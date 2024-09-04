@@ -46,8 +46,12 @@ jobs:
           while IFS= read -r file; do
             dir=$(dirname "$file")
             cp utils/default_swagger_index_page.html "$dir/index.html"
-            echo -e "$version\n$(cat $dir/hosted_versions.txt)" > "$dir/hosted_versions.txt"
+            version=$(basename "$dir")
+            parent_dir=$(dirname "$dir")
+            echo "Parent dir: $parent_dir"
+            echo "$version" > "$parent_dir/hosted_versions.txt"
           done < new_swagger_files.txt
+          rm new_swagger_files.txt
 
       - name: Commit and push changes
         run: |
