@@ -8,6 +8,8 @@ on:
 jobs:
   create-swagger-version:
     if: "contains(github.event.commits[0].message, '[CREATE-SWAGGER]')"
+    env:
+      GITHUB_TOKEN: ${{ secrets.BLOCKSCOUT_BOT_TOKEN }}
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
@@ -15,6 +17,11 @@ jobs:
         with:
           # fetch the last 2 commits to check difference
           fetch-depth: 2
+
+      - name: Set git identity to blockscout-bot
+        run: |
+          git config user.name "blockscout-bot"
+          git config user.email "blockscout-bot@example.com"  # replace with the correct email if needed
 
       - name: Check commit message
         id: check-commit
@@ -54,12 +61,8 @@ jobs:
           rm new_swagger_files.txt
 
       - name: Commit and push changes
-        env:
-          # push from blockscout-bot to trigger the pages workflow
-          GITHUB_TOKEN: ${{ secrets.BLOCKSCOUT_BOT_TOKEN }}
         run: |
-          git config --global user.name "GitHub Actions Bot"
-          git config --global user.email "actions@github.com"
+          echo $GITHUB_TOKEN
           git add .
           git commit -m "[BOT] Add index.html for new swagger.yaml files"
           git push
