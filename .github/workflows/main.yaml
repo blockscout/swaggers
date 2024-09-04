@@ -6,7 +6,7 @@ on:
       - '**/swagger.yaml'
 
 jobs:
-  create-index:
+  create-swagger-version:
     if: "contains(github.event.commits[0].message, '[CREATE-SWAGGER]')"
     runs-on: ubuntu-latest
     steps:
@@ -60,3 +60,16 @@ jobs:
           git add .
           git commit -m "[BOT] Add index.html for new swagger.yaml files"
           git push
+
+      # Other steps in your job
+      - name: Trigger github pages to build
+        uses: actions/github-script@v6
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            await github.rest.actions.createWorkflowDispatch({
+              owner: 'blockscout',
+              repo: 'swaggers',
+              workflow_id: 'jekyll-gh-pages.yml', # the name of the workflow you want to trigger
+              ref: 'master'
+            })
