@@ -12,6 +12,9 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
+        with:
+          # fetch the last 2 commits to check difference
+          fetch-depth: 2
 
       - name: Check commit message
         id: check-commit
