@@ -26,8 +26,10 @@ jobs:
       - name: Find new swagger.yaml files
         id: find-new-swagger
         run: |
+          git --no-pager log -5 --oneline
+          git status
           # Find new swagger.yaml files in the commit
-          git diff --name-status HEAD~1 HEAD | grep '^A' | grep 'swagger.yaml' | awk '{print $2}' > new_swagger_files.txt
+          git diff --name-status master~1 master | grep '^A' | grep 'swagger.yaml' | awk '{print $2}' > new_swagger_files.txt
           if [[ ! -s new_swagger_files.txt ]]; then
             echo "No new swagger.yaml files found. Exiting."
             exit 1
