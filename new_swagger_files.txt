@@ -1,1 +1,1 @@
-services/smart-contract-verifier/8baf3456/swagger.yaml
+services/smart-contract-verifier/b6b9dcf8/swagger.yaml
