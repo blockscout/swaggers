@@ -40,12 +40,13 @@ jobs:
           echo "New swagger.yaml files found:"
           cat new_swagger_files.txt
 
-      - name: Create index.html for new swagger.yaml files
+      - name: Handle new swagger file
         run: |
           # Create index.html for each new swagger.yaml found
           while IFS= read -r file; do
             dir=$(dirname "$file")
             cp utils/default_swagger_index_page.html "$dir/index.html"
+            echo -e "$version\n$(cat $dir/hosted_versions.txt)" > "$dir/hosted_versions.txt"
           done < new_swagger_files.txt
 
       - name: Commit and push changes
