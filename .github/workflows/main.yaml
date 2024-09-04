@@ -49,27 +49,17 @@ jobs:
             version=$(basename "$dir")
             parent_dir=$(dirname "$dir")
             echo "Parent dir: $parent_dir"
-            echo "$version" > "$parent_dir/hosted_versions.txt"
+            echo "$version" >> "$parent_dir/hosted_versions.txt"
           done < new_swagger_files.txt
           rm new_swagger_files.txt
 
       - name: Commit and push changes
+        env:
+          # push from blockscout-bot to trigger the pages workflow
+          GH_TOKEN: ${{ secrets.BLOCKSCOUT_BOT_TOKEN }}
         run: |
           git config --global user.name "GitHub Actions Bot"
           git config --global user.email "actions@github.com"
           git add .
           git commit -m "[BOT] Add index.html for new swagger.yaml files"
           git push
-
-      # Other steps in your job
-      - name: Trigger github pages to build
-        uses: actions/github-script@v6
-        with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-          script: |
-            await github.rest.actions.createWorkflowDispatch({
-              owner: 'blockscout',
-              repo: 'swaggers',
-              workflow_id: 'jekyll-gh-pages.yml', # the name of the workflow you want to trigger
-              ref: 'master'
-            })
