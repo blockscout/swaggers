@@ -17,6 +17,9 @@
 
                 const fileList = document.getElementById('file-list');
                 versions.forEach(version => {
+                    if (version.trim() === '') {
+                        return;
+                    }
                     const li = document.createElement('li');
                     const a = document.createElement('a');
                     a.href = `./${version}/index.html`;
