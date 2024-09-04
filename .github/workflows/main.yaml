@@ -1,0 +1,51 @@
+name: Create index.html for new swagger.yaml
+
+on:
+  push:
+    paths:
+      - '**/swagger.yaml'
+
+jobs:
+  create-index:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Check commit message
+        id: check-commit
+        run: |
+          COMMIT_MESSAGE=$(git log -1 --pretty=%B)
+          echo "Commit message: $COMMIT_MESSAGE"
+          if [[ "$COMMIT_MESSAGE" != *"[BOT]"* || "$COMMIT_MESSAGE" != *"[CREATE-SWAGGER]"* ]]; then
+            echo "The commit message does not contain [BOT] and [CREATE-SWAGGER]. Exiting."
+            exit 1
+          fi
+
+      - name: Find new swagger.yaml files
+        id: find-new-swagger
+        run: |
+          # Find new swagger.yaml files in the commit
+          git diff --name-status HEAD~1 HEAD | grep '^A' | grep 'swagger.yaml' | awk '{print $2}' > new_swagger_files.txt
+          if [[ ! -s new_swagger_files.txt ]]; then
+            echo "No new swagger.yaml files found. Exiting."
+            exit 1
+          fi
+          echo "New swagger.yaml files found:"
+          cat new_swagger_files.txt
+
+      - name: Create index.html for new swagger.yaml files
+        run: |
+          # Create index.html for each new swagger.yaml found
+          while IFS= read -r file; do
+            dir=$(dirname "$file")
+            cp /utils/default_swagger_index_page.html "$dir/index.html"
+          done < new_swagger_files.txt
+
+      - name: Commit and push changes
+        run: |
+          git config --global user.name "GitHub Actions Bot"
+          git config --global user.email "actions@github.com"
+          git add .
+          git commit -m "[BOT] Add index.html for new swagger.yaml files"
+          git push
