@@ -1,19 +1,41 @@
-<!-- HTML for static distribution bundle build -->
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta charset="UTF-8">
-        <title>smart-contract-verifier</title>
-        <link rel="stylesheet" type="text/css" href="/dist/swagger-ui.css" />
-        <link rel="stylesheet" type="text/css" href="/dist/index.css" />
-        <link rel="icon" type="image/png" href="/dist/favicon-32x32.png" sizes="32x32" />
-        <link rel="icon" type="image/png" href="/dist/favicon-16x16.png" sizes="16x16" />
-    </head>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Available swagger versions for service <code>smart-contract-verifier</code></title>
+    <script>
+        // Function to fetch the content of hosted_files.txt and list the files
+        async function loadFileList() {
+            try {
+                const response = await fetch('./hosted_versions.txt'); // Fetch the file
+                if (!response.ok) {
+                    throw new Error('Failed to load hosted_files.txt');
+                }
+                const text = await response.text(); // Get the file content as text
+                const versions = text.split('\n').filter(file => file.trim() !== ''); // Split by line and remove empty lines
 
-    <body>
-        <div id="swagger-ui"></div>
-        <script src="/dist/swagger-ui-bundle.js" charset="UTF-8"> </script>
-        <script src="/dist/swagger-ui-standalone-preset.js" charset="UTF-8"> </script>
-        <script src="/dist/swagger-initializer.js" charset="UTF-8"> </script>
-    </body>
+                const fileList = document.getElementById('file-list');
+                versions.forEach(version => {
+                    const li = document.createElement('li');
+                    const a = document.createElement('a');
+                    a.href = `./${version}/index.html`;
+                    a.textContent = version;
+                    li.appendChild(a);
+                    fileList.appendChild(li);
+                });
+            } catch (error) {
+                console.error('Error loading file list:', error);
+            }
+        }
+
+        window.onload = loadFileList; // Load the file list when the page is loaded
+    </script>
+</head>
+<body>
+<h1>Available Files</h1>
+<ul id="file-list">
+    <!-- Files will be dynamically added here -->
+</ul>
+</body>
 </html>
