@@ -58,6 +58,8 @@ jobs:
 
       - name: Commit and push changes
         run: |
+          git config --global user.email "bot@blockscout.com"
+          git config --global user.name "blockscout-bot"
           git add .
           git commit -m "[BOT] Add index.html for new swagger.yaml files"
           git push
