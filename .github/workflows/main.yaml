@@ -63,3 +63,15 @@ jobs:
           git add .
           git commit -m "[BOT] Add index.html for new swagger.yaml files"
           git push
+
+      - name: Trigger github-pages workflow
+        uses: actions/github-script@v4
+        with:
+          github-token: ${{ secrets.BLOCKSCOUT_BOT_TOKEN }}
+          script: |
+            await github.actions.createWorkflowDispatch({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              workflow_id: 'jekyll-gh-pages.yml',
+              ref: 'master'
+            });
