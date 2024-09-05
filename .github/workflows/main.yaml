@@ -60,8 +60,6 @@ jobs:
         run: |
           git config --global user.email "bot@blockscout.com"
           git config --global user.name "blockscout-bot"
-          git config pull.rebase true
-          git pull origin master
           git add .
           git commit -m "[BOT] [SKIP-GH-PAGES] Add index.html for new swagger.yaml files"
           git fetch origin master
