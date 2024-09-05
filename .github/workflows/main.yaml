@@ -61,7 +61,7 @@ jobs:
           git config --global user.email "bot@blockscout.com"
           git config --global user.name "blockscout-bot"
           git add .
-          git commit -m "[BOT] Add index.html for new swagger.yaml files"
+          git commit -m "[BOT] [SKIP-GH-PAGES] Add index.html for new swagger.yaml files"
           git push
 
       - name: Trigger github-pages workflow
