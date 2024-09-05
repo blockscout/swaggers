@@ -73,7 +73,7 @@
     <script>
         async function loadFileList() {
             try {
-                const response = await fetch('./hosted_versions.txt');
+                const response = await fetch(`https://raw.githubusercontent.com/blockscout/swaggers/master/services/{{SERVICE_NAME}}/hosted_versions.txt`);
                 if (!response.ok) {
                     throw new Error('Failed to load hosted_versions.txt');
                 }

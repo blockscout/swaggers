@@ -4,7 +4,8 @@
   "description": "[<img alt=\"The blog of Peter Evans: How to Host Swagger Documentation With Github Pages\" title=\"View blog post\" src=\"https://peterevans.dev/img/blog-published-badge.svg\">](https://peterevans.dev/posts/how-to-host-swagger-docs-with-github-pages/)",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "new": "node addService.js",
+    "regenerate": "node retemplateServices.js"
   },
   "keywords": [],
   "author": "",
