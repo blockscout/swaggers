@@ -18,6 +18,84 @@ consumes:
 produces:
   - application/json
 paths:
+  /api/v1/coinbase/deposits:
+    get:
+      operationId: Autoscout_ListCoinbaseDeposits
+      responses:
+        "200":
+          description: A successful response.
+          schema:
+            $ref: '#/definitions/v1ListCoinbaseDepositsResponse'
+        default:
+          description: An unexpected error response.
+          schema:
+            $ref: '#/definitions/rpcStatus'
+      tags:
+        - Coinbase
+      security:
+        - ApiKeyAuth: []
+    post:
+      operationId: Autoscout_CreateCoinbaseDeposit
+      responses:
+        "200":
+          description: A successful response.
+          schema:
+            $ref: '#/definitions/v1CreateCoinbaseDepositResponse'
+        default:
+          description: An unexpected error response.
+          schema:
+            $ref: '#/definitions/rpcStatus'
+      parameters:
+        - name: body
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/v1CreateCoinbaseDepositRequest'
+      tags:
+        - Coinbase
+      security:
+        - ApiKeyAuth: []
+  /api/v1/coinbase/deposits/{deposit_id}:
+    get:
+      operationId: Autoscout_GetCoinbaseDeposit
+      responses:
+        "200":
+          description: A successful response.
+          schema:
+            $ref: '#/definitions/v1Deposit'
+        default:
+          description: An unexpected error response.
+          schema:
+            $ref: '#/definitions/rpcStatus'
+      parameters:
+        - name: deposit_id
+          in: path
+          required: true
+          type: string
+      tags:
+        - Coinbase
+      security:
+        - ApiKeyAuth: []
+    delete:
+      operationId: Autoscout_DeleteCoinbaseDeposit
+      responses:
+        "200":
+          description: A successful response.
+          schema:
+            $ref: '#/definitions/v1DeleteCoinbaseDepositResponse'
+        default:
+          description: An unexpected error response.
+          schema:
+            $ref: '#/definitions/rpcStatus'
+      parameters:
+        - name: deposit_id
+          in: path
+          required: true
+          type: string
+      tags:
+        - Coinbase
+      security:
+        - ApiKeyAuth: []
   /api/v1/deployments/{deployment_id}:
     get:
       summary: Get detailed information about specific deployment
@@ -536,6 +614,18 @@ definitions:
         type: string
     required:
       - name
+  v1CreateCoinbaseDepositRequest:
+    type: object
+  v1CreateCoinbaseDepositResponse:
+    type: object
+    properties:
+      id:
+        type: string
+      url:
+        type: string
+    required:
+      - id
+      - url
   v1CreateInstanceRequest:
     type: object
     properties:
@@ -554,6 +644,8 @@ definitions:
         type: string
     required:
       - instance_id
+  v1DeleteCoinbaseDepositResponse:
+    type: object
   v1DeleteInstanceResponse:
     type: object
   v1DeployConfig:
@@ -671,6 +763,35 @@ definitions:
       - STOPPED
       - FAILED
     default: NO_STATUS
+  v1Deposit:
+    type: object
+    properties:
+      id:
+        type: string
+      url:
+        type: string
+      created_at:
+        type: string
+      amount:
+        type: string
+      status:
+        $ref: '#/definitions/v1DepositStatus'
+    required:
+      - id
+      - url
+      - created_at
+      - status
+  v1DepositStatus:
+    type: string
+    enum:
+      - UNSPECIFIED_DEPOSIT_STATUS
+      - DEPOSIT_STATUS_CREATED
+      - DEPOSIT_STATUS_PENDING
+      - DEPOSIT_STATUS_DELAYED
+      - DEPOSIT_STATUS_CONFIRMED
+      - DEPOSIT_STATUS_FAILED
+      - DEPOSIT_STATUS_RESOLVED
+    default: UNSPECIFIED_DEPOSIT_STATUS
   v1Footer:
     type: object
     properties:
@@ -774,6 +895,16 @@ definitions:
         items:
           type: object
           $ref: '#/definitions/v1AuthToken'
+    required:
+      - items
+  v1ListCoinbaseDepositsResponse:
+    type: object
+    properties:
+      items:
+        type: array
+        items:
+          type: object
+          $ref: '#/definitions/v1Deposit'
     required:
       - items
   v1ListDeploymentsResponse:
