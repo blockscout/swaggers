@@ -502,6 +502,27 @@ definitions:
         items:
           type: object
           $ref: '#/definitions/protobufAny'
+  v1AdBannerProvider:
+    type: string
+    enum:
+      - UNSPECIFIED_AD_BANNER_PROVIDER
+      - SLICE
+      - BANNER_NONE
+    default: UNSPECIFIED_AD_BANNER_PROVIDER
+  v1AdTextProvider:
+    type: string
+    enum:
+      - UNSPECIFIED_AD_TEXT_PROVIDER
+      - COINZILLA
+      - TEXT_NONE
+    default: UNSPECIFIED_AD_TEXT_PROVIDER
+  v1Ads:
+    type: object
+    properties:
+      text_provider:
+        $ref: '#/definitions/v1AdTextProvider'
+      banner_provider:
+        $ref: '#/definitions/v1AdBannerProvider'
   v1ArbitrumConfig:
     type: object
     properties:
@@ -711,6 +732,8 @@ definitions:
         $ref: '#/definitions/v1OptimismConfig'
       arbitrum:
         $ref: '#/definitions/v1ArbitrumConfig'
+      ads:
+        $ref: '#/definitions/v1Ads'
     required:
       - rpc_url
       - server_size
