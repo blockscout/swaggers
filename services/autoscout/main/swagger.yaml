@@ -734,6 +734,8 @@ definitions:
         $ref: '#/definitions/v1ArbitrumConfig'
       ads:
         $ref: '#/definitions/v1Ads'
+      meta_og:
+        $ref: '#/definitions/v1MetaOg'
     required:
       - rpc_url
       - server_size
@@ -950,6 +952,17 @@ definitions:
           $ref: '#/definitions/v1Instance'
     required:
       - items
+  v1MetaOg:
+    type: object
+    properties:
+      description:
+        type: string
+      image_url:
+        type: string
+      enhanced_data_enabled:
+        type: boolean
+      seo_enhanced_data_enabled:
+        type: boolean
   v1NavigationLayout:
     type: string
     enum:
