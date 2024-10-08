@@ -736,6 +736,8 @@ definitions:
         $ref: '#/definitions/v1Ads'
       meta_og:
         $ref: '#/definitions/v1MetaOg'
+      final_config:
+        $ref: '#/definitions/v1FinalConfig'
     required:
       - rpc_url
       - server_size
@@ -817,6 +819,21 @@ definitions:
       - DEPOSIT_STATUS_FAILED
       - DEPOSIT_STATUS_RESOLVED
     default: UNSPECIFIED_DEPOSIT_STATUS
+  v1FinalConfig:
+    type: object
+    properties:
+      fields:
+        type: array
+        items:
+          type: object
+          $ref: '#/definitions/v1FinalConfigField'
+  v1FinalConfigField:
+    type: object
+    properties:
+      json_path:
+        type: string
+      value:
+        type: string
   v1Footer:
     type: object
     properties:
