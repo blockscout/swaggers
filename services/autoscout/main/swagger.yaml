@@ -118,6 +118,63 @@ paths:
         - Deployments
       security:
         - ApiKeyAuth: []
+  /api/v1/deployments/{deployment_id}/logs:
+    get:
+      operationId: Autoscout_ListDeploymentLogs
+      responses:
+        "200":
+          description: A successful response.
+          schema:
+            $ref: '#/definitions/v1ListDeploymentLogsResponse'
+        default:
+          description: An unexpected error response.
+          schema:
+            $ref: '#/definitions/rpcStatus'
+      parameters:
+        - name: deployment_id
+          in: path
+          required: true
+          type: string
+        - name: page
+          in: query
+          required: false
+          type: integer
+          format: int64
+        - name: per_page
+          in: query
+          required: false
+          type: integer
+          format: int64
+      tags:
+        - Deployments
+      security:
+        - ApiKeyAuth: []
+  /api/v1/deployments/{deployment_id}/logs/{id}:
+    get:
+      operationId: Autoscout_GetDeploymentLog
+      responses:
+        "200":
+          description: A successful response.
+          schema:
+            $ref: '#/definitions/v1DeploymentLog'
+        default:
+          description: An unexpected error response.
+          schema:
+            $ref: '#/definitions/rpcStatus'
+      parameters:
+        - name: deployment_id
+          in: path
+          required: true
+          type: string
+        - name: id
+          in: path
+          required: true
+          type: integer
+          format: int32
+      tags:
+        - Deployments
+      security:
+        - ApiKeyAuth: []
   /api/v1/instances:
     get:
       summary: Get list of all owned instances
@@ -779,6 +836,33 @@ definitions:
       - config_state_hash
       - total_cost
       - health_status
+  v1DeploymentLog:
+    type: object
+    properties:
+      id:
+        type: integer
+        format: int32
+      message:
+        type: string
+      timestamp:
+        type: string
+      bucket:
+        type: string
+      group_size:
+        type: integer
+        format: int32
+      severity:
+        type: string
+      container:
+        type: string
+    required:
+      - id
+      - message
+      - timestamp
+      - bucket
+      - group_size
+      - severity
+      - container
   v1DeploymentStatus:
     type: string
     enum:
@@ -949,6 +1033,18 @@ definitions:
           $ref: '#/definitions/v1Deposit'
     required:
       - items
+  v1ListDeploymentLogsResponse:
+    type: object
+    properties:
+      items:
+        type: array
+        items:
+          type: object
+          $ref: '#/definitions/v1DeploymentLog'
+      pagination:
+        $ref: '#/definitions/v1PaginationResult'
+    required:
+      - items
   v1ListDeploymentsResponse:
     type: object
     properties:
@@ -1049,6 +1145,24 @@ definitions:
     title: https://github.com/blockscout/docs/blob/df6996a0f8e553c2d4b1c3dcda6ef2518a8b39f9/for-developers/information-and-settings/env-variables/backend-envs-chain-specific.md?plain=1#L102-L119
     required:
       - l1_blockscout_url
+  v1PaginationResult:
+    type: object
+    properties:
+      page:
+        type: integer
+        format: int64
+      next_page:
+        type: integer
+        format: int64
+      per_page:
+        type: integer
+        format: int64
+      total_items:
+        type: integer
+        format: int64
+      total_pages:
+        type: integer
+        format: int64
   v1RegisterProfileRequest:
     type: object
     properties:
