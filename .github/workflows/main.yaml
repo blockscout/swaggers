@@ -29,34 +29,33 @@ jobs:
             exit 1
           fi
 
-      - name: Find new swagger.yaml files
-        id: find-new-swagger
+      - name: Find swagger.yaml file actions
+        id: find-swagger-action
         run: |
-          git --no-pager log -5 --oneline
-          git status
-          # Find new swagger.yaml files in the commit
-          git diff --name-status master~1 master | grep '^A' | grep 'swagger.yaml' | awk '{print $2}' > new_swagger_files.txt
-          if [[ ! -s new_swagger_files.txt ]]; then
-            echo "No new swagger.yaml files found. Exiting."
+          git diff --name-status master~1 master | grep 'swagger.yaml' | awk '{print $1,$2}' > swagger_files.txt
+          if grep '^A' swagger_files.txt; then
+            echo "SWAGGER_FILE_ACTION=new" >> $GITHUB_OUTPUT
+          elif grep '^M' swagger_files.txt; then
+            echo "SWAGGER_FILE_ACTION=modified" >> $GITHUB_OUTPUT
+          else
+            echo "No relevant swagger.yaml changes found. Exiting."
             exit 1
           fi
-          echo "New swagger.yaml files found:"
-          cat new_swagger_files.txt
 
       - name: Handle new swagger file
+        if: ${{ steps.find-swagger-action.outputs.SWAGGER_FILE_ACTION == 'new' }}
         run: |
-          # Create index.html for each new swagger.yaml found
           while IFS= read -r file; do
             dir=$(dirname "$file")
             cp utils/default_swagger_index_page.html "$dir/index.html"
             version=$(basename "$dir")
             parent_dir=$(dirname "$dir")
-            echo "Parent dir: $parent_dir"
             echo "$version" >> "$parent_dir/hosted_versions.txt"
-          done < new_swagger_files.txt
-          rm new_swagger_files.txt
+          done < swagger_files.txt
+          rm swagger_files.txt
 
       - name: Commit and push changes
+        if: ${{ steps.find-swagger-action.outputs.SWAGGER_FILE_ACTION == 'new' }}
         run: |
           git config --global user.email "bot@blockscout.com"
           git config --global user.name "blockscout-bot"
@@ -68,11 +67,11 @@ jobs:
             git push origin master
           else
             git rebase --abort
-            echo "Rebase failed due to conflicts, exiting."
             exit 1
           fi
 
       - name: Trigger github-pages workflow
+        if: ${{ steps.find-swagger-action.outputs.SWAGGER_FILE_ACTION == 'new' || steps.find-swagger-action.outputs.SWAGGER_FILE_ACTION == 'modified' }}
         uses: actions/github-script@v4
         with:
           github-token: ${{ secrets.BLOCKSCOUT_BOT_TOKEN }}

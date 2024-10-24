@@ -16,15 +16,15 @@
     jobs:
      other-jobs:
          ... 
-
-     push-swagger:
-       if: github.event_name == 'push' && (github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/tags'))
-       uses: ./.github/workflows/_push_swagger.yml
-       with:
-         service_name: '{service_name}'
-         swagger_path: '{swagger_path}'
-       secrets:
-         api_token_github: ${{ secrets.BLOCKSCOUT_BOT_TOKEN }}
+   
+    push-swagger:
+      if: github.event_name == 'push' && (github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/tags'))
+      uses: blockscout/blockscout-rs/.github/workflows/_push_swagger.yml@main
+      with:
+        service_name: '{service_name}'
+        swagger_path: '{swagger_path}'
+      secrets:
+        api_token_github: ${{ secrets.BLOCKSCOUT_BOT_TOKEN }}
     ```
 
 
