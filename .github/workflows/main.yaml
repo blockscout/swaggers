@@ -32,12 +32,17 @@ jobs:
       - name: Find swagger.yaml file actions
         id: find-swagger-action
         run: |
-          git diff --name-status master~1 master | grep 'swagger.yaml' | awk '{print $1,$2}' > swagger_files.txt
-          if grep '^A' swagger_files.txt; then
-            echo "SWAGGER_FILE_ACTION=new" >> $GITHUB_OUTPUT
-          elif grep '^M' swagger_files.txt; then
-            echo "SWAGGER_FILE_ACTION=modified" >> $GITHUB_OUTPUT
-          else
+          # Find swagger.yaml files and identify their action (A or M)
+          git diff --name-status master~1 master | grep 'swagger.yaml' | while read status file; do
+            if [ "$status" = "A" ]; then
+              echo "SWAGGER_FILE_ACTION=new" >> $GITHUB_OUTPUT
+              echo "$file" >> swagger_files.txt
+            elif [ "$status" = "M" ]; then
+              echo "SWAGGER_FILE_ACTION=modified" >> $GITHUB_OUTPUT
+              echo "$file" >> swagger_files.txt
+            fi
+          done
+          if [ ! -f swagger_files.txt ]; then
             echo "No relevant swagger.yaml changes found. Exiting."
             exit 1
           fi
@@ -47,6 +52,7 @@ jobs:
         run: |
           while IFS= read -r file; do
             dir=$(dirname "$file")
+            mkdir -p "$dir" 
             cp utils/default_swagger_index_page.html "$dir/index.html"
             version=$(basename "$dir")
             parent_dir=$(dirname "$dir")
