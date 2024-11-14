@@ -795,6 +795,21 @@ definitions:
         $ref: '#/definitions/v1MetaOg'
       final_config:
         $ref: '#/definitions/v1FinalConfig'
+      api_spec_url:
+        type: string
+      hide_navigation:
+        type: array
+        items:
+          type: string
+      menu_other:
+        type: array
+        items:
+          type: object
+          $ref: '#/definitions/v1MenuItem'
+      disable_graphql:
+        type: boolean
+      maintenance_banner:
+        type: string
     required:
       - rpc_url
       - server_size
@@ -1065,6 +1080,13 @@ definitions:
           $ref: '#/definitions/v1Instance'
     required:
       - items
+  v1MenuItem:
+    type: object
+    properties:
+      text:
+        type: string
+      url:
+        type: string
   v1MetaOg:
     type: object
     properties:
@@ -1142,6 +1164,17 @@ definitions:
       has_mud_framework:
         type: boolean
         title: NEXT_PUBLIC_HAS_MUD_FRAMEWORK
+      beacon_rpc_url:
+        type: string
+      beacon_blob_fetcher_reference_slot:
+        type: integer
+        format: int32
+      beacon_blob_fetcher_slot_duration:
+        type: integer
+        format: int32
+      beacon_blob_fetcher_reference_timestamp:
+        type: integer
+        format: int32
     title: https://github.com/blockscout/docs/blob/df6996a0f8e553c2d4b1c3dcda6ef2518a8b39f9/for-developers/information-and-settings/env-variables/backend-envs-chain-specific.md?plain=1#L102-L119
     required:
       - l1_blockscout_url
