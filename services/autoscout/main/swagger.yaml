@@ -768,8 +768,8 @@ definitions:
       wallet_connect_project_id:
         type: string
       eip_1559_elasticity:
-        type: integer
-        format: int32
+        type: string
+        format: int64
       navigation_layout:
         $ref: '#/definitions/v1NavigationLayout'
       favicon_url:
@@ -1167,14 +1167,14 @@ definitions:
       beacon_rpc_url:
         type: string
       beacon_blob_fetcher_reference_slot:
-        type: integer
-        format: int32
+        type: string
+        format: int64
       beacon_blob_fetcher_slot_duration:
-        type: integer
-        format: int32
+        type: string
+        format: int64
       beacon_blob_fetcher_reference_timestamp:
-        type: integer
-        format: int32
+        type: string
+        format: int64
     title: https://github.com/blockscout/docs/blob/df6996a0f8e553c2d4b1c3dcda6ef2518a8b39f9/for-developers/information-and-settings/env-variables/backend-envs-chain-specific.md?plain=1#L102-L119
     required:
       - l1_blockscout_url
