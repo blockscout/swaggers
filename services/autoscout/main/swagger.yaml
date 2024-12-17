@@ -13,6 +13,8 @@ tags:
   - name: Autoscout
   - name: Health
 host: autoscout.services.blockscout.com
+schemes:
+  - https
 consumes:
   - application/json
 produces:
@@ -563,7 +565,7 @@ definitions:
     type: string
     enum:
       - UNSPECIFIED_AD_BANNER_PROVIDER
-      - SLICE
+      - SLISE
       - BANNER_NONE
     default: UNSPECIFIED_AD_BANNER_PROVIDER
   v1AdTextProvider:
@@ -810,6 +812,8 @@ definitions:
         type: boolean
       maintenance_banner:
         type: string
+      skip_cname_check:
+        type: boolean
     required:
       - rpc_url
       - server_size
