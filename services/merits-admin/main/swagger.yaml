@@ -1,0 +1,246 @@
+swagger: "2.0"
+info:
+  title: Merits Admin service
+  version: 0.1.1
+  contact:
+    name: Blockscout
+    url: https://blockscout.com
+    email: support@blockscout.com
+tags:
+  - name: PointsAdminService
+host: merits.blockscout.com
+schemes:
+  - https
+consumes:
+  - application/json
+produces:
+  - application/json
+paths:
+  /admin/api/v1/distribute:
+    post:
+      operationId: PointsAdminService_AdminDistribute
+      responses:
+        "200":
+          description: A successful response.
+          schema:
+            $ref: '#/definitions/v1AdminDistributeResponse'
+        default:
+          description: An unexpected error response.
+          schema:
+            $ref: '#/definitions/rpcStatus'
+      parameters:
+        - name: body
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/v1AdminDistributeRequest'
+      tags:
+        - PointsAdminService
+  /admin/api/v1/network/{chain_id}:
+    post:
+      operationId: PointsAdminService_AdminAddNetwork
+      responses:
+        "200":
+          description: A successful response.
+          schema:
+            $ref: '#/definitions/v1AdminAddNetworkResponse'
+        default:
+          description: An unexpected error response.
+          schema:
+            $ref: '#/definitions/rpcStatus'
+      parameters:
+        - name: chain_id
+          in: path
+          required: true
+          type: string
+        - name: body
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/PointsAdminServiceAdminAddNetworkBody'
+      tags:
+        - PointsAdminService
+    patch:
+      operationId: PointsAdminService_AdminUpdateNetwork
+      responses:
+        "200":
+          description: A successful response.
+          schema:
+            $ref: '#/definitions/v1AdminUpdateNetworkResponse'
+        default:
+          description: An unexpected error response.
+          schema:
+            $ref: '#/definitions/rpcStatus'
+      parameters:
+        - name: chain_id
+          in: path
+          required: true
+          type: string
+        - name: body
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/PointsAdminServiceAdminUpdateNetworkBody'
+      tags:
+        - PointsAdminService
+  /admin/api/v1/user/{address_or_code}:
+    get:
+      operationId: PointsAdminService_AdminUserInfo
+      responses:
+        "200":
+          description: A successful response.
+          schema:
+            $ref: '#/definitions/v1AdminUserInfoResponse'
+        default:
+          description: An unexpected error response.
+          schema:
+            $ref: '#/definitions/rpcStatus'
+      parameters:
+        - name: address_or_code
+          in: path
+          required: true
+          type: string
+      tags:
+        - PointsAdminService
+definitions:
+  PointsAdminServiceAdminAddNetworkBody:
+    type: object
+    properties:
+      name:
+        type: string
+      domain:
+        type: string
+      active:
+        type: boolean
+  PointsAdminServiceAdminUpdateNetworkBody:
+    type: object
+    properties:
+      name:
+        type: string
+      domain:
+        type: string
+      active:
+        type: boolean
+  protobufAny:
+    type: object
+    properties:
+      '@type':
+        type: string
+    additionalProperties: {}
+  protobufNullValue:
+    type: string
+    enum:
+      - NULL_VALUE
+    default: NULL_VALUE
+    description: |-
+      `NullValue` is a singleton enumeration to represent the null value for the
+      `Value` type union.
+
+      The JSON representation for `NullValue` is JSON `null`.
+
+       - NULL_VALUE: Null value.
+  rpcStatus:
+    type: object
+    properties:
+      code:
+        type: integer
+        format: int32
+      message:
+        type: string
+      details:
+        type: array
+        items:
+          type: object
+          $ref: '#/definitions/protobufAny'
+  v1AdminAddNetworkResponse:
+    type: object
+  v1AdminDistributeRequest:
+    type: object
+    properties:
+      id:
+        type: string
+      description:
+        type: string
+      distributions:
+        type: array
+        items:
+          type: object
+          $ref: '#/definitions/v1Distribution'
+      create_missing_accounts:
+        type: boolean
+      expected_total:
+        type: string
+  v1AdminDistributeResponse:
+    type: object
+    properties:
+      accounts_distributed:
+        type: string
+        format: uint64
+      accounts_created:
+        type: string
+        format: uint64
+  v1AdminUpdateNetworkResponse:
+    type: object
+  v1AdminUserInfoResponse:
+    type: object
+    properties:
+      address:
+        type: string
+      balances:
+        $ref: '#/definitions/v1GetUserBalancesResponse'
+      logs:
+        type: array
+        items:
+          type: object
+          $ref: '#/definitions/v1UserLog'
+      code:
+        type: string
+      invited_users:
+        type: array
+        items:
+          type: string
+  v1Distribution:
+    type: object
+    properties:
+      address:
+        type: string
+      amount:
+        type: string
+  v1GetUserBalancesResponse:
+    type: object
+    properties:
+      total:
+        type: string
+      staked:
+        type: string
+      unstaked:
+        type: string
+      total_staking_rewards:
+        type: string
+      total_referral_rewards:
+        type: string
+      pending_referral_rewards:
+        type: string
+  v1UserLog:
+    type: object
+    properties:
+      id:
+        type: string
+        format: uint64
+      action:
+        type: string
+      details:
+        type: object
+      timestamp:
+        type: string
+securityDefinitions:
+  AdminApiKey:
+    type: apiKey
+    description: 'Authentication token, prefixed by Bearer: Bearer <token>'
+    name: Authorization
+    in: header
+security:
+  - AdminApiKey: []
+externalDocs:
+  description: More about merits microservice
+  url: https://github.com/blockscout/points
