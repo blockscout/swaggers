@@ -383,6 +383,28 @@ paths:
         - Instances
       security:
         - ApiKeyAuth: []
+  /api/v1/instances:update-status-batch:
+    post:
+      operationId: Autoscout_UpdateInstanceStatusBatch
+      responses:
+        "200":
+          description: A successful response.
+          schema:
+            $ref: '#/definitions/v1UpdateInstanceStatusBatchResponse'
+        default:
+          description: An unexpected error response.
+          schema:
+            $ref: '#/definitions/rpcStatus'
+      parameters:
+        - name: body
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/v1UpdateInstanceStatusBatchRequest'
+      tags:
+        - Instances
+      security:
+        - ApiKeyAuth: []
   /api/v1/schemas/config:
     get:
       operationId: Autoscout_GetConfigSchema
@@ -659,6 +681,25 @@ definitions:
       - name
       - token_value
       - created_at
+  v1BatchUpdateInstanceStatusItem:
+    type: object
+    properties:
+      ok:
+        type: boolean
+      error:
+        type: string
+      instance_slug:
+        type: string
+      instance_id:
+        type: string
+      deployment_id:
+        type: string
+      status:
+        $ref: '#/definitions/v1DeploymentStatus'
+    required:
+      - ok
+      - instance_slug
+      - instance_id
   v1ChainType:
     type: string
     enum:
@@ -892,6 +933,7 @@ definitions:
       - STOPPING
       - STOPPED
       - FAILED
+      - QUEUED
     default: NO_STATUS
   v1Deposit:
     type: object
@@ -1257,6 +1299,39 @@ definitions:
       - STOP
       - RESTART
     default: START
+  v1UpdateInstanceStatusBatchRequest:
+    type: object
+    properties:
+      all_running:
+        type: boolean
+      instance_ids:
+        type: array
+        items:
+          type: string
+      action:
+        $ref: '#/definitions/v1UpdateInstanceAction'
+      dry_run:
+        type: boolean
+    required:
+      - action
+  v1UpdateInstanceStatusBatchResponse:
+    type: object
+    properties:
+      total:
+        type: integer
+        format: int64
+      total_errors:
+        type: integer
+        format: int64
+      items:
+        type: array
+        items:
+          type: object
+          $ref: '#/definitions/v1BatchUpdateInstanceStatusItem'
+    required:
+      - total
+      - total_errors
+      - items
   v1UpdateInstanceStatusResponse:
     type: object
     properties:
