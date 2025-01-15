@@ -175,6 +175,11 @@ paths:
           in: query
           required: false
           type: string
+        - name: addressLimit
+          in: query
+          required: false
+          type: integer
+          format: int64
       tags:
         - Metadata
   /health:
@@ -303,17 +308,11 @@ definitions:
   v1SearchPublicTagsResponse:
     type: object
     properties:
-      tags:
-        type: array
-        items:
-          type: object
-          $ref: '#/definitions/v1Tag'
-        title: 'TODO: remove this field'
       items:
         type: array
         items:
           type: object
-          $ref: '#/definitions/v1Tag'
+          $ref: '#/definitions/v1TagAddresses'
       nextPageParams:
         $ref: '#/definitions/v1Pagination'
   v1SubmitAddressesToExtractorsRequest:
@@ -339,3 +338,12 @@ definitions:
         format: int32
       meta:
         type: string
+  v1TagAddresses:
+    type: object
+    properties:
+      tag:
+        $ref: '#/definitions/v1Tag'
+      addresses:
+        type: array
+        items:
+          type: string
