@@ -498,6 +498,44 @@ paths:
             $ref: '#/definitions/v1RegisterProfileRequest'
       tags:
         - Users
+  /api/v1/users/terms/latest:
+    get:
+      operationId: Autoscout_GetLatestTermsOfService
+      responses:
+        "200":
+          description: A successful response.
+          schema:
+            $ref: '#/definitions/v1TermsOfService'
+        default:
+          description: An unexpected error response.
+          schema:
+            $ref: '#/definitions/rpcStatus'
+      tags:
+        - Users
+      security:
+        - ApiKeyAuth: []
+  /api/v1/users/terms:accept:
+    post:
+      operationId: Autoscout_AcceptTermsOfService
+      responses:
+        "200":
+          description: A successful response.
+          schema:
+            $ref: '#/definitions/v1TermsOfService'
+        default:
+          description: An unexpected error response.
+          schema:
+            $ref: '#/definitions/rpcStatus'
+      parameters:
+        - name: body
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/v1AcceptTermsOfServiceRequest'
+      tags:
+        - Users
+      security:
+        - ApiKeyAuth: []
   /health:
     get:
       summary: |-
@@ -583,6 +621,13 @@ definitions:
         items:
           type: object
           $ref: '#/definitions/protobufAny'
+  v1AcceptTermsOfServiceRequest:
+    type: object
+    properties:
+      version:
+        type: string
+    required:
+      - version
   v1AdBannerProvider:
     type: string
     enum:
@@ -1285,6 +1330,21 @@ definitions:
         type: string
       memory:
         type: string
+  v1TermsOfService:
+    type: object
+    properties:
+      content_url:
+        type: string
+      version:
+        type: string
+      accepted:
+        type: boolean
+      accepted_at:
+        type: string
+    required:
+      - content_url
+      - version
+      - accepted
   v1UpdateConfigResponse:
     type: object
     properties:
