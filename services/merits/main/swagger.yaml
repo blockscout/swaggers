@@ -193,6 +193,72 @@ paths:
           type: string
       tags:
         - PointsService
+  /api/v1/offers:
+    get:
+      operationId: PointsService_GetOffers
+      responses:
+        "200":
+          description: A successful response.
+          schema:
+            $ref: '#/definitions/v1GetOffersResponse'
+        default:
+          description: An unexpected error response.
+          schema:
+            $ref: '#/definitions/rpcStatus'
+      parameters:
+        - name: only_active
+          in: query
+          required: false
+          type: boolean
+      tags:
+        - PointsService
+  /api/v1/offers/{offer_id}:
+    get:
+      operationId: PointsService_GetOffer
+      responses:
+        "200":
+          description: A successful response.
+          schema:
+            $ref: '#/definitions/v1Offer'
+        default:
+          description: An unexpected error response.
+          schema:
+            $ref: '#/definitions/rpcStatus'
+      parameters:
+        - name: offer_id
+          in: path
+          required: true
+          type: string
+      tags:
+        - PointsService
+  /api/v1/offers/{offer_id}/redemptions:
+    get:
+      operationId: PointsService_GetOfferRedemptions
+      responses:
+        "200":
+          description: A successful response.
+          schema:
+            $ref: '#/definitions/v1GetOfferRedemptionsResponse'
+        default:
+          description: An unexpected error response.
+          schema:
+            $ref: '#/definitions/rpcStatus'
+      parameters:
+        - name: offer_id
+          in: path
+          required: true
+          type: string
+        - name: page_size
+          in: query
+          required: false
+          type: integer
+          format: int64
+        - name: page_token
+          in: query
+          required: false
+          type: string
+      tags:
+        - PointsService
   /api/v1/user/balances:
     get:
       operationId: PointsService_GetUserBalances
@@ -269,6 +335,78 @@ paths:
             $ref: '#/definitions/v1DailyRewardClaimRequest'
       tags:
         - PointsService
+  /api/v1/user/logs:
+    get:
+      operationId: PointsService_GetRewardsHistory
+      responses:
+        "200":
+          description: A successful response.
+          schema:
+            $ref: '#/definitions/v1GetRewardsHistoryResponse'
+        default:
+          description: An unexpected error response.
+          schema:
+            $ref: '#/definitions/rpcStatus'
+      parameters:
+        - name: action
+          in: query
+          required: false
+          type: string
+        - name: page_size
+          in: query
+          required: false
+          type: integer
+          format: int64
+        - name: page_token
+          in: query
+          required: false
+          type: string
+      tags:
+        - PointsService
+  /api/v1/user/offers/redeem:
+    post:
+      operationId: PointsService_RedeemOffer
+      responses:
+        "200":
+          description: A successful response.
+          schema:
+            $ref: '#/definitions/v1RedeemOfferResponse'
+        default:
+          description: An unexpected error response.
+          schema:
+            $ref: '#/definitions/rpcStatus'
+      parameters:
+        - name: body
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/v1RedeemOfferRequest'
+      tags:
+        - PointsService
+  /api/v1/user/offers/redemptions:
+    get:
+      operationId: PointsService_GetOfferRedemptionsHistory
+      responses:
+        "200":
+          description: A successful response.
+          schema:
+            $ref: '#/definitions/v1GetOfferRedemptionsResponse'
+        default:
+          description: An unexpected error response.
+          schema:
+            $ref: '#/definitions/rpcStatus'
+      parameters:
+        - name: page_size
+          in: query
+          required: false
+          type: integer
+          format: int64
+        - name: page_token
+          in: query
+          required: false
+          type: string
+      tags:
+        - PointsService
   /api/v1/user/referrals:
     get:
       operationId: PointsService_GetReferralData
@@ -290,6 +428,18 @@ definitions:
       '@type':
         type: string
     additionalProperties: {}
+  protobufNullValue:
+    type: string
+    enum:
+      - NULL_VALUE
+    default: NULL_VALUE
+    description: |-
+      `NullValue` is a singleton enumeration to represent the null value for the
+      `Value` type union.
+
+      The JSON representation for `NullValue` is JSON `null`.
+
+       - NULL_VALUE: Null value.
   rpcStatus:
     type: object
     properties:
@@ -408,6 +558,24 @@ definitions:
         items:
           type: object
           $ref: '#/definitions/v1Instance'
+  v1GetOfferRedemptionsResponse:
+    type: object
+    properties:
+      items:
+        type: array
+        items:
+          type: object
+          $ref: '#/definitions/v1OfferRedemption'
+      next_page_params:
+        $ref: '#/definitions/v1Pagination'
+  v1GetOffersResponse:
+    type: object
+    properties:
+      items:
+        type: array
+        items:
+          type: object
+          $ref: '#/definitions/v1Offer'
   v1GetReferralDataResponse:
     type: object
     properties:
@@ -418,6 +586,16 @@ definitions:
       referrals:
         type: string
         format: uint64
+  v1GetRewardsHistoryResponse:
+    type: object
+    properties:
+      items:
+        type: array
+        items:
+          type: object
+          $ref: '#/definitions/v1RewardLog'
+      next_page_params:
+        $ref: '#/definitions/v1Pagination'
   v1GetUserBalancesResponse:
     type: object
     properties:
@@ -466,6 +644,54 @@ definitions:
         additionalProperties:
           type: string
           format: uint64
+  v1Offer:
+    type: object
+    properties:
+      offer_id:
+        type: string
+      details:
+        type: object
+      price:
+        type: string
+      weight:
+        type: integer
+        format: int32
+      valid_since:
+        type: string
+      valid_until:
+        type: string
+      redemptions_limit:
+        type: integer
+        format: int32
+      redemptions_count:
+        type: integer
+        format: int32
+      is_valid:
+        type: boolean
+      is_hidden:
+        type: boolean
+      is_unique_per_address:
+        type: boolean
+      is_auto_filled:
+        type: boolean
+  v1OfferRedemption:
+    type: object
+    properties:
+      offer_id:
+        type: string
+      address:
+        type: string
+      redemption:
+        type: string
+        format: uint64
+      price:
+        type: string
+      note:
+        type: string
+      redeemed_at:
+        type: string
+      secret:
+        type: string
   v1Pagination:
     type: object
     properties:
@@ -474,6 +700,26 @@ definitions:
       page_size:
         type: integer
         format: int64
+  v1RedeemOfferRequest:
+    type: object
+    properties:
+      offer_id:
+        type: string
+      expected_price:
+        type: string
+      note:
+        type: string
+  v1RedeemOfferResponse:
+    type: object
+  v1RewardLog:
+    type: object
+    properties:
+      action:
+        type: string
+      details:
+        type: object
+      timestamp:
+        type: string
   v1RewardsConfig:
     type: object
     properties:
