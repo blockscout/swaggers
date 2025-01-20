@@ -92,6 +92,14 @@ paths:
           in: query
           required: false
           type: string
+        - name: blockscout_login_chain_id
+          in: query
+          required: false
+          type: string
+        - name: blockscout_login_address
+          in: query
+          required: false
+          type: string
       tags:
         - PointsService
   /api/v1/auth/user/{address}:
@@ -458,6 +466,11 @@ definitions:
     properties:
       valid:
         type: boolean
+  v1AuthConfig:
+    type: object
+    properties:
+      shared_siwe_login:
+        type: boolean
   v1AuthLoginRequest:
     type: object
     properties:
@@ -482,6 +495,8 @@ definitions:
     type: object
     properties:
       nonce:
+        type: string
+      merits_login_nonce:
         type: string
   v1AuthUserResponse:
     type: object
@@ -550,6 +565,8 @@ definitions:
     properties:
       rewards:
         $ref: '#/definitions/v1RewardsConfig'
+      auth:
+        $ref: '#/definitions/v1AuthConfig'
   v1GetInstancesLeaderboardResponse:
     type: object
     properties:
