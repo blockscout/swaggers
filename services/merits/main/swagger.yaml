@@ -404,6 +404,10 @@ paths:
           schema:
             $ref: '#/definitions/rpcStatus'
       parameters:
+        - name: offer_id
+          in: query
+          required: false
+          type: string
         - name: page_size
           in: query
           required: false
