@@ -371,6 +371,26 @@ paths:
           type: string
       tags:
         - PointsService
+  /api/v1/user/offers/check-redeem:
+    post:
+      operationId: PointsService_CheckRedeemOffer
+      responses:
+        "200":
+          description: A successful response.
+          schema:
+            $ref: '#/definitions/v1CheckRedeemOfferResponse'
+        default:
+          description: An unexpected error response.
+          schema:
+            $ref: '#/definitions/rpcStatus'
+      parameters:
+        - name: body
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/v1RedeemOfferRequest'
+      tags:
+        - PointsService
   /api/v1/user/offers/redeem:
     post:
       operationId: PointsService_RedeemOffer
@@ -417,6 +437,20 @@ paths:
           in: query
           required: false
           type: string
+      tags:
+        - PointsService
+  /api/v1/user/passport-score:
+    get:
+      operationId: PointsService_GetLatestPassportScore
+      responses:
+        "200":
+          description: A successful response.
+          schema:
+            $ref: '#/definitions/v1GetLatestPassportScoreResponse'
+        default:
+          description: An unexpected error response.
+          schema:
+            $ref: '#/definitions/rpcStatus'
       tags:
         - PointsService
   /api/v1/user/referrals:
@@ -518,6 +552,13 @@ definitions:
         type: string
       timestamp:
         type: string
+  v1CheckRedeemOfferResponse:
+    type: object
+    properties:
+      is_redeemable:
+        type: boolean
+      reason:
+        type: string
   v1DailyRewardCheckResponse:
     type: object
     properties:
@@ -579,6 +620,11 @@ definitions:
         items:
           type: object
           $ref: '#/definitions/v1Instance'
+  v1GetLatestPassportScoreResponse:
+    type: object
+    properties:
+      score:
+        $ref: '#/definitions/v1PassportScore'
   v1GetOfferRedemptionsResponse:
     type: object
     properties:
@@ -689,6 +735,8 @@ definitions:
         format: int32
       is_valid:
         type: boolean
+      min_passport_score:
+        type: string
       is_hidden:
         type: boolean
       is_unique_per_address:
@@ -721,6 +769,15 @@ definitions:
       page_size:
         type: integer
         format: int64
+  v1PassportScore:
+    type: object
+    properties:
+      score:
+        type: string
+      expiry_at:
+        type: string
+      details:
+        type: object
   v1RedeemOfferRequest:
     type: object
     properties:
