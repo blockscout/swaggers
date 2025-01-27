@@ -1,0 +1,861 @@
+swagger: "2.0"
+info:
+  title: Merits service
+  version: 0.1.1
+  contact:
+    name: Blockscout
+    url: https://blockscout.com
+    email: support@blockscout.com
+tags:
+  - name: PointsService
+host: merits.blockscout.com
+schemes:
+  - https
+consumes:
+  - application/json
+produces:
+  - application/json
+paths:
+  /api/v1/auth/code/{code}:
+    get:
+      operationId: PointsService_AuthCode
+      responses:
+        "200":
+          description: A successful response.
+          schema:
+            $ref: '#/definitions/v1AuthCodeResponse'
+        default:
+          description: An unexpected error response.
+          schema:
+            $ref: '#/definitions/rpcStatus'
+      parameters:
+        - name: code
+          in: path
+          required: true
+          type: string
+      tags:
+        - PointsService
+  /api/v1/auth/login:
+    post:
+      operationId: PointsService_AuthLogin
+      responses:
+        "200":
+          description: A successful response.
+          schema:
+            $ref: '#/definitions/v1AuthLoginResponse'
+        default:
+          description: An unexpected error response.
+          schema:
+            $ref: '#/definitions/rpcStatus'
+      parameters:
+        - name: body
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/v1AuthLoginRequest'
+      tags:
+        - PointsService
+  /api/v1/auth/logout:
+    post:
+      operationId: PointsService_AuthLogout
+      responses:
+        "200":
+          description: A successful response.
+          schema:
+            $ref: '#/definitions/v1AuthLogoutResponse'
+        default:
+          description: An unexpected error response.
+          schema:
+            $ref: '#/definitions/rpcStatus'
+      parameters:
+        - name: body
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/v1AuthLogoutRequest'
+      tags:
+        - PointsService
+  /api/v1/auth/nonce:
+    get:
+      operationId: PointsService_AuthNonce
+      responses:
+        "200":
+          description: A successful response.
+          schema:
+            $ref: '#/definitions/v1AuthNonceResponse'
+        default:
+          description: An unexpected error response.
+          schema:
+            $ref: '#/definitions/rpcStatus'
+      parameters:
+        - name: code
+          in: query
+          required: false
+          type: string
+        - name: blockscout_login_chain_id
+          in: query
+          required: false
+          type: string
+        - name: blockscout_login_address
+          in: query
+          required: false
+          type: string
+      tags:
+        - PointsService
+  /api/v1/auth/user/{address}:
+    get:
+      operationId: PointsService_AuthUser
+      responses:
+        "200":
+          description: A successful response.
+          schema:
+            $ref: '#/definitions/v1AuthUserResponse'
+        default:
+          description: An unexpected error response.
+          schema:
+            $ref: '#/definitions/rpcStatus'
+      parameters:
+        - name: address
+          in: path
+          required: true
+          type: string
+      tags:
+        - PointsService
+  /api/v1/config:
+    get:
+      operationId: PointsService_GetConfig
+      responses:
+        "200":
+          description: A successful response.
+          schema:
+            $ref: '#/definitions/v1GetConfigResponse'
+        default:
+          description: An unexpected error response.
+          schema:
+            $ref: '#/definitions/rpcStatus'
+      tags:
+        - PointsService
+  /api/v1/instances:
+    get:
+      operationId: PointsService_GetInstancesLeaderboard
+      responses:
+        "200":
+          description: A successful response.
+          schema:
+            $ref: '#/definitions/v1GetInstancesLeaderboardResponse'
+        default:
+          description: An unexpected error response.
+          schema:
+            $ref: '#/definitions/rpcStatus'
+      tags:
+        - PointsService
+  /api/v1/leaderboard/users:
+    get:
+      operationId: PointsService_GetUsersLeaderboard
+      responses:
+        "200":
+          description: A successful response.
+          schema:
+            $ref: '#/definitions/v1GetUsersLeaderboardResponse'
+        default:
+          description: An unexpected error response.
+          schema:
+            $ref: '#/definitions/rpcStatus'
+      parameters:
+        - name: sort
+          in: query
+          required: false
+          type: string
+        - name: page_size
+          in: query
+          required: false
+          type: integer
+          format: int64
+        - name: page_token
+          in: query
+          required: false
+          type: string
+      tags:
+        - PointsService
+  /api/v1/leaderboard/users/{address}:
+    get:
+      summary: leaderboard
+      operationId: PointsService_GetUserLeaderboard
+      responses:
+        "200":
+          description: A successful response.
+          schema:
+            $ref: '#/definitions/v1UserLeaderboardPosition'
+        default:
+          description: An unexpected error response.
+          schema:
+            $ref: '#/definitions/rpcStatus'
+      parameters:
+        - name: address
+          in: path
+          required: true
+          type: string
+        - name: sort
+          in: query
+          required: false
+          type: string
+      tags:
+        - PointsService
+  /api/v1/offers:
+    get:
+      operationId: PointsService_GetOffers
+      responses:
+        "200":
+          description: A successful response.
+          schema:
+            $ref: '#/definitions/v1GetOffersResponse'
+        default:
+          description: An unexpected error response.
+          schema:
+            $ref: '#/definitions/rpcStatus'
+      parameters:
+        - name: only_active
+          in: query
+          required: false
+          type: boolean
+      tags:
+        - PointsService
+  /api/v1/offers/{offer_id}:
+    get:
+      operationId: PointsService_GetOffer
+      responses:
+        "200":
+          description: A successful response.
+          schema:
+            $ref: '#/definitions/v1Offer'
+        default:
+          description: An unexpected error response.
+          schema:
+            $ref: '#/definitions/rpcStatus'
+      parameters:
+        - name: offer_id
+          in: path
+          required: true
+          type: string
+      tags:
+        - PointsService
+  /api/v1/offers/{offer_id}/redemptions:
+    get:
+      operationId: PointsService_GetOfferRedemptions
+      responses:
+        "200":
+          description: A successful response.
+          schema:
+            $ref: '#/definitions/v1GetOfferRedemptionsResponse'
+        default:
+          description: An unexpected error response.
+          schema:
+            $ref: '#/definitions/rpcStatus'
+      parameters:
+        - name: offer_id
+          in: path
+          required: true
+          type: string
+        - name: page_size
+          in: query
+          required: false
+          type: integer
+          format: int64
+        - name: page_token
+          in: query
+          required: false
+          type: string
+      tags:
+        - PointsService
+  /api/v1/user/balances:
+    get:
+      operationId: PointsService_GetUserBalances
+      responses:
+        "200":
+          description: A successful response.
+          schema:
+            $ref: '#/definitions/v1GetUserBalancesResponse'
+        default:
+          description: An unexpected error response.
+          schema:
+            $ref: '#/definitions/rpcStatus'
+      tags:
+        - PointsService
+  /api/v1/user/campaign-logs:
+    get:
+      operationId: PointsService_GetCampaignRewardsHistory
+      responses:
+        "200":
+          description: A successful response.
+          schema:
+            $ref: '#/definitions/v1GetCampaignRewardsHistoryResponse'
+        default:
+          description: An unexpected error response.
+          schema:
+            $ref: '#/definitions/rpcStatus'
+      parameters:
+        - name: campaign
+          in: query
+          required: false
+          type: string
+        - name: page_size
+          in: query
+          required: false
+          type: integer
+          format: int64
+        - name: page_token
+          in: query
+          required: false
+          type: string
+      tags:
+        - PointsService
+  /api/v1/user/daily/check:
+    get:
+      operationId: PointsService_DailyRewardCheck
+      responses:
+        "200":
+          description: A successful response.
+          schema:
+            $ref: '#/definitions/v1DailyRewardCheckResponse'
+        default:
+          description: An unexpected error response.
+          schema:
+            $ref: '#/definitions/rpcStatus'
+      tags:
+        - PointsService
+  /api/v1/user/daily/claim:
+    post:
+      operationId: PointsService_DailyRewardClaim
+      responses:
+        "200":
+          description: A successful response.
+          schema:
+            $ref: '#/definitions/v1DailyRewardClaimResponse'
+        default:
+          description: An unexpected error response.
+          schema:
+            $ref: '#/definitions/rpcStatus'
+      parameters:
+        - name: body
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/v1DailyRewardClaimRequest'
+      tags:
+        - PointsService
+  /api/v1/user/logs:
+    get:
+      operationId: PointsService_GetRewardsHistory
+      responses:
+        "200":
+          description: A successful response.
+          schema:
+            $ref: '#/definitions/v1GetRewardsHistoryResponse'
+        default:
+          description: An unexpected error response.
+          schema:
+            $ref: '#/definitions/rpcStatus'
+      parameters:
+        - name: action
+          in: query
+          required: false
+          type: string
+        - name: page_size
+          in: query
+          required: false
+          type: integer
+          format: int64
+        - name: page_token
+          in: query
+          required: false
+          type: string
+      tags:
+        - PointsService
+  /api/v1/user/offers/check-redeem:
+    post:
+      operationId: PointsService_CheckRedeemOffer
+      responses:
+        "200":
+          description: A successful response.
+          schema:
+            $ref: '#/definitions/v1CheckRedeemOfferResponse'
+        default:
+          description: An unexpected error response.
+          schema:
+            $ref: '#/definitions/rpcStatus'
+      parameters:
+        - name: body
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/v1RedeemOfferRequest'
+      tags:
+        - PointsService
+  /api/v1/user/offers/redeem:
+    post:
+      operationId: PointsService_RedeemOffer
+      responses:
+        "200":
+          description: A successful response.
+          schema:
+            $ref: '#/definitions/v1RedeemOfferResponse'
+        default:
+          description: An unexpected error response.
+          schema:
+            $ref: '#/definitions/rpcStatus'
+      parameters:
+        - name: body
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/v1RedeemOfferRequest'
+      tags:
+        - PointsService
+  /api/v1/user/offers/redemptions:
+    get:
+      operationId: PointsService_GetOfferRedemptionsHistory
+      responses:
+        "200":
+          description: A successful response.
+          schema:
+            $ref: '#/definitions/v1GetOfferRedemptionsResponse'
+        default:
+          description: An unexpected error response.
+          schema:
+            $ref: '#/definitions/rpcStatus'
+      parameters:
+        - name: offer_id
+          in: query
+          required: false
+          type: string
+        - name: page_size
+          in: query
+          required: false
+          type: integer
+          format: int64
+        - name: page_token
+          in: query
+          required: false
+          type: string
+      tags:
+        - PointsService
+  /api/v1/user/passport-score:
+    get:
+      operationId: PointsService_GetLatestPassportScore
+      responses:
+        "200":
+          description: A successful response.
+          schema:
+            $ref: '#/definitions/v1GetLatestPassportScoreResponse'
+        default:
+          description: An unexpected error response.
+          schema:
+            $ref: '#/definitions/rpcStatus'
+      tags:
+        - PointsService
+  /api/v1/user/referrals:
+    get:
+      operationId: PointsService_GetReferralData
+      responses:
+        "200":
+          description: A successful response.
+          schema:
+            $ref: '#/definitions/v1GetReferralDataResponse'
+        default:
+          description: An unexpected error response.
+          schema:
+            $ref: '#/definitions/rpcStatus'
+      tags:
+        - PointsService
+definitions:
+  protobufAny:
+    type: object
+    properties:
+      '@type':
+        type: string
+    additionalProperties: {}
+  protobufNullValue:
+    type: string
+    enum:
+      - NULL_VALUE
+    default: NULL_VALUE
+    description: |-
+      `NullValue` is a singleton enumeration to represent the null value for the
+      `Value` type union.
+
+      The JSON representation for `NullValue` is JSON `null`.
+
+       - NULL_VALUE: Null value.
+  rpcStatus:
+    type: object
+    properties:
+      code:
+        type: integer
+        format: int32
+      message:
+        type: string
+      details:
+        type: array
+        items:
+          type: object
+          $ref: '#/definitions/protobufAny'
+  v1AuthCodeResponse:
+    type: object
+    properties:
+      valid:
+        type: boolean
+  v1AuthConfig:
+    type: object
+    properties:
+      shared_siwe_login:
+        type: boolean
+  v1AuthLoginRequest:
+    type: object
+    properties:
+      nonce:
+        type: string
+      message:
+        type: string
+      signature:
+        type: string
+  v1AuthLoginResponse:
+    type: object
+    properties:
+      created:
+        type: boolean
+      token:
+        type: string
+  v1AuthLogoutRequest:
+    type: object
+  v1AuthLogoutResponse:
+    type: object
+  v1AuthNonceResponse:
+    type: object
+    properties:
+      nonce:
+        type: string
+      merits_login_nonce:
+        type: string
+  v1AuthUserResponse:
+    type: object
+    properties:
+      exists:
+        type: boolean
+      user:
+        $ref: '#/definitions/v1User'
+  v1CampaignLog:
+    type: object
+    properties:
+      id:
+        type: string
+      amount:
+        type: string
+      timestamp:
+        type: string
+  v1CheckRedeemOfferResponse:
+    type: object
+    properties:
+      is_redeemable:
+        type: boolean
+      reason:
+        type: string
+  v1DailyRewardCheckResponse:
+    type: object
+    properties:
+      available:
+        type: boolean
+      daily_reward:
+        type: string
+      streak_reward:
+        type: string
+      pending_referral_rewards:
+        type: string
+      total_reward:
+        type: string
+      date:
+        type: string
+      reset_at:
+        type: string
+      streak:
+        type: string
+        format: uint64
+  v1DailyRewardClaimRequest:
+    type: object
+  v1DailyRewardClaimResponse:
+    type: object
+    properties:
+      daily_reward:
+        type: string
+      streak_reward:
+        type: string
+      pending_referral_rewards:
+        type: string
+      total_reward:
+        type: string
+      streak:
+        type: string
+        format: uint64
+  v1GetCampaignRewardsHistoryResponse:
+    type: object
+    properties:
+      items:
+        type: array
+        items:
+          type: object
+          $ref: '#/definitions/v1CampaignLog'
+      next_page_params:
+        $ref: '#/definitions/v1Pagination'
+  v1GetConfigResponse:
+    type: object
+    properties:
+      rewards:
+        $ref: '#/definitions/v1RewardsConfig'
+      auth:
+        $ref: '#/definitions/v1AuthConfig'
+  v1GetInstancesLeaderboardResponse:
+    type: object
+    properties:
+      instances:
+        type: array
+        items:
+          type: object
+          $ref: '#/definitions/v1Instance'
+  v1GetLatestPassportScoreResponse:
+    type: object
+    properties:
+      score:
+        $ref: '#/definitions/v1PassportScore'
+  v1GetOfferRedemptionsResponse:
+    type: object
+    properties:
+      items:
+        type: array
+        items:
+          type: object
+          $ref: '#/definitions/v1OfferRedemption'
+      next_page_params:
+        $ref: '#/definitions/v1Pagination'
+  v1GetOffersResponse:
+    type: object
+    properties:
+      items:
+        type: array
+        items:
+          type: object
+          $ref: '#/definitions/v1Offer'
+  v1GetReferralDataResponse:
+    type: object
+    properties:
+      code:
+        type: string
+      link:
+        type: string
+      referrals:
+        type: string
+        format: uint64
+  v1GetRewardsHistoryResponse:
+    type: object
+    properties:
+      items:
+        type: array
+        items:
+          type: object
+          $ref: '#/definitions/v1RewardLog'
+      next_page_params:
+        $ref: '#/definitions/v1Pagination'
+  v1GetUserBalancesResponse:
+    type: object
+    properties:
+      total:
+        type: string
+      staked:
+        type: string
+      unstaked:
+        type: string
+      total_staking_rewards:
+        type: string
+      total_referral_rewards:
+        type: string
+      pending_referral_rewards:
+        type: string
+  v1GetUsersLeaderboardResponse:
+    type: object
+    properties:
+      items:
+        type: array
+        items:
+          type: object
+          $ref: '#/definitions/v1UserLeaderboardPosition'
+      next_page_params:
+        $ref: '#/definitions/v1Pagination'
+  v1Instance:
+    type: object
+    properties:
+      chain_id:
+        type: string
+      name:
+        type: string
+      domain:
+        type: string
+      metrics:
+        $ref: '#/definitions/v1Metrics'
+      staking:
+        $ref: '#/definitions/v1Staking'
+  v1Metrics:
+    type: object
+    properties:
+      snapshot_at:
+        type: string
+      metrics:
+        type: object
+        additionalProperties:
+          type: string
+          format: uint64
+  v1Offer:
+    type: object
+    properties:
+      offer_id:
+        type: string
+      details:
+        type: object
+      price:
+        type: string
+      weight:
+        type: integer
+        format: int32
+      valid_since:
+        type: string
+      valid_until:
+        type: string
+      redemptions_limit:
+        type: integer
+        format: int32
+      redemptions_count:
+        type: integer
+        format: int32
+      is_valid:
+        type: boolean
+      min_passport_score:
+        type: string
+      is_hidden:
+        type: boolean
+      is_unique_per_address:
+        type: boolean
+      is_auto_filled:
+        type: boolean
+  v1OfferRedemption:
+    type: object
+    properties:
+      offer_id:
+        type: string
+      address:
+        type: string
+      redemption:
+        type: string
+        format: uint64
+      price:
+        type: string
+      note:
+        type: string
+      redeemed_at:
+        type: string
+      secret:
+        type: string
+  v1Pagination:
+    type: object
+    properties:
+      page_token:
+        type: string
+      page_size:
+        type: integer
+        format: int64
+  v1PassportScore:
+    type: object
+    properties:
+      score:
+        type: string
+      expiry_at:
+        type: string
+      details:
+        type: object
+  v1RedeemOfferRequest:
+    type: object
+    properties:
+      offer_id:
+        type: string
+      expected_price:
+        type: string
+      note:
+        type: string
+  v1RedeemOfferResponse:
+    type: object
+  v1RewardLog:
+    type: object
+    properties:
+      action:
+        type: string
+      details:
+        type: object
+      timestamp:
+        type: string
+  v1RewardsConfig:
+    type: object
+    properties:
+      registration:
+        type: string
+      registration_with_referral:
+        type: string
+      daily_claim:
+        type: string
+      referral_share:
+        type: string
+      streak_bonuses:
+        type: object
+        additionalProperties:
+          type: string
+  v1Staking:
+    type: object
+  v1User:
+    type: object
+    properties:
+      address:
+        type: string
+      total_balance:
+        type: string
+      referrals:
+        type: string
+        format: uint64
+      registered_at:
+        type: string
+  v1UserLeaderboardPosition:
+    type: object
+    properties:
+      address:
+        type: string
+      total_balance:
+        type: string
+      referrals:
+        type: string
+        format: uint64
+      registered_at:
+        type: string
+      rank:
+        type: string
+        format: uint64
+      users_below:
+        type: string
+        format: uint64
+      top_percent:
+        type: number
+        format: float
+securityDefinitions:
+  UserToken:
+    type: apiKey
+    description: 'Authentication token, prefixed by Bearer: Bearer <token>'
+    name: Authorization
+    in: header
+security:
+  - UserToken: []
+externalDocs:
+  description: More about merits microservice
+  url: https://github.com/blockscout/points
