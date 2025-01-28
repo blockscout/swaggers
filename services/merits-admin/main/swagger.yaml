@@ -36,6 +36,49 @@ paths:
             $ref: '#/definitions/v1AdminDistributeRequest'
       tags:
         - PointsAdminService
+  /admin/api/v1/distributions/{distribution_id}:
+    get:
+      operationId: PointsAdminService_AdminGetDistribution
+      responses:
+        "200":
+          description: A successful response.
+          schema:
+            $ref: '#/definitions/v1AdminGetDistributionResponse'
+        default:
+          description: An unexpected error response.
+          schema:
+            $ref: '#/definitions/rpcStatus'
+      parameters:
+        - name: distribution_id
+          in: path
+          required: true
+          type: string
+      tags:
+        - PointsAdminService
+  /admin/api/v1/distributions/{id}:
+    post:
+      operationId: PointsAdminService_AdminDistribute2
+      responses:
+        "200":
+          description: A successful response.
+          schema:
+            $ref: '#/definitions/v1AdminDistributeResponse'
+        default:
+          description: An unexpected error response.
+          schema:
+            $ref: '#/definitions/rpcStatus'
+      parameters:
+        - name: id
+          in: path
+          required: true
+          type: string
+        - name: body
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/PointsAdminServiceAdminDistributeBody'
+      tags:
+        - PointsAdminService
   /admin/api/v1/networks/{chain_id}:
     post:
       operationId: PointsAdminService_AdminAddNetwork
@@ -237,14 +280,36 @@ paths:
           format: int32
       tags:
         - PointsAdminService
-  /admin/api/v1/users/{address_or_code}:
+  /admin/api/v1/users:
     get:
-      operationId: PointsAdminService_AdminUserInfo
+      operationId: PointsAdminService_AdminGetUsersBasicInfo
       responses:
         "200":
           description: A successful response.
           schema:
-            $ref: '#/definitions/v1AdminUserInfoResponse'
+            $ref: '#/definitions/v1AdminGetUsersBasicInfoResponse'
+        default:
+          description: An unexpected error response.
+          schema:
+            $ref: '#/definitions/rpcStatus'
+      parameters:
+        - name: address
+          in: query
+          required: false
+          type: array
+          items:
+            type: string
+          collectionFormat: multi
+      tags:
+        - PointsAdminService
+  /admin/api/v1/users/{address_or_code}:
+    get:
+      operationId: PointsAdminService_AdminGetUserInfo
+      responses:
+        "200":
+          description: A successful response.
+          schema:
+            $ref: '#/definitions/v1AdminGetUserInfoResponse'
         default:
           description: An unexpected error response.
           schema:
@@ -322,6 +387,20 @@ definitions:
         type: array
         items:
           type: string
+  PointsAdminServiceAdminDistributeBody:
+    type: object
+    properties:
+      description:
+        type: string
+      distributions:
+        type: array
+        items:
+          type: object
+          $ref: '#/definitions/v1Distribution'
+      create_missing_accounts:
+        type: boolean
+      expected_total:
+        type: string
   PointsAdminServiceAdminUpdateNetworkBody:
     type: object
     properties:
@@ -427,6 +506,28 @@ definitions:
       accounts_created:
         type: string
         format: uint64
+  v1AdminGetDistributionResponse:
+    type: object
+    properties:
+      id:
+        type: string
+      description:
+        type: string
+      total_receivers:
+        type: string
+        format: uint64
+      total_accounts_created:
+        type: string
+        format: uint64
+      total_distributed:
+        type: string
+      distributions:
+        type: array
+        items:
+          type: object
+          $ref: '#/definitions/v1Distribution'
+      distributed_at:
+        type: string
   v1AdminGetOfferRedemptionsResponse:
     type: object
     properties:
@@ -447,13 +548,7 @@ definitions:
           $ref: '#/definitions/v1OfferSecret'
       next_page_params:
         $ref: '#/definitions/v1Pagination'
-  v1AdminUpdateNetworkResponse:
-    type: object
-  v1AdminUpdateOfferResponse:
-    type: object
-  v1AdminUpdateReferralCodeResponse:
-    type: object
-  v1AdminUserInfoResponse:
+  v1AdminGetUserInfoResponse:
     type: object
     properties:
       address:
@@ -473,6 +568,20 @@ definitions:
           type: string
       passport_score:
         $ref: '#/definitions/v1PassportScore'
+  v1AdminGetUsersBasicInfoResponse:
+    type: object
+    properties:
+      items:
+        type: array
+        items:
+          type: object
+          $ref: '#/definitions/v1UserBasicInfo'
+  v1AdminUpdateNetworkResponse:
+    type: object
+  v1AdminUpdateOfferResponse:
+    type: object
+  v1AdminUpdateReferralCodeResponse:
+    type: object
   v1Distribution:
     type: object
     properties:
@@ -542,6 +651,13 @@ definitions:
         type: string
       details:
         type: object
+  v1UserBasicInfo:
+    type: object
+    properties:
+      address:
+        type: string
+      balances:
+        $ref: '#/definitions/v1GetUserBalancesResponse'
   v1UserLog:
     type: object
     properties:
