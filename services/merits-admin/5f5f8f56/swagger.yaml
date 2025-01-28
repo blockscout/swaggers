@@ -1,0 +1,683 @@
+swagger: "2.0"
+info:
+  title: Merits Admin service
+  version: 0.1.1
+  contact:
+    name: Blockscout
+    url: https://blockscout.com
+    email: support@blockscout.com
+tags:
+  - name: PointsAdminService
+host: merits.blockscout.com
+schemes:
+  - https
+consumes:
+  - application/json
+produces:
+  - application/json
+paths:
+  /admin/api/v1/distribute:
+    post:
+      operationId: PointsAdminService_AdminDistribute
+      responses:
+        "200":
+          description: A successful response.
+          schema:
+            $ref: '#/definitions/v1AdminDistributeResponse'
+        default:
+          description: An unexpected error response.
+          schema:
+            $ref: '#/definitions/rpcStatus'
+      parameters:
+        - name: body
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/v1AdminDistributeRequest'
+      tags:
+        - PointsAdminService
+  /admin/api/v1/distributions/{distribution_id}:
+    get:
+      operationId: PointsAdminService_AdminGetDistribution
+      responses:
+        "200":
+          description: A successful response.
+          schema:
+            $ref: '#/definitions/v1AdminGetDistributionResponse'
+        default:
+          description: An unexpected error response.
+          schema:
+            $ref: '#/definitions/rpcStatus'
+      parameters:
+        - name: distribution_id
+          in: path
+          required: true
+          type: string
+      tags:
+        - PointsAdminService
+  /admin/api/v1/distributions/{id}:
+    post:
+      operationId: PointsAdminService_AdminDistribute2
+      responses:
+        "200":
+          description: A successful response.
+          schema:
+            $ref: '#/definitions/v1AdminDistributeResponse'
+        default:
+          description: An unexpected error response.
+          schema:
+            $ref: '#/definitions/rpcStatus'
+      parameters:
+        - name: id
+          in: path
+          required: true
+          type: string
+        - name: body
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/PointsAdminServiceAdminDistributeBody'
+      tags:
+        - PointsAdminService
+  /admin/api/v1/networks/{chain_id}:
+    post:
+      operationId: PointsAdminService_AdminAddNetwork
+      responses:
+        "200":
+          description: A successful response.
+          schema:
+            $ref: '#/definitions/v1AdminAddNetworkResponse'
+        default:
+          description: An unexpected error response.
+          schema:
+            $ref: '#/definitions/rpcStatus'
+      parameters:
+        - name: chain_id
+          in: path
+          required: true
+          type: string
+        - name: body
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/PointsAdminServiceAdminAddNetworkBody'
+      tags:
+        - PointsAdminService
+    patch:
+      operationId: PointsAdminService_AdminUpdateNetwork
+      responses:
+        "200":
+          description: A successful response.
+          schema:
+            $ref: '#/definitions/v1AdminUpdateNetworkResponse'
+        default:
+          description: An unexpected error response.
+          schema:
+            $ref: '#/definitions/rpcStatus'
+      parameters:
+        - name: chain_id
+          in: path
+          required: true
+          type: string
+        - name: body
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/PointsAdminServiceAdminUpdateNetworkBody'
+      tags:
+        - PointsAdminService
+  /admin/api/v1/offers/{offer_id}:
+    post:
+      operationId: PointsAdminService_AdminAddOffer
+      responses:
+        "200":
+          description: A successful response.
+          schema:
+            $ref: '#/definitions/v1AdminAddOfferResponse'
+        default:
+          description: An unexpected error response.
+          schema:
+            $ref: '#/definitions/rpcStatus'
+      parameters:
+        - name: offer_id
+          in: path
+          required: true
+          type: string
+        - name: body
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/PointsAdminServiceAdminAddOfferBody'
+      tags:
+        - PointsAdminService
+    patch:
+      operationId: PointsAdminService_AdminUpdateOffer
+      responses:
+        "200":
+          description: A successful response.
+          schema:
+            $ref: '#/definitions/v1AdminUpdateOfferResponse'
+        default:
+          description: An unexpected error response.
+          schema:
+            $ref: '#/definitions/rpcStatus'
+      parameters:
+        - name: offer_id
+          in: path
+          required: true
+          type: string
+        - name: body
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/PointsAdminServiceAdminUpdateOfferBody'
+      tags:
+        - PointsAdminService
+  /admin/api/v1/offers/{offer_id}/redemptions:
+    get:
+      operationId: PointsAdminService_AdminGetOfferRedemptions
+      responses:
+        "200":
+          description: A successful response.
+          schema:
+            $ref: '#/definitions/v1AdminGetOfferRedemptionsResponse'
+        default:
+          description: An unexpected error response.
+          schema:
+            $ref: '#/definitions/rpcStatus'
+      parameters:
+        - name: offer_id
+          in: path
+          required: true
+          type: string
+        - name: page_size
+          in: query
+          required: false
+          type: integer
+          format: int64
+        - name: page_token
+          in: query
+          required: false
+          type: string
+      tags:
+        - PointsAdminService
+  /admin/api/v1/offers/{offer_id}/secrets:
+    get:
+      operationId: PointsAdminService_AdminGetOfferSecrets
+      responses:
+        "200":
+          description: A successful response.
+          schema:
+            $ref: '#/definitions/v1AdminGetOfferSecretsResponse'
+        default:
+          description: An unexpected error response.
+          schema:
+            $ref: '#/definitions/rpcStatus'
+      parameters:
+        - name: offer_id
+          in: path
+          required: true
+          type: string
+        - name: is_redeemed
+          in: query
+          required: false
+          type: boolean
+        - name: page_size
+          in: query
+          required: false
+          type: integer
+          format: int64
+        - name: page_token
+          in: query
+          required: false
+          type: string
+      tags:
+        - PointsAdminService
+    post:
+      operationId: PointsAdminService_AdminAddOfferSecrets
+      responses:
+        "200":
+          description: A successful response.
+          schema:
+            $ref: '#/definitions/v1AdminAddOfferSecretsResponse'
+        default:
+          description: An unexpected error response.
+          schema:
+            $ref: '#/definitions/rpcStatus'
+      parameters:
+        - name: offer_id
+          in: path
+          required: true
+          type: string
+        - name: body
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/PointsAdminServiceAdminAddOfferSecretsBody'
+      tags:
+        - PointsAdminService
+  /admin/api/v1/offers/{offer_id}/secrets/{secret_id}:
+    delete:
+      operationId: PointsAdminService_AdminDeleteOfferSecret
+      responses:
+        "200":
+          description: A successful response.
+          schema:
+            $ref: '#/definitions/v1AdminDeleteOfferSecretResponse'
+        default:
+          description: An unexpected error response.
+          schema:
+            $ref: '#/definitions/rpcStatus'
+      parameters:
+        - name: offer_id
+          in: path
+          required: true
+          type: string
+        - name: secret_id
+          in: path
+          required: true
+          type: integer
+          format: int32
+      tags:
+        - PointsAdminService
+  /admin/api/v1/users:
+    get:
+      operationId: PointsAdminService_AdminGetUsersBasicInfo
+      responses:
+        "200":
+          description: A successful response.
+          schema:
+            $ref: '#/definitions/v1AdminGetUsersBasicInfoResponse'
+        default:
+          description: An unexpected error response.
+          schema:
+            $ref: '#/definitions/rpcStatus'
+      parameters:
+        - name: address
+          in: query
+          required: false
+          type: array
+          items:
+            type: string
+          collectionFormat: multi
+      tags:
+        - PointsAdminService
+  /admin/api/v1/users/{address_or_code}:
+    get:
+      operationId: PointsAdminService_AdminGetUserInfo
+      responses:
+        "200":
+          description: A successful response.
+          schema:
+            $ref: '#/definitions/v1AdminGetUserInfoResponse'
+        default:
+          description: An unexpected error response.
+          schema:
+            $ref: '#/definitions/rpcStatus'
+      parameters:
+        - name: address_or_code
+          in: path
+          required: true
+          type: string
+      tags:
+        - PointsAdminService
+  /admin/api/v1/users/{address}/code:
+    post:
+      operationId: PointsAdminService_AdminUpdateReferralCode
+      responses:
+        "200":
+          description: A successful response.
+          schema:
+            $ref: '#/definitions/v1AdminUpdateReferralCodeResponse'
+        default:
+          description: An unexpected error response.
+          schema:
+            $ref: '#/definitions/rpcStatus'
+      parameters:
+        - name: address
+          in: path
+          required: true
+          type: string
+        - name: body
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/PointsAdminServiceAdminUpdateReferralCodeBody'
+      tags:
+        - PointsAdminService
+definitions:
+  PointsAdminServiceAdminAddNetworkBody:
+    type: object
+    properties:
+      name:
+        type: string
+      domain:
+        type: string
+      active:
+        type: boolean
+  PointsAdminServiceAdminAddOfferBody:
+    type: object
+    properties:
+      details:
+        type: object
+      price:
+        type: string
+      weight:
+        type: integer
+        format: int32
+      valid_since:
+        type: string
+      valid_until:
+        type: string
+      redemptions_limit:
+        type: integer
+        format: int32
+      min_passport_score:
+        type: string
+      is_hidden:
+        type: boolean
+      is_unique_per_address:
+        type: boolean
+      is_auto_filled:
+        type: boolean
+  PointsAdminServiceAdminAddOfferSecretsBody:
+    type: object
+    properties:
+      details:
+        type: array
+        items:
+          type: string
+  PointsAdminServiceAdminDistributeBody:
+    type: object
+    properties:
+      description:
+        type: string
+      distributions:
+        type: array
+        items:
+          type: object
+          $ref: '#/definitions/v1Distribution'
+      create_missing_accounts:
+        type: boolean
+      expected_total:
+        type: string
+  PointsAdminServiceAdminUpdateNetworkBody:
+    type: object
+    properties:
+      name:
+        type: string
+      domain:
+        type: string
+      active:
+        type: boolean
+  PointsAdminServiceAdminUpdateOfferBody:
+    type: object
+    properties:
+      details:
+        type: object
+      price:
+        type: string
+      weight:
+        type: integer
+        format: int32
+      valid_since:
+        type: string
+      valid_until:
+        type: string
+      redemptions_limit:
+        type: integer
+        format: int32
+      min_passport_score:
+        type: string
+      is_hidden:
+        type: boolean
+      is_unique_per_address:
+        type: boolean
+      is_auto_filled:
+        type: boolean
+  PointsAdminServiceAdminUpdateReferralCodeBody:
+    type: object
+    properties:
+      old_code:
+        type: string
+      new_code:
+        type: string
+  protobufAny:
+    type: object
+    properties:
+      '@type':
+        type: string
+    additionalProperties: {}
+  protobufNullValue:
+    type: string
+    enum:
+      - NULL_VALUE
+    default: NULL_VALUE
+    description: |-
+      `NullValue` is a singleton enumeration to represent the null value for the
+      `Value` type union.
+
+      The JSON representation for `NullValue` is JSON `null`.
+
+       - NULL_VALUE: Null value.
+  rpcStatus:
+    type: object
+    properties:
+      code:
+        type: integer
+        format: int32
+      message:
+        type: string
+      details:
+        type: array
+        items:
+          type: object
+          $ref: '#/definitions/protobufAny'
+  v1AdminAddNetworkResponse:
+    type: object
+  v1AdminAddOfferResponse:
+    type: object
+  v1AdminAddOfferSecretsResponse:
+    type: object
+  v1AdminDeleteOfferSecretResponse:
+    type: object
+  v1AdminDistributeRequest:
+    type: object
+    properties:
+      id:
+        type: string
+      description:
+        type: string
+      distributions:
+        type: array
+        items:
+          type: object
+          $ref: '#/definitions/v1Distribution'
+      create_missing_accounts:
+        type: boolean
+      expected_total:
+        type: string
+  v1AdminDistributeResponse:
+    type: object
+    properties:
+      accounts_distributed:
+        type: string
+        format: uint64
+      accounts_created:
+        type: string
+        format: uint64
+  v1AdminGetDistributionResponse:
+    type: object
+    properties:
+      id:
+        type: string
+      description:
+        type: string
+      total_receivers:
+        type: string
+        format: uint64
+      total_accounts_created:
+        type: string
+        format: uint64
+      total_distributed:
+        type: string
+      distributions:
+        type: array
+        items:
+          type: object
+          $ref: '#/definitions/v1Distribution'
+      distributed_at:
+        type: string
+  v1AdminGetOfferRedemptionsResponse:
+    type: object
+    properties:
+      items:
+        type: array
+        items:
+          type: object
+          $ref: '#/definitions/v1OfferRedemption'
+      next_page_params:
+        $ref: '#/definitions/v1Pagination'
+  v1AdminGetOfferSecretsResponse:
+    type: object
+    properties:
+      items:
+        type: array
+        items:
+          type: object
+          $ref: '#/definitions/v1OfferSecret'
+      next_page_params:
+        $ref: '#/definitions/v1Pagination'
+  v1AdminGetUserInfoResponse:
+    type: object
+    properties:
+      address:
+        type: string
+      balances:
+        $ref: '#/definitions/v1GetUserBalancesResponse'
+      logs:
+        type: array
+        items:
+          type: object
+          $ref: '#/definitions/v1UserLog'
+      code:
+        type: string
+      invited_users:
+        type: array
+        items:
+          type: string
+      passport_score:
+        $ref: '#/definitions/v1PassportScore'
+  v1AdminGetUsersBasicInfoResponse:
+    type: object
+    properties:
+      items:
+        type: array
+        items:
+          type: object
+          $ref: '#/definitions/v1UserBasicInfo'
+  v1AdminUpdateNetworkResponse:
+    type: object
+  v1AdminUpdateOfferResponse:
+    type: object
+  v1AdminUpdateReferralCodeResponse:
+    type: object
+  v1Distribution:
+    type: object
+    properties:
+      address:
+        type: string
+      amount:
+        type: string
+  v1GetUserBalancesResponse:
+    type: object
+    properties:
+      total:
+        type: string
+      staked:
+        type: string
+      unstaked:
+        type: string
+      total_staking_rewards:
+        type: string
+      total_referral_rewards:
+        type: string
+      pending_referral_rewards:
+        type: string
+  v1OfferRedemption:
+    type: object
+    properties:
+      offer_id:
+        type: string
+      address:
+        type: string
+      redemption:
+        type: string
+        format: uint64
+      price:
+        type: string
+      note:
+        type: string
+      redeemed_at:
+        type: string
+      secret:
+        type: string
+  v1OfferSecret:
+    type: object
+    properties:
+      secret_id:
+        type: integer
+        format: int32
+      offer_id:
+        type: string
+      details:
+        type: string
+      is_redeemed:
+        type: boolean
+  v1Pagination:
+    type: object
+    properties:
+      page_token:
+        type: string
+      page_size:
+        type: integer
+        format: int64
+  v1PassportScore:
+    type: object
+    properties:
+      score:
+        type: string
+      expiry_at:
+        type: string
+      details:
+        type: object
+  v1UserBasicInfo:
+    type: object
+    properties:
+      address:
+        type: string
+      balances:
+        $ref: '#/definitions/v1GetUserBalancesResponse'
+  v1UserLog:
+    type: object
+    properties:
+      id:
+        type: string
+        format: uint64
+      action:
+        type: string
+      details:
+        type: object
+      timestamp:
+        type: string
+securityDefinitions:
+  AdminApiKey:
+    type: apiKey
+    description: 'Authentication token, prefixed by Bearer: Bearer <token>'
+    name: Authorization
+    in: header
+security:
+  - AdminApiKey: []
+externalDocs:
+  description: More about merits microservice
+  url: https://github.com/blockscout/points
