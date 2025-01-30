@@ -792,6 +792,9 @@ definitions:
         type: string
   v1RedeemOfferResponse:
     type: object
+    properties:
+      secret:
+        type: string
   v1RewardLog:
     type: object
     properties:
