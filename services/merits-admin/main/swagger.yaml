@@ -618,6 +618,8 @@ definitions:
     properties:
       address:
         type: string
+      is_active:
+        type: boolean
       balances:
         $ref: '#/definitions/v1GetUserBalancesResponse'
   v1UserLog:
