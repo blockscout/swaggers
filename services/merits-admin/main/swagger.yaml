@@ -55,30 +55,6 @@ paths:
           type: string
       tags:
         - PointsAdminService
-  /admin/api/v1/distributions/{id}:
-    post:
-      operationId: PointsAdminService_AdminDistribute2
-      responses:
-        "200":
-          description: A successful response.
-          schema:
-            $ref: '#/definitions/v1AdminDistributeResponse'
-        default:
-          description: An unexpected error response.
-          schema:
-            $ref: '#/definitions/rpcStatus'
-      parameters:
-        - name: id
-          in: path
-          required: true
-          type: string
-        - name: body
-          in: body
-          required: true
-          schema:
-            $ref: '#/definitions/PointsAdminServiceAdminDistributeBody'
-      tags:
-        - PointsAdminService
   /admin/api/v1/networks/{chain_id}:
     post:
       operationId: PointsAdminService_AdminAddNetwork
@@ -387,20 +363,6 @@ definitions:
         type: array
         items:
           type: string
-  PointsAdminServiceAdminDistributeBody:
-    type: object
-    properties:
-      description:
-        type: string
-      distributions:
-        type: array
-        items:
-          type: object
-          $ref: '#/definitions/v1Distribution'
-      create_missing_accounts:
-        type: boolean
-      expected_total:
-        type: string
   PointsAdminServiceAdminUpdateNetworkBody:
     type: object
     properties:
