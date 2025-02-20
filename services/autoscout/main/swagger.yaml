@@ -33,7 +33,7 @@ paths:
           schema:
             $ref: '#/definitions/rpcStatus'
       tags:
-        - Coinbase
+        - Deposits
       security:
         - ApiKeyAuth: []
     post:
@@ -54,7 +54,7 @@ paths:
           schema:
             $ref: '#/definitions/v1CreateCoinbaseDepositRequest'
       tags:
-        - Coinbase
+        - Deposits
       security:
         - ApiKeyAuth: []
   /api/v1/coinbase/deposits/{deposit_id}:
@@ -75,7 +75,7 @@ paths:
           required: true
           type: string
       tags:
-        - Coinbase
+        - Deposits
       security:
         - ApiKeyAuth: []
     delete:
@@ -95,7 +95,7 @@ paths:
           required: true
           type: string
       tags:
-        - Coinbase
+        - Deposits
       security:
         - ApiKeyAuth: []
   /api/v1/deployments/{deployment_id}:
@@ -175,6 +175,87 @@ paths:
           format: int32
       tags:
         - Deployments
+      security:
+        - ApiKeyAuth: []
+  /api/v1/deposits:
+    get:
+      operationId: Autoscout_ListExternalDeposits
+      responses:
+        "200":
+          description: A successful response.
+          schema:
+            $ref: '#/definitions/v1ListExternalDepositsResponse'
+        default:
+          description: An unexpected error response.
+          schema:
+            $ref: '#/definitions/rpcStatus'
+      tags:
+        - Deposits
+      security:
+        - ApiKeyAuth: []
+  /api/v1/deposits/coinbase:
+    post:
+      operationId: Autoscout_CreateCoinbaseDeposit2
+      responses:
+        "200":
+          description: A successful response.
+          schema:
+            $ref: '#/definitions/v1CreateCoinbaseDepositResponse'
+        default:
+          description: An unexpected error response.
+          schema:
+            $ref: '#/definitions/rpcStatus'
+      parameters:
+        - name: body
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/v1CreateCoinbaseDepositRequest'
+      tags:
+        - Deposits
+      security:
+        - ApiKeyAuth: []
+  /api/v1/deposits/coinbase/{deposit_id}:
+    delete:
+      operationId: Autoscout_DeleteCoinbaseDeposit2
+      responses:
+        "200":
+          description: A successful response.
+          schema:
+            $ref: '#/definitions/v1DeleteCoinbaseDepositResponse'
+        default:
+          description: An unexpected error response.
+          schema:
+            $ref: '#/definitions/rpcStatus'
+      parameters:
+        - name: deposit_id
+          in: path
+          required: true
+          type: string
+      tags:
+        - Deposits
+      security:
+        - ApiKeyAuth: []
+  /api/v1/deposits/stripe:
+    post:
+      operationId: Autoscout_CreateStripeDeposit
+      responses:
+        "200":
+          description: A successful response.
+          schema:
+            $ref: '#/definitions/v1CreateStripeDepositResponse'
+        default:
+          description: An unexpected error response.
+          schema:
+            $ref: '#/definitions/rpcStatus'
+      parameters:
+        - name: body
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/v1CreateStripeDepositRequest'
+      tags:
+        - Deposits
       security:
         - ApiKeyAuth: []
   /api/v1/instances:
@@ -810,6 +891,18 @@ definitions:
         type: string
     required:
       - instance_id
+  v1CreateStripeDepositRequest:
+    type: object
+  v1CreateStripeDepositResponse:
+    type: object
+    properties:
+      id:
+        type: string
+      url:
+        type: string
+    required:
+      - id
+      - url
   v1DeleteCoinbaseDepositResponse:
     type: object
   v1DeleteInstanceResponse:
@@ -993,11 +1086,13 @@ definitions:
         type: string
       status:
         $ref: '#/definitions/v1DepositStatus'
+      type:
+        $ref: '#/definitions/v1DepositType'
     required:
       - id
-      - url
       - created_at
       - status
+      - type
   v1DepositStatus:
     type: string
     enum:
@@ -1009,6 +1104,40 @@ definitions:
       - DEPOSIT_STATUS_FAILED
       - DEPOSIT_STATUS_RESOLVED
     default: UNSPECIFIED_DEPOSIT_STATUS
+  v1DepositType:
+    type: string
+    enum:
+      - UNSPECIFIED_DEPOSIT_TYPE
+      - DEPOSIT_TYPE_STRIPE
+      - DEPOSIT_TYPE_COINBASE
+    default: UNSPECIFIED_DEPOSIT_TYPE
+  v1ExpensiveInstance:
+    type: object
+    properties:
+      instance_id:
+        type: string
+      name:
+        type: string
+      slug:
+        type: string
+      deployment_status:
+        $ref: '#/definitions/v1DeploymentStatus'
+      created_at:
+        type: string
+      blockscout_url:
+        type: string
+      total_cost:
+        type: string
+      cost_per_month_approx:
+        type: string
+    required:
+      - instance_id
+      - name
+      - slug
+      - deployment_status
+      - created_at
+      - total_cost
+      - cost_per_month_approx
   v1FinalConfig:
     type: object
     properties:
@@ -1161,6 +1290,16 @@ definitions:
           $ref: '#/definitions/v1Deployment'
     required:
       - items
+  v1ListExternalDepositsResponse:
+    type: object
+    properties:
+      items:
+        type: array
+        items:
+          type: object
+          $ref: '#/definitions/v1Deposit'
+    required:
+      - items
   v1ListInstancesResponse:
     type: object
     properties:
@@ -1189,6 +1328,23 @@ definitions:
         type: boolean
       seo_enhanced_data_enabled:
         type: boolean
+  v1MostExpensiveInstances:
+    type: object
+    properties:
+      items:
+        type: array
+        items:
+          type: object
+          $ref: '#/definitions/v1ExpensiveInstance'
+      count:
+        type: integer
+        format: int64
+      total_monthly_cost:
+        type: string
+    required:
+      - items
+      - count
+      - total_monthly_cost
   v1NavigationLayout:
     type: string
     enum:
@@ -1430,11 +1586,14 @@ definitions:
         items:
           type: object
           $ref: '#/definitions/v1UserAction'
+      most_expensive_instances:
+        $ref: '#/definitions/v1MostExpensiveInstances'
     required:
       - email
       - created_at
       - balance
       - recent_actions
+      - most_expensive_instances
 securityDefinitions:
   ApiKeyAuth:
     type: apiKey
