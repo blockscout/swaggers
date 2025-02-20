@@ -36,7 +36,7 @@ paths:
           in: query
           required: false
           type: string
-          format: uint64
+          format: int64
         - name: pageSize
           in: query
           required: false
@@ -91,7 +91,7 @@ paths:
           in: query
           required: false
           type: string
-          format: uint64
+          format: int64
         - name: tagsLimit
           description: If provided, the first `tags_limit` tags will be returned for each address
           in: query
@@ -156,7 +156,7 @@ paths:
           in: query
           required: false
           type: string
-          format: uint64
+          format: int64
         - name: tagTypes
           description: Comma separated list of tag types
           in: query
