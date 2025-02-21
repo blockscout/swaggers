@@ -1080,6 +1080,8 @@ definitions:
         type: string
       url:
         type: string
+      receipt_url:
+        type: string
       created_at:
         type: string
       amount:
