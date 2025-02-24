@@ -189,6 +189,17 @@ paths:
           description: An unexpected error response.
           schema:
             $ref: '#/definitions/rpcStatus'
+      parameters:
+        - name: page
+          in: query
+          required: false
+          type: integer
+          format: int64
+        - name: per_page
+          in: query
+          required: false
+          type: integer
+          format: int64
       tags:
         - Deposits
       security:
@@ -1300,6 +1311,8 @@ definitions:
         items:
           type: object
           $ref: '#/definitions/v1Deposit'
+      pagination:
+        $ref: '#/definitions/v1PaginationResult'
     required:
       - items
   v1ListInstancesResponse:
