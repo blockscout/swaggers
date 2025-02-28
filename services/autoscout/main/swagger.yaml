@@ -843,6 +843,8 @@ definitions:
       - UNSPECIFIED_CHAIN_TYPE
       - ARBITRUM
       - OPTIMISM
+      - POLYGON_ZKEVM
+      - ZKSYNC
     default: UNSPECIFIED_CHAIN_TYPE
   v1ColorTheme:
     type: string
@@ -981,6 +983,10 @@ definitions:
         $ref: '#/definitions/v1OptimismConfig'
       arbitrum:
         $ref: '#/definitions/v1ArbitrumConfig'
+      polygon_zkevm:
+        $ref: '#/definitions/v1PolygonZkEvmConfig'
+      zksync:
+        $ref: '#/definitions/v1ZksyncConfig'
       ads:
         $ref: '#/definitions/v1Ads'
       meta_og:
@@ -1004,6 +1010,10 @@ definitions:
         type: string
       skip_cname_check:
         type: boolean
+      indexer:
+        $ref: '#/definitions/v1IndexerConfig'
+      hero_banner:
+        $ref: '#/definitions/v1HeroBanner'
     required:
       - rpc_url
       - server_size
@@ -1213,6 +1223,43 @@ definitions:
     required:
       - ok
       - last_check
+  v1HeroBanner:
+    type: object
+    properties:
+      background:
+        type: array
+        items:
+          type: string
+      text_color:
+        type: array
+        items:
+          type: string
+      border:
+        type: array
+        items:
+          type: string
+      button:
+        $ref: '#/definitions/v1HeroBannerButton'
+  v1HeroBannerButton:
+    type: object
+    properties:
+      default:
+        $ref: '#/definitions/v1HeroBannerButtonValue'
+      hover:
+        $ref: '#/definitions/v1HeroBannerButtonValue'
+      selected:
+        $ref: '#/definitions/v1HeroBannerButtonValue'
+  v1HeroBannerButtonValue:
+    type: object
+    properties:
+      background:
+        type: array
+        items:
+          type: string
+      text_color:
+        type: array
+        items:
+          type: string
   v1Identicon:
     type: string
     enum:
@@ -1222,6 +1269,49 @@ definitions:
       - GRADIENT_AVATAR
       - BLOCKIE
     default: UNSPECIFIED_IDENTICON
+  v1IndexerConfig:
+    type: object
+    properties:
+      receipts_batch_size:
+        type: string
+        format: int64
+        title: INDEXER_RECEIPTS_BATCH_SIZE
+      receipts_concurrency:
+        type: string
+        format: int64
+        title: INDEXER_RECEIPTS_CONCURRENCY
+      internal_transactions_batch_size:
+        type: string
+        format: int64
+        title: INDEXER_INTERNAL_TRANSACTIONS_BATCH_SIZE
+      internal_transactions_concurrency:
+        type: string
+        format: int64
+        title: INDEXER_INTERNAL_TRANSACTIONS_CONCURRENCY
+      catchup_blocks_batch_size:
+        type: string
+        format: int64
+        title: INDEXER_CATCHUP_BLOCKS_BATCH_SIZE
+      catchup_blocks_concurrency:
+        type: string
+        format: int64
+        title: INDEXER_CATCHUP_BLOCKS_CONCURRENCY
+      coin_balances_batch_size:
+        type: string
+        format: int64
+        title: INDEXER_COIN_BALANCES_BATCH_SIZE
+      coin_balances_concurrency:
+        type: string
+        format: int64
+        title: INDEXER_COIN_BALANCES_CONCURRENCY
+      token_balances_batch_size:
+        type: string
+        format: int64
+        title: INDEXER_TOKEN_BALANCES_BATCH_SIZE
+      token_balances_concurrency:
+        type: string
+        format: int64
+        title: INDEXER_TOKEN_BALANCES_CONCURRENCY
   v1IndexingStatus:
     type: object
     properties:
@@ -1458,6 +1548,62 @@ definitions:
       total_pages:
         type: integer
         format: int64
+  v1PolygonZkEvmConfig:
+    type: object
+    properties:
+      l1_rpc:
+        type: string
+        title: INDEXER_POLYGON_ZKEVM_L1_RPC
+      l1_bridge_start_block:
+        type: string
+        format: int64
+        title: INDEXER_POLYGON_ZKEVM_L1_BRIDGE_START_BLOCK
+      l1_bridge_contract:
+        type: string
+        title: INDEXER_POLYGON_ZKEVM_L1_BRIDGE_CONTRACT
+      l1_blockscout_url:
+        type: string
+        title: NEXT_PUBLIC_ROLLUP_L1_BASE_URL
+      batches_chunk_size:
+        type: string
+        format: int64
+        title: INDEXER_POLYGON_ZKEVM_BATCHES_CHUNK_SIZE
+      batches_recheck_interval:
+        type: string
+        format: int64
+        title: INDEXER_POLYGON_ZKEVM_BATCHES_RECHECK_INTERVAL
+      l1_bridge_network_id:
+        type: string
+        format: int64
+        title: INDEXER_POLYGON_ZKEVM_L1_BRIDGE_NETWORK_ID
+      l1_bridge_rollup_index:
+        type: string
+        format: int64
+        title: INDEXER_POLYGON_ZKEVM_L1_BRIDGE_ROLLUP_INDEX
+      l1_bridge_native_symbol:
+        type: string
+        title: INDEXER_POLYGON_ZKEVM_L1_BRIDGE_NATIVE_SYMBOL
+      l1_bridge_native_decimals:
+        type: string
+        format: int64
+        title: INDEXER_POLYGON_ZKEVM_L1_BRIDGE_NATIVE_DECIMALS
+      l2_bridge_start_block:
+        type: string
+        format: int64
+        title: INDEXER_POLYGON_ZKEVM_L2_BRIDGE_START_BLOCK
+      l2_bridge_contract:
+        type: string
+        title: INDEXER_POLYGON_ZKEVM_L2_BRIDGE_CONTRACT
+      l2_bridge_network_id:
+        type: string
+        format: int64
+        title: INDEXER_POLYGON_ZKEVM_L2_BRIDGE_NETWORK_ID
+      l2_bridge_rollup_index:
+        type: string
+        format: int64
+        title: INDEXER_POLYGON_ZKEVM_L2_BRIDGE_ROLLUP_INDEX
+    required:
+      - l1_blockscout_url
   v1RegisterProfileRequest:
     type: object
     properties:
@@ -1609,6 +1755,33 @@ definitions:
       - balance
       - recent_actions
       - most_expensive_instances
+  v1ZksyncConfig:
+    type: object
+    properties:
+      l1_rpc:
+        type: string
+        title: INDEXER_ZKSYNC_L1_RPC
+      l1_blockscout_url:
+        type: string
+        title: NEXT_PUBLIC_ROLLUP_L1_BASE_URL
+      batches_chunk_size:
+        type: string
+        format: int64
+        title: INDEXER_ZKSYNC_BATCHES_CHUNK_SIZE
+      new_batches_max_range:
+        type: string
+        format: int64
+        title: INDEXER_ZKSYNC_NEW_BATCHES_MAX_RANGE
+      new_batches_recheck_interval:
+        type: string
+        format: int64
+        title: INDEXER_ZKSYNC_NEW_BATCHES_RECHECK_INTERVAL
+      batches_status_recheck_interval:
+        type: string
+        format: int64
+        title: INDEXER_ZKSYNC_BATCHES_STATUS_RECHECK_INTERVAL
+    required:
+      - l1_blockscout_url
 securityDefinitions:
   ApiKeyAuth:
     type: apiKey
