@@ -475,6 +475,28 @@ paths:
         - Instances
       security:
         - ApiKeyAuth: []
+  /api/v1/instances:regenerate-config-batch:
+    post:
+      operationId: Autoscout_RegenerateConfigBatch
+      responses:
+        "200":
+          description: A successful response.
+          schema:
+            $ref: '#/definitions/v1RegenerateConfigBatchResponse'
+        default:
+          description: An unexpected error response.
+          schema:
+            $ref: '#/definitions/rpcStatus'
+      parameters:
+        - name: body
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/v1RegenerateConfigBatchRequest'
+      tags:
+        - Instances
+      security:
+        - ApiKeyAuth: []
   /api/v1/instances:update-status-batch:
     post:
       operationId: Autoscout_UpdateInstanceStatusBatch
@@ -1604,6 +1626,48 @@ definitions:
         title: INDEXER_POLYGON_ZKEVM_L2_BRIDGE_ROLLUP_INDEX
     required:
       - l1_blockscout_url
+  v1RegenerateConfigBatchItem:
+    type: object
+    properties:
+      instance_id:
+        type: string
+      instance_slug:
+        type: string
+      ok:
+        type: boolean
+      error:
+        type: string
+    required:
+      - instance_id
+      - instance_slug
+      - ok
+  v1RegenerateConfigBatchRequest:
+    type: object
+    properties:
+      instance_ids:
+        type: array
+        items:
+          type: string
+    required:
+      - instance_ids
+  v1RegenerateConfigBatchResponse:
+    type: object
+    properties:
+      total:
+        type: integer
+        format: int64
+      total_errors:
+        type: integer
+        format: int64
+      items:
+        type: array
+        items:
+          type: object
+          $ref: '#/definitions/v1RegenerateConfigBatchItem'
+    required:
+      - total
+      - total_errors
+      - items
   v1RegisterProfileRequest:
     type: object
     properties:
