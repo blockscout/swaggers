@@ -1175,6 +1175,8 @@ definitions:
         type: string
       cost_per_month_approx:
         type: string
+      icon_url:
+        type: string
     required:
       - instance_id
       - name
