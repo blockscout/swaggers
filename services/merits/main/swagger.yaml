@@ -555,6 +555,8 @@ definitions:
         type: string
       timestamp:
         type: string
+      description:
+        type: string
   v1CheckRedeemOfferResponse:
     type: object
     properties:
