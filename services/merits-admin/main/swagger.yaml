@@ -16,6 +16,58 @@ consumes:
 produces:
   - application/json
 paths:
+  /admin/api/v1/codes:
+    get:
+      operationId: PointsAdminService_AdminGetCustomReferralCodes
+      responses:
+        "200":
+          description: A successful response.
+          schema:
+            $ref: '#/definitions/v1AdminGetCustomReferralCodesResponse'
+        default:
+          description: An unexpected error response.
+          schema:
+            $ref: '#/definitions/rpcStatus'
+      tags:
+        - PointsAdminService
+    post:
+      operationId: PointsAdminService_AdminAddCustomReferralCode
+      responses:
+        "200":
+          description: A successful response.
+          schema:
+            $ref: '#/definitions/v1AdminAddCustomReferralCodeResponse'
+        default:
+          description: An unexpected error response.
+          schema:
+            $ref: '#/definitions/rpcStatus'
+      parameters:
+        - name: body
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/v1AdminAddCustomReferralCodeRequest'
+      tags:
+        - PointsAdminService
+    patch:
+      operationId: PointsAdminService_AdminUpdateCustomReferralCode
+      responses:
+        "200":
+          description: A successful response.
+          schema:
+            $ref: '#/definitions/v1AdminUpdateCustomReferralCodeResponse'
+        default:
+          description: An unexpected error response.
+          schema:
+            $ref: '#/definitions/rpcStatus'
+      parameters:
+        - name: body
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/v1AdminUpdateCustomReferralCodeRequest'
+      tags:
+        - PointsAdminService
   /admin/api/v1/distribute:
     post:
       operationId: PointsAdminService_AdminDistribute
@@ -435,6 +487,21 @@ definitions:
         items:
           type: object
           $ref: '#/definitions/protobufAny'
+  v1AdminAddCustomReferralCodeRequest:
+    type: object
+    properties:
+      code:
+        type: string
+      bonus:
+        type: string
+      limit:
+        type: integer
+        format: int32
+  v1AdminAddCustomReferralCodeResponse:
+    type: object
+    properties:
+      code:
+        type: string
   v1AdminAddNetworkResponse:
     type: object
   v1AdminAddOfferResponse:
@@ -468,6 +535,14 @@ definitions:
       accounts_created:
         type: string
         format: uint64
+  v1AdminGetCustomReferralCodesResponse:
+    type: object
+    properties:
+      items:
+        type: array
+        items:
+          type: object
+          $ref: '#/definitions/v1CustomReferralCode'
   v1AdminGetDistributionResponse:
     type: object
     properties:
@@ -538,12 +613,37 @@ definitions:
         items:
           type: object
           $ref: '#/definitions/v1UserBasicInfo'
+  v1AdminUpdateCustomReferralCodeRequest:
+    type: object
+    properties:
+      code:
+        type: string
+      bonus:
+        type: string
+      limit:
+        type: integer
+        format: int32
+  v1AdminUpdateCustomReferralCodeResponse:
+    type: object
   v1AdminUpdateNetworkResponse:
     type: object
   v1AdminUpdateOfferResponse:
     type: object
   v1AdminUpdateReferralCodeResponse:
     type: object
+  v1CustomReferralCode:
+    type: object
+    properties:
+      code:
+        type: string
+      bonus:
+        type: string
+      limit:
+        type: integer
+        format: int32
+      count:
+        type: integer
+        format: int32
   v1Distribution:
     type: object
     properties:
