@@ -507,6 +507,10 @@ definitions:
     properties:
       valid:
         type: boolean
+      is_custom:
+        type: boolean
+      reward:
+        type: string
   v1AuthConfig:
     type: object
     properties:
