@@ -137,6 +137,20 @@ paths:
         - PointsService
   /api/v1/instances:
     get:
+      operationId: PointsService_GetInstances
+      responses:
+        "200":
+          description: A successful response.
+          schema:
+            $ref: '#/definitions/v1GetInstancesResponse'
+        default:
+          description: An unexpected error response.
+          schema:
+            $ref: '#/definitions/rpcStatus'
+      tags:
+        - PointsService
+  /api/v1/instances/leaderboard:
+    get:
       operationId: PointsService_GetInstancesLeaderboard
       responses:
         "200":
@@ -624,7 +638,15 @@ definitions:
   v1GetInstancesLeaderboardResponse:
     type: object
     properties:
-      instances:
+      items:
+        type: array
+        items:
+          type: object
+          $ref: '#/definitions/v1InstanceExtended'
+  v1GetInstancesResponse:
+    type: object
+    properties:
+      items:
         type: array
         items:
           type: object
@@ -706,6 +728,19 @@ definitions:
         type: string
       domain:
         type: string
+      details:
+        type: object
+  v1InstanceExtended:
+    type: object
+    properties:
+      chain_id:
+        type: string
+      name:
+        type: string
+      domain:
+        type: string
+      details:
+        type: object
       metrics:
         $ref: '#/definitions/v1Metrics'
       staking:
