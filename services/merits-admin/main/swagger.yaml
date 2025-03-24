@@ -107,7 +107,39 @@ paths:
           type: string
       tags:
         - PointsAdminService
+  /admin/api/v1/networks:
+    get:
+      operationId: PointsAdminService_AdminGetNetworks
+      responses:
+        "200":
+          description: A successful response.
+          schema:
+            $ref: '#/definitions/v1AdminGetNetworksResponse'
+        default:
+          description: An unexpected error response.
+          schema:
+            $ref: '#/definitions/rpcStatus'
+      tags:
+        - PointsAdminService
   /admin/api/v1/networks/{chain_id}:
+    get:
+      operationId: PointsAdminService_AdminGetNetwork
+      responses:
+        "200":
+          description: A successful response.
+          schema:
+            $ref: '#/definitions/v1AdminNetwork'
+        default:
+          description: An unexpected error response.
+          schema:
+            $ref: '#/definitions/rpcStatus'
+      parameters:
+        - name: chain_id
+          in: path
+          required: true
+          type: string
+      tags:
+        - PointsAdminService
     post:
       operationId: PointsAdminService_AdminAddNetwork
       responses:
@@ -383,6 +415,8 @@ definitions:
         type: string
       active:
         type: boolean
+      details:
+        type: object
   PointsAdminServiceAdminAddOfferBody:
     type: object
     properties:
@@ -424,6 +458,8 @@ definitions:
         type: string
       active:
         type: boolean
+      details:
+        type: object
   PointsAdminServiceAdminUpdateOfferBody:
     type: object
     properties:
@@ -565,6 +601,14 @@ definitions:
           $ref: '#/definitions/v1Distribution'
       distributed_at:
         type: string
+  v1AdminGetNetworksResponse:
+    type: object
+    properties:
+      items:
+        type: array
+        items:
+          type: object
+          $ref: '#/definitions/v1AdminNetwork'
   v1AdminGetOfferRedemptionsResponse:
     type: object
     properties:
@@ -613,6 +657,19 @@ definitions:
         items:
           type: object
           $ref: '#/definitions/v1UserBasicInfo'
+  v1AdminNetwork:
+    type: object
+    properties:
+      chain_id:
+        type: string
+      name:
+        type: string
+      domain:
+        type: string
+      active:
+        type: boolean
+      details:
+        type: object
   v1AdminUpdateCustomReferralCodeRequest:
     type: object
     properties:
