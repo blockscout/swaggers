@@ -548,6 +548,17 @@ paths:
           description: An unexpected error response.
           schema:
             $ref: '#/definitions/rpcStatus'
+      parameters:
+        - name: page
+          in: query
+          required: false
+          type: integer
+          format: int64
+        - name: per_page
+          in: query
+          required: false
+          type: integer
+          format: int64
       tags:
         - Users
       security:
@@ -836,10 +847,16 @@ definitions:
         type: string
       created_at:
         type: string
+      id:
+        type: string
+      expires_at:
+        type: string
     required:
       - name
       - token_value
       - created_at
+      - id
+      - expires_at
   v1BatchUpdateInstanceStatusItem:
     type: object
     properties:
@@ -894,6 +911,9 @@ definitions:
     properties:
       name:
         type: string
+      lifetime_days:
+        type: integer
+        format: int64
     required:
       - name
   v1CreateCoinbaseDepositRequest:
@@ -938,6 +958,8 @@ definitions:
     required:
       - id
       - url
+  v1DeleteAuthTokenResponse:
+    type: object
   v1DeleteCoinbaseDepositResponse:
     type: object
   v1DeleteInstanceResponse:
@@ -1383,6 +1405,8 @@ definitions:
         items:
           type: object
           $ref: '#/definitions/v1AuthToken'
+      pagination:
+        $ref: '#/definitions/v1PaginationResult'
     required:
       - items
   v1ListCoinbaseDepositsResponse:
