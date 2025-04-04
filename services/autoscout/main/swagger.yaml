@@ -585,6 +585,28 @@ paths:
         - Users
       security:
         - ApiKeyAuth: []
+  /api/v1/users/auth-tokens/{token_id}:
+    delete:
+      summary: Delete an auth token from current account
+      operationId: Autoscout_DeleteAuthToken
+      responses:
+        "200":
+          description: A successful response.
+          schema:
+            $ref: '#/definitions/v1DeleteAuthTokenResponse'
+        default:
+          description: An unexpected error response.
+          schema:
+            $ref: '#/definitions/rpcStatus'
+      parameters:
+        - name: token_id
+          in: path
+          required: true
+          type: string
+      tags:
+        - Users
+      security:
+        - ApiKeyAuth: []
   /api/v1/users/profile:
     get:
       summary: Get information about current account
