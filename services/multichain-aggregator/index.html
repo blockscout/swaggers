@@ -89,11 +89,12 @@
                     const a = document.createElement('a');
                     a.href = `./${version}/index.html`;
                     a.textContent = version;
-
-                    if (version.startsWith('v')) {
+                    const isTag = /^v?\d+\.\d+\.\d+$/.test(version);
+                    const isCommit = /^[a-f0-9]{8}$/.test(version);
+                    if (isTag) {
                         li.appendChild(a);
                         tagsList.appendChild(li);
-                    } else if (/^[a-f0-9]{8}/.test(version)) {
+                    } else if (isCommit) {
                         li.appendChild(a);
                         commitsList.appendChild(li);
                     } else {
