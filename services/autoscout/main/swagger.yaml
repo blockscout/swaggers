@@ -1003,6 +1003,8 @@ definitions:
         type: string
       custom_domain:
         type: string
+      redirect_from_domain:
+        type: string
       logo_url:
         type: string
       logo_url_dark:
