@@ -415,6 +415,19 @@ definitions:
         type: string
       active:
         type: boolean
+      rpc_url:
+        type: string
+      blockscout_api_key:
+        type: string
+      block_timestamp_skew:
+        type: integer
+        format: int32
+      sent_transactions_activity_enabled:
+        type: boolean
+      verified_contracts_activity_enabled:
+        type: boolean
+      blockscout_usage_activity_enabled:
+        type: boolean
       details:
         type: object
   PointsAdminServiceAdminAddOfferBody:
@@ -457,6 +470,19 @@ definitions:
       domain:
         type: string
       active:
+        type: boolean
+      rpc_url:
+        type: string
+      blockscout_api_key:
+        type: string
+      block_timestamp_skew:
+        type: integer
+        format: int32
+      sent_transactions_activity_enabled:
+        type: boolean
+      verified_contracts_activity_enabled:
+        type: boolean
+      blockscout_usage_activity_enabled:
         type: boolean
       details:
         type: object
@@ -667,6 +693,19 @@ definitions:
       domain:
         type: string
       active:
+        type: boolean
+      rpc_url:
+        type: string
+      blockscout_api_key:
+        type: string
+      block_timestamp_skew:
+        type: integer
+        format: int32
+      sent_transactions_activity_enabled:
+        type: boolean
+      verified_contracts_activity_enabled:
+        type: boolean
+      blockscout_usage_activity_enabled:
         type: boolean
       details:
         type: object
