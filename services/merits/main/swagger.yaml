@@ -16,6 +16,65 @@ consumes:
 produces:
   - application/json
 paths:
+  /api/v1/activity/check-pass:
+    get:
+      operationId: PointsService_CheckActivityPass
+      responses:
+        "200":
+          description: A successful response.
+          schema:
+            $ref: '#/definitions/v1CheckActivityPassResponse'
+        default:
+          description: An unexpected error response.
+          schema:
+            $ref: '#/definitions/rpcStatus'
+      parameters:
+        - name: address
+          in: query
+          required: false
+          type: string
+      tags:
+        - PointsService
+  /api/v1/activity/track/transaction:
+    post:
+      operationId: PointsService_PreSubmitTransactionNoAuth
+      responses:
+        "200":
+          description: A successful response.
+          schema:
+            $ref: '#/definitions/v1PreSubmitTransactionResponse'
+        default:
+          description: An unexpected error response.
+          schema:
+            $ref: '#/definitions/rpcStatus'
+      parameters:
+        - name: body
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/v1PreSubmitTransactionRequest'
+      tags:
+        - PointsService
+  /api/v1/activity/track/transaction/confirm:
+    post:
+      operationId: PointsService_PostSubmitTransaction
+      responses:
+        "200":
+          description: A successful response.
+          schema:
+            $ref: '#/definitions/v1PostSubmitTransactionResponse'
+        default:
+          description: An unexpected error response.
+          schema:
+            $ref: '#/definitions/rpcStatus'
+      parameters:
+        - name: body
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/v1PostSubmitTransactionRequest'
+      tags:
+        - PointsService
   /api/v1/auth/code/{code}:
     get:
       operationId: PointsService_AuthCode
@@ -133,6 +192,11 @@ paths:
           description: An unexpected error response.
           schema:
             $ref: '#/definitions/rpcStatus'
+      parameters:
+        - name: chain_id
+          in: query
+          required: false
+          type: string
       tags:
         - PointsService
   /api/v1/instances:
@@ -279,6 +343,108 @@ paths:
           in: query
           required: false
           type: string
+      tags:
+        - PointsService
+  /api/v1/user/activity/rewards:
+    get:
+      operationId: PointsService_GetActivityRewards
+      responses:
+        "200":
+          description: A successful response.
+          schema:
+            $ref: '#/definitions/v1GetActivityRewardsResponse'
+        default:
+          description: An unexpected error response.
+          schema:
+            $ref: '#/definitions/rpcStatus'
+      tags:
+        - PointsService
+  /api/v1/user/activity/rewards-history:
+    get:
+      operationId: PointsService_GetActivityRewardsHistory
+      responses:
+        "200":
+          description: A successful response.
+          schema:
+            $ref: '#/definitions/v1GetActivityRewardsHistoryResponse'
+        default:
+          description: An unexpected error response.
+          schema:
+            $ref: '#/definitions/rpcStatus'
+      parameters:
+        - name: activity
+          in: query
+          required: false
+          type: string
+        - name: page_size
+          in: query
+          required: false
+          type: integer
+          format: int64
+        - name: page_token
+          in: query
+          required: false
+          type: string
+      tags:
+        - PointsService
+  /api/v1/user/activity/track/contract:
+    post:
+      operationId: PointsService_PreVerifyContract
+      responses:
+        "200":
+          description: A successful response.
+          schema:
+            $ref: '#/definitions/v1PreVerifyContractResponse'
+        default:
+          description: An unexpected error response.
+          schema:
+            $ref: '#/definitions/rpcStatus'
+      parameters:
+        - name: body
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/v1PreVerifyContractRequest'
+      tags:
+        - PointsService
+  /api/v1/user/activity/track/transaction:
+    post:
+      operationId: PointsService_PreSubmitTransaction
+      responses:
+        "200":
+          description: A successful response.
+          schema:
+            $ref: '#/definitions/v1PreSubmitTransactionResponse'
+        default:
+          description: An unexpected error response.
+          schema:
+            $ref: '#/definitions/rpcStatus'
+      parameters:
+        - name: body
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/v1PreSubmitTransactionRequest'
+      tags:
+        - PointsService
+  /api/v1/user/activity/track/usage:
+    post:
+      operationId: PointsService_SubmitActivity
+      responses:
+        "200":
+          description: A successful response.
+          schema:
+            $ref: '#/definitions/v1SubmitActivityResponse'
+        default:
+          description: An unexpected error response.
+          schema:
+            $ref: '#/definitions/rpcStatus'
+      parameters:
+        - name: body
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/v1SubmitActivityRequest'
       tags:
         - PointsService
   /api/v1/user/balances:
@@ -516,6 +682,42 @@ definitions:
         items:
           type: object
           $ref: '#/definitions/protobufAny'
+  v1ActivityConfig:
+    type: object
+    properties:
+      sent_transactions_activity_enabled:
+        type: boolean
+      verified_contracts_activity_enabled:
+        type: boolean
+      blockscout_usage_activity_enabled:
+        type: boolean
+  v1ActivityPass:
+    type: object
+    properties:
+      offer_id:
+        type: string
+      details:
+        type: object
+      valid_since:
+        type: string
+      valid_until:
+        type: string
+  v1ActivityReward:
+    type: object
+    properties:
+      date:
+        type: string
+      end_date:
+        type: string
+      activity:
+        type: string
+      amount:
+        type: string
+      percentile:
+        type: number
+        format: float
+      is_pending:
+        type: boolean
   v1AuthCodeResponse:
     type: object
     properties:
@@ -575,6 +777,13 @@ definitions:
         type: string
       description:
         type: string
+  v1CheckActivityPassResponse:
+    type: object
+    properties:
+      is_valid:
+        type: boolean
+      activity_pass:
+        $ref: '#/definitions/v1ActivityPass'
   v1CheckRedeemOfferResponse:
     type: object
     properties:
@@ -618,6 +827,29 @@ definitions:
       streak:
         type: string
         format: uint64
+  v1GetActivityRewardsHistoryResponse:
+    type: object
+    properties:
+      items:
+        type: array
+        items:
+          type: object
+          $ref: '#/definitions/v1ActivityReward'
+      next_page_params:
+        $ref: '#/definitions/v1Pagination'
+  v1GetActivityRewardsResponse:
+    type: object
+    properties:
+      items:
+        type: array
+        items:
+          type: object
+          $ref: '#/definitions/v1ActivityReward'
+      last_week:
+        type: array
+        items:
+          type: object
+          $ref: '#/definitions/v1ActivityReward'
   v1GetCampaignRewardsHistoryResponse:
     type: object
     properties:
@@ -635,6 +867,8 @@ definitions:
         $ref: '#/definitions/v1RewardsConfig'
       auth:
         $ref: '#/definitions/v1AuthConfig'
+      activity:
+        $ref: '#/definitions/v1ActivityConfig'
   v1GetInstancesLeaderboardResponse:
     type: object
     properties:
@@ -822,6 +1056,38 @@ definitions:
         type: string
       details:
         type: object
+  v1PostSubmitTransactionRequest:
+    type: object
+    properties:
+      token:
+        type: string
+      tx_hash:
+        type: string
+  v1PostSubmitTransactionResponse:
+    type: object
+  v1PreSubmitTransactionRequest:
+    type: object
+    properties:
+      chain_id:
+        type: string
+      from_address:
+        type: string
+      to_address:
+        type: string
+  v1PreSubmitTransactionResponse:
+    type: object
+    properties:
+      token:
+        type: string
+  v1PreVerifyContractRequest:
+    type: object
+    properties:
+      chain_id:
+        type: string
+      address:
+        type: string
+  v1PreVerifyContractResponse:
+    type: object
   v1RedeemOfferRequest:
     type: object
     properties:
@@ -860,7 +1126,30 @@ definitions:
         type: object
         additionalProperties:
           type: string
+      sent_transactions_activity_rewards:
+        type: object
+        additionalProperties:
+          type: string
+      verified_contracts_activity_rewards:
+        type: object
+        additionalProperties:
+          type: string
+      blockscout_usage_activity_rewards:
+        type: object
+        additionalProperties:
+          type: string
+      blockscout_activity_pass_id:
+        type: string
   v1Staking:
+    type: object
+  v1SubmitActivityRequest:
+    type: object
+    properties:
+      chain_id:
+        type: string
+      action:
+        type: string
+  v1SubmitActivityResponse:
     type: object
   v1User:
     type: object
