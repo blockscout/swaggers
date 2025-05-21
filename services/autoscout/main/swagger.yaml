@@ -1382,6 +1382,9 @@ definitions:
         type: string
         format: int64
         title: INDEXER_TOKEN_BALANCES_CONCURRENCY
+      disable_pending_fetcher:
+        type: boolean
+        title: INDEXER_DISABLE_PENDING_TRANSACTIONS_FETCHER
   v1IndexingStatus:
     type: object
     properties:
