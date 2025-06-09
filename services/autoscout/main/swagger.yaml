@@ -269,28 +269,6 @@ paths:
         - Deposits
       security:
         - ApiKeyAuth: []
-  /api/v1/deposits/daimo:preview:
-    post:
-      operationId: Autoscout_PreviewDaimoDeposit
-      responses:
-        "200":
-          description: A successful response.
-          schema:
-            $ref: '#/definitions/v1PreviewDaimoDepositResponse'
-        default:
-          description: An unexpected error response.
-          schema:
-            $ref: '#/definitions/rpcStatus'
-      parameters:
-        - name: body
-          in: body
-          required: true
-          schema:
-            $ref: '#/definitions/v1PreviewDaimoDepositRequest'
-      tags:
-        - Deposits
-      security:
-        - ApiKeyAuth: []
   /api/v1/deposits/stripe:
     post:
       operationId: Autoscout_CreateStripeDeposit
@@ -313,14 +291,14 @@ paths:
         - Deposits
       security:
         - ApiKeyAuth: []
-  /api/v1/deposits/stripe:preview:
+  /api/v1/deposits:preview:
     post:
-      operationId: Autoscout_PreviewStripeDeposit
+      operationId: Autoscout_PreviewDeposit
       responses:
         "200":
           description: A successful response.
           schema:
-            $ref: '#/definitions/v1PreviewStripeDepositResponse'
+            $ref: '#/definitions/v1PreviewDepositResponse'
         default:
           description: An unexpected error response.
           schema:
@@ -330,7 +308,7 @@ paths:
           in: body
           required: true
           schema:
-            $ref: '#/definitions/v1PreviewStripeDepositRequest'
+            $ref: '#/definitions/v1PreviewDepositRequest'
       tags:
         - Deposits
       security:
@@ -1818,7 +1796,7 @@ definitions:
         title: INDEXER_POLYGON_ZKEVM_L2_BRIDGE_ROLLUP_INDEX
     required:
       - l1_blockscout_url
-  v1PreviewDaimoDepositRequest:
+  v1PreviewDepositRequest:
     type: object
     properties:
       amount_cents:
@@ -1828,29 +1806,7 @@ definitions:
         type: string
     required:
       - amount_cents
-  v1PreviewDaimoDepositResponse:
-    type: object
-    properties:
-      top_up_amount:
-        type: string
-      total_deposit_amount:
-        type: string
-      promotion_effect:
-        $ref: '#/definitions/v1PromotionEffect'
-    required:
-      - top_up_amount
-      - total_deposit_amount
-  v1PreviewStripeDepositRequest:
-    type: object
-    properties:
-      amount_cents:
-        type: integer
-        format: int64
-      promocode:
-        type: string
-    required:
-      - amount_cents
-  v1PreviewStripeDepositResponse:
+  v1PreviewDepositResponse:
     type: object
     properties:
       top_up_amount:
