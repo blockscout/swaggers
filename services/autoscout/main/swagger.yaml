@@ -691,12 +691,12 @@ paths:
         - Users
   /api/v1/users/promocodes:activate:
     post:
-      operationId: Autoscout_ActivatePromocode
+      operationId: Autoscout_ActivateRegularPromocode
       responses:
         "200":
           description: A successful response.
           schema:
-            $ref: '#/definitions/v1ActivatePromocodeResponse'
+            $ref: '#/definitions/v1RegularPromocodeResponse'
         default:
           description: An unexpected error response.
           schema:
@@ -706,7 +706,29 @@ paths:
           in: body
           required: true
           schema:
-            $ref: '#/definitions/v1ActivatePromocodeRequest'
+            $ref: '#/definitions/v1RegularPromocodeRequest'
+      tags:
+        - Users
+      security:
+        - ApiKeyAuth: []
+  /api/v1/users/promocodes:preview:
+    post:
+      operationId: Autoscout_PreviewRegularPromocode
+      responses:
+        "200":
+          description: A successful response.
+          schema:
+            $ref: '#/definitions/v1RegularPromocodeResponse'
+        default:
+          description: An unexpected error response.
+          schema:
+            $ref: '#/definitions/rpcStatus'
+      parameters:
+        - name: body
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/v1RegularPromocodeRequest'
       tags:
         - Users
       security:
@@ -841,20 +863,6 @@ definitions:
         type: string
     required:
       - version
-  v1ActivatePromocodeRequest:
-    type: object
-    properties:
-      promocode:
-        type: string
-    required:
-      - promocode
-  v1ActivatePromocodeResponse:
-    type: object
-    properties:
-      reward_amount:
-        type: string
-    required:
-      - reward_amount
   v1AdBannerProvider:
     type: string
     enum:
@@ -1893,6 +1901,20 @@ definitions:
         $ref: '#/definitions/v1UserProfile'
       initial_token:
         $ref: '#/definitions/v1AuthToken'
+  v1RegularPromocodeRequest:
+    type: object
+    properties:
+      promocode:
+        type: string
+    required:
+      - promocode
+  v1RegularPromocodeResponse:
+    type: object
+    properties:
+      reward_amount:
+        type: string
+    required:
+      - reward_amount
   v1ServerSizeSchema:
     type: object
     properties:
