@@ -1202,6 +1202,8 @@ definitions:
         type: string
       skip_cname_check:
         type: boolean
+      wait_for_correct_cname:
+        type: boolean
       indexer:
         $ref: '#/definitions/v1IndexerConfig'
       hero_banner:
