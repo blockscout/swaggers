@@ -2175,7 +2175,7 @@ paths:
             x-struct:
             x-validate:
       responses:
-        200:
+        '200':
           content:
             application/json:
               schema:
@@ -2220,7 +2220,7 @@ paths:
                 x-struct:
                 x-validate:
           description: List of native coin holders with their balances, with pagination.
-        403:
+        '403':
           content:
             application/json:
               schema:
@@ -2257,19 +2257,19 @@ paths:
             x-struct:
             x-validate:
       responses:
-        200:
+        '200':
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/AddressResponse'
           description: Detailed information about the specified address.
-        403:
+        '403':
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/ForbiddenResponse'
           description: Forbidden
-        422:
+        '422':
           content:
             application/json:
               schema:
@@ -2324,7 +2324,7 @@ paths:
             x-struct:
             x-validate:
       responses:
-        200:
+        '200':
           content:
             application/json:
               schema:
@@ -2353,13 +2353,13 @@ paths:
                 x-struct:
                 x-validate:
           description: Blocks validated by the specified address, with pagination.
-        403:
+        '403':
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/ForbiddenResponse'
           description: Forbidden
-        422:
+        '422':
           content:
             application/json:
               schema:
@@ -2420,7 +2420,7 @@ paths:
           schema:
             $ref: '#/components/schemas/Type'
       responses:
-        200:
+        '200':
           content:
             application/json:
               schema:
@@ -2451,13 +2451,13 @@ paths:
                 x-struct:
                 x-validate:
           description: Celo election rewards for the specified address.
-        403:
+        '403':
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/ForbiddenResponse'
           description: Forbidden
-        422:
+        '422':
           content:
             application/json:
               schema:
@@ -2512,7 +2512,7 @@ paths:
             x-struct:
             x-validate:
       responses:
-        200:
+        '200':
           content:
             application/json:
               schema:
@@ -2541,13 +2541,13 @@ paths:
                 x-struct:
                 x-validate:
           description: Historical coin balance changes for the specified address, with pagination.
-        403:
+        '403':
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/ForbiddenResponse'
           description: Forbidden
-        422:
+        '422':
           content:
             application/json:
               schema:
@@ -2584,7 +2584,7 @@ paths:
             x-struct:
             x-validate:
       responses:
-        200:
+        '200':
           content:
             application/json:
               schema:
@@ -2606,13 +2606,13 @@ paths:
                 x-struct:
                 x-validate:
           description: Daily coin balance history for the specified address.
-        403:
+        '403':
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/ForbiddenResponse'
           description: Forbidden
-        422:
+        '422':
           content:
             application/json:
               schema:
@@ -2649,19 +2649,19 @@ paths:
             x-struct:
             x-validate:
       responses:
-        200:
+        '200':
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/AddressCounters'
           description: Count statistics for the specified address
-        403:
+        '403':
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/ForbiddenResponse'
           description: Forbidden
-        422:
+        '422':
           content:
             application/json:
               schema:
@@ -2747,7 +2747,7 @@ paths:
             x-struct:
             x-validate:
       responses:
-        200:
+        '200':
           content:
             application/json:
               schema:
@@ -2778,13 +2778,13 @@ paths:
                 x-struct:
                 x-validate:
           description: All internal transactions for the specified address.
-        403:
+        '403':
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/ForbiddenResponse'
           description: Forbidden
-        422:
+        '422':
           content:
             application/json:
               schema:
@@ -2853,7 +2853,7 @@ paths:
             x-struct:
             x-validate:
       responses:
-        200:
+        '200':
           content:
             application/json:
               schema:
@@ -2883,13 +2883,13 @@ paths:
                 x-struct:
                 x-validate:
           description: Event logs for the specified address, with pagination.
-        403:
+        '403':
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/ForbiddenResponse'
           description: Forbidden
-        422:
+        '422':
           content:
             application/json:
               schema:
@@ -2930,7 +2930,7 @@ paths:
             * ERC-721 - Non-fungible tokens
             * ERC-1155 - Multi-token standard
             * ERC-404 - Hybrid fungible/non-fungible tokens
-            
+
             Example: `ERC-721,ERC-1155` to show both NFT and multi-token transfers
           in: query
           name: type
@@ -2973,7 +2973,7 @@ paths:
           schema:
             $ref: '#/components/schemas/Type'
       responses:
-        200:
+        '200':
           content:
             application/json:
               schema:
@@ -3004,13 +3004,13 @@ paths:
                 x-struct:
                 x-validate:
           description: NFTs owned by the specified address, with pagination.
-        403:
+        '403':
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/ForbiddenResponse'
           description: Forbidden
-        422:
+        '422':
           content:
             application/json:
               schema:
@@ -3051,7 +3051,7 @@ paths:
             * ERC-721 - Non-fungible tokens
             * ERC-1155 - Multi-token standard
             * ERC-404 - Hybrid fungible/non-fungible tokens
-            
+
             Example: `ERC-721,ERC-1155` to show both NFT and multi-token transfers
           in: query
           name: type
@@ -3088,7 +3088,7 @@ paths:
           schema:
             $ref: '#/components/schemas/Type'
       responses:
-        200:
+        '200':
           content:
             application/json:
               schema:
@@ -3118,13 +3118,13 @@ paths:
                 x-struct:
                 x-validate:
           description: NFTs owned by the specified address, grouped by collection, with pagination.
-        403:
+        '403':
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/ForbiddenResponse'
           description: Forbidden
-        422:
+        '422':
           content:
             application/json:
               schema:
@@ -3161,19 +3161,19 @@ paths:
             x-struct:
             x-validate:
       responses:
-        200:
+        '200':
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/AddressTabsCounters'
           description: Counters for address tabs.
-        403:
+        '403':
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/ForbiddenResponse'
           description: Forbidden
-        422:
+        '422':
           content:
             application/json:
               schema:
@@ -3210,7 +3210,7 @@ paths:
             x-struct:
             x-validate:
       responses:
-        200:
+        '200':
           content:
             application/json:
               schema:
@@ -3221,13 +3221,13 @@ paths:
                 x-struct:
                 x-validate:
           description: All token balances for the specified address.
-        403:
+        '403':
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/ForbiddenResponse'
           description: Forbidden
-        422:
+        '422':
           content:
             application/json:
               schema:
@@ -3284,7 +3284,7 @@ paths:
             * ERC-721 - Non-fungible tokens
             * ERC-1155 - Multi-token standard
             * ERC-404 - Hybrid fungible/non-fungible tokens
-            
+
             Example: `ERC-20,ERC-721` to show both fungible and NFT transfers
           in: query
           name: type
@@ -3359,7 +3359,7 @@ paths:
             x-struct:
             x-validate:
       responses:
-        200:
+        '200':
           content:
             application/json:
               schema:
@@ -3389,13 +3389,13 @@ paths:
                 x-struct:
                 x-validate:
           description: All token transfers for the specified address.
-        403:
+        '403':
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/ForbiddenResponse'
           description: Forbidden
-        422:
+        '422':
           content:
             application/json:
               schema:
@@ -3437,7 +3437,7 @@ paths:
             * ERC-721 - Non-fungible tokens
             * ERC-1155 - Multi-token standard
             * ERC-404 - Hybrid fungible/non-fungible tokens
-            
+
             Example: `ERC-20,ERC-721` to show both fungible and NFT transfers
           in: query
           name: type
@@ -3487,7 +3487,7 @@ paths:
           schema:
             $ref: '#/components/schemas/IntegerString'
       responses:
-        200:
+        '200':
           content:
             application/json:
               schema:
@@ -3518,13 +3518,13 @@ paths:
                 x-struct:
                 x-validate:
           description: Token balances for the specified address with pagination.
-        403:
+        '403':
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/ForbiddenResponse'
           description: Forbidden
-        422:
+        '422':
           content:
             application/json:
               schema:
@@ -3671,7 +3671,7 @@ paths:
             x-struct:
             x-validate:
       responses:
-        200:
+        '200':
           content:
             application/json:
               schema:
@@ -3705,13 +3705,13 @@ paths:
                 x-struct:
                 x-validate:
           description: All transactions for the specified address.
-        403:
+        '403':
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/ForbiddenResponse'
           description: Forbidden
-        422:
+        '422':
           content:
             application/json:
               schema:
@@ -3766,7 +3766,7 @@ paths:
             x-struct:
             x-validate:
       responses:
-        200:
+        '200':
           content:
             application/json:
               schema:
@@ -3795,13 +3795,13 @@ paths:
                 x-struct:
                 x-validate:
           description: Withdrawals for the specified address, with pagination. Note that receiver field is not included in this endpoint.
-        403:
+        '403':
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/ForbiddenResponse'
           description: Forbidden
-        422:
+        '422':
           content:
             application/json:
               schema:
