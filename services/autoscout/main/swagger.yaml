@@ -179,12 +179,12 @@ paths:
         - ApiKeyAuth: []
   /api/v1/deposits:
     get:
-      operationId: Autoscout_ListExternalDeposits
+      operationId: Autoscout_ListDeposits
       responses:
         "200":
           description: A successful response.
           schema:
-            $ref: '#/definitions/v1ListExternalDepositsResponse'
+            $ref: '#/definitions/v1ListDepositsResponse'
         default:
           description: An unexpected error response.
           schema:
@@ -200,6 +200,17 @@ paths:
           required: false
           type: integer
           format: int64
+        - name: type
+          in: query
+          required: false
+          type: string
+          enum:
+            - UNSPECIFIED_DEPOSIT_TYPE
+            - DEPOSIT_TYPE_STRIPE
+            - DEPOSIT_TYPE_COINBASE
+            - DEPOSIT_TYPE_DAIMO
+            - DEPOSIT_TYPE_PROMOTION_FLAT_BONUS
+          default: UNSPECIFIED_DEPOSIT_TYPE
       tags:
         - Deposits
       security:
@@ -1328,6 +1339,7 @@ definitions:
       - DEPOSIT_TYPE_STRIPE
       - DEPOSIT_TYPE_COINBASE
       - DEPOSIT_TYPE_DAIMO
+      - DEPOSIT_TYPE_PROMOTION_FLAT_BONUS
     default: UNSPECIFIED_DEPOSIT_TYPE
   v1ExpensiveInstance:
     type: object
@@ -1595,7 +1607,7 @@ definitions:
           $ref: '#/definitions/v1Deployment'
     required:
       - items
-  v1ListExternalDepositsResponse:
+  v1ListDepositsResponse:
     type: object
     properties:
       items:
