@@ -1680,6 +1680,7 @@ definitions:
       - GETH
       - BESU
       - GANACHE
+      - ANVIL
     default: UNSPECIFIED_NODE_TYPE
   v1OptimismConfig:
     type: object
