@@ -1,0 +1,666 @@
+swagger: "2.0"
+info:
+  title: metadata_admin.proto
+  version: version not set
+tags:
+  - name: Admin
+  - name: MarketplaceAdmin
+  - name: Health
+consumes:
+  - application/json
+produces:
+  - application/json
+paths:
+  /api/v1/chains/{chainId}/marketplace/dapps:
+    get:
+      operationId: MarketplaceAdmin_ListMarketplaceDapps
+      responses:
+        "200":
+          description: ""
+          schema:
+            type: array
+            items:
+              type: object
+              $ref: '#/definitions/v1MarketplaceDapp'
+        default:
+          description: An unexpected error response.
+          schema:
+            $ref: '#/definitions/rpcStatus'
+      parameters:
+        - name: chainId
+          in: path
+          required: true
+          type: string
+      tags:
+        - MarketplaceAdmin
+  /api/v1/chains/{chainId}/marketplace/dapps/{dappId}/ratings:
+    post:
+      operationId: MarketplaceAdmin_CreateDappRating
+      responses:
+        "200":
+          description: A successful response.
+          schema:
+            $ref: '#/definitions/v1CreateDappRatingResponse'
+        default:
+          description: An unexpected error response.
+          schema:
+            $ref: '#/definitions/rpcStatus'
+      parameters:
+        - name: chainId
+          in: path
+          required: true
+          type: string
+          format: int64
+        - name: dappId
+          in: path
+          required: true
+          type: string
+        - name: body
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/MarketplaceAdminCreateDappRatingBody'
+      tags:
+        - MarketplaceAdmin
+  /api/v1/chains/{chainId}/marketplace/dapps/{id}:
+    get:
+      operationId: MarketplaceAdmin_GetMarketplaceDapp
+      responses:
+        "200":
+          description: A successful response.
+          schema:
+            $ref: '#/definitions/v1MarketplaceDapp'
+        default:
+          description: An unexpected error response.
+          schema:
+            $ref: '#/definitions/rpcStatus'
+      parameters:
+        - name: chainId
+          in: path
+          required: true
+          type: string
+        - name: id
+          in: path
+          required: true
+          type: string
+      tags:
+        - MarketplaceAdmin
+  /api/v1/chains/{chainId}/metadata-submissions/tag:
+    post:
+      operationId: Admin_CreateMetadataTagSubmission
+      responses:
+        "200":
+          description: A successful response.
+          schema:
+            $ref: '#/definitions/v1MetadataTagSubmission'
+        default:
+          description: An unexpected error response.
+          schema:
+            $ref: '#/definitions/rpcStatus'
+      parameters:
+        - name: chainId
+          in: path
+          required: true
+          type: string
+          format: uint64
+        - name: body
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/AdminCreateMetadataTagSubmissionBody'
+      tags:
+        - Admin
+  /api/v1/chains/{chainId}/metadata-submissions/tag/{id}:
+    get:
+      operationId: Admin_GetMetadataTagSubmission
+      responses:
+        "200":
+          description: A successful response.
+          schema:
+            $ref: '#/definitions/v1MetadataTagSubmission'
+        default:
+          description: An unexpected error response.
+          schema:
+            $ref: '#/definitions/rpcStatus'
+      parameters:
+        - name: chainId
+          in: path
+          required: true
+          type: string
+          format: uint64
+        - name: id
+          in: path
+          required: true
+          type: string
+          format: int64
+      tags:
+        - Admin
+  /api/v1/chains/{chainId}/token-info-submissions:
+    get:
+      summary: |-
+        Returns a list of all token info submissions submitted by the user.
+        User must be authenticated and can get only those submissions, they submitted.
+      operationId: Admin_ListTokenInfoSubmissions
+      responses:
+        "200":
+          description: A successful response.
+          schema:
+            $ref: '#/definitions/v1ListTokenInfoSubmissionsResponse'
+        default:
+          description: An unexpected error response.
+          schema:
+            $ref: '#/definitions/rpcStatus'
+      parameters:
+        - name: chainId
+          in: path
+          required: true
+          type: string
+          format: uint64
+        - name: status
+          description: Filter by submission status.
+          in: query
+          required: false
+          type: string
+          enum:
+            - STATUS_UNKNOWN
+            - IN_PROCESS
+            - APPROVED
+            - REJECTED
+            - UPDATE_REQUIRED
+          default: STATUS_UNKNOWN
+      tags:
+        - Admin
+    post:
+      summary: |-
+        Creates a new token info submission.
+        Fails if any in process submission for the specified token already exists.
+        Fails if token ownership is not verified by the user.
+      operationId: Admin_CreateTokenInfoSubmission
+      responses:
+        "200":
+          description: A successful response.
+          schema:
+            $ref: '#/definitions/v1TokenInfoSubmission'
+        default:
+          description: An unexpected error response.
+          schema:
+            $ref: '#/definitions/rpcStatus'
+      parameters:
+        - name: chainId
+          in: path
+          required: true
+          type: string
+          format: uint64
+        - name: submission
+          description: The token info submission resource to create.
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/v1TokenInfoSubmission'
+      tags:
+        - Admin
+  /api/v1/chains/{chainId}/token-info-submissions/selectors:
+    get:
+      summary: Returns a list of selector values available for token info submission.
+      operationId: Admin_ListTokenInfoSubmissionSelectors
+      responses:
+        "200":
+          description: A successful response.
+          schema:
+            $ref: '#/definitions/v1ListTokenInfoSubmissionSelectorsResponse'
+        default:
+          description: An unexpected error response.
+          schema:
+            $ref: '#/definitions/rpcStatus'
+      parameters:
+        - name: chainId
+          in: path
+          required: true
+          type: string
+          format: uint64
+      tags:
+        - Admin
+  /api/v1/chains/{chainId}/token-info-submissions/{id}:
+    get:
+      summary: Returns a specific token info submission.
+      operationId: Admin_GetTokenInfoSubmission
+      responses:
+        "200":
+          description: A successful response.
+          schema:
+            $ref: '#/definitions/v1TokenInfoSubmission'
+        default:
+          description: An unexpected error response.
+          schema:
+            $ref: '#/definitions/rpcStatus'
+      parameters:
+        - name: chainId
+          in: path
+          required: true
+          type: string
+          format: uint64
+        - name: id
+          description: The ID of the token info submission resource to retrieve.
+          in: path
+          required: true
+          type: string
+          format: int64
+      tags:
+        - Admin
+    put:
+      summary: Modifies a token info submission.
+      operationId: Admin_UpdateTokenInfoSubmission
+      responses:
+        "200":
+          description: A successful response.
+          schema:
+            $ref: '#/definitions/v1TokenInfoSubmission'
+        default:
+          description: An unexpected error response.
+          schema:
+            $ref: '#/definitions/rpcStatus'
+      parameters:
+        - name: chainId
+          in: path
+          required: true
+          type: string
+          format: uint64
+        - name: id
+          description: |-
+            The ID of the token info submission resource to update.
+            Should correspond to the value inside `submission`.
+          in: path
+          required: true
+          type: string
+          format: int64
+        - name: submission
+          description: |-
+            The token info submission to update.
+
+            The token info submission's `id` field is used to identify the submission to update.
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/v1TokenInfoSubmission'
+      tags:
+        - Admin
+  /api/v1/marketplace/categories:
+    get:
+      operationId: MarketplaceAdmin_ListMarketplaceCategories
+      responses:
+        "200":
+          description: ""
+          schema:
+            type: array
+            items:
+              type: string
+        default:
+          description: An unexpected error response.
+          schema:
+            $ref: '#/definitions/rpcStatus'
+      tags:
+        - MarketplaceAdmin
+  /api/v1/marketplace/chains:
+    get:
+      operationId: MarketplaceAdmin_ListMarketplaceChains
+      responses:
+        "200":
+          description: ""
+          schema:
+            type: array
+            items:
+              type: string
+        default:
+          description: An unexpected error response.
+          schema:
+            $ref: '#/definitions/rpcStatus'
+      tags:
+        - MarketplaceAdmin
+  /api/v1/marketplace/dapps:search:
+    get:
+      operationId: MarketplaceAdmin_SearchMarketplaceDapps
+      responses:
+        "200":
+          description: ""
+          schema:
+            type: array
+            items:
+              type: object
+              $ref: '#/definitions/SearchMarketplaceDappsResponseMarketplaceDappWithChainId'
+        default:
+          description: An unexpected error response.
+          schema:
+            $ref: '#/definitions/rpcStatus'
+      parameters:
+        - name: title
+          in: query
+          required: false
+          type: string
+        - name: categories
+          in: query
+          required: false
+          type: string
+        - name: chainIds
+          in: query
+          required: false
+          type: string
+      tags:
+        - MarketplaceAdmin
+  /health:
+    get:
+      summary: |-
+        If the requested service is unknown, the call will fail with status
+        NOT_FOUND.
+      operationId: Health_Check
+      responses:
+        "200":
+          description: A successful response.
+          schema:
+            $ref: '#/definitions/v1HealthCheckResponse'
+        default:
+          description: An unexpected error response.
+          schema:
+            $ref: '#/definitions/rpcStatus'
+      parameters:
+        - name: service
+          in: query
+          required: false
+          type: string
+      tags:
+        - Health
+definitions:
+  AdminCreateMetadataTagSubmissionBody:
+    type: object
+    properties:
+      submission:
+        $ref: '#/definitions/v1MetadataTagSubmission'
+  HealthCheckResponseServingStatus:
+    type: string
+    enum:
+      - UNKNOWN
+      - SERVING
+      - NOT_SERVING
+      - SERVICE_UNKNOWN
+    default: UNKNOWN
+    description: ' - SERVICE_UNKNOWN: Used only by the Watch method.'
+  MarketplaceAdminCreateDappRatingBody:
+    type: object
+    properties:
+      rating:
+        type: integer
+        format: int32
+  SearchMarketplaceDappsResponseMarketplaceDappWithChainId:
+    type: object
+    properties:
+      chainId:
+        type: string
+      dapp:
+        $ref: '#/definitions/v1MarketplaceDapp'
+  protobufAny:
+    type: object
+    properties:
+      '@type':
+        type: string
+    additionalProperties: {}
+  protobufNullValue:
+    type: string
+    enum:
+      - NULL_VALUE
+    default: NULL_VALUE
+    description: |-
+      `NullValue` is a singleton enumeration to represent the null value for the
+      `Value` type union.
+
+      The JSON representation for `NullValue` is JSON `null`.
+
+       - NULL_VALUE: Null value.
+  rpcStatus:
+    type: object
+    properties:
+      code:
+        type: integer
+        format: int32
+      message:
+        type: string
+      details:
+        type: array
+        items:
+          type: object
+          $ref: '#/definitions/protobufAny'
+  v1CreateDappRatingResponse:
+    type: object
+    properties:
+      rating:
+        $ref: '#/definitions/v1DappRating'
+  v1DappRating:
+    type: object
+    properties:
+      userEmail:
+        type: string
+      userAddress:
+        type: string
+      dappId:
+        type: string
+      rating:
+        type: integer
+        format: int32
+      createdAt:
+        type: string
+  v1HealthCheckResponse:
+    type: object
+    properties:
+      status:
+        $ref: '#/definitions/HealthCheckResponseServingStatus'
+  v1ListMarketplaceCategoriesResponse:
+    type: object
+    properties:
+      categories:
+        type: array
+        items:
+          type: string
+  v1ListMarketplaceChainsResponse:
+    type: object
+    properties:
+      chains:
+        type: array
+        items:
+          type: string
+  v1ListMarketplaceDappsResponse:
+    type: object
+    properties:
+      dapps:
+        type: array
+        items:
+          type: object
+          $ref: '#/definitions/v1MarketplaceDapp'
+  v1ListMetadataTagSubmissionsResponse:
+    type: object
+    properties:
+      submissions:
+        type: array
+        items:
+          type: object
+          $ref: '#/definitions/v1MetadataTagSubmission'
+  v1ListTokenInfoSubmissionSelectorsResponse:
+    type: object
+    properties:
+      projectSectors:
+        type: array
+        items:
+          type: string
+        description: Project sectors.
+  v1ListTokenInfoSubmissionsResponse:
+    type: object
+    properties:
+      submissions:
+        type: array
+        items:
+          type: object
+          $ref: '#/definitions/v1TokenInfoSubmission'
+  v1MarketplaceDapp:
+    type: object
+    properties:
+      id:
+        type: string
+      title:
+        type: string
+      external:
+        type: boolean
+      internalWallet:
+        type: boolean
+      priority:
+        type: integer
+        format: int32
+      logo:
+        type: string
+      logoDarkMode:
+        type: string
+      shortDescription:
+        type: string
+      categories:
+        type: array
+        items:
+          type: string
+      author:
+        type: string
+      url:
+        type: string
+      description:
+        type: string
+      site:
+        type: string
+      twitter:
+        type: string
+      telegram:
+        type: string
+      discord:
+        type: string
+      github:
+        type: array
+        items:
+          type: string
+      rating:
+        type: number
+        format: double
+      ratingsTotalCount:
+        type: string
+        format: int64
+      userRating:
+        type: integer
+        format: int32
+  v1MetadataSubmissionStatus:
+    type: string
+    enum:
+      - STATUS_UNKNOWN
+      - IN_PROCESS
+      - APPROVED
+      - REJECTED
+    default: STATUS_UNKNOWN
+  v1MetadataTagSubmission:
+    type: object
+    properties:
+      id:
+        type: string
+        format: int64
+      status:
+        $ref: '#/definitions/v1MetadataSubmissionStatus'
+      requesterName:
+        type: string
+      requesterEmail:
+        type: string
+      address:
+        type: string
+      name:
+        type: string
+      tagType:
+        type: string
+      description:
+        type: string
+      meta:
+        type: object
+      companyName:
+        type: string
+      companyWebsite:
+        type: string
+  v1SearchMarketplaceDappsResponse:
+    type: object
+    properties:
+      dapps:
+        type: array
+        items:
+          type: object
+          $ref: '#/definitions/SearchMarketplaceDappsResponseMarketplaceDappWithChainId'
+  v1TokenInfoSubmission:
+    type: object
+    properties:
+      id:
+        type: string
+        format: uint64
+        description: A unique token info submission id.
+      tokenAddress:
+        type: string
+        description: A token address a user submitted the info for.
+      status:
+        $ref: '#/definitions/v1TokenInfoSubmissionStatus'
+        description: Output only field. Could not be updated by the user.
+      updatedAt:
+        type: string
+      adminComments:
+        type: string
+      requesterName:
+        type: string
+      requesterEmail:
+        type: string
+      projectName:
+        type: string
+      projectWebsite:
+        type: string
+      projectEmail:
+        type: string
+      iconUrl:
+        type: string
+      projectDescription:
+        type: string
+      projectSector:
+        type: string
+      comment:
+        type: string
+      docs:
+        type: string
+      github:
+        type: string
+      telegram:
+        type: string
+      linkedin:
+        type: string
+      discord:
+        type: string
+      slack:
+        type: string
+      twitter:
+        type: string
+      openSea:
+        type: string
+      facebook:
+        type: string
+      medium:
+        type: string
+      reddit:
+        type: string
+      support:
+        type: string
+      coinMarketCapTicker:
+        type: string
+      coinGeckoTicker:
+        type: string
+      defiLlamaTicker:
+        type: string
+  v1TokenInfoSubmissionStatus:
+    type: string
+    enum:
+      - STATUS_UNKNOWN
+      - IN_PROCESS
+      - APPROVED
+      - REJECTED
+      - UPDATE_REQUIRED
+    default: STATUS_UNKNOWN
