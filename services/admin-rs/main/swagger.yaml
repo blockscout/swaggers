@@ -543,8 +543,8 @@ definitions:
         type: number
         format: double
       ratingsTotalCount:
-        type: string
-        format: int64
+        type: integer
+        format: int32
       userRating:
         type: integer
         format: int32
