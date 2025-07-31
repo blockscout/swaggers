@@ -177,6 +177,57 @@ paths:
         - Deployments
       security:
         - ApiKeyAuth: []
+  /api/v1/deployments/{deployment_id}/storage-usage:
+    get:
+      operationId: Autoscout_GetDeploymentStorageUsage
+      responses:
+        "200":
+          description: A successful response.
+          schema:
+            $ref: '#/definitions/v1GetDeploymentStorageUsageResponse'
+        default:
+          description: An unexpected error response.
+          schema:
+            $ref: '#/definitions/rpcStatus'
+      parameters:
+        - name: deployment_id
+          in: path
+          required: true
+          type: string
+        - name: from
+          in: query
+          required: false
+          type: string
+        - name: to
+          in: query
+          required: false
+          type: string
+      tags:
+        - Deployments
+      security:
+        - ApiKeyAuth: []
+  /api/v1/deployments:sync-server-spec:
+    post:
+      operationId: Autoscout_SyncDeploymentsServerSpec
+      responses:
+        "200":
+          description: A successful response.
+          schema:
+            $ref: '#/definitions/v1SyncDeploymentsServerSpecResponse'
+        default:
+          description: An unexpected error response.
+          schema:
+            $ref: '#/definitions/rpcStatus'
+      parameters:
+        - name: body
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/v1SyncDeploymentsServerSpecRequest'
+      tags:
+        - Deployments
+      security:
+        - ApiKeyAuth: []
   /api/v1/deposits:
     get:
       operationId: Autoscout_ListDeposits
@@ -1260,6 +1311,19 @@ definitions:
       - config_state_hash
       - total_cost
       - health_status
+  v1DeploymentHourStorageUsage:
+    type: object
+    properties:
+      timestamp:
+        type: string
+      usage_mb:
+        type: integer
+        format: int32
+      free_quota_mb:
+        type: integer
+        format: int32
+      overage_cost_per_gb_hour:
+        type: string
   v1DeploymentLog:
     type: object
     properties:
@@ -1410,6 +1474,19 @@ definitions:
         type: string
       url:
         type: string
+  v1GetDeploymentStorageUsageResponse:
+    type: object
+    properties:
+      storage_data:
+        type: array
+        items:
+          type: object
+          $ref: '#/definitions/v1DeploymentHourStorageUsage'
+      paid_until:
+        type: string
+        title: timestamp (hour) until which the deployment's storage has been paid for
+    required:
+      - storage_data
   v1HealthCheckResponse:
     type: object
     properties:
@@ -1954,6 +2031,47 @@ definitions:
         type: string
       memory:
         type: string
+  v1SyncDeploymentsServerSpecItem:
+    type: object
+    properties:
+      ok:
+        type: boolean
+      error:
+        type: string
+      deployment_id:
+        type: string
+    required:
+      - ok
+      - deployment_id
+  v1SyncDeploymentsServerSpecRequest:
+    type: object
+    properties:
+      all_running:
+        type: boolean
+      deployment_ids:
+        type: array
+        items:
+          type: string
+      dry_run:
+        type: boolean
+  v1SyncDeploymentsServerSpecResponse:
+    type: object
+    properties:
+      total:
+        type: integer
+        format: int64
+      total_errors:
+        type: integer
+        format: int64
+      items:
+        type: array
+        items:
+          type: object
+          $ref: '#/definitions/v1SyncDeploymentsServerSpecItem'
+    required:
+      - total
+      - total_errors
+      - items
   v1TermsOfService:
     type: object
     properties:
