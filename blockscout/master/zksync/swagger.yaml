@@ -2155,7 +2155,7 @@ paths:
       parameters:
         - description: API key for rate limiting
           in: query
-          name: api_key
+          name: apikey
           required: false
           schema:
             type: string
@@ -2303,7 +2303,7 @@ paths:
             $ref: '#/components/schemas/AddressHash'
         - description: API key for rate limiting
           in: query
-          name: api_key
+          name: apikey
           required: false
           schema:
             type: string
@@ -2347,7 +2347,7 @@ paths:
       parameters:
         - description: API key for rate limiting
           in: query
-          name: api_key
+          name: apikey
           required: false
           schema:
             type: string
@@ -2437,7 +2437,7 @@ paths:
       parameters:
         - description: API key for rate limiting
           in: query
-          name: api_key
+          name: apikey
           required: false
           schema:
             type: string
@@ -2535,7 +2535,7 @@ paths:
       parameters:
         - description: API key for rate limiting
           in: query
-          name: api_key
+          name: apikey
           required: false
           schema:
             type: string
@@ -2630,7 +2630,7 @@ paths:
             $ref: '#/components/schemas/AddressHash'
         - description: API key for rate limiting
           in: query
-          name: api_key
+          name: apikey
           required: false
           schema:
             type: string
@@ -2695,7 +2695,7 @@ paths:
             $ref: '#/components/schemas/AddressHash'
         - description: API key for rate limiting
           in: query
-          name: api_key
+          name: apikey
           required: false
           schema:
             type: string
@@ -2739,7 +2739,7 @@ paths:
       parameters:
         - description: API key for rate limiting
           in: query
-          name: api_key
+          name: apikey
           required: false
           schema:
             type: string
@@ -2862,7 +2862,7 @@ paths:
       parameters:
         - description: API key for rate limiting
           in: query
-          name: api_key
+          name: apikey
           required: false
           schema:
             type: string
@@ -2967,7 +2967,7 @@ paths:
       parameters:
         - description: API key for rate limiting
           in: query
-          name: api_key
+          name: apikey
           required: false
           schema:
             type: string
@@ -3088,7 +3088,7 @@ paths:
       parameters:
         - description: API key for rate limiting
           in: query
-          name: api_key
+          name: apikey
           required: false
           schema:
             type: string
@@ -3207,7 +3207,7 @@ paths:
             $ref: '#/components/schemas/AddressHash'
         - description: API key for rate limiting
           in: query
-          name: api_key
+          name: apikey
           required: false
           schema:
             type: string
@@ -3256,7 +3256,7 @@ paths:
             $ref: '#/components/schemas/AddressHash'
         - description: API key for rate limiting
           in: query
-          name: api_key
+          name: apikey
           required: false
           schema:
             type: string
@@ -3305,7 +3305,7 @@ paths:
       parameters:
         - description: API key for rate limiting
           in: query
-          name: api_key
+          name: apikey
           required: false
           schema:
             type: string
@@ -3473,7 +3473,7 @@ paths:
       parameters:
         - description: API key for rate limiting
           in: query
-          name: api_key
+          name: apikey
           required: false
           schema:
             type: string
@@ -3602,7 +3602,7 @@ paths:
       parameters:
         - description: API key for rate limiting
           in: query
-          name: api_key
+          name: apikey
           required: false
           schema:
             type: string
@@ -3789,7 +3789,7 @@ paths:
       parameters:
         - description: API key for rate limiting
           in: query
-          name: api_key
+          name: apikey
           required: false
           schema:
             type: string
