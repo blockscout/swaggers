@@ -1643,7 +1643,7 @@ components:
     Token:
       description: Token struct
       properties:
-        address:
+        address_hash:
           $ref: '#/components/schemas/AddressHash'
         circulating_market_cap:
           $ref: '#/components/schemas/FloatStringNullable'
@@ -1657,7 +1657,7 @@ components:
           type: string
           x-struct:
           x-validate:
-        holders:
+        holders_count:
           $ref: '#/components/schemas/IntegerStringNullable'
         icon_url:
           $ref: '#/components/schemas/URLNullable'
@@ -1683,12 +1683,12 @@ components:
           $ref: '#/components/schemas/FloatStringNullable'
       required:
         - filecoin_robust_address
-        - address
+        - address_hash
         - symbol
         - name
         - decimals
         - type
-        - holders
+        - holders_count
         - exchange_rate
         - volume_24h
         - total_supply

@@ -1699,7 +1699,7 @@ components:
     Token:
       description: Token struct
       properties:
-        address:
+        address_hash:
           $ref: '#/components/schemas/AddressHash'
         circulating_market_cap:
           $ref: '#/components/schemas/FloatStringNullable'
@@ -1707,7 +1707,7 @@ components:
           $ref: '#/components/schemas/IntegerStringNullable'
         exchange_rate:
           $ref: '#/components/schemas/FloatStringNullable'
-        holders:
+        holders_count:
           $ref: '#/components/schemas/IntegerStringNullable'
         icon_url:
           $ref: '#/components/schemas/URLNullable'
@@ -1732,12 +1732,12 @@ components:
         volume_24h:
           $ref: '#/components/schemas/FloatStringNullable'
       required:
-        - address
+        - address_hash
         - symbol
         - name
         - decimals
         - type
-        - holders
+        - holders_count
         - exchange_rate
         - volume_24h
         - total_supply
