@@ -2089,7 +2089,7 @@ info:
   contact:
     email: info@blockscout.com
   title: Blockscout
-  version: 9.0.0
+  version: 9.0.1
 openapi: 3.0.0
 paths:
   /v2/addresses:
