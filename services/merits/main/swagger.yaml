@@ -447,6 +447,20 @@ paths:
             $ref: '#/definitions/v1SubmitActivityRequest'
       tags:
         - PointsService
+  /api/v1/user/badges:
+    get:
+      operationId: PointsService_GetAvailableBadges
+      responses:
+        "200":
+          description: A successful response.
+          schema:
+            $ref: '#/definitions/v1GetAvailableBadgesResponse'
+        default:
+          description: An unexpected error response.
+          schema:
+            $ref: '#/definitions/rpcStatus'
+      tags:
+        - PointsService
   /api/v1/user/balances:
     get:
       operationId: PointsService_GetUserBalances
@@ -766,6 +780,25 @@ definitions:
         type: boolean
       user:
         $ref: '#/definitions/v1User'
+  v1BadgeInfo:
+    type: object
+    properties:
+      chain_id:
+        type: string
+      address:
+        type: string
+      requirements:
+        $ref: '#/definitions/v1BadgeRequirements'
+      is_qualified:
+        type: boolean
+      is_whitelisted:
+        type: boolean
+  v1BadgeRequirements:
+    type: object
+    properties:
+      streak:
+        type: string
+        format: uint64
   v1CampaignLog:
     type: object
     properties:
@@ -850,6 +883,14 @@ definitions:
         items:
           type: object
           $ref: '#/definitions/v1ActivityReward'
+  v1GetAvailableBadgesResponse:
+    type: object
+    properties:
+      items:
+        type: array
+        items:
+          type: object
+          $ref: '#/definitions/v1BadgeInfo'
   v1GetCampaignRewardsHistoryResponse:
     type: object
     properties:
