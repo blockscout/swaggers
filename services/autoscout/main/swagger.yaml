@@ -1332,6 +1332,8 @@ definitions:
         format: int32
       message:
         type: string
+      truncated_message:
+        type: string
       timestamp:
         type: string
       bucket:
@@ -1346,6 +1348,7 @@ definitions:
     required:
       - id
       - message
+      - truncated_message
       - timestamp
       - bucket
       - group_size
