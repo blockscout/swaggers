@@ -531,11 +531,6 @@ components:
               type: boolean
               x-struct:
               x-validate:
-            is_scilla_contract:
-              nullable: false
-              type: boolean
-              x-struct:
-              x-validate:
             token:
               allOf:
                 - $ref: '#/components/schemas/Token'
@@ -547,7 +542,20 @@ components:
               type: integer
               x-struct:
               x-validate:
+            zilliqa:
+              properties:
+                is_scilla_contract:
+                  nullable: false
+                  type: boolean
+                  x-struct:
+                  x-validate:
+              required:
+                - is_scilla_contract
+              type: object
+              x-struct:
+              x-validate:
           required:
+            - zilliqa
             - creator_address_hash
             - creation_transaction_hash
             - token

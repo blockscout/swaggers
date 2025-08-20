@@ -14,6 +14,7 @@ components:
         filecoin:
           properties:
             actor_type:
+              description: Type of actor associated with the Filecoin address
               enum:
                 - account
                 - cron
@@ -37,17 +38,23 @@ components:
               x-struct:
               x-validate:
             id:
+              description: Short f0 Filecoin address that may change during chain reorgs
               example: f03248220
               nullable: true
               type: string
               x-struct:
               x-validate:
             robust:
+              description: Robust f0/f1/f2/f3/f4 Filecoin address
               example: f25nml2cfbljvn4goqtclhifepvfnicv6g7mfmmvq
               nullable: true
               type: string
               x-struct:
               x-validate:
+          required:
+            - id
+            - robust
+            - actor_type
           type: object
           x-struct:
           x-validate:
@@ -545,6 +552,7 @@ components:
             creator_address_hash:
               $ref: '#/components/schemas/AddressHashNullable'
             creator_filecoin_robust_address:
+              description: Robust f0/f1/f2/f3/f4 Filecoin address
               example: f25nml2cfbljvn4goqtclhifepvfnicv6g7mfmmvq
               nullable: true
               type: string
