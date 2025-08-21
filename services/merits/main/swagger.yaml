@@ -793,6 +793,8 @@ definitions:
         type: boolean
       is_whitelisted:
         type: boolean
+      is_minted:
+        type: boolean
   v1BadgeRequirements:
     type: object
     properties:
