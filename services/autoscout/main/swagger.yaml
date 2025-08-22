@@ -1270,6 +1270,10 @@ definitions:
         $ref: '#/definitions/v1IndexerConfig'
       hero_banner:
         $ref: '#/definitions/v1HeroBanner'
+      google_analytics_property_id:
+        type: string
+      production_ready:
+        type: boolean
     required:
       - rpc_url
       - server_size
@@ -1558,6 +1562,13 @@ definitions:
       - GRADIENT_AVATAR
       - BLOCKIE
     default: UNSPECIFIED_IDENTICON
+  v1IndexerBlockTransformer:
+    type: string
+    enum:
+      - UNSPECIFIED_BLOCK_TRANSFORMER
+      - BASE
+      - CLIQUE
+    default: UNSPECIFIED_BLOCK_TRANSFORMER
   v1IndexerConfig:
     type: object
     properties:
@@ -1604,6 +1615,9 @@ definitions:
       disable_pending_fetcher:
         type: boolean
         title: INDEXER_DISABLE_PENDING_TRANSACTIONS_FETCHER
+      block_transformer:
+        $ref: '#/definitions/v1IndexerBlockTransformer'
+        title: BLOCK_TRANSFORMER
   v1IndexingStatus:
     type: object
     properties:
