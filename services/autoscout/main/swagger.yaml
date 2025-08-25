@@ -479,7 +479,12 @@ paths:
           in: body
           required: true
           schema:
-            $ref: '#/definitions/AutoscoutUpdateConfigBody'
+            type: object
+            properties:
+              config:
+                $ref: '#/definitions/v1DeployConfig'
+            required:
+              - config
       tags:
         - Instances
       security:
@@ -505,7 +510,13 @@ paths:
           in: body
           required: true
           schema:
-            $ref: '#/definitions/AutoscoutUpdateConfigPartialBody'
+            type: object
+            properties:
+              config:
+                type: object
+                title: See `DeployConfig` for available fields
+            required:
+              - config
       tags:
         - Instances
       security:
@@ -576,7 +587,12 @@ paths:
           in: body
           required: true
           schema:
-            $ref: '#/definitions/AutoscoutUpdateInstanceStatusBody'
+            type: object
+            properties:
+              action:
+                $ref: '#/definitions/v1UpdateInstanceAction'
+            required:
+              - action
       tags:
         - Instances
       security:
@@ -639,6 +655,28 @@ paths:
             $ref: '#/definitions/rpcStatus'
       tags:
         - Instances
+      security:
+        - ApiKeyAuth: []
+  /api/v1/users/acquisition_source:
+    post:
+      operationId: Autoscout_CreateUserAcquisitionSource
+      responses:
+        "200":
+          description: A successful response.
+          schema:
+            $ref: '#/definitions/v1CreateUserAcquisitionSourceResponse'
+        default:
+          description: An unexpected error response.
+          schema:
+            $ref: '#/definitions/rpcStatus'
+      parameters:
+        - name: body
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/v1CreateUserAcquisitionSourceRequest'
+      tags:
+        - Users
       security:
         - ApiKeyAuth: []
   /api/v1/users/auth-tokens:
@@ -856,28 +894,6 @@ paths:
       tags:
         - Health
 definitions:
-  AutoscoutUpdateConfigBody:
-    type: object
-    properties:
-      config:
-        $ref: '#/definitions/v1DeployConfig'
-    required:
-      - config
-  AutoscoutUpdateConfigPartialBody:
-    type: object
-    properties:
-      config:
-        type: object
-        title: See `DeployConfig` for available fields
-    required:
-      - config
-  AutoscoutUpdateInstanceStatusBody:
-    type: object
-    properties:
-      action:
-        $ref: '#/definitions/v1UpdateInstanceAction'
-    required:
-      - action
   HealthCheckResponseServingStatus:
     type: string
     enum:
@@ -1166,6 +1182,25 @@ definitions:
     required:
       - id
       - url
+  v1CreateUserAcquisitionSourceRequest:
+    type: object
+    properties:
+      referrer:
+        type: string
+      utm_source:
+        type: string
+      utm_medium:
+        type: string
+      utm_campaign:
+        type: string
+      utm_term:
+        type: string
+      utm_content:
+        type: string
+    required:
+      - utm_source
+  v1CreateUserAcquisitionSourceResponse:
+    type: object
   v1DeleteAuthTokenResponse:
     type: object
   v1DeleteCoinbaseDepositResponse:
