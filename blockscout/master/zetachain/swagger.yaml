@@ -34,7 +34,7 @@ components:
           x-validate:
         is_verified:
           description: Has address associated source code?
-          nullable: false
+          nullable: true
           type: boolean
           x-struct:
           x-validate:
