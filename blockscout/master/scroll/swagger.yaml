@@ -762,6 +762,11 @@ components:
           type: integer
           x-struct:
           x-validate:
+        is_pending_update:
+          nullable: false
+          type: boolean
+          x-struct:
+          x-validate:
         miner:
           $ref: '#/components/schemas/Address'
         nonce:
@@ -860,6 +865,7 @@ components:
         - type
         - transaction_fees
         - withdrawals_count
+        - is_pending_update
       title: Block
       type: object
       x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.Block
@@ -1911,6 +1917,11 @@ components:
           nullable: false
           x-struct:
           x-validate:
+        is_pending_update:
+          nullable: true
+          type: boolean
+          x-struct:
+          x-validate:
         raw_input:
           $ref: '#/components/schemas/HexString'
         scroll:
@@ -2021,6 +2032,7 @@ components:
         - transaction_tag
         - has_error_in_internal_transactions
         - authorization_list
+        - is_pending_update
       title: Transaction
       type: object
       x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.Transaction
