@@ -479,12 +479,7 @@ paths:
           in: body
           required: true
           schema:
-            type: object
-            properties:
-              config:
-                $ref: '#/definitions/v1DeployConfig'
-            required:
-              - config
+            $ref: '#/definitions/AutoscoutUpdateConfigBody'
       tags:
         - Instances
       security:
@@ -510,13 +505,7 @@ paths:
           in: body
           required: true
           schema:
-            type: object
-            properties:
-              config:
-                type: object
-                title: See `DeployConfig` for available fields
-            required:
-              - config
+            $ref: '#/definitions/AutoscoutUpdateConfigPartialBody'
       tags:
         - Instances
       security:
@@ -587,12 +576,7 @@ paths:
           in: body
           required: true
           schema:
-            type: object
-            properties:
-              action:
-                $ref: '#/definitions/v1UpdateInstanceAction'
-            required:
-              - action
+            $ref: '#/definitions/AutoscoutUpdateInstanceStatusBody'
       tags:
         - Instances
       security:
@@ -894,6 +878,28 @@ paths:
       tags:
         - Health
 definitions:
+  AutoscoutUpdateConfigBody:
+    type: object
+    properties:
+      config:
+        $ref: '#/definitions/v1DeployConfig'
+    required:
+      - config
+  AutoscoutUpdateConfigPartialBody:
+    type: object
+    properties:
+      config:
+        type: object
+        title: See `DeployConfig` for available fields
+    required:
+      - config
+  AutoscoutUpdateInstanceStatusBody:
+    type: object
+    properties:
+      action:
+        $ref: '#/definitions/v1UpdateInstanceAction'
+    required:
+      - action
   HealthCheckResponseServingStatus:
     type: string
     enum:
