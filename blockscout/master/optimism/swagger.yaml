@@ -1587,6 +1587,8 @@ components:
           $ref: '#/components/schemas/Address'
         token:
           $ref: '#/components/schemas/Token'
+        token_type:
+          $ref: '#/components/schemas/Type'
         total:
           anyOf:
             - $ref: '#/components/schemas/TotalERC721'
@@ -1618,6 +1620,7 @@ components:
         - block_hash
         - block_number
         - log_index
+        - token_type
       title: TokenTransfer
       type: object
       x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.TokenTransfer
