@@ -1576,7 +1576,7 @@ components:
           x-struct:
           x-validate:
         transaction_hash:
-          $ref: '#/components/schemas/FullHash'
+          $ref: '#/components/schemas/FullHashNullable'
         type:
           enum:
             - token_burning
