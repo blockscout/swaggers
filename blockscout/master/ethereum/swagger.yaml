@@ -1045,7 +1045,8 @@ components:
         - eip1167
         - eip1967
         - eip1822
-        - eip930
+        - eip1967_oz
+        - eip1967_beacon
         - master_copy
         - basic_implementation
         - basic_get_implementation
@@ -1055,7 +1056,6 @@ components:
         - eip7702
         - resolved_delegate_proxy
         - erc7760
-        - unknown
       nullable: true
       title: ProxyType
       type: string
