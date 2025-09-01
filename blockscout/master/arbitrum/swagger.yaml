@@ -66,6 +66,15 @@ components:
           type: array
           x-struct:
           x-validate:
+        reputation:
+          description: Reputation of the address
+          enum:
+            - ok
+            - scam
+          nullable: false
+          type: string
+          x-struct:
+          x-validate:
         watchlist_names:
           description: Watch list name associated with the address
           items:
@@ -78,6 +87,7 @@ components:
         - is_contract
         - name
         - is_scam
+        - reputation
         - proxy_type
         - implementations
         - is_verified
@@ -1596,6 +1606,15 @@ components:
           x-validate:
         method:
           $ref: '#/components/schemas/MethodNameNullable'
+        reputation:
+          description: Reputation of the token transfer
+          enum:
+            - ok
+            - scam
+          nullable: true
+          type: string
+          x-struct:
+          x-validate:
         timestamp:
           $ref: '#/components/schemas/TimestampNullable'
         to:
@@ -1636,12 +1655,22 @@ components:
         - block_number
         - log_index
         - token_type
+        - reputation
       title: TokenTransfer
       type: object
       x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.TokenTransfer
       x-validate:
     TokenBalance:
       properties:
+        reputation:
+          description: Reputation of the token balance
+          enum:
+            - ok
+            - scam
+          nullable: true
+          type: string
+          x-struct:
+          x-validate:
         token:
           allOf:
             - $ref: '#/components/schemas/Token'
@@ -1663,6 +1692,7 @@ components:
         - token
         - token_id
         - token_instance
+        - reputation
       title: TokenBalance
       type: object
       x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.Address.TokenBalance
@@ -1712,6 +1742,15 @@ components:
           type: string
           x-struct:
           x-validate:
+        reputation:
+          description: Reputation of the token
+          enum:
+            - ok
+            - scam
+          nullable: true
+          type: string
+          x-struct:
+          x-validate:
         symbol:
           nullable: false
           type: string
@@ -1739,6 +1778,7 @@ components:
         - total_supply
         - icon_url
         - circulating_market_cap
+        - reputation
       title: Token
       type: object
       x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.Token
