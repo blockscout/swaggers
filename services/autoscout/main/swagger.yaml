@@ -1231,7 +1231,9 @@ definitions:
       custom_domain:
         type: string
       redirect_from_domain:
-        type: string
+        type: array
+        items:
+          type: string
       logo_url:
         type: string
       logo_url_dark:
