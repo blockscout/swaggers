@@ -444,6 +444,11 @@ components:
     AddressTabsCounters:
       description: Counters for address tabs
       properties:
+        beacon_deposits_count:
+          nullable: false
+          type: integer
+          x-struct:
+          x-validate:
         celo_election_rewards_count:
           nullable: false
           type: integer
@@ -573,6 +578,16 @@ components:
       title: AddressResponse
       type: object
       x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.Address.Response
+      x-validate:
+    Status:
+      enum:
+        - invalid
+        - pending
+        - completed
+      nullable: false
+      title: Status
+      type: string
+      x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.Beacon.Deposit.Status
       x-validate:
     AddressInternalTransactionsPaginatedResponse:
       nullable: false
@@ -727,6 +742,31 @@ components:
         - items
         - next_page_params
       title: AddressBlocksValidatedPaginatedResponse
+      type: object
+      x-struct:
+      x-validate:
+    AddressBeaconDepositsPaginatedResponse:
+      nullable: false
+      properties:
+        items:
+          items:
+            $ref: '#/components/schemas/Deposit'
+          nullable: false
+          type: array
+          x-struct:
+          x-validate:
+        next_page_params:
+          example:
+            index: 123
+            items_count: 50
+          nullable: true
+          type: object
+          x-struct:
+          x-validate:
+      required:
+        - items
+        - next_page_params
+      title: AddressBeaconDepositsPaginatedResponse
       type: object
       x-struct:
       x-validate:
@@ -1121,6 +1161,19 @@ components:
       type: string
       x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.General.IntegerStringNullable
       x-validate:
+    TotalBeaconDepositsCount:
+      properties:
+        deposits_count:
+          nullable: false
+          type: integer
+          x-struct:
+          x-validate:
+      required:
+        - deposits_count
+      title: TotalBeaconDepositsCount
+      type: object
+      x-struct:
+      x-validate:
     ProxyType:
       enum:
         - eip1167
@@ -1141,6 +1194,31 @@ components:
       title: ProxyType
       type: string
       x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.General.ProxyType
+      x-validate:
+    BeaconDepositsPaginatedResponse:
+      nullable: false
+      properties:
+        items:
+          items:
+            $ref: '#/components/schemas/Deposit'
+          nullable: false
+          type: array
+          x-struct:
+          x-validate:
+        next_page_params:
+          example:
+            index: 123
+            items_count: 50
+          nullable: true
+          type: object
+          x-struct:
+          x-validate:
+      required:
+        - items
+        - next_page_params
+      title: BeaconDepositsPaginatedResponse
+      type: object
+      x-struct:
       x-validate:
     MethodNameNullable:
       description: Method name or hex method id
@@ -2307,6 +2385,70 @@ components:
       type: object
       x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.SignedAuthorization
       x-validate:
+    Deposit:
+      properties:
+        amount:
+          $ref: '#/components/schemas/IntegerString'
+        block_hash:
+          $ref: '#/components/schemas/FullHash'
+        block_number:
+          nullable: false
+          type: integer
+          x-struct:
+          x-validate:
+        block_timestamp:
+          $ref: '#/components/schemas/Timestamp'
+        from_address:
+          $ref: '#/components/schemas/Address'
+        index:
+          nullable: false
+          type: integer
+          x-struct:
+          x-validate:
+        pubkey:
+          nullable: false
+          pattern: ^0x([A-Fa-f0-9]{96})$
+          type: string
+          x-struct:
+          x-validate:
+        signature:
+          nullable: false
+          pattern: ^0x([A-Fa-f0-9]{192})$
+          type: string
+          x-struct:
+          x-validate:
+        status:
+          $ref: '#/components/schemas/Status'
+        transaction_hash:
+          $ref: '#/components/schemas/FullHash'
+        withdrawal_address:
+          allOf:
+            - $ref: '#/components/schemas/Address'
+          nullable: true
+          x-struct:
+          x-validate:
+        withdrawal_credentials:
+          nullable: false
+          pattern: ^0x([A-Fa-f0-9]{64})$
+          type: string
+          x-struct:
+          x-validate:
+      required:
+        - index
+        - transaction_hash
+        - block_hash
+        - block_number
+        - block_timestamp
+        - pubkey
+        - withdrawal_credentials
+        - amount
+        - signature
+        - status
+        - from_address
+      title: Deposit
+      type: object
+      x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.Beacon.Deposit
+      x-validate:
     HexStringNullable:
       nullable: true
       pattern: ^0x([A-Fa-f0-9]*)$
@@ -2518,6 +2660,98 @@ paths:
                 $ref: '#/components/schemas/JsonErrorResponse'
           description: Unprocessable Entity
       summary: Retrieve detailed information about a specific address or contract
+      tags:
+        - addresses
+  /v2/addresses/{address_hash_param}/beacon/deposits:
+    get:
+      callbacks: {}
+      description: Retrieves Beacon deposits for a specific address.
+      operationId: BlockScoutWeb.API.V2.AddressController.beacon_deposits
+      parameters:
+        - description: API key for rate limiting
+          in: query
+          name: apikey
+          required: false
+          schema:
+            type: string
+            x-struct:
+            x-validate:
+        - description: Secret key for getting access to restricted resources
+          in: query
+          name: key
+          required: false
+          schema:
+            type: string
+            x-struct:
+            x-validate:
+        - in: path
+          name: address_hash_param
+          required: true
+          schema:
+            $ref: '#/components/schemas/AddressHash'
+        - description: Deposit index for paging
+          in: query
+          name: index
+          required: false
+          schema:
+            maximum: 9223372036854775807
+            minimum: 0
+            type: integer
+            x-struct:
+            x-validate:
+        - description: Number of items returned per page
+          in: query
+          name: items_count
+          required: false
+          schema:
+            maximum: 50
+            minimum: 1
+            type: integer
+            x-struct:
+            x-validate:
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                nullable: false
+                properties:
+                  items:
+                    items:
+                      $ref: '#/components/schemas/Deposit'
+                    nullable: false
+                    type: array
+                    x-struct:
+                    x-validate:
+                  next_page_params:
+                    example:
+                      index: 123
+                      items_count: 50
+                    nullable: true
+                    type: object
+                    x-struct:
+                    x-validate:
+                required:
+                  - items
+                  - next_page_params
+                title: AddressBeaconDepositsPaginatedResponse
+                type: object
+                x-struct:
+                x-validate:
+          description: Beacon deposits for the specified address.
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ForbiddenResponse'
+          description: Forbidden
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JsonErrorResponse'
+          description: Unprocessable Entity
+      summary: List Beacon Deposits for a specific address
       tags:
         - addresses
   /v2/addresses/{address_hash_param}/blocks-validated:
@@ -4052,6 +4286,120 @@ paths:
       summary: List validator withdrawals involving a specific address
       tags:
         - addresses
+  /v2/beacon/deposits:
+    get:
+      callbacks: {}
+      description: Retrieves a paginated list of all beacon deposits.
+      operationId: BlockScoutWeb.API.V2.Ethereum.DepositController.list
+      parameters:
+        - description: API key for rate limiting
+          in: query
+          name: apikey
+          required: false
+          schema:
+            type: string
+            x-struct:
+            x-validate:
+        - description: Secret key for getting access to restricted resources
+          in: query
+          name: key
+          required: false
+          schema:
+            type: string
+            x-struct:
+            x-validate:
+        - description: Deposit index for paging
+          in: query
+          name: index
+          required: false
+          schema:
+            maximum: 9223372036854775807
+            minimum: 0
+            type: integer
+            x-struct:
+            x-validate:
+        - description: Number of items returned per page
+          in: query
+          name: items_count
+          required: false
+          schema:
+            maximum: 50
+            minimum: 1
+            type: integer
+            x-struct:
+            x-validate:
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                nullable: false
+                properties:
+                  items:
+                    items:
+                      $ref: '#/components/schemas/Deposit'
+                    nullable: false
+                    type: array
+                    x-struct:
+                    x-validate:
+                  next_page_params:
+                    example:
+                      index: 123
+                      items_count: 50
+                    nullable: true
+                    type: object
+                    x-struct:
+                    x-validate:
+                required:
+                  - items
+                  - next_page_params
+                title: BeaconDepositsPaginatedResponse
+                type: object
+                x-struct:
+                x-validate:
+          description: List of Beacon Deposits, with pagination.
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ForbiddenResponse'
+          description: Forbidden
+      summary: Lists all beacon deposits
+      tags:
+        - beacon_deposits
+  /v2/beacon/deposits/count:
+    get:
+      callbacks: {}
+      description: Retrieves the total count of beacon deposits.
+      operationId: BlockScoutWeb.API.V2.Ethereum.DepositController.count
+      parameters: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                properties:
+                  deposits_count:
+                    nullable: false
+                    type: integer
+                    x-struct:
+                    x-validate:
+                required:
+                  - deposits_count
+                title: TotalBeaconDepositsCount
+                type: object
+                x-struct:
+                x-validate:
+          description: Total count of beacon deposits.
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ForbiddenResponse'
+          description: Forbidden
+      summary: Gets total count of beacon deposits
+      tags:
+        - beacon_deposits
 security: []
 servers:
   - url: http://localhost/api
