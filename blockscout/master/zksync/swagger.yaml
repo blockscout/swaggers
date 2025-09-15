@@ -348,6 +348,17 @@ components:
       type: object
       x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.TokenTransfer.TotalERC1155
       x-validate:
+    CeloElectionRewardType:
+      enum:
+        - voter
+        - validator
+        - group
+        - delegated_payment
+      nullable: false
+      title: CeloElectionRewardType
+      type: string
+      x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.Celo.ElectionReward.Type
+      x-validate:
     Withdrawal:
       properties:
         amount:
@@ -1199,7 +1210,7 @@ components:
         token:
           $ref: '#/components/schemas/Token'
         type:
-          $ref: '#/components/schemas/Type'
+          $ref: '#/components/schemas/CeloElectionRewardType'
       required:
         - amount
         - account
@@ -1579,7 +1590,8 @@ components:
           example:
             amount: '1000000000000000000'
             associated_account_address_hash: '0x1234567890123456789012345678901234567890'
-            block_number: 100
+            epoch_number: 100
+            items_count: 50
             type: validator
           nullable: true
           type: object
@@ -2745,6 +2757,16 @@ paths:
           required: true
           schema:
             $ref: '#/components/schemas/AddressHash'
+        - description: Number of items returned per page
+          in: query
+          name: items_count
+          required: false
+          schema:
+            maximum: 50
+            minimum: 1
+            type: integer
+            x-struct:
+            x-validate:
         - description: Epoch number for paging
           in: query
           name: epoch_number
@@ -2768,7 +2790,7 @@ paths:
           name: type
           required: false
           schema:
-            $ref: '#/components/schemas/Type'
+            $ref: '#/components/schemas/CeloElectionRewardType'
       responses:
         '200':
           content:
@@ -2787,7 +2809,8 @@ paths:
                     example:
                       amount: '1000000000000000000'
                       associated_account_address_hash: '0x1234567890123456789012345678901234567890'
-                      block_number: 100
+                      epoch_number: 100
+                      items_count: 50
                       type: validator
                     nullable: true
                     type: object
