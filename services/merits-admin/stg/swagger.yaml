@@ -340,39 +340,6 @@ paths:
           format: int32
       tags:
         - PointsAdminService
-  /admin/api/v1/partners:
-    get:
-      operationId: PointsAdminService_AdminGetPartnerApiKeys
-      responses:
-        "200":
-          description: A successful response.
-          schema:
-            $ref: '#/definitions/v1AdminGetPartnerApiKeysResponse'
-        default:
-          description: An unexpected error response.
-          schema:
-            $ref: '#/definitions/rpcStatus'
-      tags:
-        - PointsAdminService
-    post:
-      operationId: PointsAdminService_AdminAddPartnerApiKey
-      responses:
-        "200":
-          description: A successful response.
-          schema:
-            $ref: '#/definitions/v1AdminAddPartnerApiKeyResponse'
-        default:
-          description: An unexpected error response.
-          schema:
-            $ref: '#/definitions/rpcStatus'
-      parameters:
-        - name: body
-          in: body
-          required: true
-          schema:
-            $ref: '#/definitions/v1AdminAddPartnerApiKeyRequest'
-      tags:
-        - PointsAdminService
   /admin/api/v1/users:
     get:
       operationId: PointsAdminService_AdminGetUsersBasicInfo
@@ -436,40 +403,6 @@ paths:
           required: true
           schema:
             $ref: '#/definitions/PointsAdminServiceAdminUpdateReferralCodeBody'
-      tags:
-        - PointsAdminService
-  /partner/api/v1/balance:
-    get:
-      operationId: PointsAdminService_PartnerBalance
-      responses:
-        "200":
-          description: A successful response.
-          schema:
-            $ref: '#/definitions/v1PartnerApiKey'
-        default:
-          description: An unexpected error response.
-          schema:
-            $ref: '#/definitions/rpcStatus'
-      tags:
-        - PointsAdminService
-  /partner/api/v1/distribute:
-    post:
-      operationId: PointsAdminService_PartnerDistribute
-      responses:
-        "200":
-          description: A successful response.
-          schema:
-            $ref: '#/definitions/v1AdminDistributeResponse'
-        default:
-          description: An unexpected error response.
-          schema:
-            $ref: '#/definitions/rpcStatus'
-      parameters:
-        - name: body
-          in: body
-          required: true
-          schema:
-            $ref: '#/definitions/v1AdminDistributeRequest'
       tags:
         - PointsAdminService
 definitions:
@@ -637,22 +570,6 @@ definitions:
     type: object
   v1AdminAddOfferSecretsResponse:
     type: object
-  v1AdminAddPartnerApiKeyRequest:
-    type: object
-    properties:
-      name:
-        type: string
-      valid_since:
-        type: string
-      valid_until:
-        type: string
-      rate:
-        type: string
-  v1AdminAddPartnerApiKeyResponse:
-    type: object
-    properties:
-      api_key:
-        type: string
   v1AdminDeleteOfferSecretResponse:
     type: object
   v1AdminDistributeRequest:
@@ -738,14 +655,6 @@ definitions:
           $ref: '#/definitions/v1OfferSecret'
       next_page_params:
         $ref: '#/definitions/v1Pagination'
-  v1AdminGetPartnerApiKeysResponse:
-    type: object
-    properties:
-      items:
-        type: array
-        items:
-          type: object
-          $ref: '#/definitions/v1PartnerApiKey'
   v1AdminGetUserInfoResponse:
     type: object
     properties:
@@ -891,25 +800,6 @@ definitions:
       page_size:
         type: integer
         format: int64
-  v1PartnerApiKey:
-    type: object
-    properties:
-      name:
-        type: string
-      api_key:
-        type: string
-      valid_since:
-        type: string
-      valid_until:
-        type: string
-      rate:
-        type: string
-      balance:
-        type: string
-      total_distributed:
-        type: string
-      updated_at:
-        type: string
   v1PassportScore:
     type: object
     properties:
