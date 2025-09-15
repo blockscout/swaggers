@@ -2704,7 +2704,16 @@ paths:
           name: type
           required: false
           schema:
-            $ref: '#/components/schemas/CeloElectionRewardType'
+            enum:
+              - voter
+              - validator
+              - group
+              - delegated_payment
+            nullable: false
+            title: CeloElectionRewardType
+            type: string
+            x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.Celo.ElectionReward.Type
+            x-validate:
       responses:
         '200':
           content:
