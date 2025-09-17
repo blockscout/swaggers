@@ -11,6 +11,7 @@ tags:
   - name: Deployments
   - name: Users
   - name: Autoscout
+  - name: Apay
   - name: Health
 host: autoscout.services.blockscout.com
 schemes:
@@ -20,6 +21,135 @@ consumes:
 produces:
   - application/json
 paths:
+  /api/v1/apay/deposits:
+    get:
+      operationId: ListApayDeposits
+      responses:
+        "200":
+          description: A successful response.
+          schema:
+            $ref: '#/definitions/v1ListApayDepositsResponse'
+        default:
+          description: An unexpected error response.
+          schema:
+            $ref: '#/definitions/rpcStatus'
+      parameters:
+        - name: page
+          in: query
+          required: false
+          type: integer
+          format: int64
+        - name: per_page
+          in: query
+          required: false
+          type: integer
+          format: int64
+        - name: customer_email
+          in: query
+          required: false
+          type: string
+        - name: provider_type
+          in: query
+          required: false
+          type: string
+          enum:
+            - UNSPECIFIED_DEPOSIT_TYPE
+            - PROVIDER_TYPE_STRIPE
+            - PROVIDER_TYPE_DAIMO
+          default: UNSPECIFIED_DEPOSIT_TYPE
+      tags:
+        - Apay
+      security:
+        - ApiKeyAuth: []
+  /api/v1/apay/deposits/daimo:
+    post:
+      operationId: CreateApayDaimoDeposit
+      responses:
+        "200":
+          description: A successful response.
+          schema:
+            $ref: '#/definitions/v1CreateApayDepositResponse'
+        default:
+          description: An unexpected error response.
+          schema:
+            $ref: '#/definitions/rpcStatus'
+      parameters:
+        - name: body
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/v1CreateDaimoApayDepositRequest'
+      tags:
+        - Apay
+      security:
+        - ApiKeyAuth: []
+  /api/v1/apay/deposits/stripe:
+    post:
+      operationId: CreateApayStripeDeposit
+      responses:
+        "200":
+          description: A successful response.
+          schema:
+            $ref: '#/definitions/v1CreateApayDepositResponse'
+        default:
+          description: An unexpected error response.
+          schema:
+            $ref: '#/definitions/rpcStatus'
+      parameters:
+        - name: body
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/v1CreateStripeApayDepositRequest'
+      tags:
+        - Apay
+      security:
+        - ApiKeyAuth: []
+  /api/v1/apay/deposits/{deposit_id}:
+    get:
+      operationId: GetApayDeposit
+      responses:
+        "200":
+          description: A successful response.
+          schema:
+            $ref: '#/definitions/v1ApayDeposit'
+        default:
+          description: An unexpected error response.
+          schema:
+            $ref: '#/definitions/rpcStatus'
+      parameters:
+        - name: deposit_id
+          in: path
+          required: true
+          type: string
+      tags:
+        - Apay
+      security:
+        - ApiKeyAuth: []
+  /api/v1/apay/webhook-example:
+    post:
+      operationId: Apay_WebHookExample
+      responses:
+        "200":
+          description: A successful response.
+          schema:
+            $ref: '#/definitions/v1WebHookResponse'
+        default:
+          description: An unexpected error response.
+          schema:
+            $ref: '#/definitions/rpcStatus'
+      parameters:
+        - name: body
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/v1WebhookRequest'
+      tags:
+        - Apay
+      security:
+        - ApaySignature: []
+        - ApayVersion: []
+        - ApayAlgorithm: []
   /api/v1/coinbase/deposits:
     get:
       operationId: Autoscout_ListCoinbaseDeposits
@@ -968,6 +1098,35 @@ definitions:
         $ref: '#/definitions/v1AdTextProvider'
       banner_provider:
         $ref: '#/definitions/v1AdBannerProvider'
+  v1ApayDeposit:
+    type: object
+    properties:
+      id:
+        type: string
+      amount:
+        type: string
+      url:
+        type: string
+      customer_email:
+        type: string
+      provider_type:
+        $ref: '#/definitions/v1ApayProviderType'
+      status:
+        $ref: '#/definitions/v1DepositStatus'
+      metadata:
+        type: object
+    required:
+      - id
+      - amount
+      - provider_type
+      - status
+  v1ApayProviderType:
+    type: string
+    enum:
+      - UNSPECIFIED_DEPOSIT_TYPE
+      - PROVIDER_TYPE_STRIPE
+      - PROVIDER_TYPE_DAIMO
+    default: UNSPECIFIED_DEPOSIT_TYPE
   v1ArbitrumConfig:
     type: object
     properties:
@@ -1100,6 +1259,13 @@ definitions:
         type: string
       properties:
         $ref: '#/definitions/v1ConfigPropertiesSchema'
+  v1CreateApayDepositResponse:
+    type: object
+    properties:
+      deposit:
+        $ref: '#/definitions/v1ApayDeposit'
+    required:
+      - deposit
   v1CreateAuthTokenRequest:
     type: object
     properties:
@@ -1130,6 +1296,20 @@ definitions:
     required:
       - id
       - url
+  v1CreateDaimoApayDepositRequest:
+    type: object
+    properties:
+      amount_cents:
+        type: integer
+        format: int64
+      customer_email:
+        type: string
+      metadata:
+        type: object
+      customization:
+        $ref: '#/definitions/v1DaimoCustomization'
+    required:
+      - amount_cents
   v1CreateDaimoDepositRequest:
     type: object
     properties:
@@ -1168,6 +1348,20 @@ definitions:
         type: string
     required:
       - instance_id
+  v1CreateStripeApayDepositRequest:
+    type: object
+    properties:
+      amount_cents:
+        type: integer
+        format: int64
+      customer_email:
+        type: string
+      metadata:
+        type: object
+      customization:
+        $ref: '#/definitions/v1StripeCustomization'
+    required:
+      - amount_cents
   v1CreateStripeDepositRequest:
     type: object
     properties:
@@ -1207,6 +1401,15 @@ definitions:
       - utm_source
   v1CreateUserAcquisitionSourceResponse:
     type: object
+  v1DaimoCustomization:
+    type: object
+    properties:
+      success_redirect_url:
+        type: string
+      title:
+        type: string
+      image:
+        type: string
   v1DeleteAuthTokenResponse:
     type: object
   v1DeleteCoinbaseDepositResponse:
@@ -1703,6 +1906,16 @@ definitions:
       - config
       - config_state_hash
       - deployment
+  v1ListApayDepositsResponse:
+    type: object
+    properties:
+      items:
+        type: array
+        items:
+          type: object
+          $ref: '#/definitions/v1ApayDeposit'
+      pagination:
+        $ref: '#/definitions/v1PaginationResult'
   v1ListAuthTokensResponse:
     type: object
     properties:
@@ -2101,6 +2314,17 @@ definitions:
         type: array
         items:
           type: string
+  v1StripeCustomization:
+    type: object
+    properties:
+      success_redirect_url:
+        type: string
+      title:
+        type: string
+      description:
+        type: string
+      image:
+        type: string
   v1SyncDeploymentsServerSpecItem:
     type: object
     properties:
@@ -2250,6 +2474,37 @@ definitions:
       - balance
       - recent_actions
       - most_expensive_instances
+  v1WebHookResponse:
+    type: object
+  v1WebhookEvent:
+    type: object
+    properties:
+      type:
+        $ref: '#/definitions/v1WebhookEventType'
+      deposit:
+        $ref: '#/definitions/v1ApayDeposit'
+      timestamp:
+        type: string
+    required:
+      - type
+      - timestamp
+  v1WebhookEventType:
+    type: string
+    enum:
+      - UNSPECIFIED_WEBHOOK_EVENT_TYPE
+      - DEPOSIT_CREATED
+      - DEPOSIT_UPDATED
+    default: UNSPECIFIED_WEBHOOK_EVENT_TYPE
+  v1WebhookRequest:
+    type: object
+    properties:
+      event:
+        $ref: '#/definitions/v1WebhookEvent'
+      timestamp:
+        type: string
+    required:
+      - event
+      - timestamp
   v1ZksyncConfig:
     type: object
     properties:
@@ -2278,6 +2533,18 @@ definitions:
     required:
       - l1_blockscout_url
 securityDefinitions:
+  ApayAlgorithm:
+    type: apiKey
+    name: x-apay-alg
+    in: header
+  ApaySignature:
+    type: apiKey
+    name: x-apay-signature
+    in: header
+  ApayVersion:
+    type: apiKey
+    name: x-apay-version
+    in: header
   ApiKeyAuth:
     type: apiKey
     name: x-api-key
