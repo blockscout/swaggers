@@ -106,15 +106,6 @@ components:
       properties:
         amount:
           $ref: '#/components/schemas/IntegerStringNullable'
-        reputation:
-          description: Reputation of the token collection
-          enum:
-            - ok
-            - scam
-          nullable: true
-          type: string
-          x-struct:
-          x-validate:
         token:
           $ref: '#/components/schemas/Token'
         token_instances:
@@ -128,7 +119,6 @@ components:
         - token
         - amount
         - token_instances
-        - reputation
       title: NFTCollection
       type: object
       x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.NFTCollection
@@ -1735,15 +1725,6 @@ components:
           nullable: true
           x-struct:
           x-validate:
-        reputation:
-          description: Reputation of the token instance
-          enum:
-            - ok
-            - scam
-          nullable: true
-          type: string
-          x-struct:
-          x-validate:
         thumbnails:
           nullable: true
           properties:
@@ -1796,7 +1777,6 @@ components:
         - media_url
         - token_type
         - value
-        - reputation
       title: TokenInstanceInList
       type: object
       x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.TokenInstance
@@ -2181,15 +2161,6 @@ components:
           x-validate:
         method:
           $ref: '#/components/schemas/MethodNameNullable'
-        reputation:
-          description: Reputation of the token transfer
-          enum:
-            - ok
-            - scam
-          nullable: true
-          type: string
-          x-struct:
-          x-validate:
         timestamp:
           $ref: '#/components/schemas/TimestampNullable'
         to:
@@ -2230,7 +2201,6 @@ components:
         - block_number
         - log_index
         - token_type
-        - reputation
       title: TokenTransfer
       type: object
       x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.TokenTransfer
@@ -2238,15 +2208,6 @@ components:
     TokenBalance:
       additionalProperties: false
       properties:
-        reputation:
-          description: Reputation of the token balance
-          enum:
-            - ok
-            - scam
-          nullable: true
-          type: string
-          x-struct:
-          x-validate:
         token:
           allOf:
             - $ref: '#/components/schemas/Token'
@@ -2268,7 +2229,6 @@ components:
         - token
         - token_id
         - token_instance
-        - reputation
       title: TokenBalance
       type: object
       x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.Address.TokenBalance
