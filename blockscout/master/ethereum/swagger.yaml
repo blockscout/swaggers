@@ -2745,7 +2745,7 @@ info:
   contact:
     email: info@blockscout.com
   title: Blockscout
-  version: 9.1.0
+  version: 9.1.1
 openapi: 3.0.0
 paths:
   /v2/addresses:
