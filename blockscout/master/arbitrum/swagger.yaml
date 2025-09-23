@@ -1065,6 +1065,7 @@ components:
                 - in_calldata
                 - in_celestia
                 - in_anytrust
+                - in_eigenda
               nullable: true
               type: string
               x-struct:
