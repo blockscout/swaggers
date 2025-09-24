@@ -44,7 +44,7 @@ paths:
           required: false
           type: integer
           format: int64
-        - name: customer_email
+        - name: customer_id
           in: query
           required: false
           type: string
@@ -1107,7 +1107,7 @@ definitions:
         type: string
       url:
         type: string
-      customer_email:
+      customer_id:
         type: string
       provider_type:
         $ref: '#/definitions/v1ApayProviderType'
@@ -1302,7 +1302,7 @@ definitions:
       amount_cents:
         type: integer
         format: int64
-      customer_email:
+      customer_id:
         type: string
       metadata:
         type: object
@@ -1354,6 +1354,8 @@ definitions:
       amount_cents:
         type: integer
         format: int64
+      customer_id:
+        type: string
       customer_email:
         type: string
       metadata:
