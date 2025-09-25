@@ -21,6 +21,108 @@ consumes:
 produces:
   - application/json
 paths:
+  /api/v1/admin/instances:
+    get:
+      summary: Search instances matching a set of filters
+      operationId: Autoscout_SearchInstances
+      responses:
+        "200":
+          description: A successful response.
+          schema:
+            $ref: '#/definitions/v1SearchInstancesResponse'
+        default:
+          description: An unexpected error response.
+          schema:
+            $ref: '#/definitions/rpcStatus'
+      parameters:
+        - name: instance_id
+          in: query
+          required: false
+          type: integer
+          format: int32
+        - name: instance_uuid
+          in: query
+          required: false
+          type: string
+        - name: instance_slug
+          in: query
+          required: false
+          type: string
+        - name: user_id
+          in: query
+          required: false
+          type: integer
+          format: int32
+        - name: user_email
+          in: query
+          required: false
+          type: string
+        - name: page
+          in: query
+          required: false
+          type: integer
+          format: int64
+        - name: per_page
+          in: query
+          required: false
+          type: integer
+          format: int64
+      tags:
+        - Instances
+      security:
+        - ApiKeyAuth: []
+  /api/v1/admin/users:
+    get:
+      summary: Search users matching a set of filters
+      operationId: Autoscout_SearchUsers
+      responses:
+        "200":
+          description: A successful response.
+          schema:
+            $ref: '#/definitions/v1SearchUsersResponse'
+        default:
+          description: An unexpected error response.
+          schema:
+            $ref: '#/definitions/rpcStatus'
+      parameters:
+        - name: user_id
+          in: query
+          required: false
+          type: integer
+          format: int32
+        - name: user_email
+          in: query
+          required: false
+          type: string
+        - name: user_roles
+          in: query
+          required: false
+          type: array
+          items:
+            type: string
+          collectionFormat: multi
+        - name: created_before
+          in: query
+          required: false
+          type: string
+        - name: created_after
+          in: query
+          required: false
+          type: string
+        - name: page
+          in: query
+          required: false
+          type: integer
+          format: int64
+        - name: per_page
+          in: query
+          required: false
+          type: integer
+          format: int64
+      tags:
+        - Users
+      security:
+        - ApiKeyAuth: []
   /api/v1/apay/deposits:
     get:
       operationId: ListApayDeposits
@@ -2285,6 +2387,30 @@ definitions:
         type: string
     required:
       - reward_amount
+  v1SearchInstancesResponse:
+    type: object
+    properties:
+      items:
+        type: array
+        items:
+          type: object
+          $ref: '#/definitions/v1Instance'
+      pagination:
+        $ref: '#/definitions/v1PaginationResult'
+    required:
+      - items
+  v1SearchUsersResponse:
+    type: object
+    properties:
+      items:
+        type: array
+        items:
+          type: object
+          $ref: '#/definitions/v1User'
+      pagination:
+        $ref: '#/definitions/v1PaginationResult'
+    required:
+      - items
   v1ServerSizeSchema:
     type: object
     properties:
@@ -2440,6 +2566,21 @@ definitions:
     required:
       - status
       - deployment_id
+  v1User:
+    type: object
+    properties:
+      email:
+        type: string
+      project_title:
+        type: string
+      created_at:
+        type: string
+      balance:
+        type: string
+    required:
+      - email
+      - created_at
+      - balance
   v1UserAction:
     type: object
     properties:
