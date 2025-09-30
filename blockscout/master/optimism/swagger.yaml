@@ -1112,6 +1112,7 @@ components:
               enum:
                 - in_blob4844
                 - in_celestia
+                - in_alt_da
                 - in_calldata
               nullable: false
               type: string
@@ -1161,6 +1162,24 @@ components:
                     required:
                       - height
                       - namespace
+                      - commitment
+                      - l1_transaction_hash
+                      - l1_timestamp
+                    type: object
+                    x-struct:
+                    x-validate:
+                  - nullable: false
+                    properties:
+                      commitment:
+                        nullable: true
+                        type: string
+                        x-struct:
+                        x-validate:
+                      l1_timestamp:
+                        $ref: '#/components/schemas/TimestampNullable'
+                      l1_transaction_hash:
+                        $ref: '#/components/schemas/FullHashNullable'
+                    required:
                       - commitment
                       - l1_transaction_hash
                       - l1_timestamp
