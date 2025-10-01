@@ -94,9 +94,6 @@ components:
         - is_verified
         - ens_domain_name
         - metadata
-        - private_tags
-        - watchlist_names
-        - public_tags
       title: Address
       type: object
       x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.Address
@@ -218,6 +215,32 @@ components:
       title: EmptyString
       type: string
       x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.General.EmptyString
+      x-validate:
+    OptimismBatchBlocksPaginatedResponse:
+      additionalProperties: false
+      nullable: false
+      properties:
+        items:
+          items:
+            $ref: '#/components/schemas/Block'
+          nullable: false
+          type: array
+          x-struct:
+          x-validate:
+        next_page_params:
+          example:
+            block_number: 22566361
+            items_count: 50
+          nullable: true
+          type: object
+          x-struct:
+          x-validate:
+      required:
+        - items
+        - next_page_params
+      title: OptimismBatchBlocksPaginatedResponse
+      type: object
+      x-struct:
       x-validate:
     Type:
       enum:
@@ -388,6 +411,32 @@ components:
         $ref: '#/components/schemas/TokenBalance'
       title: AddressTokenBalances
       type: array
+      x-struct:
+      x-validate:
+    BlocksPaginatedResponse:
+      additionalProperties: false
+      nullable: false
+      properties:
+        items:
+          items:
+            $ref: '#/components/schemas/Block'
+          nullable: false
+          type: array
+          x-struct:
+          x-validate:
+        next_page_params:
+          example:
+            block_number: 22566361
+            items_count: 50
+          nullable: true
+          type: object
+          x-struct:
+          x-validate:
+      required:
+        - items
+        - next_page_params
+      title: BlocksPaginatedResponse
+      type: object
       x-struct:
       x-validate:
     AddressCoinBalanceHistoryPaginatedResponse:
@@ -652,9 +701,6 @@ components:
         - is_verified
         - ens_domain_name
         - metadata
-        - private_tags
-        - watchlist_names
-        - public_tags
         - creator_address_hash
         - creation_transaction_hash
         - token
@@ -811,6 +857,33 @@ components:
       type: string
       x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.General.FloatStringNullable
       x-validate:
+    BlockTransactionsPaginatedResponse:
+      additionalProperties: false
+      nullable: false
+      properties:
+        items:
+          items:
+            $ref: '#/components/schemas/Transaction'
+          nullable: false
+          type: array
+          x-struct:
+          x-validate:
+        next_page_params:
+          example:
+            block_number: 12345678
+            index: 103
+            items_count: 50
+          nullable: true
+          type: object
+          x-struct:
+          x-validate:
+      required:
+        - items
+        - next_page_params
+      title: BlockTransactionsPaginatedResponse
+      type: object
+      x-struct:
+      x-validate:
     URLNullable:
       example: https://example.com
       format: uri
@@ -953,9 +1026,6 @@ components:
               - is_verified
               - ens_domain_name
               - metadata
-              - private_tags
-              - watchlist_names
-              - public_tags
               - coin_balance
               - transactions_count
             title: AddressWithCoinBalanceAndTransactionsCount
@@ -1072,7 +1142,7 @@ components:
           x-struct:
           x-validate:
         difficulty:
-          $ref: '#/components/schemas/IntegerString'
+          $ref: '#/components/schemas/IntegerStringNullable'
         gas_limit:
           $ref: '#/components/schemas/IntegerString'
         gas_target_percentage:
@@ -1094,6 +1164,7 @@ components:
         hash_for_merged_mining:
           $ref: '#/components/schemas/FullHash'
         height:
+          minimum: 0
           nullable: false
           type: integer
           x-struct:
@@ -1122,6 +1193,8 @@ components:
           items:
             additionalProperties: false
             properties:
+              address_hash:
+                $ref: '#/components/schemas/AddressHash'
               reward:
                 $ref: '#/components/schemas/IntegerString'
               type:
@@ -1147,7 +1220,7 @@ components:
         timestamp:
           $ref: '#/components/schemas/Timestamp'
         total_difficulty:
-          $ref: '#/components/schemas/IntegerString'
+          $ref: '#/components/schemas/IntegerStringNullable'
         transaction_fees:
           $ref: '#/components/schemas/IntegerString'
         transactions_count:
@@ -1181,6 +1254,7 @@ components:
           x-struct:
           x-validate:
         withdrawals_count:
+          minimum: 0
           nullable: true
           type: integer
           x-struct:
@@ -1481,6 +1555,200 @@ components:
       title: Total
       type: object
       x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.TokenTransfer.Total
+      x-validate:
+    BlockInternalTransactionsPaginatedResponse:
+      additionalProperties: false
+      nullable: false
+      properties:
+        items:
+          items:
+            $ref: '#/components/schemas/InternalTransaction'
+          nullable: false
+          type: array
+          x-struct:
+          x-validate:
+        next_page_params:
+          example:
+            block_index: 8
+            items_count: 50
+          nullable: true
+          type: object
+          x-struct:
+          x-validate:
+      required:
+        - items
+        - next_page_params
+      title: BlockInternalTransactionsPaginatedResponse
+      type: object
+      x-struct:
+      x-validate:
+    BlockResponse:
+      additionalProperties: false
+      description: Block response
+      properties:
+        base_fee_per_gas:
+          $ref: '#/components/schemas/IntegerStringNullable'
+        bitcoin_merged_mining_coinbase_transaction:
+          $ref: '#/components/schemas/HexString'
+        bitcoin_merged_mining_header:
+          $ref: '#/components/schemas/HexString'
+        bitcoin_merged_mining_merkle_proof:
+          $ref: '#/components/schemas/HexString'
+        burnt_fees:
+          $ref: '#/components/schemas/IntegerStringNullable'
+        burnt_fees_percentage:
+          format: float
+          nullable: true
+          type: number
+          x-struct:
+          x-validate:
+        difficulty:
+          $ref: '#/components/schemas/IntegerStringNullable'
+        gas_limit:
+          $ref: '#/components/schemas/IntegerString'
+        gas_target_percentage:
+          format: float
+          nullable: false
+          type: number
+          x-struct:
+          x-validate:
+        gas_used:
+          $ref: '#/components/schemas/IntegerString'
+        gas_used_percentage:
+          format: float
+          nullable: false
+          type: number
+          x-struct:
+          x-validate:
+        hash:
+          $ref: '#/components/schemas/FullHash'
+        hash_for_merged_mining:
+          $ref: '#/components/schemas/FullHash'
+        height:
+          minimum: 0
+          nullable: false
+          type: integer
+          x-struct:
+          x-validate:
+        internal_transactions_count:
+          nullable: true
+          type: integer
+          x-struct:
+          x-validate:
+        is_pending_update:
+          nullable: false
+          type: boolean
+          x-struct:
+          x-validate:
+        miner:
+          $ref: '#/components/schemas/Address'
+        minimum_gas_price:
+          $ref: '#/components/schemas/IntegerString'
+        nonce:
+          $ref: '#/components/schemas/HexStringNullable'
+        parent_hash:
+          $ref: '#/components/schemas/FullHash'
+        priority_fee:
+          $ref: '#/components/schemas/IntegerStringNullable'
+        rewards:
+          items:
+            additionalProperties: false
+            properties:
+              address_hash:
+                $ref: '#/components/schemas/AddressHash'
+              reward:
+                $ref: '#/components/schemas/IntegerString'
+              type:
+                nullable: false
+                type: string
+                x-struct:
+                x-validate:
+            required:
+              - type
+              - reward
+            type: object
+            x-struct:
+            x-validate:
+          nullable: false
+          type: array
+          x-struct:
+          x-validate:
+        size:
+          nullable: false
+          type: integer
+          x-struct:
+          x-validate:
+        timestamp:
+          $ref: '#/components/schemas/Timestamp'
+        total_difficulty:
+          $ref: '#/components/schemas/IntegerStringNullable'
+        transaction_fees:
+          $ref: '#/components/schemas/IntegerString'
+        transactions_count:
+          nullable: false
+          type: integer
+          x-struct:
+          x-validate:
+        type:
+          enum:
+            - block
+            - uncle
+            - reorg
+          nullable: false
+          type: string
+          x-struct:
+          x-validate:
+        uncles_hashes:
+          items:
+            additionalProperties: false
+            nullable: false
+            properties:
+              hash:
+                $ref: '#/components/schemas/FullHash'
+            required:
+              - hash
+            type: object
+            x-struct:
+            x-validate:
+          nullable: false
+          type: array
+          x-struct:
+          x-validate:
+        withdrawals_count:
+          minimum: 0
+          nullable: true
+          type: integer
+          x-struct:
+          x-validate:
+      required:
+        - height
+        - timestamp
+        - transactions_count
+        - internal_transactions_count
+        - miner
+        - size
+        - hash
+        - parent_hash
+        - difficulty
+        - total_difficulty
+        - gas_used
+        - gas_limit
+        - nonce
+        - base_fee_per_gas
+        - burnt_fees
+        - priority_fee
+        - uncles_hashes
+        - rewards
+        - gas_target_percentage
+        - gas_used_percentage
+        - burnt_fees_percentage
+        - type
+        - transaction_fees
+        - withdrawals_count
+        - is_pending_update
+      title: BlockResponse
+      type: object
+      x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.Block
       x-validate:
     HexString:
       nullable: false
@@ -1835,6 +2103,19 @@ components:
       type: object
       x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.General.Tag
       x-validate:
+    NotFoundResponse:
+      description: Response returned when the requested resource is not found
+      properties:
+        message:
+          description: Error message indicating the requested resource was not found
+          example: Resource not found
+          type: string
+          x-struct:
+          x-validate:
+      title: NotFoundResponse
+      type: object
+      x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.ErrorResponses.NotFoundResponse
+      x-validate:
     TimestampNullable:
       format: date-time
       nullable: true
@@ -1869,6 +2150,32 @@ components:
       type: object
       x-struct:
       x-validate:
+    BlockBeaconDepositsPaginatedResponse:
+      additionalProperties: false
+      nullable: false
+      properties:
+        items:
+          items:
+            $ref: '#/components/schemas/Deposit'
+          nullable: false
+          type: array
+          x-struct:
+          x-validate:
+        next_page_params:
+          example:
+            index: 123
+            items_count: 50
+          nullable: true
+          type: object
+          x-struct:
+          x-validate:
+      required:
+        - items
+        - next_page_params
+      title: BlockBeaconDepositsPaginatedResponse
+      type: object
+      x-struct:
+      x-validate:
     AddressCeloElectionRewardsPaginatedResponse:
       additionalProperties: false
       nullable: false
@@ -1895,6 +2202,32 @@ components:
         - items
         - next_page_params
       title: AddressCeloElectionRewardsPaginatedResponse
+      type: object
+      x-struct:
+      x-validate:
+    BlockWithdrawalsPaginatedResponse:
+      additionalProperties: false
+      nullable: false
+      properties:
+        items:
+          items:
+            $ref: '#/components/schemas/Withdrawal'
+          nullable: false
+          type: array
+          x-struct:
+          x-validate:
+        next_page_params:
+          example:
+            index: 88192653
+            items_count: 50
+          nullable: true
+          type: object
+          x-struct:
+          x-validate:
+      required:
+        - items
+        - next_page_params
+      title: BlockWithdrawalsPaginatedResponse
       type: object
       x-struct:
       x-validate:
@@ -1999,14 +2332,57 @@ components:
         - is_verified
         - ens_domain_name
         - metadata
-        - private_tags
-        - watchlist_names
-        - public_tags
         - coin_balance
         - transactions_count
       title: AddressWithCoinBalanceAndTransactionsCount
       type: object
       x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.Address
+      x-validate:
+    BlockCountdown:
+      description: Block countdown information showing estimated time until a target block is reached
+      example:
+        countdown_block: 22600000
+        current_block: 22566361
+        estimated_time_in_sec: 404868.0
+        remaining_blocks: 33639
+      properties:
+        countdown_block:
+          description: The target block number for the countdown
+          example: 22600000
+          minimum: 0
+          type: integer
+          x-struct:
+          x-validate:
+        current_block:
+          description: The current highest block number in the blockchain
+          example: 22566361
+          minimum: 0
+          type: integer
+          x-struct:
+          x-validate:
+        estimated_time_in_sec:
+          description: Estimated time in seconds until the target block is reached
+          example: 404868.0
+          format: float
+          minimum: 0
+          type: number
+          x-struct:
+          x-validate:
+        remaining_blocks:
+          description: Number of blocks remaining until the target block is reached
+          example: 33639
+          minimum: 0
+          type: integer
+          x-struct:
+          x-validate:
+      required:
+        - current_block
+        - countdown_block
+        - remaining_blocks
+        - estimated_time_in_sec
+      title: BlockCountdown
+      type: object
+      x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.Block.Countdown
       x-validate:
     AddressCounters:
       additionalProperties: false
@@ -2921,9 +3297,6 @@ paths:
                         - is_verified
                         - ens_domain_name
                         - metadata
-                        - private_tags
-                        - watchlist_names
-                        - public_tags
                         - coin_balance
                         - transactions_count
                       title: AddressWithCoinBalanceAndTransactionsCount
@@ -3139,6 +3512,7 @@ paths:
           name: block_number
           required: false
           schema:
+            minimum: 0
             type: integer
             x-struct:
             x-validate:
@@ -3349,6 +3723,7 @@ paths:
           name: block_number
           required: false
           schema:
+            minimum: 0
             type: integer
             x-struct:
             x-validate:
@@ -3570,6 +3945,7 @@ paths:
           name: block_number
           required: false
           schema:
+            minimum: 0
             type: integer
             x-struct:
             x-validate:
@@ -3685,6 +4061,7 @@ paths:
           name: block_number
           required: false
           schema:
+            minimum: 0
             type: integer
             x-struct:
             x-validate:
@@ -4166,6 +4543,7 @@ paths:
           name: block_number
           required: false
           schema:
+            minimum: 0
             type: integer
             x-struct:
             x-validate:
@@ -4787,6 +5165,758 @@ paths:
       summary: Gets total count of beacon deposits
       tags:
         - beacon_deposits
+  /v2/blocks:
+    get:
+      callbacks: {}
+      description: Retrieves a paginated list of blocks with optional filtering by block type and sorting options.
+      operationId: BlockScoutWeb.API.V2.BlockController.blocks
+      parameters:
+        - description: API key for rate limiting
+          in: query
+          name: apikey
+          required: false
+          schema:
+            type: string
+            x-struct:
+            x-validate:
+        - description: Secret key for getting access to restricted resources
+          in: query
+          name: key
+          required: false
+          schema:
+            type: string
+            x-struct:
+            x-validate:
+        - description: |
+            Filter by block type:
+            * reorg - Only show reorgs
+            * uncle - Only show uncle blocks
+            * block - Only show main blocks
+            If omitted, default value "block" is used.
+          in: query
+          name: type
+          required: false
+          schema:
+            enum:
+              - uncle
+              - reorg
+              - block
+            type: string
+            x-struct:
+            x-validate:
+        - description: Block number for paging
+          in: query
+          name: block_number
+          required: false
+          schema:
+            minimum: 0
+            type: integer
+            x-struct:
+            x-validate:
+        - description: Number of items returned per page
+          in: query
+          name: items_count
+          required: false
+          schema:
+            maximum: 50
+            minimum: 1
+            type: integer
+            x-struct:
+            x-validate:
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                additionalProperties: false
+                nullable: false
+                properties:
+                  items:
+                    items:
+                      $ref: '#/components/schemas/Block'
+                    nullable: false
+                    type: array
+                    x-struct:
+                    x-validate:
+                  next_page_params:
+                    example:
+                      block_number: 22566361
+                      items_count: 50
+                    nullable: true
+                    type: object
+                    x-struct:
+                    x-validate:
+                required:
+                  - items
+                  - next_page_params
+                title: BlocksPaginatedResponse
+                type: object
+                x-struct:
+                x-validate:
+          description: List of blocks with pagination.
+      summary: List blocks with optional filtering and sorting
+      tags:
+        - blocks
+  /v2/blocks/optimism-batch/{batch_number_param}:
+    get:
+      callbacks: {}
+      description: Retrieves L2 blocks that are bound to a specific Optimism batch number.
+      operationId: BlockScoutWeb.API.V2.BlockController.optimism_batch
+      parameters:
+        - description: API key for rate limiting
+          in: query
+          name: apikey
+          required: false
+          schema:
+            type: string
+            x-struct:
+            x-validate:
+        - description: Secret key for getting access to restricted resources
+          in: query
+          name: key
+          required: false
+          schema:
+            type: string
+            x-struct:
+            x-validate:
+        - description: Batch number
+          in: path
+          name: batch_number
+          required: true
+          schema:
+            minimum: 0
+            type: integer
+            x-struct:
+            x-validate:
+        - description: Block number for paging
+          in: query
+          name: block_number
+          required: false
+          schema:
+            minimum: 0
+            type: integer
+            x-struct:
+            x-validate:
+        - description: Number of items returned per page
+          in: query
+          name: items_count
+          required: false
+          schema:
+            maximum: 50
+            minimum: 1
+            type: integer
+            x-struct:
+            x-validate:
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                additionalProperties: false
+                nullable: false
+                properties:
+                  items:
+                    items:
+                      $ref: '#/components/schemas/Block'
+                    nullable: false
+                    type: array
+                    x-struct:
+                    x-validate:
+                  next_page_params:
+                    example:
+                      block_number: 22566361
+                      items_count: 50
+                    nullable: true
+                    type: object
+                    x-struct:
+                    x-validate:
+                required:
+                  - items
+                  - next_page_params
+                title: OptimismBatchBlocksPaginatedResponse
+                type: object
+                x-struct:
+                x-validate:
+          description: L2 blocks in the specified Optimism batch.
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JsonErrorResponse'
+          description: Unprocessable Entity
+      summary: List L2 blocks in an Optimism batch
+      tags:
+        - blocks
+  /v2/blocks/{block_hash_or_number_param}:
+    get:
+      callbacks: {}
+      description: Retrieves detailed information for a specific block, including transactions, internal transactions, and metadata.
+      operationId: BlockScoutWeb.API.V2.BlockController.block
+      parameters:
+        - in: path
+          name: block_hash_or_number_param
+          required: true
+          schema:
+            anyOf:
+              - type: integer
+                x-struct:
+                x-validate:
+              - $ref: '#/components/schemas/FullHash'
+            x-struct:
+            x-validate:
+        - description: API key for rate limiting
+          in: query
+          name: apikey
+          required: false
+          schema:
+            type: string
+            x-struct:
+            x-validate:
+        - description: Secret key for getting access to restricted resources
+          in: query
+          name: key
+          required: false
+          schema:
+            type: string
+            x-struct:
+            x-validate:
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BlockResponse'
+          description: Detailed information about the specified block.
+        '404':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFoundResponse'
+          description: Not Found
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JsonErrorResponse'
+          description: Unprocessable Entity
+      summary: Retrieve detailed information about a specific block
+      tags:
+        - blocks
+  /v2/blocks/{block_hash_or_number_param}/beacon/deposits:
+    get:
+      callbacks: {}
+      description: Retrieves beacon deposits included in a specific block with pagination support.
+      operationId: BlockScoutWeb.API.V2.BlockController.beacon_deposits
+      parameters:
+        - description: API key for rate limiting
+          in: query
+          name: apikey
+          required: false
+          schema:
+            type: string
+            x-struct:
+            x-validate:
+        - description: Secret key for getting access to restricted resources
+          in: query
+          name: key
+          required: false
+          schema:
+            type: string
+            x-struct:
+            x-validate:
+        - in: path
+          name: block_hash_or_number_param
+          required: true
+          schema:
+            anyOf:
+              - type: integer
+                x-struct:
+                x-validate:
+              - $ref: '#/components/schemas/FullHash'
+            x-struct:
+            x-validate:
+        - description: Transaction index for paging
+          in: query
+          name: index
+          required: false
+          schema:
+            type: integer
+            x-struct:
+            x-validate:
+        - description: Number of items returned per page
+          in: query
+          name: items_count
+          required: false
+          schema:
+            maximum: 50
+            minimum: 1
+            type: integer
+            x-struct:
+            x-validate:
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                additionalProperties: false
+                nullable: false
+                properties:
+                  items:
+                    items:
+                      $ref: '#/components/schemas/Deposit'
+                    nullable: false
+                    type: array
+                    x-struct:
+                    x-validate:
+                  next_page_params:
+                    example:
+                      index: 123
+                      items_count: 50
+                    nullable: true
+                    type: object
+                    x-struct:
+                    x-validate:
+                required:
+                  - items
+                  - next_page_params
+                title: BlockBeaconDepositsPaginatedResponse
+                type: object
+                x-struct:
+                x-validate:
+          description: Beacon deposits in the specified block.
+        '404':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFoundResponse'
+          description: Not Found
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JsonErrorResponse'
+          description: Unprocessable Entity
+      summary: List beacon deposits in a specific block
+      tags:
+        - blocks
+  /v2/blocks/{block_hash_or_number_param}/internal-transactions:
+    get:
+      callbacks: {}
+      description: Retrieves internal transactions included in a specific block with optional filtering by type and call type.
+      operationId: BlockScoutWeb.API.V2.BlockController.internal_transactions
+      parameters:
+        - description: API key for rate limiting
+          in: query
+          name: apikey
+          required: false
+          schema:
+            type: string
+            x-struct:
+            x-validate:
+        - description: Secret key for getting access to restricted resources
+          in: query
+          name: key
+          required: false
+          schema:
+            type: string
+            x-struct:
+            x-validate:
+        - in: path
+          name: block_hash_or_number_param
+          required: true
+          schema:
+            anyOf:
+              - type: integer
+                x-struct:
+                x-validate:
+              - $ref: '#/components/schemas/FullHash'
+            x-struct:
+            x-validate:
+        - description: |
+            Filter internal transactions by type:
+            * all - Show all internal transactions (default)
+            * call - Only show call internal transactions
+            * create - Only show create internal transactions
+            * create2 - Only show create2 internal transactions
+            * reward - Only show reward internal transactions
+            * selfdestruct - Only show selfdestruct internal transactions
+            * stop - Only show stop internal transactions
+            * invalid - Only show invalid internal transactions (Arbitrum only)
+          in: query
+          name: internal_type
+          required: false
+          schema:
+            enum:
+              - call
+              - create
+              - create2
+              - reward
+              - selfdestruct
+              - stop
+            type: string
+            x-struct:
+            x-validate:
+        - description: |
+            Filter internal transactions by call type:
+            * all - Show all internal transactions (default)
+            * call - Only show call internal transactions
+            * callcode - Only show callcode internal transactions
+            * delegatecall - Only show delegatecall internal transactions
+            * staticcall - Only show staticcall internal transactions
+            * invalid - Only show invalid internal transactions (Arbitrum only)
+          in: query
+          name: call_type
+          required: false
+          schema:
+            enum:
+              - call
+              - callcode
+              - delegatecall
+              - staticcall
+            type: string
+            x-struct:
+            x-validate:
+        - description: Block index for paging
+          in: query
+          name: block_index
+          required: false
+          schema:
+            type: integer
+            x-struct:
+            x-validate:
+        - description: Number of items returned per page
+          in: query
+          name: items_count
+          required: false
+          schema:
+            maximum: 50
+            minimum: 1
+            type: integer
+            x-struct:
+            x-validate:
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                additionalProperties: false
+                nullable: false
+                properties:
+                  items:
+                    items:
+                      $ref: '#/components/schemas/InternalTransaction'
+                    nullable: false
+                    type: array
+                    x-struct:
+                    x-validate:
+                  next_page_params:
+                    example:
+                      block_index: 8
+                      items_count: 50
+                    nullable: true
+                    type: object
+                    x-struct:
+                    x-validate:
+                required:
+                  - items
+                  - next_page_params
+                title: BlockInternalTransactionsPaginatedResponse
+                type: object
+                x-struct:
+                x-validate:
+          description: Internal transactions in the specified block.
+        '404':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFoundResponse'
+          description: Not Found
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JsonErrorResponse'
+          description: Unprocessable Entity
+      summary: List internal transactions in a specific block
+      tags:
+        - blocks
+  /v2/blocks/{block_hash_or_number_param}/transactions:
+    get:
+      callbacks: {}
+      description: Retrieves transactions included in a specific block with optional filtering and sorting.
+      operationId: BlockScoutWeb.API.V2.BlockController.transactions
+      parameters:
+        - description: API key for rate limiting
+          in: query
+          name: apikey
+          required: false
+          schema:
+            type: string
+            x-struct:
+            x-validate:
+        - description: Secret key for getting access to restricted resources
+          in: query
+          name: key
+          required: false
+          schema:
+            type: string
+            x-struct:
+            x-validate:
+        - in: path
+          name: block_hash_or_number_param
+          required: true
+          schema:
+            anyOf:
+              - type: integer
+                x-struct:
+                x-validate:
+              - $ref: '#/components/schemas/FullHash'
+            x-struct:
+            x-validate:
+        - description: |
+            Filter transactions by type:
+            * coin_transfer - Only show coin transfer transactions
+            * contract_call - Only show contract call transactions
+            * contract_creation - Only show contract creation transactions
+            * token_transfer - Only show token transfer transactions
+            * token_creation - Only show token creation transactions
+            * blob_transaction - Only show blob transactions (Ethereum only)
+          in: query
+          name: type
+          required: false
+          schema:
+            enum:
+              - coin_transfer
+              - contract_call
+              - contract_creation
+              - token_transfer
+              - token_creation
+            type: string
+            x-struct:
+            x-validate:
+        - description: Block number for paging
+          in: query
+          name: block_number
+          required: false
+          schema:
+            minimum: 0
+            type: integer
+            x-struct:
+            x-validate:
+        - description: Transaction index for paging
+          in: query
+          name: index
+          required: false
+          schema:
+            type: integer
+            x-struct:
+            x-validate:
+        - description: Number of items returned per page
+          in: query
+          name: items_count
+          required: false
+          schema:
+            maximum: 50
+            minimum: 1
+            type: integer
+            x-struct:
+            x-validate:
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                additionalProperties: false
+                nullable: false
+                properties:
+                  items:
+                    items:
+                      $ref: '#/components/schemas/Transaction'
+                    nullable: false
+                    type: array
+                    x-struct:
+                    x-validate:
+                  next_page_params:
+                    example:
+                      block_number: 12345678
+                      index: 103
+                      items_count: 50
+                    nullable: true
+                    type: object
+                    x-struct:
+                    x-validate:
+                required:
+                  - items
+                  - next_page_params
+                title: BlockTransactionsPaginatedResponse
+                type: object
+                x-struct:
+                x-validate:
+          description: Transactions in the specified block.
+        '404':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFoundResponse'
+          description: Not Found
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JsonErrorResponse'
+          description: Unprocessable Entity
+      summary: List transactions in a specific block
+      tags:
+        - blocks
+  /v2/blocks/{block_hash_or_number_param}/withdrawals:
+    get:
+      callbacks: {}
+      description: Retrieves validator withdrawals included in a specific block.
+      operationId: BlockScoutWeb.API.V2.BlockController.withdrawals
+      parameters:
+        - description: API key for rate limiting
+          in: query
+          name: apikey
+          required: false
+          schema:
+            type: string
+            x-struct:
+            x-validate:
+        - description: Secret key for getting access to restricted resources
+          in: query
+          name: key
+          required: false
+          schema:
+            type: string
+            x-struct:
+            x-validate:
+        - in: path
+          name: block_hash_or_number_param
+          required: true
+          schema:
+            anyOf:
+              - type: integer
+                x-struct:
+                x-validate:
+              - $ref: '#/components/schemas/FullHash'
+            x-struct:
+            x-validate:
+        - description: Transaction index for paging
+          in: query
+          name: index
+          required: false
+          schema:
+            type: integer
+            x-struct:
+            x-validate:
+        - description: Number of items returned per page
+          in: query
+          name: items_count
+          required: false
+          schema:
+            maximum: 50
+            minimum: 1
+            type: integer
+            x-struct:
+            x-validate:
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                additionalProperties: false
+                nullable: false
+                properties:
+                  items:
+                    items:
+                      $ref: '#/components/schemas/Withdrawal'
+                    nullable: false
+                    type: array
+                    x-struct:
+                    x-validate:
+                  next_page_params:
+                    example:
+                      index: 88192653
+                      items_count: 50
+                    nullable: true
+                    type: object
+                    x-struct:
+                    x-validate:
+                required:
+                  - items
+                  - next_page_params
+                title: BlockWithdrawalsPaginatedResponse
+                type: object
+                x-struct:
+                x-validate:
+          description: Withdrawals in the specified block.
+        '404':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFoundResponse'
+          description: Not Found
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JsonErrorResponse'
+          description: Unprocessable Entity
+      summary: List withdrawals in a specific block
+      tags:
+        - blocks
+  /v2/blocks/{block_number_param}/countdown:
+    get:
+      callbacks: {}
+      description: Calculates the estimated time remaining until a specified block number is reached based on current block and average block time.
+      operationId: BlockScoutWeb.API.V2.BlockController.block_countdown
+      parameters:
+        - in: path
+          name: block_number_param
+          required: true
+          schema:
+            minimum: 0
+            type: integer
+            x-struct:
+            x-validate:
+        - description: API key for rate limiting
+          in: query
+          name: apikey
+          required: false
+          schema:
+            type: string
+            x-struct:
+            x-validate:
+        - description: Secret key for getting access to restricted resources
+          in: query
+          name: key
+          required: false
+          schema:
+            type: string
+            x-struct:
+            x-validate:
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BlockCountdown'
+          description: Block countdown information.
+        '404':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFoundResponse'
+          description: Not Found
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JsonErrorResponse'
+          description: Unprocessable Entity
+      summary: Get countdown information for a target block number
+      tags:
+        - blocks
 security: []
 servers:
   - url: http://localhost/api
