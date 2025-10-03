@@ -216,32 +216,6 @@ components:
       type: string
       x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.General.EmptyString
       x-validate:
-    OptimismBatchBlocksPaginatedResponse:
-      additionalProperties: false
-      nullable: false
-      properties:
-        items:
-          items:
-            $ref: '#/components/schemas/Block'
-          nullable: false
-          type: array
-          x-struct:
-          x-validate:
-        next_page_params:
-          example:
-            block_number: 22566361
-            items_count: 50
-          nullable: true
-          type: object
-          x-struct:
-          x-validate:
-      required:
-        - items
-        - next_page_params
-      title: OptimismBatchBlocksPaginatedResponse
-      type: object
-      x-struct:
-      x-validate:
     Type:
       enum:
         - ERC-20
@@ -362,17 +336,6 @@ components:
       title: TotalERC1155
       type: object
       x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.TokenTransfer.TotalERC1155
-      x-validate:
-    CeloElectionRewardType:
-      enum:
-        - voter
-        - validator
-        - group
-        - delegated_payment
-      nullable: false
-      title: CeloElectionRewardType
-      type: string
-      x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.Celo.ElectionReward.Type
       x-validate:
     Withdrawal:
       additionalProperties: false
@@ -1520,42 +1483,6 @@ components:
       type: string
       x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.General.MethodNameNullable
       x-validate:
-    ElectionReward:
-      additionalProperties: false
-      properties:
-        account:
-          $ref: '#/components/schemas/Address'
-        amount:
-          $ref: '#/components/schemas/IntegerString'
-        associated_account:
-          $ref: '#/components/schemas/Address'
-        block_hash:
-          $ref: '#/components/schemas/FullHash'
-        block_number:
-          nullable: false
-          type: integer
-          x-struct:
-          x-validate:
-        block_timestamp:
-          $ref: '#/components/schemas/Timestamp'
-        epoch_number:
-          nullable: false
-          type: integer
-          x-struct:
-          x-validate:
-        token:
-          $ref: '#/components/schemas/Token'
-        type:
-          $ref: '#/components/schemas/CeloElectionRewardType'
-      required:
-        - amount
-        - account
-        - associated_account
-        - epoch_number
-      title: ElectionReward
-      type: object
-      x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.Celo.ElectionReward
-      x-validate:
     Total:
       additionalProperties: false
       properties:
@@ -2201,35 +2128,6 @@ components:
         - items
         - next_page_params
       title: BlockBeaconDepositsPaginatedResponse
-      type: object
-      x-struct:
-      x-validate:
-    AddressCeloElectionRewardsPaginatedResponse:
-      additionalProperties: false
-      nullable: false
-      properties:
-        items:
-          items:
-            $ref: '#/components/schemas/ElectionReward'
-          nullable: false
-          type: array
-          x-struct:
-          x-validate:
-        next_page_params:
-          example:
-            amount: '1000000000000000000'
-            associated_account_address_hash: '0x1234567890123456789012345678901234567890'
-            epoch_number: 100
-            items_count: 50
-            type: validator
-          nullable: true
-          type: object
-          x-struct:
-          x-validate:
-      required:
-        - items
-        - next_page_params
-      title: AddressCeloElectionRewardsPaginatedResponse
       type: object
       x-struct:
       x-validate:
@@ -3613,125 +3511,6 @@ paths:
                 $ref: '#/components/schemas/JsonErrorResponse'
           description: Unprocessable Entity
       summary: List blocks validated (mined) by a specific validator/miner address
-      tags:
-        - addresses
-  /v2/addresses/{address_hash_param}/celo/election-rewards:
-    get:
-      callbacks: {}
-      description: Retrieves Celo election rewards for a specific address.
-      operationId: BlockScoutWeb.API.V2.AddressController.celo_election_rewards
-      parameters:
-        - description: API key for rate limiting
-          in: query
-          name: apikey
-          required: false
-          schema:
-            type: string
-            x-struct:
-            x-validate:
-        - description: Secret key for getting access to restricted resources
-          in: query
-          name: key
-          required: false
-          schema:
-            type: string
-            x-struct:
-            x-validate:
-        - in: path
-          name: address_hash_param
-          required: true
-          schema:
-            $ref: '#/components/schemas/AddressHash'
-        - description: Number of items returned per page
-          in: query
-          name: items_count
-          required: false
-          schema:
-            maximum: 50
-            minimum: 1
-            type: integer
-            x-struct:
-            x-validate:
-        - description: Epoch number for paging
-          in: query
-          name: epoch_number
-          required: false
-          schema:
-            $ref: '#/components/schemas/IntegerString'
-        - description: Amount for paging
-          in: query
-          name: amount
-          required: false
-          schema:
-            $ref: '#/components/schemas/IntegerStringNullable'
-        - description: Associated account address hash for paging
-          in: query
-          name: associated_account_address_hash
-          required: false
-          schema:
-            $ref: '#/components/schemas/AddressHash'
-        - description: Type for paging
-          in: query
-          name: type
-          required: false
-          schema:
-            enum:
-              - voter
-              - validator
-              - group
-              - delegated_payment
-            nullable: false
-            title: CeloElectionRewardType
-            type: string
-            x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.Celo.ElectionReward.Type
-            x-validate:
-      responses:
-        '200':
-          content:
-            application/json:
-              schema:
-                additionalProperties: false
-                nullable: false
-                properties:
-                  items:
-                    items:
-                      $ref: '#/components/schemas/ElectionReward'
-                    nullable: false
-                    type: array
-                    x-struct:
-                    x-validate:
-                  next_page_params:
-                    example:
-                      amount: '1000000000000000000'
-                      associated_account_address_hash: '0x1234567890123456789012345678901234567890'
-                      epoch_number: 100
-                      items_count: 50
-                      type: validator
-                    nullable: true
-                    type: object
-                    x-struct:
-                    x-validate:
-                required:
-                  - items
-                  - next_page_params
-                title: AddressCeloElectionRewardsPaginatedResponse
-                type: object
-                x-struct:
-                x-validate:
-          description: Celo election rewards for the specified address.
-        '403':
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ForbiddenResponse'
-          description: Forbidden
-        '422':
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/JsonErrorResponse'
-          description: Unprocessable Entity
-      summary: List Celo election rewards for a specific address
       tags:
         - addresses
   /v2/addresses/{address_hash_param}/coin-balance-history:
@@ -5298,96 +5077,6 @@ paths:
                 x-validate:
           description: List of blocks with pagination.
       summary: List blocks with optional filtering and sorting
-      tags:
-        - blocks
-  /v2/blocks/optimism-batch/{batch_number_param}:
-    get:
-      callbacks: {}
-      description: Retrieves L2 blocks that are bound to a specific Optimism batch number.
-      operationId: BlockScoutWeb.API.V2.BlockController.optimism_batch
-      parameters:
-        - description: API key for rate limiting
-          in: query
-          name: apikey
-          required: false
-          schema:
-            type: string
-            x-struct:
-            x-validate:
-        - description: Secret key for getting access to restricted resources
-          in: query
-          name: key
-          required: false
-          schema:
-            type: string
-            x-struct:
-            x-validate:
-        - description: Batch number
-          in: path
-          name: batch_number
-          required: true
-          schema:
-            minimum: 0
-            type: integer
-            x-struct:
-            x-validate:
-        - description: Block number for paging
-          in: query
-          name: block_number
-          required: false
-          schema:
-            minimum: 0
-            type: integer
-            x-struct:
-            x-validate:
-        - description: Number of items returned per page
-          in: query
-          name: items_count
-          required: false
-          schema:
-            maximum: 50
-            minimum: 1
-            type: integer
-            x-struct:
-            x-validate:
-      responses:
-        '200':
-          content:
-            application/json:
-              schema:
-                additionalProperties: false
-                nullable: false
-                properties:
-                  items:
-                    items:
-                      $ref: '#/components/schemas/Block'
-                    nullable: false
-                    type: array
-                    x-struct:
-                    x-validate:
-                  next_page_params:
-                    example:
-                      block_number: 22566361
-                      items_count: 50
-                    nullable: true
-                    type: object
-                    x-struct:
-                    x-validate:
-                required:
-                  - items
-                  - next_page_params
-                title: OptimismBatchBlocksPaginatedResponse
-                type: object
-                x-struct:
-                x-validate:
-          description: L2 blocks in the specified Optimism batch.
-        '422':
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/JsonErrorResponse'
-          description: Unprocessable Entity
-      summary: List L2 blocks in an Optimism batch
       tags:
         - blocks
   /v2/blocks/{block_hash_or_number_param}:
