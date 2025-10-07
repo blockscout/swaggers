@@ -2865,6 +2865,8 @@ components:
               x-validate:
           x-struct:
           x-validate:
+        operator_fee:
+          $ref: '#/components/schemas/IntegerString'
         max_fee_per_gas:
           $ref: '#/components/schemas/IntegerStringNullable'
         hash:
