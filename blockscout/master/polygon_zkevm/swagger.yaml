@@ -77,7 +77,7 @@ components:
           x-struct:
           x-validate:
         watchlist_names:
-          description: Watch list name associated with the address
+          description: Watchlist name associated with the address
           items:
             $ref: '#/components/schemas/WatchlistName'
           type: array
@@ -190,7 +190,7 @@ components:
       x-validate:
     WatchlistName:
       additionalProperties: false
-      description: Watch list name struct
+      description: Watchlist name struct
       properties:
         display_name:
           nullable: false
@@ -313,6 +313,36 @@ components:
       type: object
       x-struct:
       x-validate:
+    TokenTransfersPaginatedResponse:
+      additionalProperties: false
+      nullable: false
+      properties:
+        items:
+          items:
+            $ref: '#/components/schemas/TokenTransfer'
+          nullable: false
+          type: array
+          x-struct:
+          x-validate:
+        next_page_params:
+          example:
+            batch_block_hash: '0x789'
+            batch_log_index: 3
+            batch_transaction_hash: '0xabc'
+            block_number: 23484141
+            index: 259
+            index_in_batch: 2
+          nullable: true
+          type: object
+          x-struct:
+          x-validate:
+      required:
+        - items
+        - next_page_params
+      title: TokenTransfersPaginatedResponse
+      type: object
+      x-struct:
+      x-validate:
     TotalERC1155:
       additionalProperties: false
       properties:
@@ -374,6 +404,33 @@ components:
         $ref: '#/components/schemas/TokenBalance'
       title: AddressTokenBalances
       type: array
+      x-struct:
+      x-validate:
+    TokenInstanceTransfersPaginatedResponse:
+      additionalProperties: false
+      nullable: false
+      properties:
+        items:
+          items:
+            $ref: '#/components/schemas/TokenTransfer'
+          nullable: false
+          type: array
+          x-struct:
+          x-validate:
+        next_page_params:
+          example:
+            block_number: 23489243
+            index: 920
+            token_id: '4'
+          nullable: true
+          type: object
+          x-struct:
+          x-validate:
+      required:
+        - items
+        - next_page_params
+      title: TokenInstanceTransfersPaginatedResponse
+      type: object
       x-struct:
       x-validate:
     BlocksPaginatedResponse:
@@ -512,6 +569,164 @@ components:
       type: object
       x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.Address.TabsCounters
       x-validate:
+    TokenHolderResponse:
+      additionalProperties: false
+      description: Token holder response
+      example:
+        address:
+          ens_domain_name:
+          hash: '0xF977814e90dA44bFA03b6295A0616a897441aceC'
+          implementations: []
+          is_contract: false
+          is_scam: false
+          is_verified: false
+          metadata:
+            tags:
+              - meta:
+                  main_entity: Binance
+                  tooltipUrl: https://www.binance.com/
+                name: 'Binance: Hot Wallet 20'
+                ordinal: 10
+                slug: binance-hot-wallet-20
+                tagType: name
+              - meta:
+                  tooltipUrl: https://www.binance.com
+                name: Binance 8
+                ordinal: 10
+                slug: binance-8
+                tagType: name
+              - meta: {}
+                name: HOT WALLET
+                ordinal: 0
+                slug: hot-wallet
+                tagType: generic
+              - meta: {}
+                name: Exchange
+                ordinal: 0
+                slug: exchange
+                tagType: generic
+              - meta: {}
+                name: Binance
+                ordinal: 0
+                slug: binance
+                tagType: protocol
+          name:
+          private_tags: []
+          proxy_type:
+          public_tags: []
+          reputation: ok
+          watchlist_names: []
+        token_id:
+        value: '19474530513868000'
+      properties:
+        address:
+          additionalProperties: false
+          description: Address
+          properties:
+            ens_domain_name:
+              description: ENS domain name associated with the address
+              nullable: true
+              type: string
+              x-struct:
+              x-validate:
+            hash:
+              $ref: '#/components/schemas/AddressHash'
+            implementations:
+              description: Implementations linked with the contract
+              items:
+                $ref: '#/components/schemas/Implementation'
+              type: array
+              x-struct:
+              x-validate:
+            is_contract:
+              description: Has address contract code?
+              nullable: true
+              type: boolean
+              x-struct:
+              x-validate:
+            is_scam:
+              description: Has address scam badge?
+              nullable: false
+              type: boolean
+              x-struct:
+              x-validate:
+            is_verified:
+              description: Has address associated source code?
+              nullable: true
+              type: boolean
+              x-struct:
+              x-validate:
+            metadata:
+              allOf:
+                - $ref: '#/components/schemas/Metadata'
+              nullable: true
+              x-struct:
+              x-validate:
+            name:
+              description: Name associated with the address
+              nullable: true
+              type: string
+              x-struct:
+              x-validate:
+            private_tags:
+              description: Private tags associated with the address
+              items:
+                $ref: '#/components/schemas/Tag'
+              type: array
+              x-struct:
+              x-validate:
+            proxy_type:
+              $ref: '#/components/schemas/ProxyType'
+            public_tags:
+              description: Public tags associated with the address
+              items:
+                $ref: '#/components/schemas/Tag'
+              type: array
+              x-struct:
+              x-validate:
+            reputation:
+              description: Reputation of the address
+              enum:
+                - ok
+                - scam
+              nullable: false
+              type: string
+              x-struct:
+              x-validate:
+            watchlist_names:
+              description: Watchlist name associated with the address
+              items:
+                $ref: '#/components/schemas/WatchlistName'
+              type: array
+              x-struct:
+              x-validate:
+          required:
+            - hash
+            - is_contract
+            - name
+            - is_scam
+            - reputation
+            - proxy_type
+            - implementations
+            - is_verified
+            - ens_domain_name
+            - metadata
+          title: Address
+          type: object
+          x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.Address
+          x-validate:
+        token_id:
+          $ref: '#/components/schemas/IntegerStringNullable'
+        value:
+          $ref: '#/components/schemas/IntegerString'
+      required:
+        - address
+        - token_id
+        - value
+      title: TokenHolderResponse
+      type: object
+      x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.Token.Holder
+      x-validate:
     AddressResponse:
       additionalProperties: false
       description: Address response
@@ -647,7 +862,7 @@ components:
           x-struct:
           x-validate:
         watchlist_names:
-          description: Watch list name associated with the address
+          description: Watchlist name associated with the address
           items:
             $ref: '#/components/schemas/WatchlistName'
           type: array
@@ -680,6 +895,37 @@ components:
       title: AddressResponse
       type: object
       x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.Address
+      x-validate:
+    TokensPaginatedResponse:
+      additionalProperties: false
+      nullable: false
+      properties:
+        items:
+          items:
+            $ref: '#/components/schemas/Token'
+          nullable: false
+          type: array
+          x-struct:
+          x-validate:
+        next_page_params:
+          example:
+            contract_address_hash: '0xbe9895146f7af43049ca1c1ae358b0541ea49704'
+            fiat_value: '4724.32'
+            holders_count: 59731
+            is_name_null: false
+            items_count: 50
+            market_cap: '570958125.135513'
+            name: Wrapped Staked ETH
+          nullable: true
+          type: object
+          x-struct:
+          x-validate:
+      required:
+        - items
+        - next_page_params
+      title: TokensPaginatedResponse
+      type: object
+      x-struct:
       x-validate:
     AddressInternalTransactionsPaginatedResponse:
       additionalProperties: false
@@ -962,7 +1208,7 @@ components:
                 x-struct:
                 x-validate:
               watchlist_names:
-                description: Watch list name associated with the address
+                description: Watchlist name associated with the address
                 items:
                   $ref: '#/components/schemas/WatchlistName'
                 type: array
@@ -1313,6 +1559,14 @@ components:
           nullable: true
           x-struct:
           x-validate:
+        token_type:
+          allOf:
+            - $ref: '#/components/schemas/Type'
+          nullable: true
+          x-struct:
+          x-validate:
+        value:
+          $ref: '#/components/schemas/IntegerStringNullable'
       required:
         - id
         - metadata
@@ -1422,6 +1676,24 @@ components:
       title: BlockInternalTransactionsPaginatedResponse
       type: object
       x-struct:
+      x-validate:
+    TokenCountersResponse:
+      additionalProperties: false
+      description: Token counters response
+      example:
+        token_holders_count: '0'
+        transfers_count: '0'
+      properties:
+        token_holders_count:
+          $ref: '#/components/schemas/IntegerString'
+        transfers_count:
+          $ref: '#/components/schemas/IntegerString'
+      required:
+        - token_holders_count
+        - transfers_count
+      title: TokenCountersResponse
+      type: object
+      x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.Token.Counters
       x-validate:
     BlockResponse:
       additionalProperties: false
@@ -1670,6 +1942,33 @@ components:
       type: object
       x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.Proxy.MetadataTag
       x-validate:
+    TokenHoldersPaginatedResponse:
+      additionalProperties: false
+      nullable: false
+      properties:
+        items:
+          items:
+            $ref: '#/components/schemas/TokenHolderResponse'
+          nullable: false
+          type: array
+          x-struct:
+          x-validate:
+        next_page_params:
+          example:
+            address_hash_2: '0x48bb9b14483e43c7726df702b271d410e7460656'
+            items_count: 50
+            value: 200000000000000
+          nullable: true
+          type: object
+          x-struct:
+          x-validate:
+      required:
+        - items
+        - next_page_params
+      title: TokenHoldersPaginatedResponse
+      type: object
+      x-struct:
+      x-validate:
     TokenInstanceInList:
       additionalProperties: false
       nullable: false
@@ -1823,6 +2122,59 @@ components:
       title: DecodedInput
       type: object
       x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.General.DecodedInput
+      x-validate:
+    TokenInstancesPaginatedResponse:
+      additionalProperties: false
+      nullable: false
+      properties:
+        items:
+          items:
+            $ref: '#/components/schemas/TokenInstance'
+          nullable: false
+          type: array
+          x-struct:
+          x-validate:
+        next_page_params:
+          example:
+            unique_token: 782098
+          nullable: true
+          type: object
+          x-struct:
+          x-validate:
+      required:
+        - items
+        - next_page_params
+      title: TokenInstancesPaginatedResponse
+      type: object
+      x-struct:
+      x-validate:
+    TokenInstanceHoldersPaginatedResponse:
+      additionalProperties: false
+      nullable: false
+      properties:
+        items:
+          items:
+            $ref: '#/components/schemas/TokenHolderResponse'
+          nullable: false
+          type: array
+          x-struct:
+          x-validate:
+        next_page_params:
+          example:
+            address_hash_2: '0x1d2c163fbda9486c3a384b6fa5e34c96fe948e9a'
+            items_count: 50
+            token_id: '0'
+            value: 4217417051704137590935
+          nullable: true
+          type: object
+          x-struct:
+          x-validate:
+      required:
+        - items
+        - next_page_params
+      title: TokenInstanceHoldersPaginatedResponse
+      type: object
+      x-struct:
       x-validate:
     AddressHashNullable:
       nullable: true
@@ -1981,6 +2333,85 @@ components:
       type: object
       x-struct:
       x-validate:
+    TokenResponse:
+      additionalProperties: false
+      description: Token response
+      properties:
+        address_hash:
+          $ref: '#/components/schemas/AddressHash'
+        bridge_type:
+          description: Type of bridge used for this bridged token
+          enum:
+            - omni
+            - amb
+          nullable: true
+          type: string
+          x-struct:
+          x-validate:
+        circulating_market_cap:
+          $ref: '#/components/schemas/FloatStringNullable'
+        decimals:
+          $ref: '#/components/schemas/IntegerStringNullable'
+        exchange_rate:
+          $ref: '#/components/schemas/FloatStringNullable'
+        foreign_address:
+          nullable: true
+          pattern: ^0x([A-Fa-f0-9]{40})$
+          type: string
+          x-struct:
+          x-validate:
+        holders_count:
+          $ref: '#/components/schemas/IntegerStringNullable'
+        icon_url:
+          $ref: '#/components/schemas/URLNullable'
+        name:
+          nullable: true
+          type: string
+          x-struct:
+          x-validate:
+        origin_chain_id:
+          $ref: '#/components/schemas/IntegerStringNullable'
+        reputation:
+          description: Reputation of the token
+          enum:
+            - ok
+            - scam
+          nullable: true
+          type: string
+          x-struct:
+          x-validate:
+        symbol:
+          nullable: true
+          type: string
+          x-struct:
+          x-validate:
+        total_supply:
+          $ref: '#/components/schemas/IntegerStringNullable'
+        type:
+          allOf:
+            - $ref: '#/components/schemas/Type'
+          nullable: true
+          x-struct:
+          x-validate:
+        volume_24h:
+          $ref: '#/components/schemas/FloatStringNullable'
+      required:
+        - address_hash
+        - symbol
+        - name
+        - decimals
+        - type
+        - holders_count
+        - exchange_rate
+        - volume_24h
+        - total_supply
+        - icon_url
+        - circulating_market_cap
+        - reputation
+      title: TokenResponse
+      type: object
+      x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.Token
+      x-validate:
     BlockWithdrawalsPaginatedResponse:
       additionalProperties: false
       nullable: false
@@ -2091,7 +2522,7 @@ components:
           x-struct:
           x-validate:
         watchlist_names:
-          description: Watch list name associated with the address
+          description: Watchlist name associated with the address
           items:
             $ref: '#/components/schemas/WatchlistName'
           type: array
@@ -2304,12 +2735,27 @@ components:
       properties:
         address_hash:
           $ref: '#/components/schemas/AddressHash'
+        bridge_type:
+          description: Type of bridge used for this bridged token
+          enum:
+            - omni
+            - amb
+          nullable: true
+          type: string
+          x-struct:
+          x-validate:
         circulating_market_cap:
           $ref: '#/components/schemas/FloatStringNullable'
         decimals:
           $ref: '#/components/schemas/IntegerStringNullable'
         exchange_rate:
           $ref: '#/components/schemas/FloatStringNullable'
+        foreign_address:
+          nullable: true
+          pattern: ^0x([A-Fa-f0-9]{40})$
+          type: string
+          x-struct:
+          x-validate:
         holders_count:
           $ref: '#/components/schemas/IntegerStringNullable'
         icon_url:
@@ -2319,6 +2765,8 @@ components:
           type: string
           x-struct:
           x-validate:
+        origin_chain_id:
+          $ref: '#/components/schemas/IntegerStringNullable'
         reputation:
           description: Reputation of the token
           enum:
@@ -2825,6 +3273,2358 @@ info:
   version: 9.1.1
 openapi: 3.0.0
 paths:
+  /v2/blocks/{block_hash_or_number_param}/internal-transactions:
+    get:
+      callbacks: {}
+      description: Retrieves internal transactions included in a specific block with optional filtering by type and call type.
+      operationId: BlockScoutWeb.API.V2.BlockController.internal_transactions
+      parameters:
+        - description: API key for rate limiting
+          in: query
+          name: apikey
+          required: false
+          schema:
+            type: string
+            x-struct:
+            x-validate:
+        - description: Secret key for getting access to restricted resources
+          in: query
+          name: key
+          required: false
+          schema:
+            type: string
+            x-struct:
+            x-validate:
+        - in: path
+          name: block_hash_or_number_param
+          required: true
+          schema:
+            anyOf:
+              - type: integer
+                x-struct:
+                x-validate:
+              - $ref: '#/components/schemas/FullHash'
+            x-struct:
+            x-validate:
+        - description: |
+            Filter internal transactions by type:
+            * all - Show all internal transactions (default)
+            * call - Only show call internal transactions
+            * create - Only show create internal transactions
+            * create2 - Only show create2 internal transactions
+            * reward - Only show reward internal transactions
+            * selfdestruct - Only show selfdestruct internal transactions
+            * stop - Only show stop internal transactions
+            * invalid - Only show invalid internal transactions (Arbitrum only)
+          in: query
+          name: internal_type
+          required: false
+          schema:
+            enum:
+              - call
+              - create
+              - create2
+              - reward
+              - selfdestruct
+              - stop
+            type: string
+            x-struct:
+            x-validate:
+        - description: |
+            Filter internal transactions by call type:
+            * all - Show all internal transactions (default)
+            * call - Only show call internal transactions
+            * callcode - Only show callcode internal transactions
+            * delegatecall - Only show delegatecall internal transactions
+            * staticcall - Only show staticcall internal transactions
+            * invalid - Only show invalid internal transactions (Arbitrum only)
+          in: query
+          name: call_type
+          required: false
+          schema:
+            enum:
+              - call
+              - callcode
+              - delegatecall
+              - staticcall
+            type: string
+            x-struct:
+            x-validate:
+        - description: Block index for paging
+          in: query
+          name: block_index
+          required: false
+          schema:
+            type: integer
+            x-struct:
+            x-validate:
+        - description: Number of items returned per page
+          in: query
+          name: items_count
+          required: false
+          schema:
+            maximum: 50
+            minimum: 1
+            type: integer
+            x-struct:
+            x-validate:
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                additionalProperties: false
+                nullable: false
+                properties:
+                  items:
+                    items:
+                      $ref: '#/components/schemas/InternalTransaction'
+                    nullable: false
+                    type: array
+                    x-struct:
+                    x-validate:
+                  next_page_params:
+                    example:
+                      block_index: 8
+                      items_count: 50
+                    nullable: true
+                    type: object
+                    x-struct:
+                    x-validate:
+                required:
+                  - items
+                  - next_page_params
+                title: BlockInternalTransactionsPaginatedResponse
+                type: object
+                x-struct:
+                x-validate:
+          description: Internal transactions in the specified block.
+        '404':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFoundResponse'
+          description: Not Found
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JsonErrorResponse'
+          description: Unprocessable Entity
+      summary: List internal transactions in a specific block
+      tags:
+        - blocks
+  /v2/tokens/{address_hash_param}:
+    get:
+      callbacks: {}
+      description: Retrieves detailed information for a specific token, including metadata and statistics.
+      operationId: BlockScoutWeb.API.V2.TokenController.token
+      parameters:
+        - in: path
+          name: address_hash_param
+          required: true
+          schema:
+            $ref: '#/components/schemas/AddressHash'
+        - description: API key for rate limiting
+          in: query
+          name: apikey
+          required: false
+          schema:
+            type: string
+            x-struct:
+            x-validate:
+        - description: Secret key for getting access to restricted resources
+          in: query
+          name: key
+          required: false
+          schema:
+            type: string
+            x-struct:
+            x-validate:
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TokenResponse'
+          description: Detailed information about the specified token.
+        '404':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFoundResponse'
+          description: Not Found
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JsonErrorResponse'
+          description: Unprocessable Entity
+      summary: Retrieve detailed information about a specific token
+      tags:
+        - tokens
+  /v2/tokens/{address_hash_param}/holders/csv:
+    get:
+      callbacks: {}
+      description: Exports the holders of a specific token as a CSV file.
+      operationId: BlockScoutWeb.API.V2.CsvExportController.export_token_holders
+      parameters:
+        - description: API key for rate limiting
+          in: query
+          name: apikey
+          required: false
+          schema:
+            type: string
+            x-struct:
+            x-validate:
+        - description: Secret key for getting access to restricted resources
+          in: query
+          name: key
+          required: false
+          schema:
+            type: string
+            x-struct:
+            x-validate:
+        - in: path
+          name: address_hash_param
+          required: true
+          schema:
+            $ref: '#/components/schemas/AddressHash'
+        - in: query
+          name: address_id
+          required: false
+          schema:
+            $ref: '#/components/schemas/AddressHash'
+      responses:
+        '200':
+          content:
+            application/csv: {}
+          description: CSV file of token holders.
+        '404':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFoundResponse'
+          description: Not Found
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JsonErrorResponse'
+          description: Unprocessable Entity
+      summary: Export token holders as CSV
+      tags:
+        - tokens
+  /v2/tokens/:
+    get:
+      callbacks: {}
+      description: Retrieves a paginated list of tokens with optional filtering and sorting.
+      operationId: BlockScoutWeb.API.V2.TokenController.tokens_list
+      parameters:
+        - description: API key for rate limiting
+          in: query
+          name: apikey
+          required: false
+          schema:
+            type: string
+            x-struct:
+            x-validate:
+        - description: Secret key for getting access to restricted resources
+          in: query
+          name: key
+          required: false
+          schema:
+            type: string
+            x-struct:
+            x-validate:
+        - description: |
+            Filter by token type. Comma-separated list of:
+            * ERC-20 - Fungible tokens
+            * ERC-721 - Non-fungible tokens
+            * ERC-1155 - Multi-token standard
+            * ERC-404 - Hybrid fungible/non-fungible tokens
+
+            Example: `ERC-20,ERC-721` to show both fungible and NFT transfers
+          in: query
+          name: type
+          required: false
+          schema:
+            anyOf:
+              - $ref: '#/components/schemas/EmptyString'
+              - pattern: ^\[?(ERC-20|ERC-721|ERC-1155|ERC-404)(,(ERC-20|ERC-721|ERC-1155|ERC-404))*\]?$
+                type: string
+                x-struct:
+                x-validate:
+            x-struct:
+            x-validate:
+        - description: Search query filter
+          in: query
+          name: q
+          required: false
+          schema:
+            nullable: true
+            type: string
+            x-struct:
+            x-validate:
+        - description: |
+            Sort transactions by:
+            * block_number - Sort by block number
+            * value - Sort by transaction value
+            * fee - Sort by transaction fee
+            * balance - Sort by account balance
+            * transactions_count - Sort by number of transactions on address
+            * fiat_value - Sort by fiat value of the token transfer
+            * holders_count - Sort by number of token holders
+            * circulating_market_cap - Sort by circulating market cap of the token
+            Should be used together with `order` parameter.
+          in: query
+          name: sort
+          required: false
+          schema:
+            enum:
+              - fiat_value
+              - holders_count
+              - circulating_market_cap
+            type: string
+            x-struct:
+            x-validate:
+        - description: |
+            Sort order:
+            * asc - Ascending order
+            * desc - Descending order
+            Should be used together with `sort` parameter.
+          in: query
+          name: order
+          required: false
+          schema:
+            enum:
+              - asc
+              - desc
+            type: string
+            x-struct:
+            x-validate:
+        - description: Contract address hash for paging
+          in: query
+          name: contract_address_hash
+          required: false
+          schema:
+            $ref: '#/components/schemas/AddressHashNullable'
+        - description: Fiat value for paging
+          in: query
+          name: fiat_value
+          required: false
+          schema:
+            anyOf:
+              - $ref: '#/components/schemas/FloatString'
+              - $ref: '#/components/schemas/EmptyString'
+              - $ref: '#/components/schemas/NullString'
+            x-struct:
+            x-validate:
+        - description: Number of holders returned per page
+          in: query
+          name: holders_count
+          required: false
+          schema:
+            anyOf:
+              - $ref: '#/components/schemas/IntegerString'
+              - $ref: '#/components/schemas/EmptyString'
+              - $ref: '#/components/schemas/NullString'
+            x-struct:
+            x-validate:
+        - description: Is name null for paging
+          in: query
+          name: is_name_null
+          required: false
+          schema:
+            type: boolean
+            x-struct:
+            x-validate:
+        - description: Market cap for paging
+          in: query
+          name: market_cap
+          required: false
+          schema:
+            anyOf:
+              - $ref: '#/components/schemas/FloatString'
+              - $ref: '#/components/schemas/EmptyString'
+              - $ref: '#/components/schemas/NullString'
+            x-struct:
+            x-validate:
+        - description: Name for paging
+          in: query
+          name: name
+          required: false
+          schema:
+            type: string
+            x-struct:
+            x-validate:
+        - description: Number of items returned per page
+          in: query
+          name: items_count
+          required: false
+          schema:
+            maximum: 50
+            minimum: 1
+            type: integer
+            x-struct:
+            x-validate:
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                additionalProperties: false
+                nullable: false
+                properties:
+                  items:
+                    items:
+                      $ref: '#/components/schemas/Token'
+                    nullable: false
+                    type: array
+                    x-struct:
+                    x-validate:
+                  next_page_params:
+                    example:
+                      contract_address_hash: '0xbe9895146f7af43049ca1c1ae358b0541ea49704'
+                      fiat_value: '4724.32'
+                      holders_count: 59731
+                      is_name_null: false
+                      items_count: 50
+                      market_cap: '570958125.135513'
+                      name: Wrapped Staked ETH
+                    nullable: true
+                    type: object
+                    x-struct:
+                    x-validate:
+                required:
+                  - items
+                  - next_page_params
+                title: TokensPaginatedResponse
+                type: object
+                x-struct:
+                x-validate:
+          description: List of tokens.
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JsonErrorResponse'
+          description: Unprocessable Entity
+      summary: List tokens with optional filtering and sorting
+      tags:
+        - tokens
+  /v2/addresses/{address_hash_param}/token-transfers/csv:
+    get:
+      callbacks: {}
+      description: Exports token transfers for a specific address as a CSV file.
+      operationId: BlockScoutWeb.API.V2.CsvExportController.token_transfers_csv
+      parameters:
+        - description: API key for rate limiting
+          in: query
+          name: apikey
+          required: false
+          schema:
+            type: string
+            x-struct:
+            x-validate:
+        - description: Secret key for getting access to restricted resources
+          in: query
+          name: key
+          required: false
+          schema:
+            type: string
+            x-struct:
+            x-validate:
+        - in: path
+          name: address_hash_param
+          required: true
+          schema:
+            $ref: '#/components/schemas/AddressHash'
+        - in: query
+          name: address_id
+          required: false
+          schema:
+            $ref: '#/components/schemas/AddressHash'
+        - description: Start of the time period (ISO 8601 format) in CSV export
+          in: query
+          name: from_period
+          required: true
+          schema:
+            nullable: false
+            pattern: ^\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01])(?:T(?:[01]\d|2[0-3])(?:(?::|%3A)[0-5]\d(?:(?::|%3A)[0-5]\d(?:\.\d{1,9})?)?)?(?:Z|(?:\+|%2B|-)(?:[01]\d|2[0-3])(?:(?::|%3A)[0-5]\d)?)?)?$
+            type: string
+            x-struct:
+            x-validate:
+        - description: End of the time period (ISO 8601 format) In CSV export
+          in: query
+          name: to_period
+          required: true
+          schema:
+            nullable: false
+            pattern: ^\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01])(?:T(?:[01]\d|2[0-3])(?:(?::|%3A)[0-5]\d(?:(?::|%3A)[0-5]\d(?:\.\d{1,9})?)?)?(?:Z|(?:\+|%2B|-)(?:[01]\d|2[0-3])(?:(?::|%3A)[0-5]\d)?)?)?$
+            type: string
+            x-struct:
+            x-validate:
+        - description: Filter type in CSV export
+          in: query
+          name: filter_type
+          required: false
+          schema:
+            anyOf:
+              - enum:
+                  - address
+                nullable: true
+                type: string
+                x-struct:
+                x-validate:
+              - $ref: '#/components/schemas/NullString'
+            x-struct:
+            x-validate:
+        - description: Filter value in CSV export
+          in: query
+          name: filter_value
+          required: false
+          schema:
+            anyOf:
+              - enum:
+                  - to
+                  - from
+                nullable: true
+                type: string
+                x-struct:
+                x-validate:
+              - $ref: '#/components/schemas/NullString'
+            x-struct:
+            x-validate:
+      responses:
+        '200':
+          content:
+            application/csv: {}
+          description: CSV file of token transfers.
+        '404':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFoundResponse'
+          description: Not Found
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JsonErrorResponse'
+          description: Unprocessable Entity
+      summary: Export token transfers as CSV
+      tags:
+        - addresses
+  /v2/addresses/{address_hash_param}/token-balances:
+    get:
+      callbacks: {}
+      description: Retrieves all token balances held by a specific address, including ERC-20, ERC-721, ERC-1155 and ERC-404 tokens.
+      operationId: BlockScoutWeb.API.V2.AddressController.token_balances
+      parameters:
+        - in: path
+          name: address_hash_param
+          required: true
+          schema:
+            $ref: '#/components/schemas/AddressHash'
+        - description: API key for rate limiting
+          in: query
+          name: apikey
+          required: false
+          schema:
+            type: string
+            x-struct:
+            x-validate:
+        - description: Secret key for getting access to restricted resources
+          in: query
+          name: key
+          required: false
+          schema:
+            type: string
+            x-struct:
+            x-validate:
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/TokenBalance'
+                title: AddressTokenBalances
+                type: array
+                x-struct:
+                x-validate:
+          description: All token balances for the specified address.
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ForbiddenResponse'
+          description: Forbidden
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JsonErrorResponse'
+          description: Unprocessable Entity
+      summary: List all token balances held by a specific address
+      tags:
+        - addresses
+  /v2/blocks/{block_hash_or_number_param}/withdrawals:
+    get:
+      callbacks: {}
+      description: Retrieves validator withdrawals included in a specific block.
+      operationId: BlockScoutWeb.API.V2.BlockController.withdrawals
+      parameters:
+        - description: API key for rate limiting
+          in: query
+          name: apikey
+          required: false
+          schema:
+            type: string
+            x-struct:
+            x-validate:
+        - description: Secret key for getting access to restricted resources
+          in: query
+          name: key
+          required: false
+          schema:
+            type: string
+            x-struct:
+            x-validate:
+        - in: path
+          name: block_hash_or_number_param
+          required: true
+          schema:
+            anyOf:
+              - type: integer
+                x-struct:
+                x-validate:
+              - $ref: '#/components/schemas/FullHash'
+            x-struct:
+            x-validate:
+        - description: Transaction index for paging
+          in: query
+          name: index
+          required: false
+          schema:
+            type: integer
+            x-struct:
+            x-validate:
+        - description: Number of items returned per page
+          in: query
+          name: items_count
+          required: false
+          schema:
+            maximum: 50
+            minimum: 1
+            type: integer
+            x-struct:
+            x-validate:
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                additionalProperties: false
+                nullable: false
+                properties:
+                  items:
+                    items:
+                      $ref: '#/components/schemas/Withdrawal'
+                    nullable: false
+                    type: array
+                    x-struct:
+                    x-validate:
+                  next_page_params:
+                    example:
+                      index: 88192653
+                      items_count: 50
+                    nullable: true
+                    type: object
+                    x-struct:
+                    x-validate:
+                required:
+                  - items
+                  - next_page_params
+                title: BlockWithdrawalsPaginatedResponse
+                type: object
+                x-struct:
+                x-validate:
+          description: Withdrawals in the specified block.
+        '404':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFoundResponse'
+          description: Not Found
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JsonErrorResponse'
+          description: Unprocessable Entity
+      summary: List withdrawals in a specific block
+      tags:
+        - blocks
+  /v2/tokens/{address_hash_param}/holders:
+    get:
+      callbacks: {}
+      description: Retrieves holders for a specific token instance, with optional filtering and pagination.
+      operationId: BlockScoutWeb.API.V2.TokenController.holders
+      parameters:
+        - description: API key for rate limiting
+          in: query
+          name: apikey
+          required: false
+          schema:
+            type: string
+            x-struct:
+            x-validate:
+        - description: Secret key for getting access to restricted resources
+          in: query
+          name: key
+          required: false
+          schema:
+            type: string
+            x-struct:
+            x-validate:
+        - in: path
+          name: address_hash_param
+          required: true
+          schema:
+            $ref: '#/components/schemas/AddressHash'
+        - description: Address hash for paging
+          in: query
+          name: address_hash
+          required: false
+          schema:
+            $ref: '#/components/schemas/AddressHash'
+        - description: Transaction value for paging
+          in: query
+          name: value
+          required: false
+          schema:
+            $ref: '#/components/schemas/IntegerString'
+        - description: Number of items returned per page
+          in: query
+          name: items_count
+          required: false
+          schema:
+            maximum: 50
+            minimum: 1
+            type: integer
+            x-struct:
+            x-validate:
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                additionalProperties: false
+                nullable: false
+                properties:
+                  items:
+                    items:
+                      $ref: '#/components/schemas/TokenHolderResponse'
+                    nullable: false
+                    type: array
+                    x-struct:
+                    x-validate:
+                  next_page_params:
+                    example:
+                      address_hash_2: '0x48bb9b14483e43c7726df702b271d410e7460656'
+                      items_count: 50
+                      value: 200000000000000
+                    nullable: true
+                    type: object
+                    x-struct:
+                    x-validate:
+                required:
+                  - items
+                  - next_page_params
+                title: TokenHoldersPaginatedResponse
+                type: object
+                x-struct:
+                x-validate:
+          description: List of token holders.
+        '404':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFoundResponse'
+          description: Not Found
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JsonErrorResponse'
+          description: Unprocessable Entity
+      summary: List holders for a specific token instance
+      tags:
+        - tokens
+  /v2/blocks/{block_hash_or_number_param}:
+    get:
+      callbacks: {}
+      description: Retrieves detailed information for a specific block, including transactions, internal transactions, and metadata.
+      operationId: BlockScoutWeb.API.V2.BlockController.block
+      parameters:
+        - in: path
+          name: block_hash_or_number_param
+          required: true
+          schema:
+            anyOf:
+              - type: integer
+                x-struct:
+                x-validate:
+              - $ref: '#/components/schemas/FullHash'
+            x-struct:
+            x-validate:
+        - description: API key for rate limiting
+          in: query
+          name: apikey
+          required: false
+          schema:
+            type: string
+            x-struct:
+            x-validate:
+        - description: Secret key for getting access to restricted resources
+          in: query
+          name: key
+          required: false
+          schema:
+            type: string
+            x-struct:
+            x-validate:
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BlockResponse'
+          description: Detailed information about the specified block.
+        '404':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFoundResponse'
+          description: Not Found
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JsonErrorResponse'
+          description: Unprocessable Entity
+      summary: Retrieve detailed information about a specific block
+      tags:
+        - blocks
+  /v2/addresses/{address_hash_param}/tokens:
+    get:
+      callbacks: {}
+      description: Retrieves token balances for a specific address with pagination and filtering by token type. Useful for displaying large token portfolios.
+      operationId: BlockScoutWeb.API.V2.AddressController.tokens
+      parameters:
+        - description: API key for rate limiting
+          in: query
+          name: apikey
+          required: false
+          schema:
+            type: string
+            x-struct:
+            x-validate:
+        - description: Secret key for getting access to restricted resources
+          in: query
+          name: key
+          required: false
+          schema:
+            type: string
+            x-struct:
+            x-validate:
+        - in: path
+          name: address_hash_param
+          required: true
+          schema:
+            $ref: '#/components/schemas/AddressHash'
+        - description: |
+            Filter by token type. Comma-separated list of:
+            * ERC-20 - Fungible tokens
+            * ERC-721 - Non-fungible tokens
+            * ERC-1155 - Multi-token standard
+            * ERC-404 - Hybrid fungible/non-fungible tokens
+
+            Example: `ERC-20,ERC-721` to show both fungible and NFT transfers
+          in: query
+          name: type
+          required: false
+          schema:
+            anyOf:
+              - $ref: '#/components/schemas/EmptyString'
+              - pattern: ^\[?(ERC-20|ERC-721|ERC-1155|ERC-404)(,(ERC-20|ERC-721|ERC-1155|ERC-404))*\]?$
+                type: string
+                x-struct:
+                x-validate:
+            x-struct:
+            x-validate:
+        - description: Fiat value for paging
+          in: query
+          name: fiat_value
+          required: false
+          schema:
+            anyOf:
+              - $ref: '#/components/schemas/FloatString'
+              - $ref: '#/components/schemas/EmptyString'
+              - $ref: '#/components/schemas/NullString'
+            x-struct:
+            x-validate:
+        - description: ID for paging
+          in: query
+          name: id
+          required: false
+          schema:
+            type: integer
+            x-struct:
+            x-validate:
+        - description: Number of items returned per page
+          in: query
+          name: items_count
+          required: false
+          schema:
+            maximum: 50
+            minimum: 1
+            type: integer
+            x-struct:
+            x-validate:
+        - description: Transaction value for paging
+          in: query
+          name: value
+          required: false
+          schema:
+            $ref: '#/components/schemas/IntegerString'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                additionalProperties: false
+                nullable: false
+                properties:
+                  items:
+                    items:
+                      $ref: '#/components/schemas/TokenBalance'
+                    nullable: false
+                    type: array
+                    x-struct:
+                    x-validate:
+                  next_page_params:
+                    example:
+                      fiat_value:
+                      id: 12519063346
+                      items_count: 50
+                      value: '3750000000000000000000'
+                    nullable: true
+                    type: object
+                    x-struct:
+                    x-validate:
+                required:
+                  - items
+                  - next_page_params
+                title: AddressTokensPaginatedResponse
+                type: object
+                x-struct:
+                x-validate:
+          description: Token balances for the specified address with pagination.
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ForbiddenResponse'
+          description: Forbidden
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JsonErrorResponse'
+          description: Unprocessable Entity
+      summary: List token balances for an address with pagination and type filtering
+      tags:
+        - addresses
+  /v2/addresses/{address_hash_param}/token-transfers:
+    get:
+      callbacks: {}
+      description: Retrieves token transfers involving a specific address, with optional filtering by token type, direction, and specific token.
+      operationId: BlockScoutWeb.API.V2.AddressController.token_transfers
+      parameters:
+        - description: API key for rate limiting
+          in: query
+          name: apikey
+          required: false
+          schema:
+            type: string
+            x-struct:
+            x-validate:
+        - description: Secret key for getting access to restricted resources
+          in: query
+          name: key
+          required: false
+          schema:
+            type: string
+            x-struct:
+            x-validate:
+        - in: path
+          name: address_hash_param
+          required: true
+          schema:
+            $ref: '#/components/schemas/AddressHash'
+        - description: |
+            Filter transactions by direction:
+            * to - Only show transactions sent to this address
+            * from - Only show transactions sent from this address
+            If omitted, all transactions involving the address are returned.
+          in: query
+          name: filter
+          required: false
+          schema:
+            enum:
+              - to
+              - from
+            type: string
+            x-struct:
+            x-validate:
+        - description: |
+            Filter by token type. Comma-separated list of:
+            * ERC-20 - Fungible tokens
+            * ERC-721 - Non-fungible tokens
+            * ERC-1155 - Multi-token standard
+            * ERC-404 - Hybrid fungible/non-fungible tokens
+
+            Example: `ERC-20,ERC-721` to show both fungible and NFT transfers
+          in: query
+          name: type
+          required: false
+          schema:
+            anyOf:
+              - $ref: '#/components/schemas/EmptyString'
+              - pattern: ^\[?(ERC-20|ERC-721|ERC-1155|ERC-404)(,(ERC-20|ERC-721|ERC-1155|ERC-404))*\]?$
+                type: string
+                x-struct:
+                x-validate:
+            x-struct:
+            x-validate:
+        - description: Filter token transfers by token contract address.
+          in: query
+          name: token
+          required: false
+          schema:
+            $ref: '#/components/schemas/AddressHash'
+        - description: Block number for paging
+          in: query
+          name: block_number
+          required: false
+          schema:
+            minimum: 0
+            type: integer
+            x-struct:
+            x-validate:
+        - description: Transaction index for paging
+          in: query
+          name: index
+          required: false
+          schema:
+            type: integer
+            x-struct:
+            x-validate:
+        - description: Number of items returned per page
+          in: query
+          name: items_count
+          required: false
+          schema:
+            maximum: 50
+            minimum: 1
+            type: integer
+            x-struct:
+            x-validate:
+        - description: Batch log index for paging
+          in: query
+          name: batch_log_index
+          required: false
+          schema:
+            type: integer
+            x-struct:
+            x-validate:
+        - description: Batch block hash for paging
+          in: query
+          name: batch_block_hash
+          required: false
+          schema:
+            $ref: '#/components/schemas/FullHash'
+        - description: Batch transaction hash for paging
+          in: query
+          name: batch_transaction_hash
+          required: false
+          schema:
+            $ref: '#/components/schemas/FullHash'
+        - description: Index in batch for paging
+          in: query
+          name: index_in_batch
+          required: false
+          schema:
+            type: integer
+            x-struct:
+            x-validate:
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                additionalProperties: false
+                nullable: false
+                properties:
+                  items:
+                    items:
+                      $ref: '#/components/schemas/TokenTransfer'
+                    nullable: false
+                    type: array
+                    x-struct:
+                    x-validate:
+                  next_page_params:
+                    example:
+                      block_number: 12345678
+                      index: 0
+                      items_count: 50
+                    nullable: true
+                    type: object
+                    x-struct:
+                    x-validate:
+                required:
+                  - items
+                  - next_page_params
+                title: AddressTokenTransfersPaginatedResponse
+                type: object
+                x-struct:
+                x-validate:
+          description: All token transfers for the specified address.
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ForbiddenResponse'
+          description: Forbidden
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JsonErrorResponse'
+          description: Unprocessable Entity
+      summary: List token transfers involving a specific address with filtering options
+      tags:
+        - addresses
+  /v2/addresses/{address_hash_param}/nft:
+    get:
+      callbacks: {}
+      description: Retrieves a list of NFTs (non-fungible tokens) owned by a specific address, with optional filtering by token type.
+      operationId: BlockScoutWeb.API.V2.AddressController.nft_list
+      parameters:
+        - description: API key for rate limiting
+          in: query
+          name: apikey
+          required: false
+          schema:
+            type: string
+            x-struct:
+            x-validate:
+        - description: Secret key for getting access to restricted resources
+          in: query
+          name: key
+          required: false
+          schema:
+            type: string
+            x-struct:
+            x-validate:
+        - in: path
+          name: address_hash_param
+          required: true
+          schema:
+            $ref: '#/components/schemas/AddressHash'
+        - description: |
+            Filter by token type. Comma-separated list of:
+            * ERC-721 - Non-fungible tokens
+            * ERC-1155 - Multi-token standard
+            * ERC-404 - Hybrid fungible/non-fungible tokens
+
+            Example: `ERC-721,ERC-1155` to show both NFT and multi-token transfers
+          in: query
+          name: type
+          required: false
+          schema:
+            anyOf:
+              - $ref: '#/components/schemas/EmptyString'
+              - pattern: ^\[?(ERC-20|ERC-721|ERC-1155|ERC-404)(,(ERC-20|ERC-721|ERC-1155|ERC-404))*\]?$
+                type: string
+                x-struct:
+                x-validate:
+            x-struct:
+            x-validate:
+        - description: Number of items returned per page
+          in: query
+          name: items_count
+          required: false
+          schema:
+            maximum: 50
+            minimum: 1
+            type: integer
+            x-struct:
+            x-validate:
+        - description: Token contract address hash for paging
+          in: query
+          name: token_contract_address_hash
+          required: false
+          schema:
+            $ref: '#/components/schemas/AddressHash'
+        - description: Token ID for paging
+          in: query
+          name: token_id
+          required: false
+          schema:
+            $ref: '#/components/schemas/IntegerStringNullable'
+        - description: Token type for paging
+          in: query
+          name: token_type
+          required: false
+          schema:
+            $ref: '#/components/schemas/Type'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                additionalProperties: false
+                nullable: false
+                properties:
+                  items:
+                    items:
+                      $ref: '#/components/schemas/TokenInstanceInList'
+                    nullable: false
+                    type: array
+                    x-struct:
+                    x-validate:
+                  next_page_params:
+                    example:
+                      items_count: 50
+                      token_contract_address_hash: '0x1ffe11b9fb7f6ff1b153ab8608cf403ecaf9d44a'
+                      token_id: '24950'
+                      token_type: ERC-721
+                    nullable: true
+                    type: object
+                    x-struct:
+                    x-validate:
+                required:
+                  - items
+                  - next_page_params
+                title: AddressNFTsPaginatedResponse
+                type: object
+                x-struct:
+                x-validate:
+          description: NFTs owned by the specified address, with pagination.
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ForbiddenResponse'
+          description: Forbidden
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JsonErrorResponse'
+          description: Unprocessable Entity
+      summary: List NFTs owned by a specific address with optional type filtering
+      tags:
+        - addresses
+  /v2/tokens/{address_hash_param}/instances:
+    get:
+      callbacks: {}
+      description: Retrieves all instances of a specific token, including holders and balances.
+      operationId: BlockScoutWeb.API.V2.TokenController.instances
+      parameters:
+        - description: API key for rate limiting
+          in: query
+          name: apikey
+          required: false
+          schema:
+            type: string
+            x-struct:
+            x-validate:
+        - description: Secret key for getting access to restricted resources
+          in: query
+          name: key
+          required: false
+          schema:
+            type: string
+            x-struct:
+            x-validate:
+        - in: path
+          name: address_hash_param
+          required: true
+          schema:
+            $ref: '#/components/schemas/AddressHash'
+        - in: query
+          name: holder_address_hash
+          required: false
+          schema:
+            $ref: '#/components/schemas/AddressHash'
+        - description: Token ID for paging
+          in: query
+          name: unique_token
+          required: false
+          schema:
+            $ref: '#/components/schemas/IntegerStringNullable'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                additionalProperties: false
+                nullable: false
+                properties:
+                  items:
+                    items:
+                      $ref: '#/components/schemas/TokenInstance'
+                    nullable: false
+                    type: array
+                    x-struct:
+                    x-validate:
+                  next_page_params:
+                    example:
+                      unique_token: 782098
+                    nullable: true
+                    type: object
+                    x-struct:
+                    x-validate:
+                required:
+                  - items
+                  - next_page_params
+                title: TokenInstancesPaginatedResponse
+                type: object
+                x-struct:
+                x-validate:
+          description: List of token instances.
+        '404':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFoundResponse'
+          description: Not Found
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JsonErrorResponse'
+          description: Unprocessable Entity
+      summary: List all instances of a specific token
+      tags:
+        - tokens
+  /v2/addresses/{address_hash_param}/blocks-validated:
+    get:
+      callbacks: {}
+      description: Retrieves blocks that were validated (mined) by a specific address. Useful for tracking validator/miner performance.
+      operationId: BlockScoutWeb.API.V2.AddressController.blocks_validated
+      parameters:
+        - description: API key for rate limiting
+          in: query
+          name: apikey
+          required: false
+          schema:
+            type: string
+            x-struct:
+            x-validate:
+        - description: Secret key for getting access to restricted resources
+          in: query
+          name: key
+          required: false
+          schema:
+            type: string
+            x-struct:
+            x-validate:
+        - in: path
+          name: address_hash_param
+          required: true
+          schema:
+            $ref: '#/components/schemas/AddressHash'
+        - description: Block number for paging
+          in: query
+          name: block_number
+          required: false
+          schema:
+            minimum: 0
+            type: integer
+            x-struct:
+            x-validate:
+        - description: Number of items returned per page
+          in: query
+          name: items_count
+          required: false
+          schema:
+            maximum: 50
+            minimum: 1
+            type: integer
+            x-struct:
+            x-validate:
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                additionalProperties: false
+                nullable: false
+                properties:
+                  items:
+                    items:
+                      $ref: '#/components/schemas/Block'
+                    nullable: false
+                    type: array
+                    x-struct:
+                    x-validate:
+                  next_page_params:
+                    example:
+                      block_number: 22546398
+                      items_count: 50
+                    nullable: true
+                    type: object
+                    x-struct:
+                    x-validate:
+                required:
+                  - items
+                  - next_page_params
+                title: AddressBlocksValidatedPaginatedResponse
+                type: object
+                x-struct:
+                x-validate:
+          description: Blocks validated by the specified address, with pagination.
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ForbiddenResponse'
+          description: Forbidden
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JsonErrorResponse'
+          description: Unprocessable Entity
+      summary: List blocks validated (mined) by a specific validator/miner address
+      tags:
+        - addresses
+  /v2/addresses/{address_hash_param}/internal-transactions:
+    get:
+      callbacks: {}
+      description: Retrieves all internal transactions involving a specific address, with optional filtering for internal transactions sent from or to the address.
+      operationId: BlockScoutWeb.API.V2.AddressController.internal_transactions
+      parameters:
+        - description: API key for rate limiting
+          in: query
+          name: apikey
+          required: false
+          schema:
+            type: string
+            x-struct:
+            x-validate:
+        - description: Secret key for getting access to restricted resources
+          in: query
+          name: key
+          required: false
+          schema:
+            type: string
+            x-struct:
+            x-validate:
+        - in: path
+          name: address_hash_param
+          required: true
+          schema:
+            $ref: '#/components/schemas/AddressHash'
+        - description: |
+            Filter transactions by direction:
+            * to - Only show transactions sent to this address
+            * from - Only show transactions sent from this address
+            If omitted, all transactions involving the address are returned.
+          in: query
+          name: filter
+          required: false
+          schema:
+            enum:
+              - to
+              - from
+            type: string
+            x-struct:
+            x-validate:
+        - description: Block number for paging
+          in: query
+          name: block_number
+          required: false
+          schema:
+            minimum: 0
+            type: integer
+            x-struct:
+            x-validate:
+        - description: Transaction index for paging
+          in: query
+          name: index
+          required: false
+          schema:
+            type: integer
+            x-struct:
+            x-validate:
+        - description: Number of items returned per page
+          in: query
+          name: items_count
+          required: false
+          schema:
+            maximum: 50
+            minimum: 1
+            type: integer
+            x-struct:
+            x-validate:
+        - description: Transaction index for paging
+          in: query
+          name: transaction_index
+          required: false
+          schema:
+            type: integer
+            x-struct:
+            x-validate:
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                additionalProperties: false
+                nullable: false
+                properties:
+                  items:
+                    items:
+                      $ref: '#/components/schemas/InternalTransaction'
+                    nullable: false
+                    type: array
+                    x-struct:
+                    x-validate:
+                  next_page_params:
+                    example:
+                      block_number: 22530770
+                      index: 8
+                      items_count: 50
+                      transaction_index: 8
+                    nullable: true
+                    type: object
+                    x-struct:
+                    x-validate:
+                required:
+                  - items
+                  - next_page_params
+                title: AddressInternalTransactionsPaginatedResponse
+                type: object
+                x-struct:
+                x-validate:
+          description: All internal transactions for the specified address.
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ForbiddenResponse'
+          description: Forbidden
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JsonErrorResponse'
+          description: Unprocessable Entity
+      summary: List all internal transactions involving a specific address
+      tags:
+        - addresses
+  /v2/tokens/{address_hash_param}/transfers:
+    get:
+      callbacks: {}
+      description: Retrieves token transfers for a specific token, with optional filtering and pagination.
+      operationId: BlockScoutWeb.API.V2.TokenController.transfers
+      parameters:
+        - description: API key for rate limiting
+          in: query
+          name: apikey
+          required: false
+          schema:
+            type: string
+            x-struct:
+            x-validate:
+        - description: Secret key for getting access to restricted resources
+          in: query
+          name: key
+          required: false
+          schema:
+            type: string
+            x-struct:
+            x-validate:
+        - in: path
+          name: address_hash_param
+          required: true
+          schema:
+            $ref: '#/components/schemas/AddressHash'
+        - description: Transaction index for paging
+          in: query
+          name: index
+          required: false
+          schema:
+            type: integer
+            x-struct:
+            x-validate:
+        - description: Block number for paging
+          in: query
+          name: block_number
+          required: false
+          schema:
+            minimum: 0
+            type: integer
+            x-struct:
+            x-validate:
+        - description: Batch log index for paging
+          in: query
+          name: batch_log_index
+          required: false
+          schema:
+            type: integer
+            x-struct:
+            x-validate:
+        - description: Batch block hash for paging
+          in: query
+          name: batch_block_hash
+          required: false
+          schema:
+            $ref: '#/components/schemas/FullHash'
+        - description: Batch transaction hash for paging
+          in: query
+          name: batch_transaction_hash
+          required: false
+          schema:
+            $ref: '#/components/schemas/FullHash'
+        - description: Index in batch for paging
+          in: query
+          name: index_in_batch
+          required: false
+          schema:
+            type: integer
+            x-struct:
+            x-validate:
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                additionalProperties: false
+                nullable: false
+                properties:
+                  items:
+                    items:
+                      $ref: '#/components/schemas/TokenTransfer'
+                    nullable: false
+                    type: array
+                    x-struct:
+                    x-validate:
+                  next_page_params:
+                    example:
+                      batch_block_hash: '0x789'
+                      batch_log_index: 3
+                      batch_transaction_hash: '0xabc'
+                      block_number: 23484141
+                      index: 259
+                      index_in_batch: 2
+                    nullable: true
+                    type: object
+                    x-struct:
+                    x-validate:
+                required:
+                  - items
+                  - next_page_params
+                title: TokenTransfersPaginatedResponse
+                type: object
+                x-struct:
+                x-validate:
+          description: List of token transfers.
+        '404':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFoundResponse'
+          description: Not Found
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JsonErrorResponse'
+          description: Unprocessable Entity
+      summary: List token transfers for a specific token
+      tags:
+        - tokens
+  /v2/tokens/{address_hash_param}/instances/{token_id_param}/holders:
+    get:
+      callbacks: {}
+      description: Retrieves holders for a specific token instance (by token address and token ID).
+      operationId: BlockScoutWeb.API.V2.TokenController.holders_by_instance
+      parameters:
+        - description: API key for rate limiting
+          in: query
+          name: apikey
+          required: false
+          schema:
+            type: string
+            x-struct:
+            x-validate:
+        - description: Secret key for getting access to restricted resources
+          in: query
+          name: key
+          required: false
+          schema:
+            type: string
+            x-struct:
+            x-validate:
+        - in: path
+          name: address_hash_param
+          required: true
+          schema:
+            $ref: '#/components/schemas/AddressHash'
+        - description: Token ID for ERC-721/1155/404 tokens
+          in: path
+          name: token_id_param
+          required: true
+          schema:
+            $ref: '#/components/schemas/IntegerStringNullable'
+        - description: Address hash for paging
+          in: query
+          name: address_hash
+          required: false
+          schema:
+            $ref: '#/components/schemas/AddressHash'
+        - description: Number of items returned per page
+          in: query
+          name: items_count
+          required: false
+          schema:
+            maximum: 50
+            minimum: 1
+            type: integer
+            x-struct:
+            x-validate:
+        - description: Token ID for paging
+          in: query
+          name: token_id
+          required: false
+          schema:
+            $ref: '#/components/schemas/IntegerStringNullable'
+        - description: Transaction value for paging
+          in: query
+          name: value
+          required: false
+          schema:
+            $ref: '#/components/schemas/IntegerString'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                additionalProperties: false
+                nullable: false
+                properties:
+                  items:
+                    items:
+                      $ref: '#/components/schemas/TokenHolderResponse'
+                    nullable: false
+                    type: array
+                    x-struct:
+                    x-validate:
+                  next_page_params:
+                    example:
+                      address_hash_2: '0x1d2c163fbda9486c3a384b6fa5e34c96fe948e9a'
+                      items_count: 50
+                      token_id: '0'
+                      value: 4217417051704137590935
+                    nullable: true
+                    type: object
+                    x-struct:
+                    x-validate:
+                required:
+                  - items
+                  - next_page_params
+                title: TokenInstanceHoldersPaginatedResponse
+                type: object
+                x-struct:
+                x-validate:
+          description: List of token holders for the instance.
+        '404':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFoundResponse'
+          description: Not Found
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JsonErrorResponse'
+          description: Unprocessable Entity
+      summary: List holders for a specific token instance
+      tags:
+        - tokens
+  /v2/tokens/{address_hash_param}/instances/{token_id_param}/transfers:
+    get:
+      callbacks: {}
+      description: Retrieves token transfers for a specific token instance (by token address and token ID).
+      operationId: BlockScoutWeb.API.V2.TokenController.transfers_by_instance
+      parameters:
+        - description: API key for rate limiting
+          in: query
+          name: apikey
+          required: false
+          schema:
+            type: string
+            x-struct:
+            x-validate:
+        - description: Secret key for getting access to restricted resources
+          in: query
+          name: key
+          required: false
+          schema:
+            type: string
+            x-struct:
+            x-validate:
+        - in: path
+          name: address_hash_param
+          required: true
+          schema:
+            $ref: '#/components/schemas/AddressHash'
+        - description: Token ID for ERC-721/1155/404 tokens
+          in: path
+          name: token_id_param
+          required: true
+          schema:
+            $ref: '#/components/schemas/IntegerStringNullable'
+        - description: Transaction index for paging
+          in: query
+          name: index
+          required: false
+          schema:
+            type: integer
+            x-struct:
+            x-validate:
+        - description: Block number for paging
+          in: query
+          name: block_number
+          required: false
+          schema:
+            minimum: 0
+            type: integer
+            x-struct:
+            x-validate:
+        - description: Token ID for paging
+          in: query
+          name: token_id
+          required: false
+          schema:
+            $ref: '#/components/schemas/IntegerStringNullable'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                additionalProperties: false
+                nullable: false
+                properties:
+                  items:
+                    items:
+                      $ref: '#/components/schemas/TokenTransfer'
+                    nullable: false
+                    type: array
+                    x-struct:
+                    x-validate:
+                  next_page_params:
+                    example:
+                      block_number: 23489243
+                      index: 920
+                      token_id: '4'
+                    nullable: true
+                    type: object
+                    x-struct:
+                    x-validate:
+                required:
+                  - items
+                  - next_page_params
+                title: TokenInstanceTransfersPaginatedResponse
+                type: object
+                x-struct:
+                x-validate:
+          description: List of token transfers for the instance.
+        '404':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFoundResponse'
+          description: Not Found
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JsonErrorResponse'
+          description: Unprocessable Entity
+      summary: List token transfers for a specific token instance
+      tags:
+        - tokens
+  /v2/addresses/{address_hash_param}/counters:
+    get:
+      callbacks: {}
+      description: Retrieves count statistics for an address, including transactions, token transfers, gas usage, and validations.
+      operationId: BlockScoutWeb.API.V2.AddressController.counters
+      parameters:
+        - in: path
+          name: address_hash_param
+          required: true
+          schema:
+            $ref: '#/components/schemas/AddressHash'
+        - description: API key for rate limiting
+          in: query
+          name: apikey
+          required: false
+          schema:
+            type: string
+            x-struct:
+            x-validate:
+        - description: Secret key for getting access to restricted resources
+          in: query
+          name: key
+          required: false
+          schema:
+            type: string
+            x-struct:
+            x-validate:
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AddressCounters'
+          description: Count statistics for the specified address
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ForbiddenResponse'
+          description: Forbidden
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JsonErrorResponse'
+          description: Unprocessable Entity
+      summary: Get activity count stats for a specific address
+      tags:
+        - addresses
+  /v2/tokens/{address_hash_param}/counters:
+    get:
+      callbacks: {}
+      description: Retrieves count statistics for a token, including transfers, holders, and other metrics.
+      operationId: BlockScoutWeb.API.V2.TokenController.counters
+      parameters:
+        - in: path
+          name: address_hash_param
+          required: true
+          schema:
+            $ref: '#/components/schemas/AddressHash'
+        - description: API key for rate limiting
+          in: query
+          name: apikey
+          required: false
+          schema:
+            type: string
+            x-struct:
+            x-validate:
+        - description: Secret key for getting access to restricted resources
+          in: query
+          name: key
+          required: false
+          schema:
+            type: string
+            x-struct:
+            x-validate:
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TokenCountersResponse'
+          description: Count statistics for the specified token
+        '404':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFoundResponse'
+          description: Not Found
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JsonErrorResponse'
+          description: Unprocessable Entity
+      summary: Get activity count stats for a specific token
+      tags:
+        - tokens
+  /v2/tokens/{address_hash_param}/instances/{token_id_param}:
+    get:
+      callbacks: {}
+      description: Retrieves details for a specific token instance by token address and token ID.
+      operationId: BlockScoutWeb.API.V2.TokenController.instance
+      parameters:
+        - description: API key for rate limiting
+          in: query
+          name: apikey
+          required: false
+          schema:
+            type: string
+            x-struct:
+            x-validate:
+        - description: Secret key for getting access to restricted resources
+          in: query
+          name: key
+          required: false
+          schema:
+            type: string
+            x-struct:
+            x-validate:
+        - in: path
+          name: address_hash_param
+          required: true
+          schema:
+            $ref: '#/components/schemas/AddressHash'
+        - description: Token ID for ERC-721/1155/404 tokens
+          in: path
+          name: token_id_param
+          required: true
+          schema:
+            $ref: '#/components/schemas/IntegerStringNullable'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TokenInstance'
+          description: Details for the token instance.
+        '404':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFoundResponse'
+          description: Not Found
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JsonErrorResponse'
+          description: Unprocessable Entity
+      summary: Get details for a specific token instance
+      tags:
+        - tokens
+  /v2/addresses/{address_hash_param}/tabs-counters:
+    get:
+      callbacks: {}
+      description: Retrieves counters for various address-related entities (max counter value is 51).
+      operationId: BlockScoutWeb.API.V2.AddressController.tabs_counters
+      parameters:
+        - in: path
+          name: address_hash_param
+          required: true
+          schema:
+            $ref: '#/components/schemas/AddressHash'
+        - description: API key for rate limiting
+          in: query
+          name: apikey
+          required: false
+          schema:
+            type: string
+            x-struct:
+            x-validate:
+        - description: Secret key for getting access to restricted resources
+          in: query
+          name: key
+          required: false
+          schema:
+            type: string
+            x-struct:
+            x-validate:
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AddressTabsCounters'
+          description: Counters for address tabs.
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ForbiddenResponse'
+          description: Forbidden
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JsonErrorResponse'
+          description: Unprocessable Entity
+      summary: Get counters for address tabs
+      tags:
+        - addresses
+  /v2/addresses/{address_hash_param}/coin-balance-history:
+    get:
+      callbacks: {}
+      description: Retrieves historical native coin balance changes for a specific address, tracking how an address's balance has changed over time.
+      operationId: BlockScoutWeb.API.V2.AddressController.coin_balance_history
+      parameters:
+        - description: API key for rate limiting
+          in: query
+          name: apikey
+          required: false
+          schema:
+            type: string
+            x-struct:
+            x-validate:
+        - description: Secret key for getting access to restricted resources
+          in: query
+          name: key
+          required: false
+          schema:
+            type: string
+            x-struct:
+            x-validate:
+        - in: path
+          name: address_hash_param
+          required: true
+          schema:
+            $ref: '#/components/schemas/AddressHash'
+        - description: Block number for paging
+          in: query
+          name: block_number
+          required: false
+          schema:
+            minimum: 0
+            type: integer
+            x-struct:
+            x-validate:
+        - description: Number of items returned per page
+          in: query
+          name: items_count
+          required: false
+          schema:
+            maximum: 50
+            minimum: 1
+            type: integer
+            x-struct:
+            x-validate:
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                additionalProperties: false
+                nullable: false
+                properties:
+                  items:
+                    items:
+                      $ref: '#/components/schemas/CoinBalance'
+                    nullable: false
+                    type: array
+                    x-struct:
+                    x-validate:
+                  next_page_params:
+                    example:
+                      block_number: 22546398
+                      items_count: 50
+                    nullable: true
+                    type: object
+                    x-struct:
+                    x-validate:
+                required:
+                  - items
+                  - next_page_params
+                title: AddressCoinBalanceHistoryPaginatedResponse
+                type: object
+                x-struct:
+                x-validate:
+          description: Historical coin balance changes for the specified address, with pagination.
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ForbiddenResponse'
+          description: Forbidden
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JsonErrorResponse'
+          description: Unprocessable Entity
+      summary: Get native coin balance history for an address showing all balance changes
+      tags:
+        - addresses
+  /v2/tokens/{address_hash_param}/instances/refetch-metadata:
+    patch:
+      callbacks: {}
+      description: Triggers a metadata refetch for a token's NFT collection (by token address). Requires API key.
+      operationId: BlockScoutWeb.API.V2.TokenController.trigger_nft_collection_metadata_refetch
+      parameters:
+        - in: path
+          name: address_hash_param
+          required: true
+          schema:
+            $ref: '#/components/schemas/AddressHash'
+        - description: API key for rate limiting
+          in: query
+          name: apikey
+          required: false
+          schema:
+            type: string
+            x-struct:
+            x-validate:
+        - description: Secret key for getting access to restricted resources
+          in: query
+          name: key
+          required: false
+          schema:
+            type: string
+            x-struct:
+            x-validate:
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                properties:
+                  message:
+                    type: string
+                    x-struct:
+                    x-validate:
+                type: object
+                x-struct:
+                x-validate:
+          description: NFT collection metadata refetch triggered.
+        '404':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFoundResponse'
+          description: Not Found
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JsonErrorResponse'
+          description: Unprocessable Entity
+      summary: Trigger metadata refetch for a token's NFT collection
+      tags:
+        - tokens
+  /v2/addresses/{address_hash_param}:
+    get:
+      callbacks: {}
+      description: Retrieves detailed information for a specific address, including balance, transaction count, and metadata.
+      operationId: BlockScoutWeb.API.V2.AddressController.address
+      parameters:
+        - in: path
+          name: address_hash_param
+          required: true
+          schema:
+            $ref: '#/components/schemas/AddressHash'
+        - description: API key for rate limiting
+          in: query
+          name: apikey
+          required: false
+          schema:
+            type: string
+            x-struct:
+            x-validate:
+        - description: Secret key for getting access to restricted resources
+          in: query
+          name: key
+          required: false
+          schema:
+            type: string
+            x-struct:
+            x-validate:
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AddressResponse'
+          description: Detailed information about the specified address.
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ForbiddenResponse'
+          description: Forbidden
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JsonErrorResponse'
+          description: Unprocessable Entity
+      summary: Retrieve detailed information about a specific address or contract
+      tags:
+        - addresses
+  /v2/blocks/{block_number_param}/countdown:
+    get:
+      callbacks: {}
+      description: Calculates the estimated time remaining until a specified block number is reached based on current block and average block time.
+      operationId: BlockScoutWeb.API.V2.BlockController.block_countdown
+      parameters:
+        - in: path
+          name: block_number_param
+          required: true
+          schema:
+            minimum: 0
+            type: integer
+            x-struct:
+            x-validate:
+        - description: API key for rate limiting
+          in: query
+          name: apikey
+          required: false
+          schema:
+            type: string
+            x-struct:
+            x-validate:
+        - description: Secret key for getting access to restricted resources
+          in: query
+          name: key
+          required: false
+          schema:
+            type: string
+            x-struct:
+            x-validate:
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BlockCountdown'
+          description: Block countdown information.
+        '404':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFoundResponse'
+          description: Not Found
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JsonErrorResponse'
+          description: Unprocessable Entity
+      summary: Get countdown information for a target block number
+      tags:
+        - blocks
   /v2/addresses:
     get:
       callbacks: {}
@@ -2852,6 +5652,11 @@ paths:
             * block_number - Sort by block number
             * value - Sort by transaction value
             * fee - Sort by transaction fee
+            * balance - Sort by account balance
+            * transactions_count - Sort by number of transactions on address
+            * fiat_value - Sort by fiat value of the token transfer
+            * holders_count - Sort by number of token holders
+            * circulating_market_cap - Sort by circulating market cap of the token
             Should be used together with `order` parameter.
           in: query
           name: sort
@@ -3008,7 +5813,7 @@ paths:
                           x-struct:
                           x-validate:
                         watchlist_names:
-                          description: Watch list name associated with the address
+                          description: Watchlist name associated with the address
                           items:
                             $ref: '#/components/schemas/WatchlistName'
                           type: array
@@ -3066,60 +5871,11 @@ paths:
       summary: List addresses holding native coins sorted by balance - top accounts
       tags:
         - addresses
-  /v2/addresses/{address_hash_param}:
+  /v2/addresses/{address_hash_param}/withdrawals:
     get:
       callbacks: {}
-      description: Retrieves detailed information for a specific address, including balance, transaction count, and metadata.
-      operationId: BlockScoutWeb.API.V2.AddressController.address
-      parameters:
-        - in: path
-          name: address_hash_param
-          required: true
-          schema:
-            $ref: '#/components/schemas/AddressHash'
-        - description: API key for rate limiting
-          in: query
-          name: apikey
-          required: false
-          schema:
-            type: string
-            x-struct:
-            x-validate:
-        - description: Secret key for getting access to restricted resources
-          in: query
-          name: key
-          required: false
-          schema:
-            type: string
-            x-struct:
-            x-validate:
-      responses:
-        '200':
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/AddressResponse'
-          description: Detailed information about the specified address.
-        '403':
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ForbiddenResponse'
-          description: Forbidden
-        '422':
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/JsonErrorResponse'
-          description: Unprocessable Entity
-      summary: Retrieve detailed information about a specific address or contract
-      tags:
-        - addresses
-  /v2/addresses/{address_hash_param}/blocks-validated:
-    get:
-      callbacks: {}
-      description: Retrieves blocks that were validated (mined) by a specific address. Useful for tracking validator/miner performance.
-      operationId: BlockScoutWeb.API.V2.AddressController.blocks_validated
+      description: Retrieves withdrawals involving a specific address, typically for proof-of-stake networks supporting validator withdrawals.
+      operationId: BlockScoutWeb.API.V2.AddressController.withdrawals
       parameters:
         - description: API key for rate limiting
           in: query
@@ -3142,12 +5898,11 @@ paths:
           required: true
           schema:
             $ref: '#/components/schemas/AddressHash'
-        - description: Block number for paging
+        - description: Transaction index for paging
           in: query
-          name: block_number
+          name: index
           required: false
           schema:
-            minimum: 0
             type: integer
             x-struct:
             x-validate:
@@ -3171,14 +5926,14 @@ paths:
                 properties:
                   items:
                     items:
-                      $ref: '#/components/schemas/Block'
+                      $ref: '#/components/schemas/Withdrawal'
                     nullable: false
                     type: array
                     x-struct:
                     x-validate:
                   next_page_params:
                     example:
-                      block_number: 22546398
+                      index: 88192653
                       items_count: 50
                     nullable: true
                     type: object
@@ -3187,11 +5942,11 @@ paths:
                 required:
                   - items
                   - next_page_params
-                title: AddressBlocksValidatedPaginatedResponse
+                title: AddressWithdrawalsPaginatedResponse
                 type: object
                 x-struct:
                 x-validate:
-          description: Blocks validated by the specified address, with pagination.
+          description: Withdrawals for the specified address, with pagination. Note that receiver field is not included in this endpoint.
         '403':
           content:
             application/json:
@@ -3204,99 +5959,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/JsonErrorResponse'
           description: Unprocessable Entity
-      summary: List blocks validated (mined) by a specific validator/miner address
-      tags:
-        - addresses
-  /v2/addresses/{address_hash_param}/coin-balance-history:
-    get:
-      callbacks: {}
-      description: Retrieves historical native coin balance changes for a specific address, tracking how an address's balance has changed over time.
-      operationId: BlockScoutWeb.API.V2.AddressController.coin_balance_history
-      parameters:
-        - description: API key for rate limiting
-          in: query
-          name: apikey
-          required: false
-          schema:
-            type: string
-            x-struct:
-            x-validate:
-        - description: Secret key for getting access to restricted resources
-          in: query
-          name: key
-          required: false
-          schema:
-            type: string
-            x-struct:
-            x-validate:
-        - in: path
-          name: address_hash_param
-          required: true
-          schema:
-            $ref: '#/components/schemas/AddressHash'
-        - description: Block number for paging
-          in: query
-          name: block_number
-          required: false
-          schema:
-            minimum: 0
-            type: integer
-            x-struct:
-            x-validate:
-        - description: Number of items returned per page
-          in: query
-          name: items_count
-          required: false
-          schema:
-            maximum: 50
-            minimum: 1
-            type: integer
-            x-struct:
-            x-validate:
-      responses:
-        '200':
-          content:
-            application/json:
-              schema:
-                additionalProperties: false
-                nullable: false
-                properties:
-                  items:
-                    items:
-                      $ref: '#/components/schemas/CoinBalance'
-                    nullable: false
-                    type: array
-                    x-struct:
-                    x-validate:
-                  next_page_params:
-                    example:
-                      block_number: 22546398
-                      items_count: 50
-                    nullable: true
-                    type: object
-                    x-struct:
-                    x-validate:
-                required:
-                  - items
-                  - next_page_params
-                title: AddressCoinBalanceHistoryPaginatedResponse
-                type: object
-                x-struct:
-                x-validate:
-          description: Historical coin balance changes for the specified address, with pagination.
-        '403':
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ForbiddenResponse'
-          description: Forbidden
-        '422':
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/JsonErrorResponse'
-          description: Unprocessable Entity
-      summary: Get native coin balance history for an address showing all balance changes
+      summary: List validator withdrawals involving a specific address
       tags:
         - addresses
   /v2/addresses/{address_hash_param}/coin-balance-history-by-day:
@@ -3365,17 +6028,12 @@ paths:
       summary: Get daily native coin balance snapshots for an address from previous 10 days
       tags:
         - addresses
-  /v2/addresses/{address_hash_param}/counters:
+  /v2/tokens/{address_hash_param}/instances/{token_id_param}/transfers-count:
     get:
       callbacks: {}
-      description: Retrieves count statistics for an address, including transactions, token transfers, gas usage, and validations.
-      operationId: BlockScoutWeb.API.V2.AddressController.counters
+      description: Retrieves the number of transfers for a specific token instance (by token address and token ID).
+      operationId: BlockScoutWeb.API.V2.TokenController.transfers_count_by_instance
       parameters:
-        - in: path
-          name: address_hash_param
-          required: true
-          schema:
-            $ref: '#/components/schemas/AddressHash'
         - description: API key for rate limiting
           in: query
           name: apikey
@@ -3392,33 +6050,51 @@ paths:
             type: string
             x-struct:
             x-validate:
+        - in: path
+          name: address_hash_param
+          required: true
+          schema:
+            $ref: '#/components/schemas/AddressHash'
+        - description: Token ID for ERC-721/1155/404 tokens
+          in: path
+          name: token_id_param
+          required: true
+          schema:
+            $ref: '#/components/schemas/IntegerStringNullable'
       responses:
         '200':
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/AddressCounters'
-          description: Count statistics for the specified address
-        '403':
+                properties:
+                  transfers_count:
+                    type: integer
+                    x-struct:
+                    x-validate:
+                type: object
+                x-struct:
+                x-validate:
+          description: Transfer count for the instance.
+        '404':
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ForbiddenResponse'
-          description: Forbidden
+                $ref: '#/components/schemas/NotFoundResponse'
+          description: Not Found
         '422':
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/JsonErrorResponse'
           description: Unprocessable Entity
-      summary: Get activity count stats for a specific address
+      summary: Get transfer count for a specific token instance
       tags:
-        - addresses
-  /v2/addresses/{address_hash_param}/internal-transactions:
+        - tokens
+  /v2/blocks/{block_hash_or_number_param}/transactions:
     get:
       callbacks: {}
-      description: Retrieves all internal transactions involving a specific address, with optional filtering for internal transactions sent from or to the address.
-      operationId: BlockScoutWeb.API.V2.AddressController.internal_transactions
+      description: Retrieves transactions included in a specific block with optional filtering and sorting.
+      operationId: BlockScoutWeb.API.V2.BlockController.transactions
       parameters:
         - description: API key for rate limiting
           in: query
@@ -3437,22 +6113,34 @@ paths:
             x-struct:
             x-validate:
         - in: path
-          name: address_hash_param
+          name: block_hash_or_number_param
           required: true
           schema:
-            $ref: '#/components/schemas/AddressHash'
+            anyOf:
+              - type: integer
+                x-struct:
+                x-validate:
+              - $ref: '#/components/schemas/FullHash'
+            x-struct:
+            x-validate:
         - description: |
-            Filter transactions by direction:
-            * to - Only show transactions sent to this address
-            * from - Only show transactions sent from this address
-            If omitted, all transactions involving the address are returned.
+            Filter transactions by type:
+            * coin_transfer - Only show coin transfer transactions
+            * contract_call - Only show contract call transactions
+            * contract_creation - Only show contract creation transactions
+            * token_transfer - Only show token transfer transactions
+            * token_creation - Only show token creation transactions
+            * blob_transaction - Only show blob transactions (Ethereum only)
           in: query
-          name: filter
+          name: type
           required: false
           schema:
             enum:
-              - to
-              - from
+              - coin_transfer
+              - contract_call
+              - contract_creation
+              - token_transfer
+              - token_creation
             type: string
             x-struct:
             x-validate:
@@ -3483,11 +6171,108 @@ paths:
             type: integer
             x-struct:
             x-validate:
-        - description: Transaction index for paging
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                additionalProperties: false
+                nullable: false
+                properties:
+                  items:
+                    items:
+                      $ref: '#/components/schemas/Transaction'
+                    nullable: false
+                    type: array
+                    x-struct:
+                    x-validate:
+                  next_page_params:
+                    example:
+                      block_number: 12345678
+                      index: 103
+                      items_count: 50
+                    nullable: true
+                    type: object
+                    x-struct:
+                    x-validate:
+                required:
+                  - items
+                  - next_page_params
+                title: BlockTransactionsPaginatedResponse
+                type: object
+                x-struct:
+                x-validate:
+          description: Transactions in the specified block.
+        '404':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFoundResponse'
+          description: Not Found
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JsonErrorResponse'
+          description: Unprocessable Entity
+      summary: List transactions in a specific block
+      tags:
+        - blocks
+  /v2/blocks:
+    get:
+      callbacks: {}
+      description: Retrieves a paginated list of blocks with optional filtering by block type and sorting options.
+      operationId: BlockScoutWeb.API.V2.BlockController.blocks
+      parameters:
+        - description: API key for rate limiting
           in: query
-          name: transaction_index
+          name: apikey
           required: false
           schema:
+            type: string
+            x-struct:
+            x-validate:
+        - description: Secret key for getting access to restricted resources
+          in: query
+          name: key
+          required: false
+          schema:
+            type: string
+            x-struct:
+            x-validate:
+        - description: |
+            Filter by block type:
+            * reorg - Only show reorgs
+            * uncle - Only show uncle blocks
+            * block - Only show main blocks
+            If omitted, default value "block" is used.
+          in: query
+          name: type
+          required: false
+          schema:
+            enum:
+              - uncle
+              - reorg
+              - block
+            type: string
+            x-struct:
+            x-validate:
+        - description: Block number for paging
+          in: query
+          name: block_number
+          required: false
+          schema:
+            minimum: 0
+            type: integer
+            x-struct:
+            x-validate:
+        - description: Number of items returned per page
+          in: query
+          name: items_count
+          required: false
+          schema:
+            maximum: 50
+            minimum: 1
             type: integer
             x-struct:
             x-validate:
@@ -3501,17 +6286,15 @@ paths:
                 properties:
                   items:
                     items:
-                      $ref: '#/components/schemas/InternalTransaction'
+                      $ref: '#/components/schemas/Block'
                     nullable: false
                     type: array
                     x-struct:
                     x-validate:
                   next_page_params:
                     example:
-                      block_number: 22530770
-                      index: 8
+                      block_number: 22566361
                       items_count: 50
-                      transaction_index: 8
                     nullable: true
                     type: object
                     x-struct:
@@ -3519,26 +6302,84 @@ paths:
                 required:
                   - items
                   - next_page_params
-                title: AddressInternalTransactionsPaginatedResponse
+                title: BlocksPaginatedResponse
                 type: object
                 x-struct:
                 x-validate:
-          description: All internal transactions for the specified address.
-        '403':
+          description: List of blocks with pagination.
+      summary: List blocks with optional filtering and sorting
+      tags:
+        - blocks
+  /v2/tokens/{address_hash_param}/instances/{token_id_param}/refetch-metadata:
+    patch:
+      callbacks: {}
+      description: Triggers a metadata refetch for a specific token instance (by token address and token ID).
+      operationId: BlockScoutWeb.API.V2.TokenController.refetch_metadata
+      parameters:
+        - description: API key for rate limiting
+          in: query
+          name: apikey
+          required: false
+          schema:
+            type: string
+            x-struct:
+            x-validate:
+        - description: Secret key for getting access to restricted resources
+          in: query
+          name: key
+          required: false
+          schema:
+            type: string
+            x-struct:
+            x-validate:
+        - in: path
+          name: address_hash_param
+          required: true
+          schema:
+            $ref: '#/components/schemas/AddressHash'
+        - description: Token ID for ERC-721/1155/404 tokens
+          in: path
+          name: token_id_param
+          required: true
+          schema:
+            $ref: '#/components/schemas/IntegerStringNullable'
+        - description: reCAPTCHA response token
+          in: query
+          name: recaptcha_response
+          required: false
+          schema:
+            type: string
+            x-struct:
+            x-validate:
+      responses:
+        '200':
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ForbiddenResponse'
-          description: Forbidden
+                properties:
+                  message:
+                    type: string
+                    x-struct:
+                    x-validate:
+                type: object
+                x-struct:
+                x-validate:
+          description: Metadata refetch triggered.
+        '404':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFoundResponse'
+          description: Not Found
         '422':
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/JsonErrorResponse'
           description: Unprocessable Entity
-      summary: List all internal transactions involving a specific address
+      summary: Trigger metadata refetch for a specific token instance
       tags:
-        - addresses
+        - tokens
   /v2/addresses/{address_hash_param}/logs:
     get:
       callbacks: {}
@@ -3646,11 +6487,11 @@ paths:
       summary: List event logs emitted by or involving a specific address
       tags:
         - addresses
-  /v2/addresses/{address_hash_param}/nft:
+  /v2/addresses/{address_hash_param}/internal-transactions/csv:
     get:
       callbacks: {}
-      description: Retrieves a list of NFTs (non-fungible tokens) owned by a specific address, with optional filtering by token type.
-      operationId: BlockScoutWeb.API.V2.AddressController.nft_list
+      description: Exports internal transactions for a specific address as a CSV file.
+      operationId: BlockScoutWeb.API.V2.CsvExportController.internal_transactions_csv
       parameters:
         - description: API key for rate limiting
           in: query
@@ -3673,617 +6514,183 @@ paths:
           required: true
           schema:
             $ref: '#/components/schemas/AddressHash'
-        - description: |
-            Filter by token type. Comma-separated list of:
-            * ERC-721 - Non-fungible tokens
-            * ERC-1155 - Multi-token standard
-            * ERC-404 - Hybrid fungible/non-fungible tokens
-
-            Example: `ERC-721,ERC-1155` to show both NFT and multi-token transfers
+        - in: query
+          name: address_id
+          required: false
+          schema:
+            $ref: '#/components/schemas/AddressHash'
+        - description: Start of the time period (ISO 8601 format) in CSV export
           in: query
-          name: type
+          name: from_period
+          required: true
+          schema:
+            nullable: false
+            pattern: ^\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01])(?:T(?:[01]\d|2[0-3])(?:(?::|%3A)[0-5]\d(?:(?::|%3A)[0-5]\d(?:\.\d{1,9})?)?)?(?:Z|(?:\+|%2B|-)(?:[01]\d|2[0-3])(?:(?::|%3A)[0-5]\d)?)?)?$
+            type: string
+            x-struct:
+            x-validate:
+        - description: End of the time period (ISO 8601 format) In CSV export
+          in: query
+          name: to_period
+          required: true
+          schema:
+            nullable: false
+            pattern: ^\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01])(?:T(?:[01]\d|2[0-3])(?:(?::|%3A)[0-5]\d(?:(?::|%3A)[0-5]\d(?:\.\d{1,9})?)?)?(?:Z|(?:\+|%2B|-)(?:[01]\d|2[0-3])(?:(?::|%3A)[0-5]\d)?)?)?$
+            type: string
+            x-struct:
+            x-validate:
+        - description: Filter type in CSV export
+          in: query
+          name: filter_type
           required: false
           schema:
             anyOf:
-              - $ref: '#/components/schemas/EmptyString'
-              - pattern: ^(ERC-721|ERC-1155|ERC-404)(,(ERC-721|ERC-1155|ERC-404))*$
+              - enum:
+                  - address
+                nullable: true
                 type: string
                 x-struct:
                 x-validate:
-            x-struct:
-            x-validate:
-        - description: Number of items returned per page
-          in: query
-          name: items_count
-          required: false
-          schema:
-            maximum: 50
-            minimum: 1
-            type: integer
-            x-struct:
-            x-validate:
-        - description: Token contract address hash for paging
-          in: query
-          name: token_contract_address_hash
-          required: false
-          schema:
-            $ref: '#/components/schemas/AddressHash'
-        - description: Token ID for paging
-          in: query
-          name: token_id
-          required: false
-          schema:
-            $ref: '#/components/schemas/IntegerStringNullable'
-        - description: Token type for paging
-          in: query
-          name: token_type
-          required: false
-          schema:
-            $ref: '#/components/schemas/Type'
-      responses:
-        '200':
-          content:
-            application/json:
-              schema:
-                additionalProperties: false
-                nullable: false
-                properties:
-                  items:
-                    items:
-                      $ref: '#/components/schemas/TokenInstanceInList'
-                    nullable: false
-                    type: array
-                    x-struct:
-                    x-validate:
-                  next_page_params:
-                    example:
-                      items_count: 50
-                      token_contract_address_hash: '0x1ffe11b9fb7f6ff1b153ab8608cf403ecaf9d44a'
-                      token_id: '24950'
-                      token_type: ERC-721
-                    nullable: true
-                    type: object
-                    x-struct:
-                    x-validate:
-                required:
-                  - items
-                  - next_page_params
-                title: AddressNFTsPaginatedResponse
-                type: object
-                x-struct:
-                x-validate:
-          description: NFTs owned by the specified address, with pagination.
-        '403':
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ForbiddenResponse'
-          description: Forbidden
-        '422':
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/JsonErrorResponse'
-          description: Unprocessable Entity
-      summary: List NFTs owned by a specific address with optional type filtering
-      tags:
-        - addresses
-  /v2/addresses/{address_hash_param}/nft/collections:
-    get:
-      callbacks: {}
-      description: Retrieves NFTs owned by a specific address, organized by collection. Useful for displaying an address's NFT portfolio grouped by project.
-      operationId: BlockScoutWeb.API.V2.AddressController.nft_collections
-      parameters:
-        - description: API key for rate limiting
-          in: query
-          name: apikey
-          required: false
-          schema:
-            type: string
-            x-struct:
-            x-validate:
-        - description: Secret key for getting access to restricted resources
-          in: query
-          name: key
-          required: false
-          schema:
-            type: string
-            x-struct:
-            x-validate:
-        - in: path
-          name: address_hash_param
-          required: true
-          schema:
-            $ref: '#/components/schemas/AddressHash'
-        - description: |
-            Filter by token type. Comma-separated list of:
-            * ERC-721 - Non-fungible tokens
-            * ERC-1155 - Multi-token standard
-            * ERC-404 - Hybrid fungible/non-fungible tokens
-
-            Example: `ERC-721,ERC-1155` to show both NFT and multi-token transfers
-          in: query
-          name: type
-          required: false
-          schema:
-            anyOf:
-              - $ref: '#/components/schemas/EmptyString'
-              - pattern: ^(ERC-721|ERC-1155|ERC-404)(,(ERC-721|ERC-1155|ERC-404))*$
-                type: string
-                x-struct:
-                x-validate:
-            x-struct:
-            x-validate:
-        - description: Number of items returned per page
-          in: query
-          name: items_count
-          required: false
-          schema:
-            maximum: 50
-            minimum: 1
-            type: integer
-            x-struct:
-            x-validate:
-        - description: Token contract address hash for paging
-          in: query
-          name: token_contract_address_hash
-          required: false
-          schema:
-            $ref: '#/components/schemas/AddressHash'
-        - description: Token type for paging
-          in: query
-          name: token_type
-          required: false
-          schema:
-            $ref: '#/components/schemas/Type'
-      responses:
-        '200':
-          content:
-            application/json:
-              schema:
-                additionalProperties: false
-                nullable: false
-                properties:
-                  items:
-                    items:
-                      $ref: '#/components/schemas/NFTCollection'
-                    nullable: false
-                    type: array
-                    x-struct:
-                    x-validate:
-                  next_page_params:
-                    example:
-                      items_count: 50
-                      token_contract_address_hash: '0x1ffe11b9fb7f6ff1b153ab8608cf403ecaf9d44a'
-                      token_type: ERC-721
-                    nullable: true
-                    type: object
-                    x-struct:
-                    x-validate:
-                required:
-                  - items
-                  - next_page_params
-                title: AddressNFTCollectionsPaginatedResponse
-                type: object
-                x-struct:
-                x-validate:
-          description: NFTs owned by the specified address, grouped by collection, with pagination.
-        '403':
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ForbiddenResponse'
-          description: Forbidden
-        '422':
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/JsonErrorResponse'
-          description: Unprocessable Entity
-      summary: List NFTs owned by an address grouped by collection/project
-      tags:
-        - addresses
-  /v2/addresses/{address_hash_param}/tabs-counters:
-    get:
-      callbacks: {}
-      description: Retrieves counters for various address-related entities (max counter value is 51).
-      operationId: BlockScoutWeb.API.V2.AddressController.tabs_counters
-      parameters:
-        - in: path
-          name: address_hash_param
-          required: true
-          schema:
-            $ref: '#/components/schemas/AddressHash'
-        - description: API key for rate limiting
-          in: query
-          name: apikey
-          required: false
-          schema:
-            type: string
-            x-struct:
-            x-validate:
-        - description: Secret key for getting access to restricted resources
-          in: query
-          name: key
-          required: false
-          schema:
-            type: string
-            x-struct:
-            x-validate:
-      responses:
-        '200':
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/AddressTabsCounters'
-          description: Counters for address tabs.
-        '403':
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ForbiddenResponse'
-          description: Forbidden
-        '422':
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/JsonErrorResponse'
-          description: Unprocessable Entity
-      summary: Get counters for address tabs
-      tags:
-        - addresses
-  /v2/addresses/{address_hash_param}/token-balances:
-    get:
-      callbacks: {}
-      description: Retrieves all token balances held by a specific address, including ERC-20, ERC-721, ERC-1155 and ERC-404 tokens.
-      operationId: BlockScoutWeb.API.V2.AddressController.token_balances
-      parameters:
-        - in: path
-          name: address_hash_param
-          required: true
-          schema:
-            $ref: '#/components/schemas/AddressHash'
-        - description: API key for rate limiting
-          in: query
-          name: apikey
-          required: false
-          schema:
-            type: string
-            x-struct:
-            x-validate:
-        - description: Secret key for getting access to restricted resources
-          in: query
-          name: key
-          required: false
-          schema:
-            type: string
-            x-struct:
-            x-validate:
-      responses:
-        '200':
-          content:
-            application/json:
-              schema:
-                items:
-                  $ref: '#/components/schemas/TokenBalance'
-                title: AddressTokenBalances
-                type: array
-                x-struct:
-                x-validate:
-          description: All token balances for the specified address.
-        '403':
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ForbiddenResponse'
-          description: Forbidden
-        '422':
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/JsonErrorResponse'
-          description: Unprocessable Entity
-      summary: List all token balances held by a specific address
-      tags:
-        - addresses
-  /v2/addresses/{address_hash_param}/token-transfers:
-    get:
-      callbacks: {}
-      description: Retrieves token transfers involving a specific address, with optional filtering by token type, direction, and specific token.
-      operationId: BlockScoutWeb.API.V2.AddressController.token_transfers
-      parameters:
-        - description: API key for rate limiting
-          in: query
-          name: apikey
-          required: false
-          schema:
-            type: string
-            x-struct:
-            x-validate:
-        - description: Secret key for getting access to restricted resources
-          in: query
-          name: key
-          required: false
-          schema:
-            type: string
-            x-struct:
-            x-validate:
-        - in: path
-          name: address_hash_param
-          required: true
-          schema:
-            $ref: '#/components/schemas/AddressHash'
-        - description: |
-            Filter transactions by direction:
-            * to - Only show transactions sent to this address
-            * from - Only show transactions sent from this address
-            If omitted, all transactions involving the address are returned.
-          in: query
-          name: filter
-          required: false
-          schema:
-            enum:
-              - to
-              - from
-            type: string
-            x-struct:
-            x-validate:
-        - description: |
-            Filter by token type. Comma-separated list of:
-            * ERC-20 - Fungible tokens
-            * ERC-721 - Non-fungible tokens
-            * ERC-1155 - Multi-token standard
-            * ERC-404 - Hybrid fungible/non-fungible tokens
-
-            Example: `ERC-20,ERC-721` to show both fungible and NFT transfers
-          in: query
-          name: type
-          required: false
-          schema:
-            anyOf:
-              - $ref: '#/components/schemas/EmptyString'
-              - pattern: ^(ERC-20|ERC-721|ERC-1155|ERC-404)(,(ERC-20|ERC-721|ERC-1155|ERC-404))*$
-                type: string
-                x-struct:
-                x-validate:
-            x-struct:
-            x-validate:
-        - description: Filter token transfers by token contract address.
-          in: query
-          name: token
-          required: false
-          schema:
-            $ref: '#/components/schemas/AddressHash'
-        - description: Block number for paging
-          in: query
-          name: block_number
-          required: false
-          schema:
-            minimum: 0
-            type: integer
-            x-struct:
-            x-validate:
-        - description: Transaction index for paging
-          in: query
-          name: index
-          required: false
-          schema:
-            type: integer
-            x-struct:
-            x-validate:
-        - description: Number of items returned per page
-          in: query
-          name: items_count
-          required: false
-          schema:
-            maximum: 50
-            minimum: 1
-            type: integer
-            x-struct:
-            x-validate:
-        - description: Batch log index for paging
-          in: query
-          name: batch_log_index
-          required: false
-          schema:
-            type: integer
-            x-struct:
-            x-validate:
-        - description: Batch block hash for paging
-          in: query
-          name: batch_block_hash
-          required: false
-          schema:
-            $ref: '#/components/schemas/FullHash'
-        - description: Batch transaction hash for paging
-          in: query
-          name: batch_transaction_hash
-          required: false
-          schema:
-            $ref: '#/components/schemas/FullHash'
-        - description: Index in batch for paging
-          in: query
-          name: index_in_batch
-          required: false
-          schema:
-            type: integer
-            x-struct:
-            x-validate:
-      responses:
-        '200':
-          content:
-            application/json:
-              schema:
-                additionalProperties: false
-                nullable: false
-                properties:
-                  items:
-                    items:
-                      $ref: '#/components/schemas/TokenTransfer'
-                    nullable: false
-                    type: array
-                    x-struct:
-                    x-validate:
-                  next_page_params:
-                    example:
-                      block_number: 12345678
-                      index: 0
-                      items_count: 50
-                    nullable: true
-                    type: object
-                    x-struct:
-                    x-validate:
-                required:
-                  - items
-                  - next_page_params
-                title: AddressTokenTransfersPaginatedResponse
-                type: object
-                x-struct:
-                x-validate:
-          description: All token transfers for the specified address.
-        '403':
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ForbiddenResponse'
-          description: Forbidden
-        '422':
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/JsonErrorResponse'
-          description: Unprocessable Entity
-      summary: List token transfers involving a specific address with filtering options
-      tags:
-        - addresses
-  /v2/addresses/{address_hash_param}/tokens:
-    get:
-      callbacks: {}
-      description: Retrieves token balances for a specific address with pagination and filtering by token type. Useful for displaying large token portfolios.
-      operationId: BlockScoutWeb.API.V2.AddressController.tokens
-      parameters:
-        - description: API key for rate limiting
-          in: query
-          name: apikey
-          required: false
-          schema:
-            type: string
-            x-struct:
-            x-validate:
-        - description: Secret key for getting access to restricted resources
-          in: query
-          name: key
-          required: false
-          schema:
-            type: string
-            x-struct:
-            x-validate:
-        - in: path
-          name: address_hash_param
-          required: true
-          schema:
-            $ref: '#/components/schemas/AddressHash'
-        - description: |
-            Filter by token type. Comma-separated list of:
-            * ERC-20 - Fungible tokens
-            * ERC-721 - Non-fungible tokens
-            * ERC-1155 - Multi-token standard
-            * ERC-404 - Hybrid fungible/non-fungible tokens
-
-            Example: `ERC-20,ERC-721` to show both fungible and NFT transfers
-          in: query
-          name: type
-          required: false
-          schema:
-            anyOf:
-              - $ref: '#/components/schemas/EmptyString'
-              - pattern: ^(ERC-20|ERC-721|ERC-1155|ERC-404)(,(ERC-20|ERC-721|ERC-1155|ERC-404))*$
-                type: string
-                x-struct:
-                x-validate:
-            x-struct:
-            x-validate:
-        - description: Fiat value for paging
-          in: query
-          name: fiat_value
-          required: false
-          schema:
-            anyOf:
-              - $ref: '#/components/schemas/FloatString'
-              - $ref: '#/components/schemas/EmptyString'
               - $ref: '#/components/schemas/NullString'
             x-struct:
             x-validate:
-        - description: ID for paging
+        - description: Filter value in CSV export
           in: query
-          name: id
+          name: filter_value
           required: false
           schema:
-            type: integer
+            anyOf:
+              - enum:
+                  - to
+                  - from
+                nullable: true
+                type: string
+                x-struct:
+                x-validate:
+              - $ref: '#/components/schemas/NullString'
             x-struct:
             x-validate:
-        - description: Number of items returned per page
-          in: query
-          name: items_count
-          required: false
-          schema:
-            maximum: 50
-            minimum: 1
-            type: integer
-            x-struct:
-            x-validate:
-        - description: Transaction value for paging
-          in: query
-          name: value
-          required: false
-          schema:
-            $ref: '#/components/schemas/IntegerString'
       responses:
         '200':
           content:
-            application/json:
-              schema:
-                additionalProperties: false
-                nullable: false
-                properties:
-                  items:
-                    items:
-                      $ref: '#/components/schemas/TokenBalance'
-                    nullable: false
-                    type: array
-                    x-struct:
-                    x-validate:
-                  next_page_params:
-                    example:
-                      fiat_value:
-                      id: 12519063346
-                      items_count: 50
-                      value: '3750000000000000000000'
-                    nullable: true
-                    type: object
-                    x-struct:
-                    x-validate:
-                required:
-                  - items
-                  - next_page_params
-                title: AddressTokensPaginatedResponse
-                type: object
-                x-struct:
-                x-validate:
-          description: Token balances for the specified address with pagination.
-        '403':
+            application/csv: {}
+          description: CSV file of internal transactions.
+        '404':
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ForbiddenResponse'
-          description: Forbidden
+                $ref: '#/components/schemas/NotFoundResponse'
+          description: Not Found
         '422':
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/JsonErrorResponse'
           description: Unprocessable Entity
-      summary: List token balances for an address with pagination and type filtering
+      summary: Export internal transactions as CSV
+      tags:
+        - addresses
+  /v2/addresses/{address_hash_param}/logs/csv:
+    get:
+      callbacks: {}
+      description: Exports logs for a specific address as a CSV file.
+      operationId: BlockScoutWeb.API.V2.CsvExportController.logs_csv
+      parameters:
+        - description: API key for rate limiting
+          in: query
+          name: apikey
+          required: false
+          schema:
+            type: string
+            x-struct:
+            x-validate:
+        - description: Secret key for getting access to restricted resources
+          in: query
+          name: key
+          required: false
+          schema:
+            type: string
+            x-struct:
+            x-validate:
+        - in: path
+          name: address_hash_param
+          required: true
+          schema:
+            $ref: '#/components/schemas/AddressHash'
+        - in: query
+          name: address_id
+          required: false
+          schema:
+            $ref: '#/components/schemas/AddressHash'
+        - description: Start of the time period (ISO 8601 format) in CSV export
+          in: query
+          name: from_period
+          required: true
+          schema:
+            nullable: false
+            pattern: ^\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01])(?:T(?:[01]\d|2[0-3])(?:(?::|%3A)[0-5]\d(?:(?::|%3A)[0-5]\d(?:\.\d{1,9})?)?)?(?:Z|(?:\+|%2B|-)(?:[01]\d|2[0-3])(?:(?::|%3A)[0-5]\d)?)?)?$
+            type: string
+            x-struct:
+            x-validate:
+        - description: End of the time period (ISO 8601 format) In CSV export
+          in: query
+          name: to_period
+          required: true
+          schema:
+            nullable: false
+            pattern: ^\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01])(?:T(?:[01]\d|2[0-3])(?:(?::|%3A)[0-5]\d(?:(?::|%3A)[0-5]\d(?:\.\d{1,9})?)?)?(?:Z|(?:\+|%2B|-)(?:[01]\d|2[0-3])(?:(?::|%3A)[0-5]\d)?)?)?$
+            type: string
+            x-struct:
+            x-validate:
+        - description: Filter type in CSV export
+          in: query
+          name: filter_type
+          required: false
+          schema:
+            anyOf:
+              - enum:
+                  - address
+                nullable: true
+                type: string
+                x-struct:
+                x-validate:
+              - $ref: '#/components/schemas/NullString'
+            x-struct:
+            x-validate:
+        - description: Filter value in CSV export
+          in: query
+          name: filter_value
+          required: false
+          schema:
+            anyOf:
+              - enum:
+                  - to
+                  - from
+                nullable: true
+                type: string
+                x-struct:
+                x-validate:
+              - $ref: '#/components/schemas/NullString'
+            x-struct:
+            x-validate:
+      responses:
+        '200':
+          content:
+            application/csv: {}
+          description: CSV file of logs.
+        '404':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFoundResponse'
+          description: Not Found
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JsonErrorResponse'
+          description: Unprocessable Entity
+      summary: Export logs as CSV
       tags:
         - addresses
   /v2/addresses/{address_hash_param}/transactions:
@@ -4333,6 +6740,11 @@ paths:
             * block_number - Sort by block number
             * value - Sort by transaction value
             * fee - Sort by transaction fee
+            * balance - Sort by account balance
+            * transactions_count - Sort by number of transactions on address
+            * fiat_value - Sort by fiat value of the token transfer
+            * holders_count - Sort by number of token holders
+            * circulating_market_cap - Sort by circulating market cap of the token
             Should be used together with `order` parameter.
           in: query
           name: sort
@@ -4474,11 +6886,11 @@ paths:
       summary: List transactions involving a specific address with to-from filtering
       tags:
         - addresses
-  /v2/addresses/{address_hash_param}/withdrawals:
+  /v2/addresses/{address_hash_param}/transactions/csv:
     get:
       callbacks: {}
-      description: Retrieves withdrawals involving a specific address, typically for proof-of-stake networks supporting validator withdrawals.
-      operationId: BlockScoutWeb.API.V2.AddressController.withdrawals
+      description: Exports transactions for a specific address as a CSV file.
+      operationId: BlockScoutWeb.API.V2.CsvExportController.transactions_csv
       parameters:
         - description: API key for rate limiting
           in: query
@@ -4501,12 +6913,126 @@ paths:
           required: true
           schema:
             $ref: '#/components/schemas/AddressHash'
-        - description: Transaction index for paging
-          in: query
-          name: index
+        - in: query
+          name: address_id
           required: false
           schema:
-            type: integer
+            $ref: '#/components/schemas/AddressHash'
+        - description: Start of the time period (ISO 8601 format) in CSV export
+          in: query
+          name: from_period
+          required: true
+          schema:
+            nullable: false
+            pattern: ^\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01])(?:T(?:[01]\d|2[0-3])(?:(?::|%3A)[0-5]\d(?:(?::|%3A)[0-5]\d(?:\.\d{1,9})?)?)?(?:Z|(?:\+|%2B|-)(?:[01]\d|2[0-3])(?:(?::|%3A)[0-5]\d)?)?)?$
+            type: string
+            x-struct:
+            x-validate:
+        - description: End of the time period (ISO 8601 format) In CSV export
+          in: query
+          name: to_period
+          required: true
+          schema:
+            nullable: false
+            pattern: ^\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01])(?:T(?:[01]\d|2[0-3])(?:(?::|%3A)[0-5]\d(?:(?::|%3A)[0-5]\d(?:\.\d{1,9})?)?)?(?:Z|(?:\+|%2B|-)(?:[01]\d|2[0-3])(?:(?::|%3A)[0-5]\d)?)?)?$
+            type: string
+            x-struct:
+            x-validate:
+        - description: Filter type in CSV export
+          in: query
+          name: filter_type
+          required: false
+          schema:
+            anyOf:
+              - enum:
+                  - address
+                nullable: true
+                type: string
+                x-struct:
+                x-validate:
+              - $ref: '#/components/schemas/NullString'
+            x-struct:
+            x-validate:
+        - description: Filter value in CSV export
+          in: query
+          name: filter_value
+          required: false
+          schema:
+            anyOf:
+              - enum:
+                  - to
+                  - from
+                nullable: true
+                type: string
+                x-struct:
+                x-validate:
+              - $ref: '#/components/schemas/NullString'
+            x-struct:
+            x-validate:
+      responses:
+        '200':
+          content:
+            application/csv: {}
+          description: CSV file of transactions.
+        '404':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFoundResponse'
+          description: Not Found
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JsonErrorResponse'
+          description: Unprocessable Entity
+      summary: Export transactions as CSV
+      tags:
+        - addresses
+  /v2/addresses/{address_hash_param}/nft/collections:
+    get:
+      callbacks: {}
+      description: Retrieves NFTs owned by a specific address, organized by collection. Useful for displaying an address's NFT portfolio grouped by project.
+      operationId: BlockScoutWeb.API.V2.AddressController.nft_collections
+      parameters:
+        - description: API key for rate limiting
+          in: query
+          name: apikey
+          required: false
+          schema:
+            type: string
+            x-struct:
+            x-validate:
+        - description: Secret key for getting access to restricted resources
+          in: query
+          name: key
+          required: false
+          schema:
+            type: string
+            x-struct:
+            x-validate:
+        - in: path
+          name: address_hash_param
+          required: true
+          schema:
+            $ref: '#/components/schemas/AddressHash'
+        - description: |
+            Filter by token type. Comma-separated list of:
+            * ERC-721 - Non-fungible tokens
+            * ERC-1155 - Multi-token standard
+            * ERC-404 - Hybrid fungible/non-fungible tokens
+
+            Example: `ERC-721,ERC-1155` to show both NFT and multi-token transfers
+          in: query
+          name: type
+          required: false
+          schema:
+            anyOf:
+              - $ref: '#/components/schemas/EmptyString'
+              - pattern: ^\[?(ERC-20|ERC-721|ERC-1155|ERC-404)(,(ERC-20|ERC-721|ERC-1155|ERC-404))*\]?$
+                type: string
+                x-struct:
+                x-validate:
             x-struct:
             x-validate:
         - description: Number of items returned per page
@@ -4519,6 +7045,18 @@ paths:
             type: integer
             x-struct:
             x-validate:
+        - description: Token contract address hash for paging
+          in: query
+          name: token_contract_address_hash
+          required: false
+          schema:
+            $ref: '#/components/schemas/AddressHash'
+        - description: Token type for paging
+          in: query
+          name: token_type
+          required: false
+          schema:
+            $ref: '#/components/schemas/Type'
       responses:
         '200':
           content:
@@ -4529,15 +7067,16 @@ paths:
                 properties:
                   items:
                     items:
-                      $ref: '#/components/schemas/Withdrawal'
+                      $ref: '#/components/schemas/NFTCollection'
                     nullable: false
                     type: array
                     x-struct:
                     x-validate:
                   next_page_params:
                     example:
-                      index: 88192653
                       items_count: 50
+                      token_contract_address_hash: '0x1ffe11b9fb7f6ff1b153ab8608cf403ecaf9d44a'
+                      token_type: ERC-721
                     nullable: true
                     type: object
                     x-struct:
@@ -4545,11 +7084,11 @@ paths:
                 required:
                   - items
                   - next_page_params
-                title: AddressWithdrawalsPaginatedResponse
+                title: AddressNFTCollectionsPaginatedResponse
                 type: object
                 x-struct:
                 x-validate:
-          description: Withdrawals for the specified address, with pagination. Note that receiver field is not included in this endpoint.
+          description: NFTs owned by the specified address, grouped by collection, with pagination.
         '403':
           content:
             application/json:
@@ -4562,574 +7101,9 @@ paths:
               schema:
                 $ref: '#/components/schemas/JsonErrorResponse'
           description: Unprocessable Entity
-      summary: List validator withdrawals involving a specific address
+      summary: List NFTs owned by an address grouped by collection/project
       tags:
         - addresses
-  /v2/blocks:
-    get:
-      callbacks: {}
-      description: Retrieves a paginated list of blocks with optional filtering by block type and sorting options.
-      operationId: BlockScoutWeb.API.V2.BlockController.blocks
-      parameters:
-        - description: API key for rate limiting
-          in: query
-          name: apikey
-          required: false
-          schema:
-            type: string
-            x-struct:
-            x-validate:
-        - description: Secret key for getting access to restricted resources
-          in: query
-          name: key
-          required: false
-          schema:
-            type: string
-            x-struct:
-            x-validate:
-        - description: |
-            Filter by block type:
-            * reorg - Only show reorgs
-            * uncle - Only show uncle blocks
-            * block - Only show main blocks
-            If omitted, default value "block" is used.
-          in: query
-          name: type
-          required: false
-          schema:
-            enum:
-              - uncle
-              - reorg
-              - block
-            type: string
-            x-struct:
-            x-validate:
-        - description: Block number for paging
-          in: query
-          name: block_number
-          required: false
-          schema:
-            minimum: 0
-            type: integer
-            x-struct:
-            x-validate:
-        - description: Number of items returned per page
-          in: query
-          name: items_count
-          required: false
-          schema:
-            maximum: 50
-            minimum: 1
-            type: integer
-            x-struct:
-            x-validate:
-      responses:
-        '200':
-          content:
-            application/json:
-              schema:
-                additionalProperties: false
-                nullable: false
-                properties:
-                  items:
-                    items:
-                      $ref: '#/components/schemas/Block'
-                    nullable: false
-                    type: array
-                    x-struct:
-                    x-validate:
-                  next_page_params:
-                    example:
-                      block_number: 22566361
-                      items_count: 50
-                    nullable: true
-                    type: object
-                    x-struct:
-                    x-validate:
-                required:
-                  - items
-                  - next_page_params
-                title: BlocksPaginatedResponse
-                type: object
-                x-struct:
-                x-validate:
-          description: List of blocks with pagination.
-      summary: List blocks with optional filtering and sorting
-      tags:
-        - blocks
-  /v2/blocks/{block_hash_or_number_param}:
-    get:
-      callbacks: {}
-      description: Retrieves detailed information for a specific block, including transactions, internal transactions, and metadata.
-      operationId: BlockScoutWeb.API.V2.BlockController.block
-      parameters:
-        - in: path
-          name: block_hash_or_number_param
-          required: true
-          schema:
-            anyOf:
-              - type: integer
-                x-struct:
-                x-validate:
-              - $ref: '#/components/schemas/FullHash'
-            x-struct:
-            x-validate:
-        - description: API key for rate limiting
-          in: query
-          name: apikey
-          required: false
-          schema:
-            type: string
-            x-struct:
-            x-validate:
-        - description: Secret key for getting access to restricted resources
-          in: query
-          name: key
-          required: false
-          schema:
-            type: string
-            x-struct:
-            x-validate:
-      responses:
-        '200':
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/BlockResponse'
-          description: Detailed information about the specified block.
-        '404':
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/NotFoundResponse'
-          description: Not Found
-        '422':
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/JsonErrorResponse'
-          description: Unprocessable Entity
-      summary: Retrieve detailed information about a specific block
-      tags:
-        - blocks
-  /v2/blocks/{block_hash_or_number_param}/internal-transactions:
-    get:
-      callbacks: {}
-      description: Retrieves internal transactions included in a specific block with optional filtering by type and call type.
-      operationId: BlockScoutWeb.API.V2.BlockController.internal_transactions
-      parameters:
-        - description: API key for rate limiting
-          in: query
-          name: apikey
-          required: false
-          schema:
-            type: string
-            x-struct:
-            x-validate:
-        - description: Secret key for getting access to restricted resources
-          in: query
-          name: key
-          required: false
-          schema:
-            type: string
-            x-struct:
-            x-validate:
-        - in: path
-          name: block_hash_or_number_param
-          required: true
-          schema:
-            anyOf:
-              - type: integer
-                x-struct:
-                x-validate:
-              - $ref: '#/components/schemas/FullHash'
-            x-struct:
-            x-validate:
-        - description: |
-            Filter internal transactions by type:
-            * all - Show all internal transactions (default)
-            * call - Only show call internal transactions
-            * create - Only show create internal transactions
-            * create2 - Only show create2 internal transactions
-            * reward - Only show reward internal transactions
-            * selfdestruct - Only show selfdestruct internal transactions
-            * stop - Only show stop internal transactions
-            * invalid - Only show invalid internal transactions (Arbitrum only)
-          in: query
-          name: internal_type
-          required: false
-          schema:
-            enum:
-              - call
-              - create
-              - create2
-              - reward
-              - selfdestruct
-              - stop
-            type: string
-            x-struct:
-            x-validate:
-        - description: |
-            Filter internal transactions by call type:
-            * all - Show all internal transactions (default)
-            * call - Only show call internal transactions
-            * callcode - Only show callcode internal transactions
-            * delegatecall - Only show delegatecall internal transactions
-            * staticcall - Only show staticcall internal transactions
-            * invalid - Only show invalid internal transactions (Arbitrum only)
-          in: query
-          name: call_type
-          required: false
-          schema:
-            enum:
-              - call
-              - callcode
-              - delegatecall
-              - staticcall
-            type: string
-            x-struct:
-            x-validate:
-        - description: Block index for paging
-          in: query
-          name: block_index
-          required: false
-          schema:
-            type: integer
-            x-struct:
-            x-validate:
-        - description: Number of items returned per page
-          in: query
-          name: items_count
-          required: false
-          schema:
-            maximum: 50
-            minimum: 1
-            type: integer
-            x-struct:
-            x-validate:
-      responses:
-        '200':
-          content:
-            application/json:
-              schema:
-                additionalProperties: false
-                nullable: false
-                properties:
-                  items:
-                    items:
-                      $ref: '#/components/schemas/InternalTransaction'
-                    nullable: false
-                    type: array
-                    x-struct:
-                    x-validate:
-                  next_page_params:
-                    example:
-                      block_index: 8
-                      items_count: 50
-                    nullable: true
-                    type: object
-                    x-struct:
-                    x-validate:
-                required:
-                  - items
-                  - next_page_params
-                title: BlockInternalTransactionsPaginatedResponse
-                type: object
-                x-struct:
-                x-validate:
-          description: Internal transactions in the specified block.
-        '404':
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/NotFoundResponse'
-          description: Not Found
-        '422':
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/JsonErrorResponse'
-          description: Unprocessable Entity
-      summary: List internal transactions in a specific block
-      tags:
-        - blocks
-  /v2/blocks/{block_hash_or_number_param}/transactions:
-    get:
-      callbacks: {}
-      description: Retrieves transactions included in a specific block with optional filtering and sorting.
-      operationId: BlockScoutWeb.API.V2.BlockController.transactions
-      parameters:
-        - description: API key for rate limiting
-          in: query
-          name: apikey
-          required: false
-          schema:
-            type: string
-            x-struct:
-            x-validate:
-        - description: Secret key for getting access to restricted resources
-          in: query
-          name: key
-          required: false
-          schema:
-            type: string
-            x-struct:
-            x-validate:
-        - in: path
-          name: block_hash_or_number_param
-          required: true
-          schema:
-            anyOf:
-              - type: integer
-                x-struct:
-                x-validate:
-              - $ref: '#/components/schemas/FullHash'
-            x-struct:
-            x-validate:
-        - description: |
-            Filter transactions by type:
-            * coin_transfer - Only show coin transfer transactions
-            * contract_call - Only show contract call transactions
-            * contract_creation - Only show contract creation transactions
-            * token_transfer - Only show token transfer transactions
-            * token_creation - Only show token creation transactions
-            * blob_transaction - Only show blob transactions (Ethereum only)
-          in: query
-          name: type
-          required: false
-          schema:
-            enum:
-              - coin_transfer
-              - contract_call
-              - contract_creation
-              - token_transfer
-              - token_creation
-            type: string
-            x-struct:
-            x-validate:
-        - description: Block number for paging
-          in: query
-          name: block_number
-          required: false
-          schema:
-            minimum: 0
-            type: integer
-            x-struct:
-            x-validate:
-        - description: Transaction index for paging
-          in: query
-          name: index
-          required: false
-          schema:
-            type: integer
-            x-struct:
-            x-validate:
-        - description: Number of items returned per page
-          in: query
-          name: items_count
-          required: false
-          schema:
-            maximum: 50
-            minimum: 1
-            type: integer
-            x-struct:
-            x-validate:
-      responses:
-        '200':
-          content:
-            application/json:
-              schema:
-                additionalProperties: false
-                nullable: false
-                properties:
-                  items:
-                    items:
-                      $ref: '#/components/schemas/Transaction'
-                    nullable: false
-                    type: array
-                    x-struct:
-                    x-validate:
-                  next_page_params:
-                    example:
-                      block_number: 12345678
-                      index: 103
-                      items_count: 50
-                    nullable: true
-                    type: object
-                    x-struct:
-                    x-validate:
-                required:
-                  - items
-                  - next_page_params
-                title: BlockTransactionsPaginatedResponse
-                type: object
-                x-struct:
-                x-validate:
-          description: Transactions in the specified block.
-        '404':
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/NotFoundResponse'
-          description: Not Found
-        '422':
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/JsonErrorResponse'
-          description: Unprocessable Entity
-      summary: List transactions in a specific block
-      tags:
-        - blocks
-  /v2/blocks/{block_hash_or_number_param}/withdrawals:
-    get:
-      callbacks: {}
-      description: Retrieves validator withdrawals included in a specific block.
-      operationId: BlockScoutWeb.API.V2.BlockController.withdrawals
-      parameters:
-        - description: API key for rate limiting
-          in: query
-          name: apikey
-          required: false
-          schema:
-            type: string
-            x-struct:
-            x-validate:
-        - description: Secret key for getting access to restricted resources
-          in: query
-          name: key
-          required: false
-          schema:
-            type: string
-            x-struct:
-            x-validate:
-        - in: path
-          name: block_hash_or_number_param
-          required: true
-          schema:
-            anyOf:
-              - type: integer
-                x-struct:
-                x-validate:
-              - $ref: '#/components/schemas/FullHash'
-            x-struct:
-            x-validate:
-        - description: Transaction index for paging
-          in: query
-          name: index
-          required: false
-          schema:
-            type: integer
-            x-struct:
-            x-validate:
-        - description: Number of items returned per page
-          in: query
-          name: items_count
-          required: false
-          schema:
-            maximum: 50
-            minimum: 1
-            type: integer
-            x-struct:
-            x-validate:
-      responses:
-        '200':
-          content:
-            application/json:
-              schema:
-                additionalProperties: false
-                nullable: false
-                properties:
-                  items:
-                    items:
-                      $ref: '#/components/schemas/Withdrawal'
-                    nullable: false
-                    type: array
-                    x-struct:
-                    x-validate:
-                  next_page_params:
-                    example:
-                      index: 88192653
-                      items_count: 50
-                    nullable: true
-                    type: object
-                    x-struct:
-                    x-validate:
-                required:
-                  - items
-                  - next_page_params
-                title: BlockWithdrawalsPaginatedResponse
-                type: object
-                x-struct:
-                x-validate:
-          description: Withdrawals in the specified block.
-        '404':
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/NotFoundResponse'
-          description: Not Found
-        '422':
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/JsonErrorResponse'
-          description: Unprocessable Entity
-      summary: List withdrawals in a specific block
-      tags:
-        - blocks
-  /v2/blocks/{block_number_param}/countdown:
-    get:
-      callbacks: {}
-      description: Calculates the estimated time remaining until a specified block number is reached based on current block and average block time.
-      operationId: BlockScoutWeb.API.V2.BlockController.block_countdown
-      parameters:
-        - in: path
-          name: block_number_param
-          required: true
-          schema:
-            minimum: 0
-            type: integer
-            x-struct:
-            x-validate:
-        - description: API key for rate limiting
-          in: query
-          name: apikey
-          required: false
-          schema:
-            type: string
-            x-struct:
-            x-validate:
-        - description: Secret key for getting access to restricted resources
-          in: query
-          name: key
-          required: false
-          schema:
-            type: string
-            x-struct:
-            x-validate:
-      responses:
-        '200':
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/BlockCountdown'
-          description: Block countdown information.
-        '404':
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/NotFoundResponse'
-          description: Not Found
-        '422':
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/JsonErrorResponse'
-          description: Unprocessable Entity
-      summary: Get countdown information for a target block number
-      tags:
-        - blocks
 security: []
 servers:
   - url: http://localhost/api
