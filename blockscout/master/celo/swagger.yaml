@@ -533,6 +533,85 @@ components:
           type: integer
           x-struct:
           x-validate:
+        celo:
+          additionalProperties: false
+          properties:
+            account:
+              example:
+                attestation_signer_address:
+                locked_celo: '2000000000000000000'
+                metadata_url: https://example.com/metadata
+                name: Celo Validator
+                nonvoting_locked_celo: '1000000000000000000'
+                type: validator
+                validator_signer_address:
+                vote_signer_address:
+              nullable: true
+              properties:
+                attestation_signer_address:
+                  allOf:
+                    - $ref: '#/components/schemas/Address'
+                  nullable: true
+                  x-struct:
+                  x-validate:
+                locked_celo:
+                  nullable: false
+                  type: string
+                  x-struct:
+                  x-validate:
+                metadata_url:
+                  nullable: true
+                  type: string
+                  x-struct:
+                  x-validate:
+                name:
+                  nullable: true
+                  type: string
+                  x-struct:
+                  x-validate:
+                nonvoting_locked_celo:
+                  nullable: false
+                  type: string
+                  x-struct:
+                  x-validate:
+                type:
+                  enum:
+                    - regular
+                    - validator
+                    - group
+                  nullable: false
+                  type: string
+                  x-struct:
+                  x-validate:
+                validator_signer_address:
+                  allOf:
+                    - $ref: '#/components/schemas/Address'
+                  nullable: true
+                  x-struct:
+                  x-validate:
+                vote_signer_address:
+                  allOf:
+                    - $ref: '#/components/schemas/Address'
+                  nullable: true
+                  x-struct:
+                  x-validate:
+              required:
+                - type
+                - name
+                - metadata_url
+                - nonvoting_locked_celo
+                - locked_celo
+                - vote_signer_address
+                - validator_signer_address
+                - attestation_signer_address
+              type: object
+              x-struct:
+              x-validate:
+          required:
+            - account
+          type: object
+          x-struct:
+          x-validate:
         coin_balance:
           $ref: '#/components/schemas/IntegerStringNullable'
         creation_status:
@@ -688,6 +767,7 @@ components:
         - watchlist_address_id
         - has_beacon_chain_withdrawals
         - creation_status
+        - celo
       title: AddressResponse
       type: object
       x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.Address
