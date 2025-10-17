@@ -3279,7 +3279,7 @@ paths:
       description: Retrieves internal transactions included in a specific block with optional filtering by type and call type.
       operationId: BlockScoutWeb.API.V2.BlockController.internal_transactions
       parameters:
-        - description: API key for rate limiting
+        - description: API key for rate limiting or for sensitive endpoints
           in: query
           name: apikey
           required: false
@@ -3425,7 +3425,7 @@ paths:
           required: true
           schema:
             $ref: '#/components/schemas/AddressHash'
-        - description: API key for rate limiting
+        - description: API key for rate limiting or for sensitive endpoints
           in: query
           name: apikey
           required: false
@@ -3469,7 +3469,7 @@ paths:
       description: Exports the holders of a specific token as a CSV file.
       operationId: BlockScoutWeb.API.V2.CsvExportController.export_token_holders
       parameters:
-        - description: API key for rate limiting
+        - description: API key for rate limiting or for sensitive endpoints
           in: query
           name: apikey
           required: false
@@ -3521,7 +3521,7 @@ paths:
       description: Retrieves a paginated list of tokens with optional filtering and sorting.
       operationId: BlockScoutWeb.API.V2.TokenController.tokens_list
       parameters:
-        - description: API key for rate limiting
+        - description: API key for rate limiting or for sensitive endpoints
           in: query
           name: apikey
           required: false
@@ -3719,7 +3719,7 @@ paths:
       description: Exports token transfers for a specific address as a CSV file.
       operationId: BlockScoutWeb.API.V2.CsvExportController.token_transfers_csv
       parameters:
-        - description: API key for rate limiting
+        - description: API key for rate limiting or for sensitive endpoints
           in: query
           name: apikey
           required: false
@@ -3827,7 +3827,7 @@ paths:
           required: true
           schema:
             $ref: '#/components/schemas/AddressHash'
-        - description: API key for rate limiting
+        - description: API key for rate limiting or for sensitive endpoints
           in: query
           name: apikey
           required: false
@@ -3876,7 +3876,7 @@ paths:
       description: Retrieves validator withdrawals included in a specific block.
       operationId: BlockScoutWeb.API.V2.BlockController.withdrawals
       parameters:
-        - description: API key for rate limiting
+        - description: API key for rate limiting or for sensitive endpoints
           in: query
           name: apikey
           required: false
@@ -3973,7 +3973,7 @@ paths:
       description: Retrieves holders for a specific token instance, with optional filtering and pagination.
       operationId: BlockScoutWeb.API.V2.TokenController.holders
       parameters:
-        - description: API key for rate limiting
+        - description: API key for rate limiting or for sensitive endpoints
           in: query
           name: apikey
           required: false
@@ -4080,7 +4080,7 @@ paths:
               - $ref: '#/components/schemas/FullHash'
             x-struct:
             x-validate:
-        - description: API key for rate limiting
+        - description: API key for rate limiting or for sensitive endpoints
           in: query
           name: apikey
           required: false
@@ -4124,7 +4124,7 @@ paths:
       description: Retrieves token balances for a specific address with pagination and filtering by token type. Useful for displaying large token portfolios.
       operationId: BlockScoutWeb.API.V2.AddressController.tokens
       parameters:
-        - description: API key for rate limiting
+        - description: API key for rate limiting or for sensitive endpoints
           in: query
           name: apikey
           required: false
@@ -4254,7 +4254,7 @@ paths:
       description: Retrieves token transfers involving a specific address, with optional filtering by token type, direction, and specific token.
       operationId: BlockScoutWeb.API.V2.AddressController.token_transfers
       parameters:
-        - description: API key for rate limiting
+        - description: API key for rate limiting or for sensitive endpoints
           in: query
           name: apikey
           required: false
@@ -4424,7 +4424,7 @@ paths:
       description: Retrieves a list of NFTs (non-fungible tokens) owned by a specific address, with optional filtering by token type.
       operationId: BlockScoutWeb.API.V2.AddressController.nft_list
       parameters:
-        - description: API key for rate limiting
+        - description: API key for rate limiting or for sensitive endpoints
           in: query
           name: apikey
           required: false
@@ -4546,7 +4546,7 @@ paths:
       description: Retrieves all instances of a specific token, including holders and balances.
       operationId: BlockScoutWeb.API.V2.TokenController.instances
       parameters:
-        - description: API key for rate limiting
+        - description: API key for rate limiting or for sensitive endpoints
           in: query
           name: apikey
           required: false
@@ -4629,7 +4629,7 @@ paths:
       description: Retrieves blocks that were validated (mined) by a specific address. Useful for tracking validator/miner performance.
       operationId: BlockScoutWeb.API.V2.AddressController.blocks_validated
       parameters:
-        - description: API key for rate limiting
+        - description: API key for rate limiting or for sensitive endpoints
           in: query
           name: apikey
           required: false
@@ -4721,7 +4721,7 @@ paths:
       description: Retrieves all internal transactions involving a specific address, with optional filtering for internal transactions sent from or to the address.
       operationId: BlockScoutWeb.API.V2.AddressController.internal_transactions
       parameters:
-        - description: API key for rate limiting
+        - description: API key for rate limiting or for sensitive endpoints
           in: query
           name: apikey
           required: false
@@ -4846,7 +4846,7 @@ paths:
       description: Retrieves token transfers for a specific token, with optional filtering and pagination.
       operationId: BlockScoutWeb.API.V2.TokenController.transfers
       parameters:
-        - description: API key for rate limiting
+        - description: API key for rate limiting or for sensitive endpoints
           in: query
           name: apikey
           required: false
@@ -4968,7 +4968,7 @@ paths:
       description: Retrieves holders for a specific token instance (by token address and token ID).
       operationId: BlockScoutWeb.API.V2.TokenController.holders_by_instance
       parameters:
-        - description: API key for rate limiting
+        - description: API key for rate limiting or for sensitive endpoints
           in: query
           name: apikey
           required: false
@@ -5077,7 +5077,7 @@ paths:
       description: Retrieves token transfers for a specific token instance (by token address and token ID).
       operationId: BlockScoutWeb.API.V2.TokenController.transfers_by_instance
       parameters:
-        - description: API key for rate limiting
+        - description: API key for rate limiting or for sensitive endpoints
           in: query
           name: apikey
           required: false
@@ -5185,7 +5185,7 @@ paths:
           required: true
           schema:
             $ref: '#/components/schemas/AddressHash'
-        - description: API key for rate limiting
+        - description: API key for rate limiting or for sensitive endpoints
           in: query
           name: apikey
           required: false
@@ -5234,7 +5234,7 @@ paths:
           required: true
           schema:
             $ref: '#/components/schemas/AddressHash'
-        - description: API key for rate limiting
+        - description: API key for rate limiting or for sensitive endpoints
           in: query
           name: apikey
           required: false
@@ -5278,7 +5278,7 @@ paths:
       description: Retrieves details for a specific token instance by token address and token ID.
       operationId: BlockScoutWeb.API.V2.TokenController.instance
       parameters:
-        - description: API key for rate limiting
+        - description: API key for rate limiting or for sensitive endpoints
           in: query
           name: apikey
           required: false
@@ -5338,7 +5338,7 @@ paths:
           required: true
           schema:
             $ref: '#/components/schemas/AddressHash'
-        - description: API key for rate limiting
+        - description: API key for rate limiting or for sensitive endpoints
           in: query
           name: apikey
           required: false
@@ -5382,7 +5382,7 @@ paths:
       description: Retrieves historical native coin balance changes for a specific address, tracking how an address's balance has changed over time.
       operationId: BlockScoutWeb.API.V2.AddressController.coin_balance_history
       parameters:
-        - description: API key for rate limiting
+        - description: API key for rate limiting or for sensitive endpoints
           in: query
           name: apikey
           required: false
@@ -5474,7 +5474,7 @@ paths:
       description: Triggers a metadata refetch for a token's NFT collection (by token address). Requires API key.
       operationId: BlockScoutWeb.API.V2.TokenController.trigger_nft_collection_metadata_refetch
       parameters:
-        - description: API key for rate limiting
+        - description: API key for rate limiting or for sensitive endpoints
           in: query
           name: apikey
           required: false
@@ -5498,6 +5498,14 @@ paths:
         - description: API key required for sensitive endpoints
           in: header
           name: x-api-key
+          required: false
+          schema:
+            type: string
+            x-struct:
+            x-validate:
+        - description: API key required for sensitive endpoints
+          in: query
+          name: api_key
           required: false
           schema:
             type: string
@@ -5543,7 +5551,7 @@ paths:
           required: true
           schema:
             $ref: '#/components/schemas/AddressHash'
-        - description: API key for rate limiting
+        - description: API key for rate limiting or for sensitive endpoints
           in: query
           name: apikey
           required: false
@@ -5595,7 +5603,7 @@ paths:
             type: integer
             x-struct:
             x-validate:
-        - description: API key for rate limiting
+        - description: API key for rate limiting or for sensitive endpoints
           in: query
           name: apikey
           required: false
@@ -5639,7 +5647,7 @@ paths:
       description: Retrieves a paginated list of addresses holding the native coin, sorted by balance.
       operationId: BlockScoutWeb.API.V2.AddressController.addresses_list
       parameters:
-        - description: API key for rate limiting
+        - description: API key for rate limiting or for sensitive endpoints
           in: query
           name: apikey
           required: false
@@ -5885,7 +5893,7 @@ paths:
       description: Retrieves withdrawals involving a specific address, typically for proof-of-stake networks supporting validator withdrawals.
       operationId: BlockScoutWeb.API.V2.AddressController.withdrawals
       parameters:
-        - description: API key for rate limiting
+        - description: API key for rate limiting or for sensitive endpoints
           in: query
           name: apikey
           required: false
@@ -5981,7 +5989,7 @@ paths:
           required: true
           schema:
             $ref: '#/components/schemas/AddressHash'
-        - description: API key for rate limiting
+        - description: API key for rate limiting or for sensitive endpoints
           in: query
           name: apikey
           required: false
@@ -6042,7 +6050,7 @@ paths:
       description: Retrieves the number of transfers for a specific token instance (by token address and token ID).
       operationId: BlockScoutWeb.API.V2.TokenController.transfers_count_by_instance
       parameters:
-        - description: API key for rate limiting
+        - description: API key for rate limiting or for sensitive endpoints
           in: query
           name: apikey
           required: false
@@ -6104,7 +6112,7 @@ paths:
       description: Retrieves transactions included in a specific block with optional filtering and sorting.
       operationId: BlockScoutWeb.API.V2.BlockController.transactions
       parameters:
-        - description: API key for rate limiting
+        - description: API key for rate limiting or for sensitive endpoints
           in: query
           name: apikey
           required: false
@@ -6232,7 +6240,7 @@ paths:
       description: Retrieves a paginated list of blocks with optional filtering by block type and sorting options.
       operationId: BlockScoutWeb.API.V2.BlockController.blocks
       parameters:
-        - description: API key for rate limiting
+        - description: API key for rate limiting or for sensitive endpoints
           in: query
           name: apikey
           required: false
@@ -6324,7 +6332,7 @@ paths:
       description: Triggers a metadata refetch for a specific token instance (by token address and token ID).
       operationId: BlockScoutWeb.API.V2.TokenController.refetch_metadata
       parameters:
-        - description: API key for rate limiting
+        - description: API key for rate limiting or for sensitive endpoints
           in: query
           name: apikey
           required: false
@@ -6394,7 +6402,7 @@ paths:
       description: Retrieves event logs emitted by or involving a specific address.
       operationId: BlockScoutWeb.API.V2.AddressController.logs
       parameters:
-        - description: API key for rate limiting
+        - description: API key for rate limiting or for sensitive endpoints
           in: query
           name: apikey
           required: false
@@ -6501,7 +6509,7 @@ paths:
       description: Exports internal transactions for a specific address as a CSV file.
       operationId: BlockScoutWeb.API.V2.CsvExportController.internal_transactions_csv
       parameters:
-        - description: API key for rate limiting
+        - description: API key for rate limiting or for sensitive endpoints
           in: query
           name: apikey
           required: false
@@ -6604,7 +6612,7 @@ paths:
       description: Exports logs for a specific address as a CSV file.
       operationId: BlockScoutWeb.API.V2.CsvExportController.logs_csv
       parameters:
-        - description: API key for rate limiting
+        - description: API key for rate limiting or for sensitive endpoints
           in: query
           name: apikey
           required: false
@@ -6707,7 +6715,7 @@ paths:
       description: Retrieves transactions involving a specific address, with optional filtering for transactions sent from or to the address.
       operationId: BlockScoutWeb.API.V2.AddressController.transactions
       parameters:
-        - description: API key for rate limiting
+        - description: API key for rate limiting or for sensitive endpoints
           in: query
           name: apikey
           required: false
@@ -6900,7 +6908,7 @@ paths:
       description: Exports transactions for a specific address as a CSV file.
       operationId: BlockScoutWeb.API.V2.CsvExportController.transactions_csv
       parameters:
-        - description: API key for rate limiting
+        - description: API key for rate limiting or for sensitive endpoints
           in: query
           name: apikey
           required: false
@@ -7003,7 +7011,7 @@ paths:
       description: Retrieves NFTs owned by a specific address, organized by collection. Useful for displaying an address's NFT portfolio grouped by project.
       operationId: BlockScoutWeb.API.V2.AddressController.nft_collections
       parameters:
-        - description: API key for rate limiting
+        - description: API key for rate limiting or for sensitive endpoints
           in: query
           name: apikey
           required: false
