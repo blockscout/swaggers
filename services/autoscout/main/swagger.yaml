@@ -1217,11 +1217,14 @@ definitions:
         $ref: '#/definitions/v1DepositStatus'
       metadata:
         type: object
+      created_at:
+        type: string
     required:
       - id
       - amount
       - provider_type
       - status
+      - created_at
   v1ApayProviderType:
     type: string
     enum:
@@ -1680,6 +1683,11 @@ definitions:
         format: int32
       overage_cost_per_gb_hour:
         type: string
+    required:
+      - timestamp
+      - usage_mb
+      - free_quota_mb
+      - overage_cost_per_gb_hour
   v1DeploymentLog:
     type: object
     properties:
@@ -2453,6 +2461,8 @@ definitions:
         type: string
       image:
         type: string
+    required:
+      - success_redirect_url
   v1SyncDeploymentsServerSpecItem:
     type: object
     properties:
