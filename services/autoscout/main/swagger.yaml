@@ -228,6 +228,97 @@ paths:
         - Apay
       security:
         - ApiKeyAuth: []
+  /api/v1/apay/subscription_plans:
+    post:
+      operationId: CreateApaySubscriptionPlan
+      responses:
+        "200":
+          description: A successful response.
+          schema:
+            $ref: '#/definitions/v1CreateApaySubscriptionPlanResponse'
+        default:
+          description: An unexpected error response.
+          schema:
+            $ref: '#/definitions/rpcStatus'
+      parameters:
+        - name: body
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/v1CreateApaySubscriptionPlanRequest'
+      tags:
+        - Apay
+      security:
+        - ApiKeyAuth: []
+  /api/v1/apay/subscription_plans/{subscription_plan_id}:
+    get:
+      operationId: GetApaySubscriptionPlan
+      responses:
+        "200":
+          description: A successful response.
+          schema:
+            $ref: '#/definitions/v1GetApaySubscriptionPlanResponse'
+        default:
+          description: An unexpected error response.
+          schema:
+            $ref: '#/definitions/rpcStatus'
+      parameters:
+        - name: subscription_plan_id
+          in: path
+          required: true
+          type: integer
+          format: int32
+      tags:
+        - Apay
+      security:
+        - ApiKeyAuth: []
+    delete:
+      operationId: DeleteApaySubscriptionPlan
+      responses:
+        "200":
+          description: A successful response.
+          schema:
+            $ref: '#/definitions/v1DeleteApaySubscriptionPlanResponse'
+        default:
+          description: An unexpected error response.
+          schema:
+            $ref: '#/definitions/rpcStatus'
+      parameters:
+        - name: subscription_plan_id
+          in: path
+          required: true
+          type: integer
+          format: int32
+      tags:
+        - Apay
+      security:
+        - ApiKeyAuth: []
+    put:
+      operationId: UpdateApaySubscriptionPlan
+      responses:
+        "200":
+          description: A successful response.
+          schema:
+            $ref: '#/definitions/v1UpdateApaySubscriptionPlanResponse'
+        default:
+          description: An unexpected error response.
+          schema:
+            $ref: '#/definitions/rpcStatus'
+      parameters:
+        - name: subscription_plan_id
+          in: path
+          required: true
+          type: integer
+          format: int32
+        - name: body
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/ApayUpdateApaySubscriptionPlanBody'
+      tags:
+        - Apay
+      security:
+        - ApiKeyAuth: []
   /api/v1/apay/webhook-example:
     post:
       operationId: Apay_WebHookExample
@@ -1110,6 +1201,18 @@ paths:
       tags:
         - Health
 definitions:
+  ApayUpdateApaySubscriptionPlanBody:
+    type: object
+    properties:
+      name:
+        type: string
+      base_price_usd:
+        type: string
+      base_tokens_count:
+        type: string
+        format: uint64
+      overage_price_per_token_usd:
+        type: string
   AutoscoutUpdateConfigBody:
     type: object
     properties:
@@ -1232,6 +1335,27 @@ definitions:
       - PROVIDER_TYPE_STRIPE
       - PROVIDER_TYPE_DAIMO
     default: UNSPECIFIED_DEPOSIT_TYPE
+  v1ApaySubscriptionPlan:
+    type: object
+    properties:
+      id:
+        type: integer
+        format: int32
+      name:
+        type: string
+      base_price_usd:
+        type: string
+      base_tokens_count:
+        type: string
+        format: uint64
+      overage_price_per_token_usd:
+        type: string
+    required:
+      - id
+      - name
+      - base_price_usd
+      - base_tokens_count
+      - overage_price_per_token_usd
   v1ArbitrumConfig:
     type: object
     properties:
@@ -1371,6 +1495,30 @@ definitions:
         $ref: '#/definitions/v1ApayDeposit'
     required:
       - deposit
+  v1CreateApaySubscriptionPlanRequest:
+    type: object
+    properties:
+      name:
+        type: string
+      base_price_usd:
+        type: string
+      base_tokens_count:
+        type: string
+        format: uint64
+      overage_price_per_token_usd:
+        type: string
+    required:
+      - name
+      - base_price_usd
+      - base_tokens_count
+      - overage_price_per_token_usd
+  v1CreateApaySubscriptionPlanResponse:
+    type: object
+    properties:
+      plan:
+        $ref: '#/definitions/v1ApaySubscriptionPlan'
+    required:
+      - plan
   v1CreateAuthTokenRequest:
     type: object
     properties:
@@ -1517,6 +1665,8 @@ definitions:
         type: string
       image:
         type: string
+  v1DeleteApaySubscriptionPlanResponse:
+    type: object
   v1DeleteAuthTokenResponse:
     type: object
   v1DeleteCoinbaseDepositResponse:
@@ -1842,6 +1992,13 @@ definitions:
         type: string
       url:
         type: string
+  v1GetApaySubscriptionPlanResponse:
+    type: object
+    properties:
+      plan:
+        $ref: '#/definitions/v1ApaySubscriptionPlan'
+    required:
+      - plan
   v1GetDeploymentStorageUsageResponse:
     type: object
     properties:
@@ -2028,6 +2185,18 @@ definitions:
           $ref: '#/definitions/v1ApayDeposit'
       pagination:
         $ref: '#/definitions/v1PaginationResult'
+  v1ListApaySubscriptionPlansResponse:
+    type: object
+    properties:
+      items:
+        type: array
+        items:
+          type: object
+          $ref: '#/definitions/v1ApaySubscriptionPlan'
+      pagination:
+        $ref: '#/definitions/v1PaginationResult'
+    required:
+      - items
   v1ListAuthTokensResponse:
     type: object
     properties:
@@ -2519,6 +2688,13 @@ definitions:
       - content_url
       - version
       - accepted
+  v1UpdateApaySubscriptionPlanResponse:
+    type: object
+    properties:
+      plan:
+        $ref: '#/definitions/v1ApaySubscriptionPlan'
+    required:
+      - plan
   v1UpdateConfigResponse:
     type: object
     properties:
