@@ -1218,6 +1218,10 @@ definitions:
     properties:
       config:
         $ref: '#/definitions/v1DeployConfig'
+      skip_validation_for_fields:
+        type: array
+        items:
+          type: string
     required:
       - config
   AutoscoutUpdateConfigPartialBody:
@@ -1226,6 +1230,10 @@ definitions:
       config:
         type: object
         title: See `DeployConfig` for available fields
+      skip_validation_for_fields:
+        type: array
+        items:
+          type: string
     required:
       - config
   AutoscoutUpdateInstanceStatusBody:
@@ -1591,6 +1599,10 @@ definitions:
       config:
         $ref: '#/definitions/v1DeployConfig'
         title: initial config
+      skip_validation_for_fields:
+        type: array
+        items:
+          type: string
     required:
       - name
       - config
@@ -2508,6 +2520,10 @@ definitions:
     type: object
     properties:
       instance_ids:
+        type: array
+        items:
+          type: string
+      skip_validation_for_fields:
         type: array
         items:
           type: string
