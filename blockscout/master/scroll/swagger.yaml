@@ -7223,7 +7223,7 @@ paths:
             x-validate:
         - description: Batch number
           in: path
-          name: batch_number
+          name: batch_number_param
           required: true
           schema:
             minimum: 0
