@@ -3681,6 +3681,15 @@ paths:
             type: string
             x-struct:
             x-validate:
+        - description: Limit result items in the response
+          in: query
+          name: limit
+          required: false
+          schema:
+            nullable: true
+            type: string
+            x-struct:
+            x-validate:
         - description: |
             Sort transactions by:
             * block_number - Sort by block number
