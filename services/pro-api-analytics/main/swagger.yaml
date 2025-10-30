@@ -17,24 +17,50 @@ consumes:
 produces:
   - application/json
 paths:
-  /api/v1/pro_api_analytics:analytics:
-    post:
-      operationId: ProApiAnalyticsService_ProApiAnalytics
+  /api/v1/{address}/top-dapps:
+    get:
+      operationId: ProApiAnalyticsService_GetTopUserDapps
       responses:
         "200":
           description: A successful response.
           schema:
-            $ref: '#/definitions/v1ProApiAnalyticsResponse'
+            $ref: '#/definitions/v1GetTopUserDappsResponse'
         default:
           description: An unexpected error response.
           schema:
             $ref: '#/definitions/rpcStatus'
       parameters:
-        - name: body
-          in: body
+        - name: address
+          in: path
           required: true
+          type: string
+        - name: interval
+          in: query
+          required: false
+          type: string
+      tags:
+        - ProApiAnalyticsService
+  /api/v1/{address}/top-neighbours:
+    get:
+      operationId: ProApiAnalyticsService_GetTopUserNeighbours
+      responses:
+        "200":
+          description: A successful response.
           schema:
-            $ref: '#/definitions/v1ProApiAnalyticsRequest'
+            $ref: '#/definitions/v1GetTopUserNeighboursResponse'
+        default:
+          description: An unexpected error response.
+          schema:
+            $ref: '#/definitions/rpcStatus'
+      parameters:
+        - name: address
+          in: path
+          required: true
+          type: string
+        - name: interval
+          in: query
+          required: false
+          type: string
       tags:
         - ProApiAnalyticsService
   /health:
@@ -75,6 +101,18 @@ definitions:
       '@type':
         type: string
     additionalProperties: {}
+  protobufNullValue:
+    type: string
+    enum:
+      - NULL_VALUE
+    default: NULL_VALUE
+    description: |-
+      `NullValue` is a singleton enumeration to represent the null value for the
+      `Value` type union.
+
+      The JSON representation for `NullValue` is JSON `null`.
+
+       - NULL_VALUE: Null value.
   rpcStatus:
     type: object
     properties:
@@ -88,21 +126,45 @@ definitions:
         items:
           type: object
           $ref: '#/definitions/protobufAny'
+  v1GetTopUserDappsResponse:
+    type: object
+    properties:
+      items:
+        type: array
+        items:
+          type: object
+          $ref: '#/definitions/v1UserDappStats'
+  v1GetTopUserNeighboursResponse:
+    type: object
+    properties:
+      items:
+        type: array
+        items:
+          type: object
+          $ref: '#/definitions/v1UserNeighbourStats'
   v1HealthCheckResponse:
     type: object
     properties:
       status:
         $ref: '#/definitions/HealthCheckResponseServingStatus'
-  v1ProApiAnalyticsRequest:
+  v1UserDappStats:
     type: object
     properties:
-      foo:
+      dapp_id:
         type: string
-  v1ProApiAnalyticsResponse:
+      transactions_count:
+        type: string
+      gas_used:
+        type: string
+  v1UserNeighbourStats:
     type: object
     properties:
-      foo:
+      address:
         type: string
+      transactions_count:
+        type: string
+      metadata:
+        type: object
 securityDefinitions:
   ApiKeyAuth:
     type: apiKey
