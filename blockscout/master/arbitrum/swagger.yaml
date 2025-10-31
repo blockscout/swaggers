@@ -3823,6 +3823,65 @@ paths:
           required: false
           schema:
             $ref: '#/components/schemas/AddressHash'
+        - description: Start of the time period (ISO 8601 format) in CSV export
+          in: query
+          name: from_period
+          required: true
+          schema:
+            anyOf:
+              - nullable: false
+                pattern: ^\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01])(?:T(?:[01]\d|2[0-3])(?:(?::|%3A)[0-5]\d(?:(?::|%3A)[0-5]\d(?:\.\d{1,9})?)?)?(?:Z|(?:\+|%2B|-)(?:[01]\d|2[0-3])(?:(?::|%3A)[0-5]\d)?)?)?$
+                type: string
+                x-struct:
+                x-validate:
+              - $ref: '#/components/schemas/NullString'
+            x-struct:
+            x-validate:
+        - description: End of the time period (ISO 8601 format) In CSV export
+          in: query
+          name: to_period
+          required: true
+          schema:
+            anyOf:
+              - nullable: false
+                pattern: ^\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01])(?:T(?:[01]\d|2[0-3])(?:(?::|%3A)[0-5]\d(?:(?::|%3A)[0-5]\d(?:\.\d{1,9})?)?)?(?:Z|(?:\+|%2B|-)(?:[01]\d|2[0-3])(?:(?::|%3A)[0-5]\d)?)?)?$
+                type: string
+                x-struct:
+                x-validate:
+              - $ref: '#/components/schemas/NullString'
+            x-struct:
+            x-validate:
+        - description: Filter type in CSV export
+          in: query
+          name: filter_type
+          required: false
+          schema:
+            anyOf:
+              - enum:
+                  - address
+                nullable: true
+                type: string
+                x-struct:
+                x-validate:
+              - $ref: '#/components/schemas/NullString'
+            x-struct:
+            x-validate:
+        - description: Filter value in CSV export
+          in: query
+          name: filter_value
+          required: false
+          schema:
+            anyOf:
+              - enum:
+                  - to
+                  - from
+                nullable: true
+                type: string
+                x-struct:
+                x-validate:
+              - $ref: '#/components/schemas/NullString'
+            x-struct:
+            x-validate:
       responses:
         '200':
           content:
@@ -4087,9 +4146,13 @@ paths:
           name: from_period
           required: true
           schema:
-            nullable: false
-            pattern: ^\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01])(?:T(?:[01]\d|2[0-3])(?:(?::|%3A)[0-5]\d(?:(?::|%3A)[0-5]\d(?:\.\d{1,9})?)?)?(?:Z|(?:\+|%2B|-)(?:[01]\d|2[0-3])(?:(?::|%3A)[0-5]\d)?)?)?$
-            type: string
+            anyOf:
+              - nullable: false
+                pattern: ^\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01])(?:T(?:[01]\d|2[0-3])(?:(?::|%3A)[0-5]\d(?:(?::|%3A)[0-5]\d(?:\.\d{1,9})?)?)?(?:Z|(?:\+|%2B|-)(?:[01]\d|2[0-3])(?:(?::|%3A)[0-5]\d)?)?)?$
+                type: string
+                x-struct:
+                x-validate:
+              - $ref: '#/components/schemas/NullString'
             x-struct:
             x-validate:
         - description: End of the time period (ISO 8601 format) In CSV export
@@ -4097,9 +4160,13 @@ paths:
           name: to_period
           required: true
           schema:
-            nullable: false
-            pattern: ^\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01])(?:T(?:[01]\d|2[0-3])(?:(?::|%3A)[0-5]\d(?:(?::|%3A)[0-5]\d(?:\.\d{1,9})?)?)?(?:Z|(?:\+|%2B|-)(?:[01]\d|2[0-3])(?:(?::|%3A)[0-5]\d)?)?)?$
-            type: string
+            anyOf:
+              - nullable: false
+                pattern: ^\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01])(?:T(?:[01]\d|2[0-3])(?:(?::|%3A)[0-5]\d(?:(?::|%3A)[0-5]\d(?:\.\d{1,9})?)?)?(?:Z|(?:\+|%2B|-)(?:[01]\d|2[0-3])(?:(?::|%3A)[0-5]\d)?)?)?$
+                type: string
+                x-struct:
+                x-validate:
+              - $ref: '#/components/schemas/NullString'
             x-struct:
             x-validate:
         - description: Filter type in CSV export
@@ -6877,9 +6944,13 @@ paths:
           name: from_period
           required: true
           schema:
-            nullable: false
-            pattern: ^\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01])(?:T(?:[01]\d|2[0-3])(?:(?::|%3A)[0-5]\d(?:(?::|%3A)[0-5]\d(?:\.\d{1,9})?)?)?(?:Z|(?:\+|%2B|-)(?:[01]\d|2[0-3])(?:(?::|%3A)[0-5]\d)?)?)?$
-            type: string
+            anyOf:
+              - nullable: false
+                pattern: ^\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01])(?:T(?:[01]\d|2[0-3])(?:(?::|%3A)[0-5]\d(?:(?::|%3A)[0-5]\d(?:\.\d{1,9})?)?)?(?:Z|(?:\+|%2B|-)(?:[01]\d|2[0-3])(?:(?::|%3A)[0-5]\d)?)?)?$
+                type: string
+                x-struct:
+                x-validate:
+              - $ref: '#/components/schemas/NullString'
             x-struct:
             x-validate:
         - description: End of the time period (ISO 8601 format) In CSV export
@@ -6887,9 +6958,13 @@ paths:
           name: to_period
           required: true
           schema:
-            nullable: false
-            pattern: ^\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01])(?:T(?:[01]\d|2[0-3])(?:(?::|%3A)[0-5]\d(?:(?::|%3A)[0-5]\d(?:\.\d{1,9})?)?)?(?:Z|(?:\+|%2B|-)(?:[01]\d|2[0-3])(?:(?::|%3A)[0-5]\d)?)?)?$
-            type: string
+            anyOf:
+              - nullable: false
+                pattern: ^\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01])(?:T(?:[01]\d|2[0-3])(?:(?::|%3A)[0-5]\d(?:(?::|%3A)[0-5]\d(?:\.\d{1,9})?)?)?(?:Z|(?:\+|%2B|-)(?:[01]\d|2[0-3])(?:(?::|%3A)[0-5]\d)?)?)?$
+                type: string
+                x-struct:
+                x-validate:
+              - $ref: '#/components/schemas/NullString'
             x-struct:
             x-validate:
         - description: Filter type in CSV export
@@ -7070,9 +7145,13 @@ paths:
           name: from_period
           required: true
           schema:
-            nullable: false
-            pattern: ^\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01])(?:T(?:[01]\d|2[0-3])(?:(?::|%3A)[0-5]\d(?:(?::|%3A)[0-5]\d(?:\.\d{1,9})?)?)?(?:Z|(?:\+|%2B|-)(?:[01]\d|2[0-3])(?:(?::|%3A)[0-5]\d)?)?)?$
-            type: string
+            anyOf:
+              - nullable: false
+                pattern: ^\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01])(?:T(?:[01]\d|2[0-3])(?:(?::|%3A)[0-5]\d(?:(?::|%3A)[0-5]\d(?:\.\d{1,9})?)?)?(?:Z|(?:\+|%2B|-)(?:[01]\d|2[0-3])(?:(?::|%3A)[0-5]\d)?)?)?$
+                type: string
+                x-struct:
+                x-validate:
+              - $ref: '#/components/schemas/NullString'
             x-struct:
             x-validate:
         - description: End of the time period (ISO 8601 format) In CSV export
@@ -7080,9 +7159,13 @@ paths:
           name: to_period
           required: true
           schema:
-            nullable: false
-            pattern: ^\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01])(?:T(?:[01]\d|2[0-3])(?:(?::|%3A)[0-5]\d(?:(?::|%3A)[0-5]\d(?:\.\d{1,9})?)?)?(?:Z|(?:\+|%2B|-)(?:[01]\d|2[0-3])(?:(?::|%3A)[0-5]\d)?)?)?$
-            type: string
+            anyOf:
+              - nullable: false
+                pattern: ^\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01])(?:T(?:[01]\d|2[0-3])(?:(?::|%3A)[0-5]\d(?:(?::|%3A)[0-5]\d(?:\.\d{1,9})?)?)?(?:Z|(?:\+|%2B|-)(?:[01]\d|2[0-3])(?:(?::|%3A)[0-5]\d)?)?)?$
+                type: string
+                x-struct:
+                x-validate:
+              - $ref: '#/components/schemas/NullString'
             x-struct:
             x-validate:
         - description: Filter type in CSV export
@@ -7366,9 +7449,13 @@ paths:
           name: from_period
           required: true
           schema:
-            nullable: false
-            pattern: ^\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01])(?:T(?:[01]\d|2[0-3])(?:(?::|%3A)[0-5]\d(?:(?::|%3A)[0-5]\d(?:\.\d{1,9})?)?)?(?:Z|(?:\+|%2B|-)(?:[01]\d|2[0-3])(?:(?::|%3A)[0-5]\d)?)?)?$
-            type: string
+            anyOf:
+              - nullable: false
+                pattern: ^\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01])(?:T(?:[01]\d|2[0-3])(?:(?::|%3A)[0-5]\d(?:(?::|%3A)[0-5]\d(?:\.\d{1,9})?)?)?(?:Z|(?:\+|%2B|-)(?:[01]\d|2[0-3])(?:(?::|%3A)[0-5]\d)?)?)?$
+                type: string
+                x-struct:
+                x-validate:
+              - $ref: '#/components/schemas/NullString'
             x-struct:
             x-validate:
         - description: End of the time period (ISO 8601 format) In CSV export
@@ -7376,9 +7463,13 @@ paths:
           name: to_period
           required: true
           schema:
-            nullable: false
-            pattern: ^\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01])(?:T(?:[01]\d|2[0-3])(?:(?::|%3A)[0-5]\d(?:(?::|%3A)[0-5]\d(?:\.\d{1,9})?)?)?(?:Z|(?:\+|%2B|-)(?:[01]\d|2[0-3])(?:(?::|%3A)[0-5]\d)?)?)?$
-            type: string
+            anyOf:
+              - nullable: false
+                pattern: ^\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01])(?:T(?:[01]\d|2[0-3])(?:(?::|%3A)[0-5]\d(?:(?::|%3A)[0-5]\d(?:\.\d{1,9})?)?)?(?:Z|(?:\+|%2B|-)(?:[01]\d|2[0-3])(?:(?::|%3A)[0-5]\d)?)?)?$
+                type: string
+                x-struct:
+                x-validate:
+              - $ref: '#/components/schemas/NullString'
             x-struct:
             x-validate:
         - description: Filter type in CSV export
