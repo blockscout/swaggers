@@ -57,6 +57,21 @@ paths:
           in: query
           required: false
           type: string
+        - name: deployment_status
+          in: query
+          required: false
+          type: string
+          enum:
+            - NO_STATUS
+            - CREATED
+            - PENDING
+            - UNHEALTHY
+            - RUNNING
+            - STOPPING
+            - STOPPED
+            - FAILED
+            - QUEUED
+          default: NO_STATUS
         - name: page
           in: query
           required: false
