@@ -1335,6 +1335,8 @@ definitions:
         type: string
       url:
         type: string
+      receipt_url:
+        type: string
       customer_id:
         type: string
       provider_type:
