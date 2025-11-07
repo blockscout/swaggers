@@ -515,8 +515,96 @@ paths:
         - Deployments
       security:
         - ApiKeyAuth: []
+  /api/v1/deployments/{deployment_id}/plugin-events:
+    get:
+      summary: Get detailed history of (all) plugin events
+      operationId: Autoscout_ListPluginEvents
+      responses:
+        "200":
+          description: A successful response.
+          schema:
+            $ref: '#/definitions/v1ListPluginEventsResponse'
+        default:
+          description: An unexpected error response.
+          schema:
+            $ref: '#/definitions/rpcStatus'
+      parameters:
+        - name: deployment_id
+          in: path
+          required: true
+          type: string
+        - name: variants
+          description: |-
+            comma-separated list of plugin variants to return;
+            see `PluginVariant` for available values
+          in: query
+          required: false
+          type: array
+          items:
+            type: string
+          collectionFormat: multi
+        - name: event_types
+          description: |-
+            comma-separated list of plugin event types to return;
+            see `PluginEventType` for available values
+          in: query
+          required: false
+          type: array
+          items:
+            type: string
+          collectionFormat: multi
+        - name: page
+          in: query
+          required: false
+          type: integer
+          format: int64
+        - name: per_page
+          in: query
+          required: false
+          type: integer
+          format: int64
+      tags:
+        - Plugins
+      security:
+        - ApiKeyAuth: []
+  /api/v1/deployments/{deployment_id}/plugin-logs:
+    get:
+      operationId: Autoscout_ListPluginLogs
+      responses:
+        "200":
+          description: A successful response.
+          schema:
+            $ref: '#/definitions/v1ListPluginLogsResponse'
+        default:
+          description: An unexpected error response.
+          schema:
+            $ref: '#/definitions/rpcStatus'
+      parameters:
+        - name: deployment_id
+          in: path
+          required: true
+          type: string
+        - name: plugin_variant
+          in: query
+          required: true
+          type: string
+        - name: page
+          in: query
+          required: false
+          type: integer
+          format: int64
+        - name: per_page
+          in: query
+          required: false
+          type: integer
+          format: int64
+      tags:
+        - Plugins
+      security:
+        - ApiKeyAuth: []
   /api/v1/deployments/{deployment_id}/storage-usage:
     get:
+      summary: Get hourly storage usage information on the deployment
       operationId: Autoscout_GetDeploymentStorageUsage
       responses:
         "200":
@@ -1808,6 +1896,10 @@ definitions:
         type: boolean
       api_docs_tabs:
         $ref: '#/definitions/v1StringList'
+      stats_plugin_config:
+        $ref: '#/definitions/v1StatsPluginConfig'
+      user_ops_plugin_config:
+        $ref: '#/definitions/v1UserOpsPluginConfig'
     required:
       - rpc_url
       - server_size
@@ -1840,6 +1932,8 @@ definitions:
         $ref: '#/definitions/v1HealthStatus'
       indexing_status:
         $ref: '#/definitions/v1IndexingStatus'
+      plugins_status:
+        $ref: '#/definitions/v1DeploymentPluginStatuses'
     required:
       - deployment_id
       - instance_id
@@ -1849,6 +1943,7 @@ definitions:
       - config_state_hash
       - total_cost
       - health_status
+      - plugins_status
   v1DeploymentHourStorageUsage:
     type: object
     properties:
@@ -1897,6 +1992,16 @@ definitions:
       - group_size
       - severity
       - container
+  v1DeploymentPluginStatuses:
+    type: object
+    properties:
+      stats_status:
+        $ref: '#/definitions/v1PluginStatuses'
+      user_ops_status:
+        $ref: '#/definitions/v1PluginStatuses'
+    required:
+      - stats_status
+      - user_ops_status
   v1DeploymentStatus:
     type: string
     enum:
@@ -2292,6 +2397,30 @@ definitions:
           $ref: '#/definitions/v1Instance'
     required:
       - items
+  v1ListPluginEventsResponse:
+    type: object
+    properties:
+      items:
+        type: array
+        items:
+          type: object
+          $ref: '#/definitions/v1PluginEvent'
+      pagination:
+        $ref: '#/definitions/v1PaginationResult'
+    required:
+      - items
+  v1ListPluginLogsResponse:
+    type: object
+    properties:
+      items:
+        type: array
+        items:
+          type: object
+          $ref: '#/definitions/v1DeploymentLog'
+      pagination:
+        $ref: '#/definitions/v1PaginationResult'
+    required:
+      - items
   v1MenuItem:
     type: object
     properties:
@@ -2426,6 +2555,52 @@ definitions:
       total_pages:
         type: integer
         format: int64
+  v1PluginEvent:
+    type: object
+    properties:
+      variant:
+        $ref: '#/definitions/v1PluginVariant'
+      timestamp:
+        type: string
+      event_type:
+        $ref: '#/definitions/v1PluginEventType'
+      event_data:
+        type: object
+    required:
+      - variant
+      - timestamp
+      - event_type
+  v1PluginEventType:
+    type: string
+    enum:
+      - UNSPECIFIED_PLUGIN_EVENT_TYPE
+      - PLUGIN_EVENT_TYPE_STATUS_CHANGE
+      - PLUGIN_EVENT_TYPE_HEALTH_CHANGE
+    default: UNSPECIFIED_PLUGIN_EVENT_TYPE
+  v1PluginStatus:
+    type: string
+    enum:
+      - UNSPECIFIED_PLUGIN_STATUS
+      - PLUGIN_STATUS_STOPPED
+      - PLUGIN_STATUS_RUNNING
+    default: UNSPECIFIED_PLUGIN_STATUS
+  v1PluginStatuses:
+    type: object
+    properties:
+      launch_status:
+        $ref: '#/definitions/v1PluginStatus'
+      health_status:
+        $ref: '#/definitions/v1HealthStatus'
+    required:
+      - launch_status
+      - health_status
+  v1PluginVariant:
+    type: string
+    enum:
+      - UNSPECIFIED_PLUGIN_VARIANT
+      - PLUGIN_VARIANT_STATS
+      - PLUGIN_VARIANT_USER_OPS
+    default: UNSPECIFIED_PLUGIN_VARIANT
   v1PolygonZkEvmConfig:
     type: object
     properties:
@@ -2645,6 +2820,11 @@ definitions:
         type: string
       memory:
         type: string
+  v1StatsPluginConfig:
+    type: object
+    properties:
+      enabled:
+        type: boolean
   v1StringList:
     type: object
     properties:
@@ -2812,6 +2992,63 @@ definitions:
     required:
       - action
       - timestamp
+  v1UserOpsEntrypointConfig:
+    type: object
+    properties:
+      enabled:
+        type: boolean
+        title: / Enabled by default
+      entry_point:
+        type: array
+        items:
+          type: string
+        title: / Empty - default (see user ops docs for default)
+  v1UserOpsPluginConfig:
+    type: object
+    properties:
+      enabled:
+        type: boolean
+      rpc_url:
+        type: string
+      entrypoints_v06:
+        $ref: '#/definitions/v1UserOpsEntrypointConfig'
+      entrypoints_v07:
+        $ref: '#/definitions/v1UserOpsEntrypointConfig'
+      entrypoints_v08:
+        $ref: '#/definitions/v1UserOpsEntrypointConfig'
+      realtime_enabled:
+        type: boolean
+      realtime_polling_interval:
+        type: string
+        format: uint64
+      realtime_polling_block_range:
+        type: integer
+        format: int64
+      realtime_max_block_range:
+        type: integer
+        format: int64
+      past_rpc_logs_indexer_enabled:
+        type: boolean
+      past_rpc_logs_indexer_block_range:
+        type: integer
+        format: int64
+      past_db_logs_indexer_enabled:
+        type: boolean
+      past_db_logs_indexer_start_block:
+        type: string
+        format: int64
+      past_db_logs_indexer_end_block:
+        type: string
+        format: int64
+      trace_client:
+        $ref: '#/definitions/v1UserOpsTraceClient'
+  v1UserOpsTraceClient:
+    type: string
+    enum:
+      - UNSPECIFIED_TRACE_CLIENT
+      - DEBUG
+      - TRACE
+    default: UNSPECIFIED_TRACE_CLIENT
   v1UserProfile:
     type: object
     properties:
