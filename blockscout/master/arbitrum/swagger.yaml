@@ -2,6 +2,32 @@
 components:
   responses: {}
   schemas:
+    TransactionStateChangesPaginatedResponse:
+      additionalProperties: false
+      nullable: false
+      properties:
+        items:
+          items:
+            $ref: '#/components/schemas/StateChange'
+          nullable: false
+          type: array
+          x-struct:
+          x-validate:
+        next_page_params:
+          example:
+            items_count: 50
+            state_changes:
+          nullable: true
+          type: object
+          x-struct:
+          x-validate:
+      required:
+        - items
+        - next_page_params
+      title: TransactionStateChangesPaginatedResponse
+      type: object
+      x-struct:
+      x-validate:
     Address:
       additionalProperties: false
       description: Address
@@ -209,6 +235,33 @@ components:
       type: object
       x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.General.WatchlistName
       x-validate:
+    TransactionsPaginatedResponse:
+      additionalProperties: false
+      nullable: false
+      properties:
+        items:
+          items:
+            $ref: '#/components/schemas/TransactionResponse'
+          nullable: false
+          type: array
+          x-struct:
+          x-validate:
+        next_page_params:
+          example:
+            block_number: 23532302
+            index: 375
+            items_count: 50
+          nullable: true
+          type: object
+          x-struct:
+          x-validate:
+      required:
+        - items
+        - next_page_params
+      title: TransactionsPaginatedResponse
+      type: object
+      x-struct:
+      x-validate:
     EmptyString:
       maxLength: 0
       minLength: 0
@@ -366,6 +419,128 @@ components:
       title: TotalERC1155
       type: object
       x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.TokenTransfer.TotalERC1155
+      x-validate:
+    SummaryJustRequestBody:
+      additionalProperties: false
+      properties:
+        chain_id:
+          nullable: true
+          type: integer
+          x-struct:
+          x-validate:
+        data:
+          additionalProperties: false
+          properties:
+            decoded_input:
+              nullable: true
+              type: object
+              x-struct:
+              x-validate:
+            from:
+              allOf:
+                - $ref: '#/components/schemas/Address'
+              nullable: true
+              x-struct:
+              x-validate:
+            hash:
+              type: string
+              x-struct:
+              x-validate:
+            internal_transactions:
+              items:
+                allOf:
+                  - $ref: '#/components/schemas/InternalTransaction'
+                nullable: true
+                x-struct:
+                x-validate:
+              type: array
+              x-struct:
+              x-validate:
+            method:
+              nullable: true
+              type: string
+              x-struct:
+              x-validate:
+            raw_input:
+              type: string
+              x-struct:
+              x-validate:
+            status:
+              type: string
+              x-struct:
+              x-validate:
+            to:
+              allOf:
+                - $ref: '#/components/schemas/Address'
+              nullable: true
+              x-struct:
+              x-validate:
+            token_transfers:
+              items:
+                allOf:
+                  - $ref: '#/components/schemas/TokenTransfer'
+                nullable: true
+                x-struct:
+                x-validate:
+              type: array
+              x-struct:
+              x-validate:
+            transaction_types:
+              items:
+                type: string
+                x-struct:
+                x-validate:
+              type: array
+              x-struct:
+              x-validate:
+            type:
+              nullable: true
+              type: integer
+              x-struct:
+              x-validate:
+            value:
+              type: string
+              x-struct:
+              x-validate:
+          required:
+            - status
+            - type
+            - value
+            - hash
+            - from
+            - to
+            - method
+            - token_transfers
+            - internal_transactions
+            - transaction_types
+            - decoded_input
+            - raw_input
+          type: object
+          x-struct:
+          x-validate:
+        logs_data:
+          additionalProperties: false
+          properties:
+            items:
+              items:
+                allOf:
+                  - $ref: '#/components/schemas/Log'
+                nullable: true
+                x-struct:
+                x-validate:
+              type: array
+              x-struct:
+              x-validate:
+          required:
+            - items
+          type: object
+          x-struct:
+          x-validate:
+      required:
+        - data
+      title: SummaryJustRequestBody
+      type: object
+      x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.Transaction.SummaryJustRequestBody
       x-validate:
     Withdrawal:
       additionalProperties: false
@@ -955,6 +1130,94 @@ components:
       type: object
       x-struct:
       x-validate:
+    RawTrace:
+      items:
+        additionalProperties: false
+        properties:
+          action:
+            additionalProperties: false
+            properties:
+              callType:
+                enum:
+                  - call
+                  - callcode
+                  - delegatecall
+                  - staticcall
+                type: string
+                x-struct:
+                x-validate:
+              from:
+                $ref: '#/components/schemas/AddressHash'
+              gas:
+                $ref: '#/components/schemas/HexString'
+              init:
+                $ref: '#/components/schemas/HexString'
+              input:
+                $ref: '#/components/schemas/HexString'
+              to:
+                $ref: '#/components/schemas/AddressHash'
+              value:
+                $ref: '#/components/schemas/HexString'
+            required:
+              - from
+              - gas
+              - input
+              - value
+            type: object
+            x-struct:
+            x-validate:
+          result:
+            additionalProperties: false
+            properties:
+              gasUsed:
+                $ref: '#/components/schemas/HexString'
+              output:
+                $ref: '#/components/schemas/HexString'
+            required:
+              - gasUsed
+              - output
+            type: object
+            x-struct:
+            x-validate:
+          subtraces:
+            minimum: 0
+            type: integer
+            x-struct:
+            x-validate:
+          traceAddress:
+            items:
+              type: integer
+              x-struct:
+              x-validate:
+            type: array
+            x-struct:
+            x-validate:
+          transactionHash:
+            $ref: '#/components/schemas/FullHashNullable'
+          type:
+            enum:
+              - call
+              - create
+              - create2
+              - reward
+              - selfdestruct
+              - stop
+              - invalid
+            type: string
+            x-struct:
+            x-validate:
+        required:
+          - action
+          - subtraces
+          - traceAddress
+          - type
+        type: object
+        x-struct:
+        x-validate:
+      title: RawTrace
+      type: array
+      x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.Transaction.RawTrace
+      x-validate:
     DecodedLogInput:
       additionalProperties: false
       nullable: false
@@ -1082,6 +1345,75 @@ components:
       title: BlockTransactionsPaginatedResponse
       type: object
       x-struct:
+      x-validate:
+    Summary:
+      additionalProperties: false
+      properties:
+        data:
+          additionalProperties: false
+          properties:
+            summaries:
+              items:
+                additionalProperties: false
+                properties:
+                  summary_template:
+                    type: string
+                    x-struct:
+                    x-validate:
+                  summary_template_variables:
+                    additionalProperties:
+                      additionalProperties: false
+                      properties:
+                        type:
+                          type: string
+                          x-struct:
+                          x-validate:
+                        value:
+                          anyOf:
+                            - type: string
+                              x-struct:
+                              x-validate:
+                            - type: number
+                              x-struct:
+                              x-validate:
+                            - type: object
+                              x-struct:
+                              x-validate:
+                          x-struct:
+                          x-validate:
+                      required:
+                        - type
+                        - value
+                      type: object
+                      x-struct:
+                      x-validate:
+                    type: object
+                    x-struct:
+                    x-validate:
+                required:
+                  - summary_template
+                  - summary_template_variables
+                type: object
+                x-struct:
+                x-validate:
+              type: array
+              x-struct:
+              x-validate:
+          required:
+            - summaries
+          type: object
+          x-struct:
+          x-validate:
+        success:
+          type: boolean
+          x-struct:
+          x-validate:
+      required:
+        - data
+        - success
+      title: Summary
+      type: object
+      x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.Transaction.Summary
       x-validate:
     URLNullable:
       example: https://example.com
@@ -1595,6 +1927,33 @@ components:
       type: object
       x-struct:
       x-validate:
+    TransactionLogsPaginatedResponse:
+      additionalProperties: false
+      nullable: false
+      properties:
+        items:
+          items:
+            $ref: '#/components/schemas/Log'
+          nullable: false
+          type: array
+          x-struct:
+          x-validate:
+        next_page_params:
+          example:
+            block_number: 21925703
+            index: 124
+            items_count: 50
+          nullable: true
+          type: object
+          x-struct:
+          x-validate:
+      required:
+        - items
+        - next_page_params
+      title: TransactionLogsPaginatedResponse
+      type: object
+      x-struct:
+      x-validate:
     AddressHash:
       nullable: false
       pattern: ^0x([A-Fa-f0-9]{40})$
@@ -1725,6 +2084,32 @@ components:
       title: CoinBalanceByDay
       type: object
       x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.CoinBalanceByDay
+      x-validate:
+    TransactionTokenTransfersPaginatedResponse:
+      additionalProperties: false
+      nullable: false
+      properties:
+        items:
+          items:
+            $ref: '#/components/schemas/TokenTransfer'
+          nullable: false
+          type: array
+          x-struct:
+          x-validate:
+        next_page_params:
+          example:
+            block_number: 21307214
+            index: 442
+          nullable: true
+          type: object
+          x-struct:
+          x-validate:
+      required:
+        - items
+        - next_page_params
+      title: TransactionTokenTransfersPaginatedResponse
+      type: object
+      x-struct:
       x-validate:
     IntegerStringNullable:
       nullable: true
@@ -2557,6 +2942,34 @@ components:
       type: object
       x-struct:
       x-validate:
+    TransactionInternalTransactionsPaginatedResponse:
+      additionalProperties: false
+      nullable: false
+      properties:
+        items:
+          items:
+            $ref: '#/components/schemas/InternalTransaction'
+          nullable: false
+          type: array
+          x-struct:
+          x-validate:
+        next_page_params:
+          example:
+            block_number: 22133247
+            index: 50
+            items_count: 50
+            transaction_index: 68
+          nullable: true
+          type: object
+          x-struct:
+          x-validate:
+      required:
+        - items
+        - next_page_params
+      title: TransactionInternalTransactionsPaginatedResponse
+      type: object
+      x-struct:
+      x-validate:
     TokenResponse:
       additionalProperties: false
       description: Token response
@@ -2635,6 +3048,48 @@ components:
       title: TokenResponse
       type: object
       x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.Token
+      x-validate:
+    StateChange:
+      additionalProperties: false
+      properties:
+        address:
+          $ref: '#/components/schemas/Address'
+        balance_after:
+          $ref: '#/components/schemas/IntegerStringNullable'
+        balance_before:
+          $ref: '#/components/schemas/IntegerStringNullable'
+        change:
+          $ref: '#/components/schemas/IntegerStringNullable'
+        is_miner:
+          type: boolean
+          x-struct:
+          x-validate:
+        token:
+          allOf:
+            - $ref: '#/components/schemas/Token'
+          nullable: true
+          x-struct:
+          x-validate:
+        token_id:
+          $ref: '#/components/schemas/IntegerStringNullable'
+        type:
+          enum:
+            - token
+            - coin
+          type: string
+          x-struct:
+          x-validate:
+      required:
+        - address
+        - balance_after
+        - balance_before
+        - change
+        - is_miner
+        - token
+        - type
+      title: StateChange
+      type: object
+      x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.Transaction.StateChange
       x-validate:
     BlockWithdrawalsPaginatedResponse:
       additionalProperties: false
@@ -3578,6 +4033,451 @@ components:
       type: object
       x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.SignedAuthorization
       x-validate:
+    ArbitrumBatchTransactionsPaginatedResponse:
+      additionalProperties: false
+      nullable: false
+      properties:
+        items:
+          items:
+            $ref: '#/components/schemas/TransactionResponse'
+          nullable: false
+          type: array
+          x-struct:
+          x-validate:
+        next_page_params:
+          example:
+            block_number: 391483842
+            index: 0
+            items_count: 50
+          nullable: true
+          type: object
+          x-struct:
+          x-validate:
+      required:
+        - items
+        - next_page_params
+      title: ArbitrumBatchTransactionsPaginatedResponse
+      type: object
+      x-struct:
+      x-validate:
+    TransactionResponse:
+      additionalProperties: false
+      description: Transaction response
+      properties:
+        has_error_in_internal_transactions:
+          nullable: true
+          type: boolean
+          x-struct:
+          x-validate:
+        block_number:
+          nullable: true
+          type: integer
+          x-struct:
+          x-validate:
+        exchange_rate:
+          $ref: '#/components/schemas/FloatStringNullable'
+        transaction_types:
+          items:
+            enum:
+              - coin_transfer
+              - contract_call
+              - contract_creation
+              - rootstock_bridge
+              - rootstock_remasc
+              - token_creation
+              - token_transfer
+              - blob_transaction
+              - set_code_transaction
+            type: string
+            x-struct:
+            x-validate:
+          type: array
+          x-struct:
+          x-validate:
+        historic_exchange_rate:
+          $ref: '#/components/schemas/FloatStringNullable'
+        nonce:
+          minimum: 0
+          nullable: false
+          type: integer
+          x-struct:
+          x-validate:
+        timestamp:
+          $ref: '#/components/schemas/TimestampNullable'
+        base_fee_per_gas:
+          $ref: '#/components/schemas/IntegerStringNullable'
+        token_transfers:
+          items:
+            $ref: '#/components/schemas/TokenTransfer'
+          nullable: true
+          type: array
+          x-struct:
+          x-validate:
+        decoded_input:
+          allOf:
+            - $ref: '#/components/schemas/DecodedInput'
+          nullable: true
+          x-struct:
+          x-validate:
+        gas_price:
+          $ref: '#/components/schemas/IntegerStringNullable'
+        gas_limit:
+          $ref: '#/components/schemas/IntegerString'
+        actions:
+          items:
+            additionalProperties: false
+            properties:
+              data:
+                description: Transaction action details (json formatted)
+                nullable: false
+                type: object
+                x-struct:
+                x-validate:
+              protocol:
+                enum:
+                  - uniswap_v3
+                  - opensea_v1_1
+                  - wrapping
+                  - approval
+                  - zkbob
+                  - aave_v3
+                nullable: false
+                type: string
+                x-struct:
+                x-validate:
+              type:
+                enum:
+                  - mint_nft
+                  - mint
+                  - burn
+                  - collect
+                  - swap
+                  - sale
+                  - cancel
+                  - transfer
+                  - wrap
+                  - unwrap
+                  - approve
+                  - revoke
+                  - withdraw
+                  - deposit
+                  - borrow
+                  - supply
+                  - repay
+                  - flash_loan
+                  - enable_collateral
+                  - disable_collateral
+                  - liquidation_call
+                nullable: false
+                type: string
+                x-struct:
+                x-validate:
+            required:
+              - protocol
+              - type
+              - data
+            type: object
+            x-struct:
+            x-validate:
+          nullable: true
+          type: array
+          x-struct:
+          x-validate:
+        arbitrum:
+          additionalProperties: false
+          nullable: false
+          properties:
+            batch_data_container:
+              nullable: true
+              type: string
+              x-struct:
+              x-validate:
+            batch_number:
+              nullable: true
+              type: integer
+              x-struct:
+              x-validate:
+            commitment_transaction:
+              additionalProperties: false
+              nullable: false
+              properties:
+                hash:
+                  $ref: '#/components/schemas/FullHashNullable'
+                status:
+                  enum:
+                    - unfinalized
+                    - finalized
+                  nullable: true
+                  type: string
+                  x-struct:
+                  x-validate:
+                timestamp:
+                  $ref: '#/components/schemas/TimestampNullable'
+              required:
+                - hash
+                - timestamp
+                - status
+              type: object
+              x-struct:
+              x-validate:
+            confirmation_transaction:
+              additionalProperties: false
+              nullable: false
+              properties:
+                hash:
+                  $ref: '#/components/schemas/FullHashNullable'
+                status:
+                  enum:
+                    - unfinalized
+                    - finalized
+                  nullable: true
+                  type: string
+                  x-struct:
+                  x-validate:
+                timestamp:
+                  $ref: '#/components/schemas/TimestampNullable'
+              required:
+                - hash
+                - timestamp
+                - status
+              type: object
+              x-struct:
+              x-validate:
+            contains_message:
+              enum:
+                - incoming
+                - outcoming
+              nullable: true
+              type: string
+              x-struct:
+              x-validate:
+            gas_used_for_l1:
+              $ref: '#/components/schemas/IntegerString'
+            gas_used_for_l2:
+              $ref: '#/components/schemas/IntegerString'
+            message_related_info:
+              additionalProperties: false
+              nullable: false
+              properties:
+                associated_l1_transaction_hash:
+                  $ref: '#/components/schemas/FullHashNullable'
+                message_id:
+                  nullable: false
+                  type: integer
+                  x-struct:
+                  x-validate:
+                message_status:
+                  enum:
+                    - Syncing with base layer
+                    - Relayed
+                    - Settlement pending
+                    - Waiting for confirmation
+                    - Ready for relay
+                  nullable: false
+                  type: string
+                  x-struct:
+                  x-validate:
+              type: object
+              x-struct:
+              x-validate:
+            network_fee:
+              $ref: '#/components/schemas/IntegerString'
+            poster_fee:
+              $ref: '#/components/schemas/IntegerString'
+            status:
+              enum:
+                - Confirmed on base
+                - Sent to base
+                - Sealed on rollup
+                - Processed on rollup
+              nullable: false
+              type: string
+              x-struct:
+              x-validate:
+          required:
+            - gas_used_for_l1
+            - gas_used_for_l2
+            - poster_fee
+            - network_fee
+          type: object
+          x-struct:
+          x-validate:
+        fee:
+          $ref: '#/components/schemas/Fee'
+        method:
+          $ref: '#/components/schemas/MethodNameNullable'
+        authorization_list:
+          items:
+            $ref: '#/components/schemas/SignedAuthorization'
+          nullable: true
+          type: array
+          x-struct:
+          x-validate:
+        to:
+          $ref: '#/components/schemas/Address'
+        status:
+          enum:
+            - ok
+            - error
+          nullable: true
+          type: string
+          x-struct:
+          x-validate:
+        gas_used:
+          $ref: '#/components/schemas/IntegerStringNullable'
+        from:
+          $ref: '#/components/schemas/Address'
+        value:
+          $ref: '#/components/schemas/IntegerString'
+        created_contract:
+          allOf:
+            - $ref: '#/components/schemas/Address'
+          nullable: true
+          x-struct:
+          x-validate:
+        transaction_tag:
+          description: Transaction tag set in My Account
+          example: personal
+          nullable: true
+          type: string
+          x-struct:
+          x-validate:
+        max_priority_fee_per_gas:
+          $ref: '#/components/schemas/IntegerStringNullable'
+        position:
+          minimum: 0
+          nullable: true
+          type: integer
+          x-struct:
+          x-validate:
+        confirmations:
+          minimum: 0
+          type: integer
+          x-struct:
+          x-validate:
+        token_transfers_overflow:
+          nullable: true
+          type: boolean
+          x-struct:
+          x-validate:
+        type:
+          nullable: true
+          type: integer
+          x-struct:
+          x-validate:
+        transaction_burnt_fee:
+          $ref: '#/components/schemas/IntegerStringNullable'
+        confirmation_duration:
+          description: Array of time intervals in milliseconds. Can be empty [] (no info), single value [interval] (means that the transaction was confirmed within {interval} milliseconds), or two values [short_interval, long_interval] (means that the transaction's confirmation took from {short_interval} to {long_interval} milliseconds)
+          example:
+            - 1000
+            - 2000
+          items:
+            description: Duration in milliseconds
+            minimum: 0
+            type: integer
+            x-struct:
+            x-validate:
+          maxItems: 2
+          type: array
+          x-struct:
+          x-validate:
+        revert_reason:
+          nullable: true
+          oneOf:
+            - $ref: '#/components/schemas/DecodedInput'
+            - additionalProperties: false
+              nullable: false
+              properties:
+                raw:
+                  anyOf:
+                    - $ref: '#/components/schemas/HexString'
+                    - type: string
+                      x-struct:
+                      x-validate:
+                  nullable: true
+                  x-struct:
+                  x-validate:
+              required:
+                - raw
+              type: object
+              x-struct:
+              x-validate:
+          x-struct:
+          x-validate:
+        max_fee_per_gas:
+          $ref: '#/components/schemas/IntegerStringNullable'
+        hash:
+          $ref: '#/components/schemas/FullHash'
+        result:
+          anyOf:
+            - enum:
+                - pending
+                - awaiting_internal_transactions
+                - success
+                - dropped/replaced
+              type: string
+              x-struct:
+              x-validate:
+            - description: Error message
+              example: out of gas
+              type: string
+              x-struct:
+              x-validate:
+          nullable: false
+          x-struct:
+          x-validate:
+        is_pending_update:
+          nullable: true
+          type: boolean
+          x-struct:
+          x-validate:
+        raw_input:
+          $ref: '#/components/schemas/HexString'
+        priority_fee:
+          $ref: '#/components/schemas/IntegerStringNullable'
+      required:
+        - hash
+        - result
+        - status
+        - block_number
+        - timestamp
+        - from
+        - to
+        - created_contract
+        - confirmations
+        - confirmation_duration
+        - value
+        - fee
+        - gas_price
+        - type
+        - gas_used
+        - gas_limit
+        - max_fee_per_gas
+        - max_priority_fee_per_gas
+        - base_fee_per_gas
+        - priority_fee
+        - transaction_burnt_fee
+        - nonce
+        - position
+        - revert_reason
+        - raw_input
+        - decoded_input
+        - token_transfers
+        - token_transfers_overflow
+        - actions
+        - exchange_rate
+        - historic_exchange_rate
+        - method
+        - transaction_types
+        - transaction_tag
+        - has_error_in_internal_transactions
+        - authorization_list
+        - is_pending_update
+      title: TransactionResponse
+      type: object
+      x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.Transaction
+      x-validate:
     HexStringNullable:
       nullable: true
       pattern: ^0x([A-Fa-f0-9]*)$
@@ -3591,6 +4491,33 @@ components:
       title: Timestamp
       type: string
       x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.General.Timestamp
+      x-validate:
+    WatchlistTransactionsPaginatedResponse:
+      additionalProperties: false
+      nullable: false
+      properties:
+        items:
+          items:
+            $ref: '#/components/schemas/TransactionResponse'
+          nullable: false
+          type: array
+          x-struct:
+          x-validate:
+        next_page_params:
+          example:
+            block_number: 23617990
+            index: 128
+            items_count: 50
+          nullable: true
+          type: object
+          x-struct:
+          x-validate:
+      required:
+        - items
+        - next_page_params
+      title: WatchlistTransactionsPaginatedResponse
+      type: object
+      x-struct:
       x-validate:
 info:
   contact:
@@ -3791,6 +4718,55 @@ paths:
       summary: Retrieve detailed information about a specific token
       tags:
         - tokens
+  /v2/transactions/{transaction_hash_param}:
+    get:
+      callbacks: {}
+      description: Retrieves detailed information for a specific transaction, including token transfers, internal transactions, and metadata.
+      operationId: BlockScoutWeb.API.V2.TransactionController.transaction
+      parameters:
+        - in: path
+          name: transaction_hash_param
+          required: true
+          schema:
+            $ref: '#/components/schemas/FullHash'
+        - description: API key for rate limiting or for sensitive endpoints
+          in: query
+          name: apikey
+          required: false
+          schema:
+            type: string
+            x-struct:
+            x-validate:
+        - description: Secret key for getting access to restricted resources
+          in: query
+          name: key
+          required: false
+          schema:
+            type: string
+            x-struct:
+            x-validate:
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TransactionResponse'
+          description: Transaction details
+        '404':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFoundResponse'
+          description: Not Found
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JsonErrorResponse'
+          description: Unprocessable Entity
+      summary: Retrieve detailed information about a specific transaction
+      tags:
+        - transactions
   /v2/tokens/{address_hash_param}/holders/csv:
     get:
       callbacks: {}
@@ -5244,6 +6220,62 @@ paths:
       summary: List all internal transactions involving a specific address
       tags:
         - addresses
+  /v2/transactions/{transaction_hash_param}/external-transactions:
+    get:
+      callbacks: {}
+      description: Retrieves external transactions that are linked to the specified transaction (e.g., Solana transactions in `neon` chain type).
+      operationId: BlockScoutWeb.API.V2.TransactionController.external_transactions
+      parameters:
+        - in: path
+          name: transaction_hash_param
+          required: true
+          schema:
+            $ref: '#/components/schemas/FullHash'
+        - description: API key for rate limiting or for sensitive endpoints
+          in: query
+          name: apikey
+          required: false
+          schema:
+            type: string
+            x-struct:
+            x-validate:
+        - description: Secret key for getting access to restricted resources
+          in: query
+          name: key
+          required: false
+          schema:
+            type: string
+            x-struct:
+            x-validate:
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                items:
+                  type: string
+                  x-struct:
+                  x-validate:
+                nullable: false
+                type: array
+                x-struct:
+                x-validate:
+          description: Linked external transactions
+        '404':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFoundResponse'
+          description: Not Found
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JsonErrorResponse'
+          description: Unprocessable Entity
+      summary: List external transactions linked to a transaction
+      tags:
+        - transactions
   /v2/tokens/{address_hash_param}/transfers:
     get:
       callbacks: {}
@@ -5366,6 +6398,126 @@ paths:
       summary: List token transfers for a specific token
       tags:
         - tokens
+  /v2/transactions:
+    get:
+      callbacks: {}
+      description: Retrieves a paginated list of transactions with optional filtering and sorting options.
+      operationId: BlockScoutWeb.API.V2.TransactionController.transactions
+      parameters:
+        - description: API key for rate limiting or for sensitive endpoints
+          in: query
+          name: apikey
+          required: false
+          schema:
+            type: string
+            x-struct:
+            x-validate:
+        - description: Secret key for getting access to restricted resources
+          in: query
+          name: key
+          required: false
+          schema:
+            type: string
+            x-struct:
+            x-validate:
+        - description: |
+            Filter by transaction type:
+            * validated - Only show validated transactions
+            * pending - Only show pending transactions
+            If omitted, default value "validated" is used.
+          in: query
+          name: filter
+          required: false
+          schema:
+            enum:
+              - validated
+              - pending
+            type: string
+            x-struct:
+            x-validate:
+        - description: Block number for paging
+          in: query
+          name: block_number
+          required: false
+          schema:
+            minimum: 0
+            type: integer
+            x-struct:
+            x-validate:
+        - description: Transaction index for paging
+          in: query
+          name: index
+          required: false
+          schema:
+            type: integer
+            x-struct:
+            x-validate:
+        - description: Number of items returned per page
+          in: query
+          name: items_count
+          required: false
+          schema:
+            maximum: 50
+            minimum: 1
+            type: integer
+            x-struct:
+            x-validate:
+        - description: Transaction hash for paging
+          in: query
+          name: hash
+          required: false
+          schema:
+            $ref: '#/components/schemas/FullHash'
+        - description: Inserted at timestamp for paging (ISO8601)
+          in: query
+          name: inserted_at
+          required: false
+          schema:
+            format: date-time
+            type: string
+            x-struct:
+            x-validate:
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                additionalProperties: false
+                nullable: false
+                properties:
+                  items:
+                    items:
+                      $ref: '#/components/schemas/TransactionResponse'
+                    nullable: false
+                    type: array
+                    x-struct:
+                    x-validate:
+                  next_page_params:
+                    example:
+                      block_number: 23532302
+                      index: 375
+                      items_count: 50
+                    nullable: true
+                    type: object
+                    x-struct:
+                    x-validate:
+                required:
+                  - items
+                  - next_page_params
+                title: TransactionsPaginatedResponse
+                type: object
+                x-struct:
+                x-validate:
+          description: List of transactions
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JsonErrorResponse'
+          description: Unprocessable Entity
+      summary: List transactions with optional filtering and sorting
+      tags:
+        - transactions
   /v2/tokens/{address_hash_param}/instances/{token_id_param}/holders:
     get:
       callbacks: {}
@@ -5578,6 +6730,243 @@ paths:
       summary: List token transfers for a specific token instance
       tags:
         - tokens
+  /v2/transactions/arbitrum-batch/{batch_number_param}:
+    get:
+      callbacks: {}
+      description: Retrieves L2 transactions bound to a specific Arbitrum batch number.
+      operationId: BlockScoutWeb.API.V2.TransactionController.arbitrum_batch
+      parameters:
+        - description: API key for rate limiting or for sensitive endpoints
+          in: query
+          name: apikey
+          required: false
+          schema:
+            type: string
+            x-struct:
+            x-validate:
+        - description: Secret key for getting access to restricted resources
+          in: query
+          name: key
+          required: false
+          schema:
+            type: string
+            x-struct:
+            x-validate:
+        - description: Batch number
+          in: path
+          name: batch_number_param
+          required: true
+          schema:
+            minimum: 0
+            type: integer
+            x-struct:
+            x-validate:
+        - description: Block number for paging
+          in: query
+          name: block_number
+          required: false
+          schema:
+            minimum: 0
+            type: integer
+            x-struct:
+            x-validate:
+        - description: Transaction index for paging
+          in: query
+          name: index
+          required: false
+          schema:
+            type: integer
+            x-struct:
+            x-validate:
+        - description: Number of items returned per page
+          in: query
+          name: items_count
+          required: false
+          schema:
+            maximum: 50
+            minimum: 1
+            type: integer
+            x-struct:
+            x-validate:
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                additionalProperties: false
+                nullable: false
+                properties:
+                  items:
+                    items:
+                      $ref: '#/components/schemas/TransactionResponse'
+                    nullable: false
+                    type: array
+                    x-struct:
+                    x-validate:
+                  next_page_params:
+                    example:
+                      block_number: 391483842
+                      index: 0
+                      items_count: 50
+                    nullable: true
+                    type: object
+                    x-struct:
+                    x-validate:
+                required:
+                  - items
+                  - next_page_params
+                title: ArbitrumBatchTransactionsPaginatedResponse
+                type: object
+                x-struct:
+                x-validate:
+          description: Arbitrum batch transactions
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JsonErrorResponse'
+          description: Unprocessable Entity
+      summary: List L2 transactions in an Arbitrum batch
+      tags:
+        - transactions
+  /v2/transactions/{transaction_hash_param}/token-transfers:
+    get:
+      callbacks: {}
+      description: Retrieves token transfers for a specific transaction.
+      operationId: BlockScoutWeb.API.V2.TransactionController.token_transfers
+      parameters:
+        - description: API key for rate limiting or for sensitive endpoints
+          in: query
+          name: apikey
+          required: false
+          schema:
+            type: string
+            x-struct:
+            x-validate:
+        - description: Secret key for getting access to restricted resources
+          in: query
+          name: key
+          required: false
+          schema:
+            type: string
+            x-struct:
+            x-validate:
+        - in: path
+          name: transaction_hash_param
+          required: true
+          schema:
+            $ref: '#/components/schemas/FullHash'
+        - description: |
+            Filter by token type. Comma-separated list of:
+            * ERC-20 - Fungible tokens
+            * ERC-721 - Non-fungible tokens
+            * ERC-1155 - Multi-token standard
+            * ERC-404 - Hybrid fungible/non-fungible tokens
+
+            Example: `ERC-20,ERC-721` to show both fungible and NFT transfers
+          in: query
+          name: type
+          required: false
+          schema:
+            anyOf:
+              - $ref: '#/components/schemas/EmptyString'
+              - pattern: ^\[?(ERC-20|ERC-721|ERC-1155|ERC-404)(,(ERC-20|ERC-721|ERC-1155|ERC-404))*\]?$
+                type: string
+                x-struct:
+                x-validate:
+            x-struct:
+            x-validate:
+        - description: Transaction index for paging
+          in: query
+          name: index
+          required: false
+          schema:
+            type: integer
+            x-struct:
+            x-validate:
+        - description: Block number for paging
+          in: query
+          name: block_number
+          required: false
+          schema:
+            minimum: 0
+            type: integer
+            x-struct:
+            x-validate:
+        - description: Batch log index for paging
+          in: query
+          name: batch_log_index
+          required: false
+          schema:
+            type: integer
+            x-struct:
+            x-validate:
+        - description: Batch block hash for paging
+          in: query
+          name: batch_block_hash
+          required: false
+          schema:
+            $ref: '#/components/schemas/FullHash'
+        - description: Batch transaction hash for paging
+          in: query
+          name: batch_transaction_hash
+          required: false
+          schema:
+            $ref: '#/components/schemas/FullHash'
+        - description: Index in batch for paging
+          in: query
+          name: index_in_batch
+          required: false
+          schema:
+            type: integer
+            x-struct:
+            x-validate:
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                additionalProperties: false
+                nullable: false
+                properties:
+                  items:
+                    items:
+                      $ref: '#/components/schemas/TokenTransfer'
+                    nullable: false
+                    type: array
+                    x-struct:
+                    x-validate:
+                  next_page_params:
+                    example:
+                      block_number: 21307214
+                      index: 442
+                    nullable: true
+                    type: object
+                    x-struct:
+                    x-validate:
+                required:
+                  - items
+                  - next_page_params
+                title: TransactionTokenTransfersPaginatedResponse
+                type: object
+                x-struct:
+                x-validate:
+          description: Token transfers for transaction
+        '404':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFoundResponse'
+          description: Not Found
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JsonErrorResponse'
+          description: Unprocessable Entity
+      summary: List token transfers for a transaction
+      tags:
+        - transactions
   /v2/addresses/{address_hash_param}/counters:
     get:
       callbacks: {}
@@ -5944,6 +7333,97 @@ paths:
       summary: Trigger metadata refetch for a token's NFT collection
       tags:
         - tokens
+  /v2/transactions/{transaction_hash_param}/state-changes:
+    get:
+      callbacks: {}
+      description: Retrieves state changes for a specific transaction.
+      operationId: BlockScoutWeb.API.V2.TransactionController.state_changes
+      parameters:
+        - in: path
+          name: transaction_hash_param
+          required: true
+          schema:
+            $ref: '#/components/schemas/FullHash'
+        - description: API key for rate limiting or for sensitive endpoints
+          in: query
+          name: apikey
+          required: false
+          schema:
+            type: string
+            x-struct:
+            x-validate:
+        - description: Secret key for getting access to restricted resources
+          in: query
+          name: key
+          required: false
+          schema:
+            type: string
+            x-struct:
+            x-validate:
+        - description: State changes for paging
+          in: query
+          name: state_changes
+          required: false
+          schema:
+            nullable: true
+            type: string
+            x-struct:
+            x-validate:
+        - description: Cumulative number of items to skip for keyset-based pagination of state changes
+          in: query
+          name: items_count
+          required: false
+          schema:
+            minimum: 1
+            type: integer
+            x-struct:
+            x-validate:
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                additionalProperties: false
+                nullable: false
+                properties:
+                  items:
+                    items:
+                      $ref: '#/components/schemas/StateChange'
+                    nullable: false
+                    type: array
+                    x-struct:
+                    x-validate:
+                  next_page_params:
+                    example:
+                      items_count: 50
+                      state_changes:
+                    nullable: true
+                    type: object
+                    x-struct:
+                    x-validate:
+                required:
+                  - items
+                  - next_page_params
+                title: TransactionStateChangesPaginatedResponse
+                type: object
+                x-struct:
+                x-validate:
+          description: State changes for transaction
+        '404':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFoundResponse'
+          description: Not Found
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JsonErrorResponse'
+          description: Unprocessable Entity
+      summary: List state changes for a transaction
+      tags:
+        - transactions
   /v2/addresses/{address_hash_param}:
     get:
       callbacks: {}
@@ -6638,6 +8118,67 @@ paths:
       summary: List transactions in a specific block
       tags:
         - blocks
+  /v2/transactions/{transaction_hash_param}/summary:
+    get:
+      callbacks: {}
+      description: Retrieves interpreted summary for a specific transaction.
+      operationId: BlockScoutWeb.API.V2.TransactionController.summary
+      parameters:
+        - description: API key for rate limiting or for sensitive endpoints
+          in: query
+          name: apikey
+          required: false
+          schema:
+            type: string
+            x-struct:
+            x-validate:
+        - description: Secret key for getting access to restricted resources
+          in: query
+          name: key
+          required: false
+          schema:
+            type: string
+            x-struct:
+            x-validate:
+        - in: path
+          name: transaction_hash_param
+          required: true
+          schema:
+            $ref: '#/components/schemas/FullHash'
+        - description: If true, returns only the request body in the summary endpoint
+          in: query
+          name: just_request_body
+          required: false
+          schema:
+            type: boolean
+            x-struct:
+            x-validate:
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                anyOf:
+                  - $ref: '#/components/schemas/Summary'
+                  - $ref: '#/components/schemas/SummaryJustRequestBody'
+                x-struct:
+                x-validate:
+          description: Transaction summary
+        '404':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFoundResponse'
+          description: Not Found
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JsonErrorResponse'
+          description: Unprocessable Entity
+      summary: Get interpreted summary for a transaction
+      tags:
+        - transactions
   /v2/blocks:
     get:
       callbacks: {}
@@ -7018,6 +8559,45 @@ paths:
       summary: Export internal transactions as CSV
       tags:
         - addresses
+  /v2/transactions/stats:
+    get:
+      callbacks: {}
+      description: Retrieves statistics for transactions, including counts and fee summaries for the last 24 hours.
+      operationId: BlockScoutWeb.API.V2.TransactionController.stats
+      parameters: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                additionalProperties: false
+                properties:
+                  pending_transactions_count:
+                    $ref: '#/components/schemas/IntegerString'
+                  transaction_fees_avg_24h:
+                    $ref: '#/components/schemas/IntegerString'
+                  transaction_fees_sum_24h:
+                    $ref: '#/components/schemas/IntegerString'
+                  transactions_count_24h:
+                    $ref: '#/components/schemas/IntegerString'
+                required:
+                  - transactions_count_24h
+                  - pending_transactions_count
+                  - transaction_fees_sum_24h
+                  - transaction_fees_avg_24h
+                type: object
+                x-struct:
+                x-validate:
+          description: Transaction statistics
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JsonErrorResponse'
+          description: Unprocessable Entity
+      summary: Get transaction statistics
+      tags:
+        - transactions
   /v2/blocks/arbitrum-batch/{batch_number_param}:
     get:
       callbacks: {}
@@ -7108,6 +8688,313 @@ paths:
       summary: List L2 blocks in an Arbitrum batch
       tags:
         - blocks
+  /v2/transactions/{transaction_hash_param}/logs:
+    get:
+      callbacks: {}
+      description: Retrieves logs for a specific transaction.
+      operationId: BlockScoutWeb.API.V2.TransactionController.logs
+      parameters:
+        - in: path
+          name: transaction_hash_param
+          required: true
+          schema:
+            $ref: '#/components/schemas/FullHash'
+        - description: API key for rate limiting or for sensitive endpoints
+          in: query
+          name: apikey
+          required: false
+          schema:
+            type: string
+            x-struct:
+            x-validate:
+        - description: Secret key for getting access to restricted resources
+          in: query
+          name: key
+          required: false
+          schema:
+            type: string
+            x-struct:
+            x-validate:
+        - description: Transaction index for paging
+          in: query
+          name: index
+          required: false
+          schema:
+            type: integer
+            x-struct:
+            x-validate:
+        - description: Block number for paging
+          in: query
+          name: block_number
+          required: false
+          schema:
+            minimum: 0
+            type: integer
+            x-struct:
+            x-validate:
+        - description: Number of items returned per page
+          in: query
+          name: items_count
+          required: false
+          schema:
+            maximum: 50
+            minimum: 1
+            type: integer
+            x-struct:
+            x-validate:
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                additionalProperties: false
+                nullable: false
+                properties:
+                  items:
+                    items:
+                      $ref: '#/components/schemas/Log'
+                    nullable: false
+                    type: array
+                    x-struct:
+                    x-validate:
+                  next_page_params:
+                    example:
+                      block_number: 21925703
+                      index: 124
+                      items_count: 50
+                    nullable: true
+                    type: object
+                    x-struct:
+                    x-validate:
+                required:
+                  - items
+                  - next_page_params
+                title: TransactionLogsPaginatedResponse
+                type: object
+                x-struct:
+                x-validate:
+          description: Logs for transaction
+        '404':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFoundResponse'
+          description: Not Found
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JsonErrorResponse'
+          description: Unprocessable Entity
+      summary: List logs for a transaction
+      tags:
+        - transactions
+  /v2/transactions/watchlist:
+    get:
+      callbacks: {}
+      description: Retrieves transactions in the authenticated user's watchlist.
+      operationId: BlockScoutWeb.API.V2.TransactionController.watchlist_transactions
+      parameters:
+        - description: API key for rate limiting or for sensitive endpoints
+          in: query
+          name: apikey
+          required: false
+          schema:
+            type: string
+            x-struct:
+            x-validate:
+        - description: Secret key for getting access to restricted resources
+          in: query
+          name: key
+          required: false
+          schema:
+            type: string
+            x-struct:
+            x-validate:
+        - description: Block number for paging
+          in: query
+          name: block_number
+          required: false
+          schema:
+            minimum: 0
+            type: integer
+            x-struct:
+            x-validate:
+        - description: Transaction index for paging
+          in: query
+          name: index
+          required: false
+          schema:
+            type: integer
+            x-struct:
+            x-validate:
+        - description: Number of items returned per page
+          in: query
+          name: items_count
+          required: false
+          schema:
+            maximum: 50
+            minimum: 1
+            type: integer
+            x-struct:
+            x-validate:
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                additionalProperties: false
+                nullable: false
+                properties:
+                  items:
+                    items:
+                      $ref: '#/components/schemas/TransactionResponse'
+                    nullable: false
+                    type: array
+                    x-struct:
+                    x-validate:
+                  next_page_params:
+                    example:
+                      block_number: 23617990
+                      index: 128
+                      items_count: 50
+                    nullable: true
+                    type: object
+                    x-struct:
+                    x-validate:
+                required:
+                  - items
+                  - next_page_params
+                title: WatchlistTransactionsPaginatedResponse
+                type: object
+                x-struct:
+                x-validate:
+          description: Watchlist transactions
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ForbiddenResponse'
+          description: Forbidden
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JsonErrorResponse'
+          description: Unprocessable Entity
+      summary: List transactions in a user's watchlist
+      tags:
+        - transactions
+  /v2/transactions/{transaction_hash_param}/internal-transactions:
+    get:
+      callbacks: {}
+      description: Retrieves internal transactions for a specific transaction.
+      operationId: BlockScoutWeb.API.V2.TransactionController.internal_transactions
+      parameters:
+        - in: path
+          name: transaction_hash_param
+          required: true
+          schema:
+            $ref: '#/components/schemas/FullHash'
+        - description: API key for rate limiting or for sensitive endpoints
+          in: query
+          name: apikey
+          required: false
+          schema:
+            type: string
+            x-struct:
+            x-validate:
+        - description: Secret key for getting access to restricted resources
+          in: query
+          name: key
+          required: false
+          schema:
+            type: string
+            x-struct:
+            x-validate:
+        - description: Transaction index for paging
+          in: query
+          name: index
+          required: false
+          schema:
+            type: integer
+            x-struct:
+            x-validate:
+        - description: Block number for paging
+          in: query
+          name: block_number
+          required: false
+          schema:
+            minimum: 0
+            type: integer
+            x-struct:
+            x-validate:
+        - description: Transaction index for paging
+          in: query
+          name: transaction_index
+          required: false
+          schema:
+            type: integer
+            x-struct:
+            x-validate:
+        - description: Number of items returned per page
+          in: query
+          name: items_count
+          required: false
+          schema:
+            maximum: 50
+            minimum: 1
+            type: integer
+            x-struct:
+            x-validate:
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                additionalProperties: false
+                nullable: false
+                properties:
+                  items:
+                    items:
+                      $ref: '#/components/schemas/InternalTransaction'
+                    nullable: false
+                    type: array
+                    x-struct:
+                    x-validate:
+                  next_page_params:
+                    example:
+                      block_number: 22133247
+                      index: 50
+                      items_count: 50
+                      transaction_index: 68
+                    nullable: true
+                    type: object
+                    x-struct:
+                    x-validate:
+                required:
+                  - items
+                  - next_page_params
+                title: TransactionInternalTransactionsPaginatedResponse
+                type: object
+                x-struct:
+                x-validate:
+          description: Internal transactions for transaction
+        '404':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFoundResponse'
+          description: Not Found
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JsonErrorResponse'
+          description: Unprocessable Entity
+      summary: List internal transactions for a transaction
+      tags:
+        - transactions
   /v2/addresses/{address_hash_param}/logs/csv:
     get:
       callbacks: {}
@@ -7412,6 +9299,55 @@ paths:
       summary: List transactions involving a specific address with to-from filtering
       tags:
         - addresses
+  /v2/transactions/{transaction_hash_param}/raw-trace:
+    get:
+      callbacks: {}
+      description: Retrieves the raw trace for a specific transaction, including internal operations and execution details.
+      operationId: BlockScoutWeb.API.V2.TransactionController.raw_trace
+      parameters:
+        - in: path
+          name: transaction_hash_param
+          required: true
+          schema:
+            $ref: '#/components/schemas/FullHash'
+        - description: API key for rate limiting or for sensitive endpoints
+          in: query
+          name: apikey
+          required: false
+          schema:
+            type: string
+            x-struct:
+            x-validate:
+        - description: Secret key for getting access to restricted resources
+          in: query
+          name: key
+          required: false
+          schema:
+            type: string
+            x-struct:
+            x-validate:
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RawTrace'
+          description: Raw trace for transaction
+        '404':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFoundResponse'
+          description: Not Found
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JsonErrorResponse'
+          description: Unprocessable Entity
+      summary: Get raw trace for a transaction
+      tags:
+        - transactions
   /v2/addresses/{address_hash_param}/transactions/csv:
     get:
       callbacks: {}
