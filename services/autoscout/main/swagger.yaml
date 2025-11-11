@@ -941,6 +941,17 @@ paths:
           description: An unexpected error response.
           schema:
             $ref: '#/definitions/rpcStatus'
+      parameters:
+        - name: page
+          in: query
+          required: false
+          type: integer
+          format: int32
+        - name: per_page
+          in: query
+          required: false
+          type: integer
+          format: int32
       tags:
         - Instances
       security:
@@ -2605,6 +2616,8 @@ definitions:
         items:
           type: object
           $ref: '#/definitions/v1Instance'
+      pagination:
+        $ref: '#/definitions/v1PaginationResult'
     required:
       - items
   v1ListPluginEventsResponse:
