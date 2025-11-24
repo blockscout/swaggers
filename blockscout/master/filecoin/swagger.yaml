@@ -590,6 +590,32 @@ components:
       type: object
       x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.Transaction.SummaryJustRequestBody
       x-validate:
+    HotContract:
+      additionalProperties: false
+      properties:
+        balance:
+          $ref: '#/components/schemas/IntegerStringNullable'
+        contract_address:
+          $ref: '#/components/schemas/Address'
+        total_gas_used:
+          minimum: 1
+          type: integer
+          x-struct:
+          x-validate:
+        transactions_count:
+          minimum: 1
+          type: integer
+          x-struct:
+          x-validate:
+      required:
+        - contract_address
+        - transactions_count
+        - total_gas_used
+        - balance
+      title: HotContract
+      type: object
+      x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.Stats.HotContract
+      x-validate:
     Withdrawal:
       additionalProperties: false
       properties:
@@ -2166,6 +2192,34 @@ components:
       title: CoinBalanceByDay
       type: object
       x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.CoinBalanceByDay
+      x-validate:
+    HotSmartContractsPaginatedResponse:
+      additionalProperties: false
+      nullable: false
+      properties:
+        items:
+          items:
+            $ref: '#/components/schemas/HotContract'
+          nullable: false
+          type: array
+          x-struct:
+          x-validate:
+        next_page_params:
+          example:
+            contract_address_hash: '0x01a2A10583675E0e5dF52DE1b62734109201477a'
+            items_count: 50
+            total_gas_used: '100'
+            transactions_count: 100
+          nullable: true
+          type: object
+          x-struct:
+          x-validate:
+      required:
+        - items
+        - next_page_params
+      title: HotSmartContractsPaginatedResponse
+      type: object
+      x-struct:
       x-validate:
     TransactionTokenTransfersPaginatedResponse:
       additionalProperties: false
@@ -6405,6 +6459,162 @@ paths:
       summary: List holders for a specific token instance
       tags:
         - tokens
+  /v2/stats/hot-smart-contracts:
+    get:
+      callbacks: {}
+      description: Retrieves hot contracts
+      operationId: BlockScoutWeb.API.V2.StatsController.hot_smart_contracts
+      parameters:
+        - description: API key for rate limiting or for sensitive endpoints
+          in: query
+          name: apikey
+          required: false
+          schema:
+            type: string
+            x-struct:
+            x-validate:
+        - description: Secret key for getting access to restricted resources
+          in: query
+          name: key
+          required: false
+          schema:
+            type: string
+            x-struct:
+            x-validate:
+        - description: |
+            Sort transactions by:
+            * block_number - Sort by block number
+            * value - Sort by transaction value
+            * fee - Sort by transaction fee
+            * balance - Sort by account balance
+            * transactions_count - Sort by number of transactions on address
+            * fiat_value - Sort by fiat value of the token transfer
+            * holders_count - Sort by number of token holders
+            * circulating_market_cap - Sort by circulating market cap of the token
+            Should be used together with `order` parameter.
+          in: query
+          name: sort
+          required: false
+          schema:
+            enum:
+              - transactions_count
+              - total_gas_used
+            type: string
+            x-struct:
+            x-validate:
+        - description: |
+            Sort order:
+            * asc - Ascending order
+            * desc - Descending order
+            Should be used together with `sort` parameter.
+          in: query
+          name: order
+          required: false
+          schema:
+            enum:
+              - asc
+              - desc
+            type: string
+            x-struct:
+            x-validate:
+        - description: Time scale for hot contracts aggregation (5m=5 minutes, 1h=1 hour, 3h=3 hours, 1d=1 day, 7d=7 days, 30d=30 days)
+          in: query
+          name: scale
+          required: true
+          schema:
+            enum:
+              - 5m
+              - 1h
+              - 3h
+              - 1d
+              - 7d
+              - 30d
+            nullable: false
+            type: string
+            x-struct:
+            x-validate:
+        - description: Transactions count for paging
+          in: query
+          name: transactions_count
+          required: false
+          schema:
+            minimum: 1
+            type: integer
+            x-struct:
+            x-validate:
+        - description: Total gas used for paging
+          in: query
+          name: total_gas_used
+          required: false
+          schema:
+            minimum: 0
+            type: integer
+            x-struct:
+            x-validate:
+        - description: Contract address hash for paging
+          in: query
+          name: contract_address_hash
+          required: false
+          schema:
+            $ref: '#/components/schemas/AddressHash'
+        - description: Number of items returned per page
+          in: query
+          name: items_count
+          required: false
+          schema:
+            maximum: 50
+            minimum: 1
+            type: integer
+            x-struct:
+            x-validate:
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                additionalProperties: false
+                nullable: false
+                properties:
+                  items:
+                    items:
+                      $ref: '#/components/schemas/HotContract'
+                    nullable: false
+                    type: array
+                    x-struct:
+                    x-validate:
+                  next_page_params:
+                    example:
+                      contract_address_hash: '0x01a2A10583675E0e5dF52DE1b62734109201477a'
+                      items_count: 50
+                      total_gas_used: '100'
+                      transactions_count: 100
+                    nullable: true
+                    type: object
+                    x-struct:
+                    x-validate:
+                required:
+                  - items
+                  - next_page_params
+                title: HotSmartContractsPaginatedResponse
+                type: object
+                x-struct:
+                x-validate:
+          description: Hot contracts.
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ForbiddenResponse'
+          description: Forbidden
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JsonErrorResponse'
+          description: Unprocessable Entity
+      summary: Retrieve hot contracts
+      tags:
+        - stats
   /v2/tokens/{address_hash_param}/instances/{token_id_param}/transfers:
     get:
       callbacks: {}
