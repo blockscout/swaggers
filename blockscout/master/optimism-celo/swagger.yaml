@@ -5258,6 +5258,7 @@ paths:
             * ERC-1155 - Multi-token standard
             * ERC-404 - Hybrid fungible/non-fungible tokens
 
+
             Example: `ERC-20,ERC-721` to show both fungible and NFT transfers
           in: query
           name: type
@@ -5550,7 +5551,7 @@ paths:
   /v2/addresses/{address_hash_param}/token-balances:
     get:
       callbacks: {}
-      description: Retrieves all token balances held by a specific address, including ERC-20, ERC-721, ERC-1155 and ERC-404 tokens.
+      description: Retrieves all token balances held by a specific address, including ERC-20, ERC-721, ERC-1155, and ERC-404 tokens.
       operationId: BlockScoutWeb.API.V2.AddressController.token_balances
       parameters:
         - in: path
@@ -5883,6 +5884,7 @@ paths:
             * ERC-1155 - Multi-token standard
             * ERC-404 - Hybrid fungible/non-fungible tokens
 
+
             Example: `ERC-20,ERC-721` to show both fungible and NFT transfers
           in: query
           name: type
@@ -6027,6 +6029,7 @@ paths:
             * ERC-721 - Non-fungible tokens
             * ERC-1155 - Multi-token standard
             * ERC-404 - Hybrid fungible/non-fungible tokens
+
 
             Example: `ERC-20,ERC-721` to show both fungible and NFT transfers
           in: query
@@ -7500,6 +7503,7 @@ paths:
             * ERC-721 - Non-fungible tokens
             * ERC-1155 - Multi-token standard
             * ERC-404 - Hybrid fungible/non-fungible tokens
+
 
             Example: `ERC-20,ERC-721` to show both fungible and NFT transfers
           in: query

@@ -275,6 +275,7 @@ components:
         - ERC-721
         - ERC-1155
         - ERC-404
+        - ZRC-2
       title: Type
       type: string
       x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.Token.Type
@@ -4731,6 +4732,8 @@ paths:
             * ERC-721 - Non-fungible tokens
             * ERC-1155 - Multi-token standard
             * ERC-404 - Hybrid fungible/non-fungible tokens
+            * ZRC-2 - Fungible tokens on Zilliqa
+
 
             Example: `ERC-20,ERC-721` to show both fungible and NFT transfers
           in: query
@@ -4739,7 +4742,7 @@ paths:
           schema:
             anyOf:
               - $ref: '#/components/schemas/EmptyString'
-              - pattern: ^\[?(ERC-20|ERC-721|ERC-1155|ERC-404)(,(ERC-20|ERC-721|ERC-1155|ERC-404))*\]?$
+              - pattern: ^\[?(ERC-20|ERC-721|ERC-1155|ERC-404|ZRC-2)(,(ERC-20|ERC-721|ERC-1155|ERC-404|ZRC-2))*\]?$
                 type: string
                 x-struct:
                 x-validate:
@@ -5024,7 +5027,7 @@ paths:
   /v2/addresses/{address_hash_param}/token-balances:
     get:
       callbacks: {}
-      description: Retrieves all token balances held by a specific address, including ERC-20, ERC-721, ERC-1155 and ERC-404 tokens.
+      description: Retrieves all token balances held by a specific address, including ERC-20, ERC-721, ERC-1155, ERC-404, and ZRC-2 tokens.
       operationId: BlockScoutWeb.API.V2.AddressController.token_balances
       parameters:
         - in: path
@@ -5356,6 +5359,8 @@ paths:
             * ERC-721 - Non-fungible tokens
             * ERC-1155 - Multi-token standard
             * ERC-404 - Hybrid fungible/non-fungible tokens
+            * ZRC-2 - Fungible tokens on Zilliqa
+
 
             Example: `ERC-20,ERC-721` to show both fungible and NFT transfers
           in: query
@@ -5364,7 +5369,7 @@ paths:
           schema:
             anyOf:
               - $ref: '#/components/schemas/EmptyString'
-              - pattern: ^\[?(ERC-20|ERC-721|ERC-1155|ERC-404)(,(ERC-20|ERC-721|ERC-1155|ERC-404))*\]?$
+              - pattern: ^\[?(ERC-20|ERC-721|ERC-1155|ERC-404|ZRC-2)(,(ERC-20|ERC-721|ERC-1155|ERC-404|ZRC-2))*\]?$
                 type: string
                 x-struct:
                 x-validate:
@@ -5501,6 +5506,8 @@ paths:
             * ERC-721 - Non-fungible tokens
             * ERC-1155 - Multi-token standard
             * ERC-404 - Hybrid fungible/non-fungible tokens
+            * ZRC-2 - Fungible tokens on Zilliqa
+
 
             Example: `ERC-20,ERC-721` to show both fungible and NFT transfers
           in: query
@@ -5509,7 +5516,7 @@ paths:
           schema:
             anyOf:
               - $ref: '#/components/schemas/EmptyString'
-              - pattern: ^\[?(ERC-20|ERC-721|ERC-1155|ERC-404)(,(ERC-20|ERC-721|ERC-1155|ERC-404))*\]?$
+              - pattern: ^\[?(ERC-20|ERC-721|ERC-1155|ERC-404|ZRC-2)(,(ERC-20|ERC-721|ERC-1155|ERC-404|ZRC-2))*\]?$
                 type: string
                 x-struct:
                 x-validate:
@@ -5663,7 +5670,7 @@ paths:
           schema:
             anyOf:
               - $ref: '#/components/schemas/EmptyString'
-              - pattern: ^\[?(ERC-20|ERC-721|ERC-1155|ERC-404)(,(ERC-20|ERC-721|ERC-1155|ERC-404))*\]?$
+              - pattern: ^\[?(ERC-20|ERC-721|ERC-1155|ERC-404|ZRC-2)(,(ERC-20|ERC-721|ERC-1155|ERC-404|ZRC-2))*\]?$
                 type: string
                 x-struct:
                 x-validate:
@@ -6744,6 +6751,8 @@ paths:
             * ERC-721 - Non-fungible tokens
             * ERC-1155 - Multi-token standard
             * ERC-404 - Hybrid fungible/non-fungible tokens
+            * ZRC-2 - Fungible tokens on Zilliqa
+
 
             Example: `ERC-20,ERC-721` to show both fungible and NFT transfers
           in: query
@@ -6752,7 +6761,7 @@ paths:
           schema:
             anyOf:
               - $ref: '#/components/schemas/EmptyString'
-              - pattern: ^\[?(ERC-20|ERC-721|ERC-1155|ERC-404)(,(ERC-20|ERC-721|ERC-1155|ERC-404))*\]?$
+              - pattern: ^\[?(ERC-20|ERC-721|ERC-1155|ERC-404|ZRC-2)(,(ERC-20|ERC-721|ERC-1155|ERC-404|ZRC-2))*\]?$
                 type: string
                 x-struct:
                 x-validate:
@@ -9291,7 +9300,7 @@ paths:
           schema:
             anyOf:
               - $ref: '#/components/schemas/EmptyString'
-              - pattern: ^\[?(ERC-20|ERC-721|ERC-1155|ERC-404)(,(ERC-20|ERC-721|ERC-1155|ERC-404))*\]?$
+              - pattern: ^\[?(ERC-20|ERC-721|ERC-1155|ERC-404|ZRC-2)(,(ERC-20|ERC-721|ERC-1155|ERC-404|ZRC-2))*\]?$
                 type: string
                 x-struct:
                 x-validate:
