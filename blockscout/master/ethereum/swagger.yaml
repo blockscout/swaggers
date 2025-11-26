@@ -537,12 +537,8 @@ components:
           x-validate:
         next_page_params:
           example:
-            batch_block_hash: '0x789'
-            batch_log_index: 3
-            batch_transaction_hash: '0xabc'
-            block_number: 23484141
-            index: 259
-            index_in_batch: 2
+            block_number: 22133247
+            index: 50
           nullable: true
           type: object
           x-struct:
@@ -1480,6 +1476,31 @@ components:
       type: object
       x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.General.DecodedLogInput
       x-validate:
+    Language:
+      enum:
+        - solidity
+        - vyper
+        - yul
+        - geas
+      title: Language
+      type: string
+      x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.SmartContract.Language
+      x-validate:
+    Counters:
+      description: Smart contracts counters
+      properties:
+        new_smart_contracts_24h:
+          $ref: '#/components/schemas/IntegerString'
+        new_verified_smart_contracts_24h:
+          $ref: '#/components/schemas/IntegerString'
+        smart_contracts:
+          $ref: '#/components/schemas/IntegerString'
+        verified_smart_contracts:
+          $ref: '#/components/schemas/IntegerString'
+      title: Counters
+      type: object
+      x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.SmartContract.Counters
+      x-validate:
     CoinBalance:
       additionalProperties: false
       properties:
@@ -2067,6 +2088,34 @@ components:
       type: object
       x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.General.Implementation
       x-validate:
+    InternalTransactionsPaginatedResponse:
+      additionalProperties: false
+      nullable: false
+      properties:
+        items:
+          items:
+            $ref: '#/components/schemas/InternalTransaction'
+          nullable: false
+          type: array
+          x-struct:
+          x-validate:
+        next_page_params:
+          example:
+            block_number: 22133247
+            index: 50
+            items_count: 50
+            transaction_index: 68
+          nullable: true
+          type: object
+          x-struct:
+          x-validate:
+      required:
+        - items
+        - next_page_params
+      title: InternalTransactionsPaginatedResponse
+      type: object
+      x-struct:
+      x-validate:
     TransactionLogsPaginatedResponse:
       additionalProperties: false
       nullable: false
@@ -2279,6 +2328,20 @@ components:
       type: object
       x-struct:
       x-validate:
+    Counter:
+      additionalProperties: false
+      properties:
+        withdrawals_count:
+          $ref: '#/components/schemas/IntegerString'
+        withdrawals_sum:
+          $ref: '#/components/schemas/IntegerString'
+      required:
+        - withdrawals_count
+        - withdrawals_sum
+      title: Counter
+      type: object
+      x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.Withdrawal.Counter
+      x-validate:
     IntegerStringNullable:
       nullable: true
       pattern: ^-?([1-9][0-9]*|0)$
@@ -2408,6 +2471,26 @@ components:
       title: BlockInternalTransactionsPaginatedResponse
       type: object
       x-struct:
+      x-validate:
+    SearchResult:
+      description: Search results containing blocks, transactions, and addresses
+      properties:
+        items:
+          items:
+            type: object
+            x-struct:
+            x-validate:
+          type: array
+          x-struct:
+          x-validate:
+        next_page_params:
+          nullable: true
+          type: object
+          x-struct:
+          x-validate:
+      title: SearchResult
+      type: object
+      x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.Search.Results
       x-validate:
     TokenCountersResponse:
       additionalProperties: false
@@ -2608,6 +2691,29 @@ components:
       title: BlockResponse
       type: object
       x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.Block
+      x-validate:
+    AuditReport:
+      description: Smart contract audit report item
+      properties:
+        audit_company_name:
+          nullable: true
+          type: string
+          x-struct:
+          x-validate:
+        audit_publish_date:
+          format: date
+          nullable: true
+          type: string
+          x-struct:
+          x-validate:
+        audit_report_url:
+          nullable: true
+          type: string
+          x-struct:
+          x-validate:
+      title: AuditReport
+      type: object
+      x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.SmartContract.AuditReport
       x-validate:
     HexString:
       nullable: false
@@ -3222,6 +3328,32 @@ components:
       type: object
       x-struct:
       x-validate:
+    SmartContractsPaginatedResponse:
+      additionalProperties: false
+      nullable: false
+      properties:
+        items:
+          items:
+            $ref: '#/components/schemas/SmartContract'
+          nullable: false
+          type: array
+          x-struct:
+          x-validate:
+        next_page_params:
+          example:
+            items_count: 50
+            smart_contract_id: 1947801
+          nullable: true
+          type: object
+          x-struct:
+          x-validate:
+      required:
+        - items
+        - next_page_params
+      title: SmartContractsPaginatedResponse
+      type: object
+      x-struct:
+      x-validate:
     StateChange:
       additionalProperties: false
       properties:
@@ -3555,6 +3687,301 @@ components:
       type: object
       x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.Address.TokenBalance
       x-validate:
+    SmartContract:
+      additionalProperties: false
+      description: Smart contract
+      properties:
+        constructor_args:
+          nullable: true
+          type: string
+          x-struct:
+          x-validate:
+        is_partially_verified:
+          nullable: true
+          type: boolean
+          x-struct:
+          x-validate:
+        is_changed_bytecode:
+          nullable: true
+          type: boolean
+          x-struct:
+          x-validate:
+        abi:
+          items:
+            type: object
+            x-struct:
+            x-validate:
+          nullable: true
+          type: array
+          x-struct:
+          x-validate:
+        conflicting_implementations:
+          items:
+            type: object
+            x-struct:
+            x-validate:
+          nullable: true
+          type: array
+          x-struct:
+          x-validate:
+        certified:
+          type: boolean
+          x-struct:
+          x-validate:
+        additional_sources:
+          items:
+            properties:
+              file_path:
+                type: string
+                x-struct:
+                x-validate:
+              source_code:
+                type: string
+                x-struct:
+                x-validate:
+            type: object
+            x-struct:
+            x-validate:
+          nullable: true
+          type: array
+          x-struct:
+          x-validate:
+        is_verified_via_sourcify:
+          nullable: true
+          type: boolean
+          x-struct:
+          x-validate:
+        can_be_visualized_via_sol2uml:
+          nullable: true
+          type: boolean
+          x-struct:
+          x-validate:
+        evm_version:
+          nullable: true
+          type: string
+          x-struct:
+          x-validate:
+        language:
+          nullable: true
+          type: string
+          x-struct:
+          x-validate:
+        address:
+          $ref: '#/components/schemas/Address'
+        is_verified_via_eth_bytecode_db:
+          nullable: true
+          type: boolean
+          x-struct:
+          x-validate:
+        coin_balance:
+          nullable: true
+          type: string
+          x-struct:
+          x-validate:
+        is_fully_verified:
+          nullable: true
+          type: boolean
+          x-struct:
+          x-validate:
+        license_type:
+          nullable: true
+          type: string
+          x-struct:
+          x-validate:
+        is_blueprint:
+          nullable: true
+          type: boolean
+          x-struct:
+          x-validate:
+        name:
+          nullable: true
+          type: string
+          x-struct:
+          x-validate:
+        creation_bytecode:
+          nullable: true
+          type: string
+          x-struct:
+          x-validate:
+        external_libraries:
+          items:
+            properties:
+              address_hash:
+                $ref: '#/components/schemas/AddressHash'
+              name:
+                nullable: true
+                type: string
+                x-struct:
+                x-validate:
+            type: object
+            x-struct:
+            x-validate:
+          nullable: true
+          type: array
+          x-struct:
+          x-validate:
+        market_cap:
+          nullable: true
+          type: string
+          x-struct:
+          x-validate:
+        proxy_type:
+          nullable: true
+          type: string
+          x-struct:
+          x-validate:
+        implementations:
+          items:
+            properties:
+              address_hash:
+                $ref: '#/components/schemas/AddressHash'
+              name:
+                nullable: true
+                type: string
+                x-struct:
+                x-validate:
+            type: object
+            x-struct:
+            x-validate:
+          nullable: true
+          type: array
+          x-struct:
+          x-validate:
+        verified_at:
+          format: date-time
+          nullable: true
+          type: string
+          x-struct:
+          x-validate:
+        is_verified_via_verifier_alliance:
+          nullable: true
+          type: boolean
+          x-struct:
+          x-validate:
+        compiler_version:
+          nullable: true
+          type: string
+          x-struct:
+          x-validate:
+        decoded_constructor_args:
+          items:
+            items:
+              anyOf:
+                - type: object
+                  x-struct:
+                  x-validate:
+                - type: string
+                  x-struct:
+                  x-validate:
+              x-struct:
+              x-validate:
+            type: array
+            x-struct:
+            x-validate:
+          nullable: true
+          type: array
+          x-struct:
+          x-validate:
+        sourcify_repo_url:
+          nullable: true
+          type: string
+          x-struct:
+          x-validate:
+        optimization_runs:
+          nullable: true
+          type: integer
+          x-struct:
+          x-validate:
+        compiler_settings:
+          nullable: true
+          type: object
+          x-struct:
+          x-validate:
+        verification_metadata:
+          nullable: true
+          type: object
+          x-struct:
+          x-validate:
+        is_verified:
+          nullable: true
+          type: boolean
+          x-struct:
+          x-validate:
+        reputation:
+          nullable: true
+          type: string
+          x-struct:
+          x-validate:
+        verified_twin_address_hash:
+          nullable: true
+          type: string
+          x-struct:
+          x-validate:
+        optimization_enabled:
+          nullable: true
+          type: boolean
+          x-struct:
+          x-validate:
+        deployed_bytecode:
+          nullable: true
+          type: string
+          x-struct:
+          x-validate:
+        source_code:
+          nullable: true
+          type: string
+          x-struct:
+          x-validate:
+        transactions_count:
+          nullable: true
+          type: integer
+          x-struct:
+          x-validate:
+        creation_status:
+          nullable: true
+          type: string
+          x-struct:
+          x-validate:
+        file_path:
+          nullable: true
+          type: string
+          x-struct:
+          x-validate:
+        has_constructor_args:
+          nullable: true
+          type: boolean
+          x-struct:
+          x-validate:
+      title: SmartContract
+      type: object
+      x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.SmartContract
+      x-validate:
+    WithdrawalsPaginatedResponse:
+      additionalProperties: false
+      nullable: false
+      properties:
+        items:
+          items:
+            $ref: '#/components/schemas/Withdrawal'
+          nullable: false
+          type: array
+          x-struct:
+          x-validate:
+        next_page_params:
+          example:
+            index: 50
+            items_count: 50
+          nullable: true
+          type: object
+          x-struct:
+          x-validate:
+      required:
+        - items
+        - next_page_params
+      title: WithdrawalsPaginatedResponse
+      type: object
+      x-struct:
+      x-validate:
     Fee:
       additionalProperties: false
       properties:
@@ -3580,6 +4007,79 @@ components:
       title: FullHash
       type: string
       x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.General.FullHash
+      x-validate:
+    StatsResponse:
+      description: Stats response
+      properties:
+        average_block_time:
+          format: float
+          type: number
+          x-struct:
+          x-validate:
+        coin_image:
+          nullable: true
+          type: string
+          x-struct:
+          x-validate:
+        coin_price:
+          $ref: '#/components/schemas/FloatStringNullable'
+        coin_price_change_percentage:
+          format: float
+          nullable: true
+          type: number
+          x-struct:
+          x-validate:
+        gas_price_updated_at:
+          $ref: '#/components/schemas/TimestampNullable'
+        gas_prices:
+          nullable: true
+          type: object
+          x-struct:
+          x-validate:
+        gas_prices_update_in:
+          nullable: true
+          type: integer
+          x-struct:
+          x-validate:
+        gas_used_today:
+          anyOf:
+            - $ref: '#/components/schemas/IntegerStringNullable'
+            - type: integer
+              x-struct:
+              x-validate:
+          x-struct:
+          x-validate:
+        market_cap:
+          $ref: '#/components/schemas/FloatString'
+        network_utilization_percentage:
+          nullable: true
+          type: number
+          x-struct:
+          x-validate:
+        secondary_coin_image:
+          nullable: true
+          type: string
+          x-struct:
+          x-validate:
+        secondary_coin_price:
+          $ref: '#/components/schemas/FloatStringNullable'
+        static_gas_price:
+          $ref: '#/components/schemas/IntegerStringNullable'
+        total_addresses:
+          $ref: '#/components/schemas/IntegerString'
+        total_blocks:
+          $ref: '#/components/schemas/IntegerString'
+        total_gas_used:
+          $ref: '#/components/schemas/IntegerString'
+        total_transactions:
+          $ref: '#/components/schemas/IntegerString'
+        transactions_today:
+          $ref: '#/components/schemas/IntegerString'
+        tvl:
+          $ref: '#/components/schemas/IntegerStringNullable'
+      title: StatsResponse
+      type: object
+      x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.Stats.Response
       x-validate:
     Token:
       additionalProperties: false
@@ -4547,7 +5047,8 @@ paths:
             type: string
             x-struct:
             x-validate:
-        - in: path
+        - description: Block hash or number in the path
+          in: path
           name: block_hash_or_number_param
           required: true
           schema:
@@ -4672,7 +5173,8 @@ paths:
       description: Retrieves detailed information for a specific token, including metadata and statistics.
       operationId: BlockScoutWeb.API.V2.TokenController.token
       parameters:
-        - in: path
+        - description: Address hash in the path
+          in: path
           name: address_hash_param
           required: true
           schema:
@@ -4715,6 +5217,51 @@ paths:
       summary: Retrieve detailed information about a specific token
       tags:
         - tokens
+  /v2/config/csv-export:
+    get:
+      callbacks: {}
+      description: Returns configured limits for CSV export endpoints.
+      operationId: BlockScoutWeb.API.V2.ConfigController.csv_export
+      parameters:
+        - description: API key for rate limiting or for sensitive endpoints
+          in: query
+          name: apikey
+          required: false
+          schema:
+            type: string
+            x-struct:
+            x-validate:
+        - description: Secret key for getting access to restricted resources
+          in: query
+          name: key
+          required: false
+          schema:
+            type: string
+            x-struct:
+            x-validate:
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                properties:
+                  limit:
+                    type: integer
+                    x-struct:
+                    x-validate:
+                type: object
+                x-struct:
+                x-validate:
+          description: CSV export limits
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JsonErrorResponse'
+          description: Unprocessable Entity
+      summary: CSV export limits
+      tags:
+        - config
   /v2/beacon/deposits:
     get:
       callbacks: {}
@@ -4803,7 +5350,8 @@ paths:
       description: Retrieves detailed information for a specific transaction, including token transfers, internal transactions, and metadata.
       operationId: BlockScoutWeb.API.V2.TransactionController.transaction
       parameters:
-        - in: path
+        - description: Transaction hash in the path
+          in: path
           name: transaction_hash_param
           required: true
           schema:
@@ -4846,6 +5394,50 @@ paths:
       summary: Retrieve detailed information about a specific transaction
       tags:
         - transactions
+  /v2/main-page/transactions/watchlist:
+    get:
+      callbacks: {}
+      description: Retrieves a list of last 6 transactions from the current user's watchlist.
+      operationId: BlockScoutWeb.API.V2.MainPageController.watchlist_transactions
+      parameters:
+        - description: API key for rate limiting or for sensitive endpoints
+          in: query
+          name: apikey
+          required: false
+          schema:
+            type: string
+            x-struct:
+            x-validate:
+        - description: Secret key for getting access to restricted resources
+          in: query
+          name: key
+          required: false
+          schema:
+            type: string
+            x-struct:
+            x-validate:
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                additionalProperties: false
+                items:
+                  $ref: '#/components/schemas/TransactionResponse'
+                nullable: false
+                type: array
+                x-struct:
+                x-validate:
+          description: List of watchlist transactions
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JsonErrorResponse'
+          description: Unprocessable Entity
+      summary: Last 6 transactions from the current user's watchlist
+      tags:
+        - main_page
   /v2/tokens/{address_hash_param}/holders/csv:
     get:
       callbacks: {}
@@ -4868,12 +5460,14 @@ paths:
             type: string
             x-struct:
             x-validate:
-        - in: path
+        - description: Address hash in the path
+          in: path
           name: address_hash_param
           required: true
           schema:
             $ref: '#/components/schemas/AddressHash'
-        - in: query
+        - description: Address hash in the query
+          in: query
           name: address_id
           required: false
           schema:
@@ -5015,7 +5609,7 @@ paths:
           required: false
           schema:
             nullable: true
-            type: string
+            type: integer
             x-struct:
             x-validate:
         - description: |
@@ -5187,12 +5781,14 @@ paths:
             type: string
             x-struct:
             x-validate:
-        - in: path
+        - description: Address hash in the path
+          in: path
           name: address_hash_param
           required: true
           schema:
             $ref: '#/components/schemas/AddressHash'
-        - in: query
+        - description: Address hash in the query
+          in: query
           name: address_id
           required: false
           schema:
@@ -5282,7 +5878,8 @@ paths:
       description: Retrieves all token balances held by a specific address, including ERC-20, ERC-721, ERC-1155, and ERC-404 tokens.
       operationId: BlockScoutWeb.API.V2.AddressController.token_balances
       parameters:
-        - in: path
+        - description: Address hash in the path
+          in: path
           name: address_hash_param
           required: true
           schema:
@@ -5352,7 +5949,8 @@ paths:
             type: string
             x-struct:
             x-validate:
-        - in: path
+        - description: Block hash or number in the path
+          in: path
           name: block_hash_or_number_param
           required: true
           schema:
@@ -5449,7 +6047,8 @@ paths:
             type: string
             x-struct:
             x-validate:
-        - in: path
+        - description: Address hash in the path
+          in: path
           name: address_hash_param
           required: true
           schema:
@@ -5529,7 +6128,8 @@ paths:
       description: Retrieves detailed information for a specific block, including transactions, internal transactions, and metadata.
       operationId: BlockScoutWeb.API.V2.BlockController.block
       parameters:
-        - in: path
+        - description: Block hash or number in the path
+          in: path
           name: block_hash_or_number_param
           required: true
           schema:
@@ -5600,7 +6200,8 @@ paths:
             type: string
             x-struct:
             x-validate:
-        - in: path
+        - description: Address hash in the path
+          in: path
           name: address_hash_param
           required: true
           schema:
@@ -5709,6 +6310,176 @@ paths:
       summary: List token balances for an address with pagination and type filtering
       tags:
         - addresses
+  /v2/smart-contracts/{address_hash_param}/audit-reports:
+    get:
+      callbacks: {}
+      description: Returns audit reports for a given smart contract address.
+      operationId: BlockScoutWeb.API.V2.SmartContractController.audit_reports_list
+      parameters:
+        - description: Address hash in the path
+          in: path
+          name: address_hash_param
+          required: true
+          schema:
+            $ref: '#/components/schemas/AddressHash'
+        - description: API key for rate limiting or for sensitive endpoints
+          in: query
+          name: apikey
+          required: false
+          schema:
+            type: string
+            x-struct:
+            x-validate:
+        - description: Secret key for getting access to restricted resources
+          in: query
+          name: key
+          required: false
+          schema:
+            type: string
+            x-struct:
+            x-validate:
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                additionalProperties: false
+                description: List of smart-contract's audit reports
+                properties:
+                  items:
+                    items:
+                      $ref: '#/components/schemas/AuditReport'
+                    nullable: false
+                    type: array
+                    x-struct:
+                    x-validate:
+                  next_page_params:
+                    nullable: true
+                    type: object
+                    x-struct:
+                    x-validate:
+                required:
+                  - items
+                  - next_page_params
+                type: object
+                x-struct:
+                x-validate:
+          description: Audit reports
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JsonErrorResponse'
+          description: Unprocessable Entity
+      summary: Audit reports list
+      tags:
+        - smart_contracts
+    post:
+      callbacks: {}
+      description: Submits an audit report for a given smart contract address.
+      operationId: BlockScoutWeb.API.V2.SmartContractController.audit_report_submission
+      parameters:
+        - description: Address hash in the path
+          in: path
+          name: address_hash_param
+          required: true
+          schema:
+            $ref: '#/components/schemas/AddressHash'
+        - description: API key for rate limiting or for sensitive endpoints
+          in: query
+          name: apikey
+          required: false
+          schema:
+            type: string
+            x-struct:
+            x-validate:
+        - description: Secret key for getting access to restricted resources
+          in: query
+          name: key
+          required: false
+          schema:
+            type: string
+            x-struct:
+            x-validate:
+      requestBody:
+        content:
+          application/json:
+            schema:
+              properties:
+                audit_company_name:
+                  type: string
+                  x-struct:
+                  x-validate:
+                audit_publish_date:
+                  format: date
+                  type: string
+                  x-struct:
+                  x-validate:
+                audit_report_url:
+                  type: string
+                  x-struct:
+                  x-validate:
+                comment:
+                  nullable: true
+                  type: string
+                  x-struct:
+                  x-validate:
+                is_project_owner:
+                  type: boolean
+                  x-struct:
+                  x-validate:
+                project_name:
+                  type: string
+                  x-struct:
+                  x-validate:
+                project_url:
+                  type: string
+                  x-struct:
+                  x-validate:
+                submitter_email:
+                  type: string
+                  x-struct:
+                  x-validate:
+                submitter_name:
+                  type: string
+                  x-struct:
+                  x-validate:
+              required:
+                - submitter_name
+                - submitter_email
+                - is_project_owner
+                - project_name
+                - project_url
+                - audit_company_name
+                - audit_report_url
+                - audit_publish_date
+              type: object
+              x-struct:
+              x-validate:
+        required: false
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                properties:
+                  message:
+                    type: string
+                    x-struct:
+                    x-validate:
+                type: object
+                x-struct:
+                x-validate:
+          description: OK
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JsonErrorResponse'
+          description: Unprocessable Entity
+      summary: Submit audit report
+      tags:
+        - smart_contracts
   /v2/addresses/{address_hash_param}/token-transfers:
     get:
       callbacks: {}
@@ -5731,7 +6502,8 @@ paths:
             type: string
             x-struct:
             x-validate:
-        - in: path
+        - description: Address hash in the path
+          in: path
           name: address_hash_param
           required: true
           schema:
@@ -5886,7 +6658,8 @@ paths:
       description: Retrieves blobs for a specific transaction (Ethereum only).
       operationId: BlockScoutWeb.API.V2.TransactionController.blobs
       parameters:
-        - in: path
+        - description: Transaction hash in the path
+          in: path
           name: transaction_hash_param
           required: true
           schema:
@@ -5963,7 +6736,8 @@ paths:
             type: string
             x-struct:
             x-validate:
-        - in: path
+        - description: Address hash in the path
+          in: path
           name: address_hash_param
           required: true
           schema:
@@ -6063,6 +6837,44 @@ paths:
       summary: List NFTs owned by a specific address with optional type filtering
       tags:
         - addresses
+  /v2/stats:
+    get:
+      callbacks: {}
+      description: Returns current indexing progress, chain stats and market data used on the UI.
+      operationId: BlockScoutWeb.API.V2.StatsController.stats
+      parameters:
+        - description: API key for rate limiting or for sensitive endpoints
+          in: query
+          name: apikey
+          required: false
+          schema:
+            type: string
+            x-struct:
+            x-validate:
+        - description: Secret key for getting access to restricted resources
+          in: query
+          name: key
+          required: false
+          schema:
+            type: string
+            x-struct:
+            x-validate:
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StatsResponse'
+          description: Stats
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JsonErrorResponse'
+          description: Unprocessable Entity
+      summary: Get indexing and chain stats
+      tags:
+        - stats
   /v2/tokens/{address_hash_param}/instances:
     get:
       callbacks: {}
@@ -6085,12 +6897,14 @@ paths:
             type: string
             x-struct:
             x-validate:
-        - in: path
+        - description: Address hash in the path
+          in: path
           name: address_hash_param
           required: true
           schema:
             $ref: '#/components/schemas/AddressHash'
-        - in: query
+        - description: Token holder address hash in the query
+          in: query
           name: holder_address_hash
           required: false
           schema:
@@ -6146,6 +6960,93 @@ paths:
       summary: List all instances of a specific token
       tags:
         - tokens
+  /v2/main-page/blocks:
+    get:
+      callbacks: {}
+      description: Retrieves last 4 blocks list.
+      operationId: BlockScoutWeb.API.V2.MainPageController.blocks
+      parameters:
+        - description: API key for rate limiting or for sensitive endpoints
+          in: query
+          name: apikey
+          required: false
+          schema:
+            type: string
+            x-struct:
+            x-validate:
+        - description: Secret key for getting access to restricted resources
+          in: query
+          name: key
+          required: false
+          schema:
+            type: string
+            x-struct:
+            x-validate:
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                additionalProperties: false
+                items:
+                  $ref: '#/components/schemas/BlockResponse'
+                nullable: false
+                type: array
+                x-struct:
+                x-validate:
+          description: Blocks List on the main page.
+      summary: Last 4 blocks on the main page
+      tags:
+        - main_page
+  /v2/stats/charts/secondary-coin-market:
+    get:
+      callbacks: {}
+      description: Returns market history for the secondary coin used for charting.
+      operationId: BlockScoutWeb.API.V2.StatsController.secondary_coin_market_chart
+      parameters:
+        - description: API key for rate limiting or for sensitive endpoints
+          in: query
+          name: apikey
+          required: false
+          schema:
+            type: string
+            x-struct:
+            x-validate:
+        - description: Secret key for getting access to restricted resources
+          in: query
+          name: key
+          required: false
+          schema:
+            type: string
+            x-struct:
+            x-validate:
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                properties:
+                  chart_data:
+                    items:
+                      type: object
+                      x-struct:
+                      x-validate:
+                    type: array
+                    x-struct:
+                    x-validate:
+                type: object
+                x-struct:
+                x-validate:
+          description: Secondary coin market chart data
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JsonErrorResponse'
+          description: Unprocessable Entity
+      summary: Secondary coin market history chart data
+      tags:
+        - stats
   /v2/addresses/{address_hash_param}/blocks-validated:
     get:
       callbacks: {}
@@ -6168,7 +7069,8 @@ paths:
             type: string
             x-struct:
             x-validate:
-        - in: path
+        - description: Address hash in the path
+          in: path
           name: address_hash_param
           required: true
           schema:
@@ -6260,7 +7162,8 @@ paths:
             type: string
             x-struct:
             x-validate:
-        - in: path
+        - description: Address hash in the path
+          in: path
           name: address_hash_param
           required: true
           schema:
@@ -6369,7 +7272,8 @@ paths:
       description: Retrieves external transactions that are linked to the specified transaction (e.g., Solana transactions in `neon` chain type).
       operationId: BlockScoutWeb.API.V2.TransactionController.external_transactions
       parameters:
-        - in: path
+        - description: Transaction hash in the path
+          in: path
           name: transaction_hash_param
           required: true
           schema:
@@ -6441,7 +7345,8 @@ paths:
             type: string
             x-struct:
             x-validate:
-        - in: path
+        - description: Address hash in the path
+          in: path
           name: address_hash_param
           required: true
           schema:
@@ -6683,7 +7588,8 @@ paths:
             type: string
             x-struct:
             x-validate:
-        - in: path
+        - description: Address hash in the path
+          in: path
           name: address_hash_param
           required: true
           schema:
@@ -6926,6 +7832,44 @@ paths:
       summary: Retrieve hot contracts
       tags:
         - stats
+  /v2/smart-contracts/{address_hash_param}:
+    get:
+      callbacks: {}
+      description: Returns details for a smart contract address.
+      operationId: BlockScoutWeb.API.V2.SmartContractController.smart_contract
+      parameters:
+        - description: Address hash in the path
+          in: path
+          name: address_hash_param
+          required: true
+          schema:
+            $ref: '#/components/schemas/AddressHash'
+        - description: API key for rate limiting or for sensitive endpoints
+          in: query
+          name: apikey
+          required: false
+          schema:
+            type: string
+            x-struct:
+            x-validate:
+        - description: Secret key for getting access to restricted resources
+          in: query
+          name: key
+          required: false
+          schema:
+            type: string
+            x-struct:
+            x-validate:
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SmartContract'
+          description: Smart contract
+      summary: Smart contract
+      tags:
+        - smart_contracts
   /v2/tokens/{address_hash_param}/instances/{token_id_param}/transfers:
     get:
       callbacks: {}
@@ -6948,7 +7892,8 @@ paths:
             type: string
             x-struct:
             x-validate:
-        - in: path
+        - description: Address hash in the path
+          in: path
           name: address_hash_param
           required: true
           schema:
@@ -7029,6 +7974,189 @@ paths:
       summary: List token transfers for a specific token instance
       tags:
         - tokens
+  /v2/config/backend-version:
+    get:
+      callbacks: {}
+      description: Returns application backend version string.
+      operationId: BlockScoutWeb.API.V2.ConfigController.backend_version
+      parameters:
+        - description: API key for rate limiting or for sensitive endpoints
+          in: query
+          name: apikey
+          required: false
+          schema:
+            type: string
+            x-struct:
+            x-validate:
+        - description: Secret key for getting access to restricted resources
+          in: query
+          name: key
+          required: false
+          schema:
+            type: string
+            x-struct:
+            x-validate:
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                properties:
+                  backend_version:
+                    nullable: true
+                    type: string
+                    x-struct:
+                    x-validate:
+                type: object
+                x-struct:
+                x-validate:
+          description: Backend version
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JsonErrorResponse'
+          description: Unprocessable Entity
+      summary: Get backend version
+      tags:
+        - config
+  /v2/token-transfers:
+    get:
+      callbacks: {}
+      description: Retrieves token transfers with optional filtering and pagination.
+      operationId: BlockScoutWeb.API.V2.TokenTransferController.token_transfers
+      parameters:
+        - description: API key for rate limiting or for sensitive endpoints
+          in: query
+          name: apikey
+          required: false
+          schema:
+            type: string
+            x-struct:
+            x-validate:
+        - description: Secret key for getting access to restricted resources
+          in: query
+          name: key
+          required: false
+          schema:
+            type: string
+            x-struct:
+            x-validate:
+        - description: |
+            Filter by token type. Comma-separated list of:
+            * ERC-20 - Fungible tokens
+            * ERC-721 - Non-fungible tokens
+            * ERC-1155 - Multi-token standard
+            * ERC-404 - Hybrid fungible/non-fungible tokens
+
+
+            Example: `ERC-20,ERC-721` to show both fungible and NFT transfers
+          in: query
+          name: type
+          required: false
+          schema:
+            anyOf:
+              - $ref: '#/components/schemas/EmptyString'
+              - pattern: ^\[?(ERC-20|ERC-721|ERC-1155|ERC-404)(,(ERC-20|ERC-721|ERC-1155|ERC-404))*\]?$
+                type: string
+                x-struct:
+                x-validate:
+            x-struct:
+            x-validate:
+        - description: Limit result items in the response
+          in: query
+          name: limit
+          required: false
+          schema:
+            nullable: true
+            type: integer
+            x-struct:
+            x-validate:
+        - description: Transaction index for paging
+          in: query
+          name: index
+          required: false
+          schema:
+            type: integer
+            x-struct:
+            x-validate:
+        - description: Block number for paging
+          in: query
+          name: block_number
+          required: false
+          schema:
+            minimum: 0
+            type: integer
+            x-struct:
+            x-validate:
+        - description: Batch log index for paging
+          in: query
+          name: batch_log_index
+          required: false
+          schema:
+            type: integer
+            x-struct:
+            x-validate:
+        - description: Batch block hash for paging
+          in: query
+          name: batch_block_hash
+          required: false
+          schema:
+            $ref: '#/components/schemas/FullHash'
+        - description: Batch transaction hash for paging
+          in: query
+          name: batch_transaction_hash
+          required: false
+          schema:
+            $ref: '#/components/schemas/FullHash'
+        - description: Index in batch for paging
+          in: query
+          name: index_in_batch
+          required: false
+          schema:
+            type: integer
+            x-struct:
+            x-validate:
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                additionalProperties: false
+                nullable: false
+                properties:
+                  items:
+                    items:
+                      $ref: '#/components/schemas/TokenTransfer'
+                    nullable: false
+                    type: array
+                    x-struct:
+                    x-validate:
+                  next_page_params:
+                    example:
+                      block_number: 22133247
+                      index: 50
+                    nullable: true
+                    type: object
+                    x-struct:
+                    x-validate:
+                required:
+                  - items
+                  - next_page_params
+                title: TokenTransfersPaginatedResponse
+                type: object
+                x-struct:
+                x-validate:
+          description: Token transfers
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JsonErrorResponse'
+          description: Unprocessable Entity
+      summary: List token transfers
+      tags:
+        - token_transfers
   /v2/transactions/{transaction_hash_param}/token-transfers:
     get:
       callbacks: {}
@@ -7051,7 +8179,8 @@ paths:
             type: string
             x-struct:
             x-validate:
-        - in: path
+        - description: Transaction hash in the path
+          in: path
           name: transaction_hash_param
           required: true
           schema:
@@ -7168,13 +8297,169 @@ paths:
       summary: List token transfers for a transaction
       tags:
         - transactions
+  /v2/stats/charts/market:
+    get:
+      callbacks: {}
+      description: Returns market history (price, market cap, tvl) for charting.
+      operationId: BlockScoutWeb.API.V2.StatsController.market_chart
+      parameters:
+        - description: API key for rate limiting or for sensitive endpoints
+          in: query
+          name: apikey
+          required: false
+          schema:
+            type: string
+            x-struct:
+            x-validate:
+        - description: Secret key for getting access to restricted resources
+          in: query
+          name: key
+          required: false
+          schema:
+            type: string
+            x-struct:
+            x-validate:
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                properties:
+                  available_supply:
+                    anyOf:
+                      - $ref: '#/components/schemas/FloatString'
+                      - type: integer
+                        x-struct:
+                        x-validate:
+                    x-struct:
+                    x-validate:
+                  chart_data:
+                    items:
+                      type: object
+                      x-struct:
+                      x-validate:
+                    type: array
+                    x-struct:
+                    x-validate:
+                type: object
+                x-struct:
+                x-validate:
+          description: Market chart data
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JsonErrorResponse'
+          description: Unprocessable Entity
+      summary: Market history chart data
+      tags:
+        - stats
+  /v2/search/quick:
+    get:
+      callbacks: {}
+      description: Performs a quick, unpaginated search for short queries.
+      operationId: BlockScoutWeb.API.V2.SearchController.quick_search
+      parameters:
+        - description: Search query filter
+          in: query
+          name: q
+          required: false
+          schema:
+            nullable: true
+            type: string
+            x-struct:
+            x-validate:
+        - description: API key for rate limiting or for sensitive endpoints
+          in: query
+          name: apikey
+          required: false
+          schema:
+            type: string
+            x-struct:
+            x-validate:
+        - description: Secret key for getting access to restricted resources
+          in: query
+          name: key
+          required: false
+          schema:
+            type: string
+            x-struct:
+            x-validate:
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                items:
+                  type: object
+                  x-struct:
+                  x-validate:
+                nullable: false
+                type: array
+                x-struct:
+                x-validate:
+          description: Quick search results
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JsonErrorResponse'
+          description: Unprocessable Entity
+      summary: Quick (unpaginated) search
+      tags:
+        - search
+  /v2/main-page/transactions:
+    get:
+      callbacks: {}
+      description: Retrieves last 6 transactions list.
+      operationId: BlockScoutWeb.API.V2.MainPageController.transactions
+      parameters:
+        - description: API key for rate limiting or for sensitive endpoints
+          in: query
+          name: apikey
+          required: false
+          schema:
+            type: string
+            x-struct:
+            x-validate:
+        - description: Secret key for getting access to restricted resources
+          in: query
+          name: key
+          required: false
+          schema:
+            type: string
+            x-struct:
+            x-validate:
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                additionalProperties: false
+                items:
+                  $ref: '#/components/schemas/TransactionResponse'
+                nullable: false
+                type: array
+                x-struct:
+                x-validate:
+          description: Transactions list on the main page.
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JsonErrorResponse'
+          description: Unprocessable Entity
+      summary: Last 6 transactions on the main page
+      tags:
+        - main_page
   /v2/addresses/{address_hash_param}/counters:
     get:
       callbacks: {}
       description: Retrieves count statistics for an address, including transactions, token transfers, gas usage, and validations.
       operationId: BlockScoutWeb.API.V2.AddressController.counters
       parameters:
-        - in: path
+        - description: Address hash in the path
+          in: path
           name: address_hash_param
           required: true
           schema:
@@ -7239,7 +8524,8 @@ paths:
             type: string
             x-struct:
             x-validate:
-        - in: path
+        - description: Address hash in the path
+          in: path
           name: address_hash_param
           required: true
           schema:
@@ -7316,7 +8602,8 @@ paths:
       description: Retrieves count statistics for a token, including transfers, holders, and other metrics.
       operationId: BlockScoutWeb.API.V2.TokenController.counters
       parameters:
-        - in: path
+        - description: Address hash in the path
+          in: path
           name: address_hash_param
           required: true
           schema:
@@ -7359,6 +8646,53 @@ paths:
       summary: Get activity count stats for a specific token
       tags:
         - tokens
+  /v2/config/smart-contracts/languages:
+    get:
+      callbacks: {}
+      description: Returns list of smart contract languages supported by the database schema.
+      operationId: BlockScoutWeb.API.V2.ConfigController.languages_list
+      parameters:
+        - description: API key for rate limiting or for sensitive endpoints
+          in: query
+          name: apikey
+          required: false
+          schema:
+            type: string
+            x-struct:
+            x-validate:
+        - description: Secret key for getting access to restricted resources
+          in: query
+          name: key
+          required: false
+          schema:
+            type: string
+            x-struct:
+            x-validate:
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                properties:
+                  languages:
+                    items:
+                      $ref: '#/components/schemas/Language'
+                    type: array
+                    x-struct:
+                    x-validate:
+                type: object
+                x-struct:
+                x-validate:
+          description: Smart contract languages
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JsonErrorResponse'
+          description: Unprocessable Entity
+      summary: Smart contract languages list
+      tags:
+        - config
   /v2/tokens/{address_hash_param}/instances/{token_id_param}:
     get:
       callbacks: {}
@@ -7381,7 +8715,8 @@ paths:
             type: string
             x-struct:
             x-validate:
-        - in: path
+        - description: Address hash in the path
+          in: path
           name: address_hash_param
           required: true
           schema:
@@ -7414,13 +8749,63 @@ paths:
       summary: Get details for a specific token instance
       tags:
         - tokens
+  /v2/stats/charts/transactions:
+    get:
+      callbacks: {}
+      description: Returns transaction counts by date for charting.
+      operationId: BlockScoutWeb.API.V2.StatsController.transactions_chart
+      parameters:
+        - description: API key for rate limiting or for sensitive endpoints
+          in: query
+          name: apikey
+          required: false
+          schema:
+            type: string
+            x-struct:
+            x-validate:
+        - description: Secret key for getting access to restricted resources
+          in: query
+          name: key
+          required: false
+          schema:
+            type: string
+            x-struct:
+            x-validate:
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                properties:
+                  chart_data:
+                    items:
+                      type: object
+                      x-struct:
+                      x-validate:
+                    type: array
+                    x-struct:
+                    x-validate:
+                type: object
+                x-struct:
+                x-validate:
+          description: Transactions chart data
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JsonErrorResponse'
+          description: Unprocessable Entity
+      summary: Transactions chart data
+      tags:
+        - stats
   /v2/addresses/{address_hash_param}/tabs-counters:
     get:
       callbacks: {}
       description: Retrieves counters for various address-related entities (max counter value is 51).
       operationId: BlockScoutWeb.API.V2.AddressController.tabs_counters
       parameters:
-        - in: path
+        - description: Address hash in the path
+          in: path
           name: address_hash_param
           required: true
           schema:
@@ -7463,6 +8848,169 @@ paths:
       summary: Get counters for address tabs
       tags:
         - addresses
+  /v2/smart-contracts/:
+    get:
+      callbacks: {}
+      description: Returns a paginated list of verified smart contract addresses. Supports search, filtering and pagination keys.
+      operationId: BlockScoutWeb.API.V2.SmartContractController.smart_contracts_list
+      parameters:
+        - description: API key for rate limiting or for sensitive endpoints
+          in: query
+          name: apikey
+          required: false
+          schema:
+            type: string
+            x-struct:
+            x-validate:
+        - description: Secret key for getting access to restricted resources
+          in: query
+          name: key
+          required: false
+          schema:
+            type: string
+            x-struct:
+            x-validate:
+        - description: |
+            Sort transactions by:
+            * block_number - Sort by block number
+            * value - Sort by transaction value
+            * fee - Sort by transaction fee
+            * balance - Sort by account balance
+            * transactions_count - Sort by number of transactions on address
+            * fiat_value - Sort by fiat value of the token transfer
+            * holders_count - Sort by number of token holders
+            * circulating_market_cap - Sort by circulating market cap of the token
+            Should be used together with `order` parameter.
+          in: query
+          name: sort
+          required: false
+          schema:
+            enum:
+              - balance
+              - transactions_count
+            type: string
+            x-struct:
+            x-validate:
+        - description: |
+            Sort order:
+            * asc - Ascending order
+            * desc - Descending order
+            Should be used together with `sort` parameter.
+          in: query
+          name: order
+          required: false
+          schema:
+            enum:
+              - asc
+              - desc
+            type: string
+            x-struct:
+            x-validate:
+        - description: Search query filter
+          in: query
+          name: q
+          required: false
+          schema:
+            nullable: true
+            type: string
+            x-struct:
+            x-validate:
+        - description: Filter to apply
+          in: query
+          name: filter
+          required: false
+          schema:
+            $ref: '#/components/schemas/Language'
+        - description: Smart-contract ID for paging
+          in: query
+          name: smart_contract_id
+          required: false
+          schema:
+            type: integer
+            x-struct:
+            x-validate:
+        - description: Coin balance for paging
+          in: query
+          name: coin_balance
+          required: false
+          schema:
+            anyOf:
+              - type: integer
+                x-struct:
+                x-validate:
+              - $ref: '#/components/schemas/EmptyString'
+              - $ref: '#/components/schemas/NullString'
+            x-struct:
+            x-validate:
+        - description: Address hash for paging
+          in: query
+          name: hash
+          required: false
+          schema:
+            $ref: '#/components/schemas/AddressHash'
+        - description: Transactions count for paging
+          in: query
+          name: transactions_count
+          required: false
+          schema:
+            anyOf:
+              - type: integer
+                x-struct:
+                x-validate:
+              - $ref: '#/components/schemas/EmptyString'
+              - $ref: '#/components/schemas/NullString'
+            x-struct:
+            x-validate:
+        - description: Number of items returned per page
+          in: query
+          name: items_count
+          required: false
+          schema:
+            maximum: 50
+            minimum: 1
+            type: integer
+            x-struct:
+            x-validate:
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                additionalProperties: false
+                nullable: false
+                properties:
+                  items:
+                    items:
+                      $ref: '#/components/schemas/SmartContract'
+                    nullable: false
+                    type: array
+                    x-struct:
+                    x-validate:
+                  next_page_params:
+                    example:
+                      items_count: 50
+                      smart_contract_id: 1947801
+                    nullable: true
+                    type: object
+                    x-struct:
+                    x-validate:
+                required:
+                  - items
+                  - next_page_params
+                title: SmartContractsPaginatedResponse
+                type: object
+                x-struct:
+                x-validate:
+          description: Smart contracts
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JsonErrorResponse'
+          description: Unprocessable Entity
+      summary: Smart contracts list
+      tags:
+        - smart_contracts
   /v2/addresses/{address_hash_param}/coin-balance-history:
     get:
       callbacks: {}
@@ -7485,7 +9033,8 @@ paths:
             type: string
             x-struct:
             x-validate:
-        - in: path
+        - description: Address hash in the path
+          in: path
           name: address_hash_param
           required: true
           schema:
@@ -7577,7 +9126,8 @@ paths:
             type: string
             x-struct:
             x-validate:
-        - in: path
+        - description: Address hash in the path
+          in: path
           name: address_hash_param
           required: true
           schema:
@@ -7633,7 +9183,8 @@ paths:
       description: Retrieves state changes for a specific transaction.
       operationId: BlockScoutWeb.API.V2.TransactionController.state_changes
       parameters:
-        - in: path
+        - description: Transaction hash in the path
+          in: path
           name: transaction_hash_param
           required: true
           schema:
@@ -7724,7 +9275,8 @@ paths:
       description: Retrieves detailed information for a specific address, including balance, transaction count, and metadata.
       operationId: BlockScoutWeb.API.V2.AddressController.address
       parameters:
-        - in: path
+        - description: Address hash in the path
+          in: path
           name: address_hash_param
           required: true
           schema:
@@ -7773,7 +9325,8 @@ paths:
       description: Calculates the estimated time remaining until a specified block number is reached based on current block and average block time.
       operationId: BlockScoutWeb.API.V2.BlockController.block_countdown
       parameters:
-        - in: path
+        - description: Block number in the path
+          in: path
           name: block_number_param
           required: true
           schema:
@@ -8087,7 +9640,8 @@ paths:
             type: string
             x-struct:
             x-validate:
-        - in: path
+        - description: Address hash in the path
+          in: path
           name: address_hash_param
           required: true
           schema:
@@ -8156,13 +9710,128 @@ paths:
       summary: List validator withdrawals involving a specific address
       tags:
         - addresses
+  /v2/internal-transactions:
+    get:
+      callbacks: {}
+      description: Retrieves internal transactions with optional filtering and pagination.
+      operationId: BlockScoutWeb.API.V2.InternalTransactionController.internal_transactions
+      parameters:
+        - description: API key for rate limiting or for sensitive endpoints
+          in: query
+          name: apikey
+          required: false
+          schema:
+            type: string
+            x-struct:
+            x-validate:
+        - description: Secret key for getting access to restricted resources
+          in: query
+          name: key
+          required: false
+          schema:
+            type: string
+            x-struct:
+            x-validate:
+        - description: Transaction hash in the query
+          in: query
+          name: transaction_hash
+          required: false
+          schema:
+            $ref: '#/components/schemas/FullHash'
+        - description: Limit result items in the response
+          in: query
+          name: limit
+          required: false
+          schema:
+            nullable: true
+            type: integer
+            x-struct:
+            x-validate:
+        - description: Transaction index for paging
+          in: query
+          name: index
+          required: false
+          schema:
+            type: integer
+            x-struct:
+            x-validate:
+        - description: Block number for paging
+          in: query
+          name: block_number
+          required: false
+          schema:
+            minimum: 0
+            type: integer
+            x-struct:
+            x-validate:
+        - description: Transaction index for paging
+          in: query
+          name: transaction_index
+          required: false
+          schema:
+            type: integer
+            x-struct:
+            x-validate:
+        - description: Number of items returned per page
+          in: query
+          name: items_count
+          required: false
+          schema:
+            maximum: 50
+            minimum: 1
+            type: integer
+            x-struct:
+            x-validate:
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                additionalProperties: false
+                nullable: false
+                properties:
+                  items:
+                    items:
+                      $ref: '#/components/schemas/InternalTransaction'
+                    nullable: false
+                    type: array
+                    x-struct:
+                    x-validate:
+                  next_page_params:
+                    example:
+                      block_number: 22133247
+                      index: 50
+                      items_count: 50
+                      transaction_index: 68
+                    nullable: true
+                    type: object
+                    x-struct:
+                    x-validate:
+                required:
+                  - items
+                  - next_page_params
+                title: InternalTransactionsPaginatedResponse
+                type: object
+                x-struct:
+                x-validate:
+          description: Internal transactions
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JsonErrorResponse'
+          description: Unprocessable Entity
+      summary: List internal transactions
+      tags:
+        - internal_transactions
   /v2/addresses/{address_hash_param}/coin-balance-history-by-day:
     get:
       callbacks: {}
       description: Retrieves daily snapshots of native coin balance for a specific address. Useful for generating balance-over-time charts.
       operationId: BlockScoutWeb.API.V2.AddressController.coin_balance_history_by_day
       parameters:
-        - in: path
+        - description: Address hash in the path
+          in: path
           name: address_hash_param
           required: true
           schema:
@@ -8222,6 +9891,44 @@ paths:
       summary: Get daily native coin balance snapshots for an address from previous 10 days
       tags:
         - addresses
+  /v2/smart-contracts/counters:
+    get:
+      callbacks: {}
+      description: Returns counts for smart contracts and related metrics.
+      operationId: BlockScoutWeb.API.V2.SmartContractController.smart_contracts_counters
+      parameters:
+        - description: API key for rate limiting or for sensitive endpoints
+          in: query
+          name: apikey
+          required: false
+          schema:
+            type: string
+            x-struct:
+            x-validate:
+        - description: Secret key for getting access to restricted resources
+          in: query
+          name: key
+          required: false
+          schema:
+            type: string
+            x-struct:
+            x-validate:
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Counters'
+          description: Smart contracts counters
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JsonErrorResponse'
+          description: Unprocessable Entity
+      summary: Smart contracts counters
+      tags:
+        - smart_contracts
   /v2/tokens/{address_hash_param}/instances/{token_id_param}/transfers-count:
     get:
       callbacks: {}
@@ -8244,7 +9951,8 @@ paths:
             type: string
             x-struct:
             x-validate:
-        - in: path
+        - description: Address hash in the path
+          in: path
           name: address_hash_param
           required: true
           schema:
@@ -8284,6 +9992,60 @@ paths:
       summary: Get transfer count for a specific token instance
       tags:
         - tokens
+  /v2/main-page/indexing-status:
+    get:
+      callbacks: {}
+      description: Returns current indexing progress and ratios for blocks and internal transactions.
+      operationId: BlockScoutWeb.API.V2.MainPageController.indexing_status
+      parameters:
+        - description: API key for rate limiting or for sensitive endpoints
+          in: query
+          name: apikey
+          required: false
+          schema:
+            type: string
+            x-struct:
+            x-validate:
+        - description: Secret key for getting access to restricted resources
+          in: query
+          name: key
+          required: false
+          schema:
+            type: string
+            x-struct:
+            x-validate:
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                properties:
+                  finished_indexing:
+                    type: boolean
+                    x-struct:
+                    x-validate:
+                  finished_indexing_blocks:
+                    type: boolean
+                    x-struct:
+                    x-validate:
+                  indexed_blocks_ratio:
+                    format: float
+                    type: number
+                    x-struct:
+                    x-validate:
+                  indexed_internal_transactions_ratio:
+                    format: float
+                    nullable: true
+                    type: number
+                    x-struct:
+                    x-validate:
+                type: object
+                x-struct:
+                x-validate:
+          description: Indexing status
+      summary: Get indexing status
+      tags:
+        - main_page
   /v2/blocks/{block_hash_or_number_param}/transactions:
     get:
       callbacks: {}
@@ -8306,7 +10068,8 @@ paths:
             type: string
             x-struct:
             x-validate:
-        - in: path
+        - description: Block hash or number in the path
+          in: path
           name: block_hash_or_number_param
           required: true
           schema:
@@ -8469,7 +10232,8 @@ paths:
             type: string
             x-struct:
             x-validate:
-        - in: path
+        - description: Transaction hash in the path
+          in: path
           name: transaction_hash_param
           required: true
           schema:
@@ -8508,6 +10272,44 @@ paths:
       summary: Get interpreted summary for a transaction
       tags:
         - transactions
+  /v2/withdrawals/counters:
+    get:
+      callbacks: {}
+      description: Returns total withdrawals count and sum from cache.
+      operationId: BlockScoutWeb.API.V2.WithdrawalController.withdrawals_counters
+      parameters:
+        - description: API key for rate limiting or for sensitive endpoints
+          in: query
+          name: apikey
+          required: false
+          schema:
+            type: string
+            x-struct:
+            x-validate:
+        - description: Secret key for getting access to restricted resources
+          in: query
+          name: key
+          required: false
+          schema:
+            type: string
+            x-struct:
+            x-validate:
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Counter'
+          description: Withdrawals counters
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JsonErrorResponse'
+          description: Unprocessable Entity
+      summary: Withdrawals counters
+      tags:
+        - withdrawals
   /v2/blocks:
     get:
       callbacks: {}
@@ -8622,7 +10424,8 @@ paths:
             type: string
             x-struct:
             x-validate:
-        - in: path
+        - description: Address hash in the path
+          in: path
           name: address_hash_param
           required: true
           schema:
@@ -8692,12 +10495,13 @@ paths:
             type: string
             x-struct:
             x-validate:
-        - in: path
+        - description: Address hash in the path
+          in: path
           name: address_hash_param
           required: true
           schema:
             $ref: '#/components/schemas/AddressHash'
-        - description: Filter logs by topic
+        - description: Log topic param in the query
           in: query
           name: topic
           required: false
@@ -8799,12 +10603,14 @@ paths:
             type: string
             x-struct:
             x-validate:
-        - in: path
+        - description: Address hash in the path
+          in: path
           name: address_hash_param
           required: true
           schema:
             $ref: '#/components/schemas/AddressHash'
-        - in: query
+        - description: Address hash in the query
+          in: query
           name: address_id
           required: false
           schema:
@@ -8888,6 +10694,77 @@ paths:
       summary: Export internal transactions as CSV
       tags:
         - addresses
+  /v2/search/check-redirect:
+    get:
+      callbacks: {}
+      description: Check whether the query resolves to a single redirect target (eg. an address or tx) and return it.
+      operationId: BlockScoutWeb.API.V2.SearchController.check_redirect
+      parameters:
+        - description: Search query filter
+          in: query
+          name: q
+          required: false
+          schema:
+            nullable: true
+            type: string
+            x-struct:
+            x-validate:
+        - description: API key for rate limiting or for sensitive endpoints
+          in: query
+          name: apikey
+          required: false
+          schema:
+            type: string
+            x-struct:
+            x-validate:
+        - description: Secret key for getting access to restricted resources
+          in: query
+          name: key
+          required: false
+          schema:
+            type: string
+            x-struct:
+            x-validate:
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                properties:
+                  parameter:
+                    nullable: true
+                    type: string
+                    x-struct:
+                    x-validate:
+                  redirect:
+                    nullable: true
+                    type: boolean
+                    x-struct:
+                    x-validate:
+                  type:
+                    enum:
+                      - address
+                      - block
+                      - transaction
+                      - user_operation
+                      - blob
+                    nullable: true
+                    type: string
+                    x-struct:
+                    x-validate:
+                type: object
+                x-struct:
+                x-validate:
+          description: Redirect check result
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JsonErrorResponse'
+          description: Unprocessable Entity
+      summary: Check redirect target for a query
+      tags:
+        - search
   /v2/transactions/stats:
     get:
       callbacks: {}
@@ -8927,13 +10804,194 @@ paths:
       summary: Get transaction statistics
       tags:
         - transactions
+  /v2/config/public-metrics:
+    get:
+      callbacks: {}
+      description: Returns update period / configuration for public metrics.
+      operationId: BlockScoutWeb.API.V2.ConfigController.public_metrics
+      parameters:
+        - description: API key for rate limiting or for sensitive endpoints
+          in: query
+          name: apikey
+          required: false
+          schema:
+            type: string
+            x-struct:
+            x-validate:
+        - description: Secret key for getting access to restricted resources
+          in: query
+          name: key
+          required: false
+          schema:
+            type: string
+            x-struct:
+            x-validate:
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                properties:
+                  update_period_hours:
+                    type: integer
+                    x-struct:
+                    x-validate:
+                type: object
+                x-struct:
+                x-validate:
+          description: Public metrics config
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JsonErrorResponse'
+          description: Unprocessable Entity
+      summary: Public metrics configuration
+      tags:
+        - config
+  /v1/search:
+    get:
+      callbacks: {}
+      description: Performs a joint search for blocks, transactions, addresses and other resources.
+      operationId: BlockScoutWeb.API.V2.SearchController.search
+      parameters:
+        - description: Search query filter
+          in: query
+          name: q
+          required: false
+          schema:
+            nullable: true
+            type: string
+            x-struct:
+            x-validate:
+        - description: API key for rate limiting or for sensitive endpoints
+          in: query
+          name: apikey
+          required: false
+          schema:
+            type: string
+            x-struct:
+            x-validate:
+        - description: Secret key for getting access to restricted resources
+          in: query
+          name: key
+          required: false
+          schema:
+            type: string
+            x-struct:
+            x-validate:
+        - description: Next page params type for paging
+          in: query
+          name: next_page_params_type
+          required: false
+          schema:
+            type: string
+            x-struct:
+            x-validate:
+        - description: Label for paging in the search results
+          in: query
+          name: label
+          required: false
+          schema:
+            type: object
+            x-struct:
+            x-validate:
+        - description: Token for paging in the search results
+          in: query
+          name: token
+          required: false
+          schema:
+            type: object
+            x-struct:
+            x-validate:
+        - description: Contract for paging in the search results
+          in: query
+          name: contract
+          required: false
+          schema:
+            type: object
+            x-struct:
+            x-validate:
+        - description: TAC operation for paging in the search results
+          in: query
+          name: tac_operation
+          required: false
+          schema:
+            type: object
+            x-struct:
+            x-validate:
+        - description: Metadata tag for paging in the search results
+          in: query
+          name: metadata_tag
+          required: false
+          schema:
+            type: object
+            x-struct:
+            x-validate:
+        - description: Block for paging in the search results
+          in: query
+          name: block
+          required: false
+          schema:
+            type: object
+            x-struct:
+            x-validate:
+        - description: Blob for paging in the search results
+          in: query
+          name: blob
+          required: false
+          schema:
+            type: object
+            x-struct:
+            x-validate:
+        - description: User operation for paging in the search results
+          in: query
+          name: user_operation
+          required: false
+          schema:
+            type: object
+            x-struct:
+            x-validate:
+        - description: Address for paging in the search results
+          in: query
+          name: address
+          required: false
+          schema:
+            type: object
+            x-struct:
+            x-validate:
+        - description: ENS domain for paging in the search results
+          in: query
+          name: ens_domain
+          required: false
+          schema:
+            type: object
+            x-struct:
+            x-validate:
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SearchResult'
+          description: Search results
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JsonErrorResponse'
+          description: Unprocessable Entity
+      summary: Search across blocks, transactions and addresses
+      tags:
+        - search
   /v2/transactions/{transaction_hash_param}/logs:
     get:
       callbacks: {}
       description: Retrieves logs for a specific transaction.
       operationId: BlockScoutWeb.API.V2.TransactionController.logs
       parameters:
-        - in: path
+        - description: Transaction hash in the path
+          in: path
           name: transaction_hash_param
           required: true
           schema:
@@ -9130,7 +11188,8 @@ paths:
       description: Retrieves internal transactions for a specific transaction.
       operationId: BlockScoutWeb.API.V2.TransactionController.internal_transactions
       parameters:
-        - in: path
+        - description: Transaction hash in the path
+          in: path
           name: transaction_hash_param
           required: true
           schema:
@@ -9256,7 +11315,8 @@ paths:
             type: string
             x-struct:
             x-validate:
-        - in: path
+        - description: Block hash or number in the path
+          in: path
           name: block_hash_or_number_param
           required: true
           schema:
@@ -9353,12 +11413,14 @@ paths:
             type: string
             x-struct:
             x-validate:
-        - in: path
+        - description: Address hash in the path
+          in: path
           name: address_hash_param
           required: true
           schema:
             $ref: '#/components/schemas/AddressHash'
-        - in: query
+        - description: Address hash in the query
+          in: query
           name: address_id
           required: false
           schema:
@@ -9442,6 +11504,221 @@ paths:
       summary: Export logs as CSV
       tags:
         - addresses
+  /v2/withdrawals:
+    get:
+      callbacks: {}
+      description: Retrieves withdrawals with optional filtering and pagination.
+      operationId: BlockScoutWeb.API.V2.WithdrawalController.withdrawals_list
+      parameters:
+        - description: API key for rate limiting or for sensitive endpoints
+          in: query
+          name: apikey
+          required: false
+          schema:
+            type: string
+            x-struct:
+            x-validate:
+        - description: Secret key for getting access to restricted resources
+          in: query
+          name: key
+          required: false
+          schema:
+            type: string
+            x-struct:
+            x-validate:
+        - description: Transaction index for paging
+          in: query
+          name: index
+          required: false
+          schema:
+            type: integer
+            x-struct:
+            x-validate:
+        - description: Number of items returned per page
+          in: query
+          name: items_count
+          required: false
+          schema:
+            maximum: 50
+            minimum: 1
+            type: integer
+            x-struct:
+            x-validate:
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                additionalProperties: false
+                nullable: false
+                properties:
+                  items:
+                    items:
+                      $ref: '#/components/schemas/Withdrawal'
+                    nullable: false
+                    type: array
+                    x-struct:
+                    x-validate:
+                  next_page_params:
+                    example:
+                      index: 50
+                      items_count: 50
+                    nullable: true
+                    type: object
+                    x-struct:
+                    x-validate:
+                required:
+                  - items
+                  - next_page_params
+                title: WithdrawalsPaginatedResponse
+                type: object
+                x-struct:
+                x-validate:
+          description: Withdrawals
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JsonErrorResponse'
+          description: Unprocessable Entity
+      summary: List withdrawals
+      tags:
+        - withdrawals
+  /v2/search:
+    get:
+      callbacks: {}
+      description: Performs a joint search for blocks, transactions, addresses and other resources.
+      operationId: BlockScoutWeb.API.V2.SearchController.search (2)
+      parameters:
+        - description: Search query filter
+          in: query
+          name: q
+          required: false
+          schema:
+            nullable: true
+            type: string
+            x-struct:
+            x-validate:
+        - description: API key for rate limiting or for sensitive endpoints
+          in: query
+          name: apikey
+          required: false
+          schema:
+            type: string
+            x-struct:
+            x-validate:
+        - description: Secret key for getting access to restricted resources
+          in: query
+          name: key
+          required: false
+          schema:
+            type: string
+            x-struct:
+            x-validate:
+        - description: Next page params type for paging
+          in: query
+          name: next_page_params_type
+          required: false
+          schema:
+            type: string
+            x-struct:
+            x-validate:
+        - description: Label for paging in the search results
+          in: query
+          name: label
+          required: false
+          schema:
+            type: object
+            x-struct:
+            x-validate:
+        - description: Token for paging in the search results
+          in: query
+          name: token
+          required: false
+          schema:
+            type: object
+            x-struct:
+            x-validate:
+        - description: Contract for paging in the search results
+          in: query
+          name: contract
+          required: false
+          schema:
+            type: object
+            x-struct:
+            x-validate:
+        - description: TAC operation for paging in the search results
+          in: query
+          name: tac_operation
+          required: false
+          schema:
+            type: object
+            x-struct:
+            x-validate:
+        - description: Metadata tag for paging in the search results
+          in: query
+          name: metadata_tag
+          required: false
+          schema:
+            type: object
+            x-struct:
+            x-validate:
+        - description: Block for paging in the search results
+          in: query
+          name: block
+          required: false
+          schema:
+            type: object
+            x-struct:
+            x-validate:
+        - description: Blob for paging in the search results
+          in: query
+          name: blob
+          required: false
+          schema:
+            type: object
+            x-struct:
+            x-validate:
+        - description: User operation for paging in the search results
+          in: query
+          name: user_operation
+          required: false
+          schema:
+            type: object
+            x-struct:
+            x-validate:
+        - description: Address for paging in the search results
+          in: query
+          name: address
+          required: false
+          schema:
+            type: object
+            x-struct:
+            x-validate:
+        - description: ENS domain for paging in the search results
+          in: query
+          name: ens_domain
+          required: false
+          schema:
+            type: object
+            x-struct:
+            x-validate:
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SearchResult'
+          description: Search results
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JsonErrorResponse'
+          description: Unprocessable Entity
+      summary: Search across blocks, transactions and addresses
+      tags:
+        - search
   /v2/addresses/{address_hash_param}/transactions:
     get:
       callbacks: {}
@@ -9464,7 +11741,8 @@ paths:
             type: string
             x-struct:
             x-validate:
-        - in: path
+        - description: Address hash in the path
+          in: path
           name: address_hash_param
           required: true
           schema:
@@ -9641,7 +11919,8 @@ paths:
       description: Retrieves the raw trace for a specific transaction, including internal operations and execution details.
       operationId: BlockScoutWeb.API.V2.TransactionController.raw_trace
       parameters:
-        - in: path
+        - description: Transaction hash in the path
+          in: path
           name: transaction_hash_param
           required: true
           schema:
@@ -9706,12 +11985,14 @@ paths:
             type: string
             x-struct:
             x-validate:
-        - in: path
+        - description: Address hash in the path
+          in: path
           name: address_hash_param
           required: true
           schema:
             $ref: '#/components/schemas/AddressHash'
-        - in: query
+        - description: Address hash in the query
+          in: query
           name: address_id
           required: false
           schema:
@@ -9801,7 +12082,8 @@ paths:
       description: Retrieves beacon deposits included in a specific transaction with pagination support.
       operationId: BlockScoutWeb.API.V2.TransactionController.beacon_deposits
       parameters:
-        - in: path
+        - description: Transaction hash in the path
+          in: path
           name: transaction_hash_param
           required: true
           schema:
@@ -9908,7 +12190,8 @@ paths:
             type: string
             x-struct:
             x-validate:
-        - in: path
+        - description: Address hash in the path
+          in: path
           name: address_hash_param
           required: true
           schema:
