@@ -2038,6 +2038,7 @@ components:
         address_hash:
           $ref: '#/components/schemas/AddressHash'
         filecoin_robust_address:
+          description: Robust f0/f1/f2/f3/f4 Filecoin address
           example: f25nml2cfbljvn4goqtclhifepvfnicv6g7mfmmvq
           nullable: true
           type: string
@@ -3135,6 +3136,7 @@ components:
         exchange_rate:
           $ref: '#/components/schemas/FloatStringNullable'
         filecoin_robust_address:
+          description: Robust f0/f1/f2/f3/f4 Filecoin address
           example: f25nml2cfbljvn4goqtclhifepvfnicv6g7mfmmvq
           nullable: true
           type: string
@@ -3615,6 +3617,13 @@ components:
           type: string
           x-struct:
           x-validate:
+        verified_twin_filecoin_robust_address:
+          description: Robust f0/f1/f2/f3/f4 Filecoin address
+          example: f25nml2cfbljvn4goqtclhifepvfnicv6g7mfmmvq
+          nullable: true
+          type: string
+          x-struct:
+          x-validate:
         is_partially_verified:
           nullable: true
           type: boolean
@@ -4022,6 +4031,7 @@ components:
         exchange_rate:
           $ref: '#/components/schemas/FloatStringNullable'
         filecoin_robust_address:
+          description: Robust f0/f1/f2/f3/f4 Filecoin address
           example: f25nml2cfbljvn4goqtclhifepvfnicv6g7mfmmvq
           nullable: true
           type: string
