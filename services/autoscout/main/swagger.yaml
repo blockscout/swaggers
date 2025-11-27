@@ -435,6 +435,28 @@ paths:
         - Apay
       security:
         - ApiKeyAuth: []
+  /api/v1/apay/subscriptions/report:
+    post:
+      operationId: ReportApaySubscriptionUsage
+      responses:
+        "200":
+          description: A successful response.
+          schema:
+            $ref: '#/definitions/v1ReportApaySubscriptionsUsageResponse'
+        default:
+          description: An unexpected error response.
+          schema:
+            $ref: '#/definitions/rpcStatus'
+      parameters:
+        - name: body
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/v1ReportApaySubscriptionsUsageRequest'
+      tags:
+        - Apay
+      security:
+        - ApiKeyAuth: []
   /api/v1/apay/subscriptions/{subscription_id}:
     get:
       operationId: GetApaySubscription
@@ -2987,6 +3009,16 @@ definitions:
         type: string
     required:
       - reward_amount
+  v1ReportApaySubscriptionsUsageRequest:
+    type: object
+    properties:
+      reports:
+        type: array
+        items:
+          type: object
+          $ref: '#/definitions/v1SubscriptionUsageReport'
+    required:
+      - reports
   v1ReportApaySubscriptionsUsageResponse:
     type: object
     properties:
@@ -3074,8 +3106,7 @@ definitions:
     type: object
     properties:
       subscription_id:
-        type: integer
-        format: int32
+        type: string
       tokens_used:
         type: integer
         format: int64
