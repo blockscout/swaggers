@@ -4736,7 +4736,7 @@ paths:
   /v2/tokens/{address_hash_param}:
     get:
       callbacks: {}
-      description: Retrieves detailed information for a specific token, including metadata and statistics.
+      description: Retrieves detailed information for a specific token identified by its contract address.
       operationId: BlockScoutWeb.API.V2.TokenController.token
       parameters:
         - description: Address hash in the path
@@ -4818,7 +4818,7 @@ paths:
                 type: object
                 x-struct:
                 x-validate:
-          description: CSV export limits
+          description: CSV export limits.
         '422':
           content:
             application/json:
@@ -4831,7 +4831,7 @@ paths:
   /v2/transactions/{transaction_hash_param}:
     get:
       callbacks: {}
-      description: Retrieves detailed information for a specific transaction, including token transfers, internal transactions, and metadata.
+      description: Retrieves detailed information for a specific transaction identified by its hash.
       operationId: BlockScoutWeb.API.V2.TransactionController.transaction
       parameters:
         - description: Transaction hash in the path
@@ -4862,7 +4862,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/TransactionResponse'
-          description: Transaction details
+          description: Detailed information about the specified transaction.
         '404':
           content:
             application/json:
@@ -5038,7 +5038,7 @@ paths:
   /v2/tokens/:
     get:
       callbacks: {}
-      description: Retrieves a paginated list of tokens with optional filtering and sorting.
+      description: Retrieves a paginated list of tokens with optional filtering by name, symbol, or type.
       operationId: BlockScoutWeb.API.V2.TokenController.tokens_list
       parameters:
         - description: API key for rate limiting or for sensitive endpoints
@@ -5233,14 +5233,14 @@ paths:
                 type: object
                 x-struct:
                 x-validate:
-          description: List of tokens.
+          description: List of tokens matching the filter criteria, with pagination.
         '422':
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/JsonErrorResponse'
           description: Unprocessable Entity
-      summary: List tokens with optional filtering and sorting
+      summary: List tokens with optional filtering by name, symbol, or type
       tags:
         - tokens
   /v2/addresses/{address_hash_param}/token-transfers/csv:
@@ -5414,7 +5414,7 @@ paths:
   /v2/blocks/{block_hash_or_number_param}/withdrawals:
     get:
       callbacks: {}
-      description: Retrieves validator withdrawals included in a specific block.
+      description: Retrieves withdrawals processed in a specific block (typically for proof-of-stake networks).
       operationId: BlockScoutWeb.API.V2.BlockController.withdrawals
       parameters:
         - description: API key for rate limiting or for sensitive endpoints
@@ -5493,7 +5493,7 @@ paths:
                 type: object
                 x-struct:
                 x-validate:
-          description: Withdrawals in the specified block.
+          description: Withdrawals in the specified block, with pagination. Note that block_number and timestamp fields are not included in this endpoint.
         '404':
           content:
             application/json:
@@ -5506,13 +5506,13 @@ paths:
               schema:
                 $ref: '#/components/schemas/JsonErrorResponse'
           description: Unprocessable Entity
-      summary: List withdrawals in a specific block
+      summary: List validator withdrawals including amounts, index and receiver details processed in a specific block
       tags:
         - blocks
   /v2/tokens/{address_hash_param}/holders:
     get:
       callbacks: {}
-      description: Retrieves holders for a specific token, with optional filtering and pagination.
+      description: Retrieves addresses holding a specific token, sorted by balance. Useful for analyzing token distribution.
       operationId: BlockScoutWeb.API.V2.TokenController.holders
       parameters:
         - description: API key for rate limiting or for sensitive endpoints
@@ -5590,7 +5590,7 @@ paths:
                 type: object
                 x-struct:
                 x-validate:
-          description: List of token holders.
+          description: Holders of the specified token, with pagination.
         '404':
           content:
             application/json:
@@ -5603,7 +5603,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/JsonErrorResponse'
           description: Unprocessable Entity
-      summary: List holders for a specific token
+      summary: List addresses holding a specific token sorted by balance
       tags:
         - tokens
   /v2/blocks/{block_hash_or_number_param}:
@@ -5659,7 +5659,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/JsonErrorResponse'
           description: Unprocessable Entity
-      summary: Retrieve detailed information about a specific block
+      summary: Retrieves detailed information for a specific block identified by its number or hash.
       tags:
         - blocks
   /v2/addresses/{address_hash_param}/tokens:
@@ -5848,7 +5848,7 @@ paths:
                 type: object
                 x-struct:
                 x-validate:
-          description: Audit reports
+          description: Audit reports.
         '422':
           content:
             application/json:
@@ -5954,7 +5954,7 @@ paths:
                 type: object
                 x-struct:
                 x-validate:
-          description: OK
+          description: Audit report submission is successful.
         '422':
           content:
             application/json:
@@ -6262,7 +6262,7 @@ paths:
   /v2/stats:
     get:
       callbacks: {}
-      description: Returns current indexing progress, chain stats and market data used on the UI.
+      description: Retrieves blockchain network statistics including total blocks, transactions, addresses, average block time, market data, and network utilization.
       operationId: BlockScoutWeb.API.V2.StatsController.stats
       parameters:
         - description: API key for rate limiting or for sensitive endpoints
@@ -6287,20 +6287,20 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/StatsResponse'
-          description: Stats
+          description: Blockchain network statistics.
         '422':
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/JsonErrorResponse'
           description: Unprocessable Entity
-      summary: Get indexing and chain stats
+      summary: Retrieve blockchain network statistics and metrics
       tags:
         - stats
   /v2/tokens/{address_hash_param}/instances:
     get:
       callbacks: {}
-      description: Retrieves all instances of a specific token, including holders and balances.
+      description: Retrieves instances of NFTs for a specific token contract. This endpoint is primarily for ERC-721 and ERC-1155 tokens.
       operationId: BlockScoutWeb.API.V2.TokenController.instances
       parameters:
         - description: API key for rate limiting or for sensitive endpoints
@@ -6366,7 +6366,7 @@ paths:
                 type: object
                 x-struct:
                 x-validate:
-          description: List of token instances.
+          description: NFT instances for the specified token contract, with pagination.
         '404':
           content:
             application/json:
@@ -6379,13 +6379,13 @@ paths:
               schema:
                 $ref: '#/components/schemas/JsonErrorResponse'
           description: Unprocessable Entity
-      summary: List all instances of a specific token
+      summary: List individual NFT instances for a token contract
       tags:
         - tokens
   /v2/main-page/blocks:
     get:
       callbacks: {}
-      description: Retrieves last 4 blocks list.
+      description: Retrieves a limited set of recent blocks for display on the main page or dashboard.
       operationId: BlockScoutWeb.API.V2.MainPageController.blocks
       parameters:
         - description: API key for rate limiting or for sensitive endpoints
@@ -6416,8 +6416,8 @@ paths:
                 type: array
                 x-struct:
                 x-validate:
-          description: Blocks List on the main page.
-      summary: Last 4 blocks on the main page
+          description: List of recent blocks on the home page.
+      summary: Retrieve recent blocks as displayed on Blockscout homepage
       tags:
         - main_page
   /v2/stats/charts/secondary-coin-market:
@@ -6459,7 +6459,7 @@ paths:
                 type: object
                 x-struct:
                 x-validate:
-          description: Secondary coin market chart data
+          description: Secondary coin market chart data.
         '422':
           content:
             application/json:
@@ -6729,7 +6729,7 @@ paths:
                 type: array
                 x-struct:
                 x-validate:
-          description: Linked external transactions
+          description: Linked external transactions.
         '404':
           content:
             application/json:
@@ -6748,7 +6748,7 @@ paths:
   /v2/tokens/{address_hash_param}/transfers:
     get:
       callbacks: {}
-      description: Retrieves token transfers for a specific token, with optional filtering and pagination.
+      description: Retrieves transfer history for a specific NFT instance, showing ownership changes over time.
       operationId: BlockScoutWeb.API.V2.TokenController.transfers
       parameters:
         - description: API key for rate limiting or for sensitive endpoints
@@ -6852,7 +6852,7 @@ paths:
                 type: object
                 x-struct:
                 x-validate:
-          description: List of token transfers.
+          description: Transfers of the specified token, with pagination.
         '404':
           content:
             application/json:
@@ -6865,13 +6865,13 @@ paths:
               schema:
                 $ref: '#/components/schemas/JsonErrorResponse'
           description: Unprocessable Entity
-      summary: List token transfers for a specific token
+      summary: List ownership transfer history for a specific NFT
       tags:
         - tokens
   /v2/transactions:
     get:
       callbacks: {}
-      description: Retrieves a paginated list of transactions with optional filtering and sorting options.
+      description: Retrieves a paginated list of transactions with optional filtering by status, type, and method.
       operationId: BlockScoutWeb.API.V2.TransactionController.transactions
       parameters:
         - description: API key for rate limiting or for sensitive endpoints
@@ -6891,9 +6891,9 @@ paths:
             x-struct:
             x-validate:
         - description: |
-            Filter by transaction type:
-            * validated - Only show validated transactions
-            * pending - Only show pending transactions
+            Filter transactions by status:
+            * pending - Transactions waiting to be mined/validated
+            * validated - Confirmed transactions included in blocks
             If omitted, default value "validated" is used.
           in: query
           name: filter
@@ -6978,20 +6978,20 @@ paths:
                 type: object
                 x-struct:
                 x-validate:
-          description: List of transactions
+          description: List of transactions with pagination information.
         '422':
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/JsonErrorResponse'
           description: Unprocessable Entity
-      summary: List transactions with optional filtering and sorting
+      summary: List blockchain transactions with filtering options for status, type, and method
       tags:
         - transactions
   /v2/tokens/{address_hash_param}/instances/{token_id_param}/holders:
     get:
       callbacks: {}
-      description: Retrieves holders for a specific token instance (by token address and token ID).
+      description: Retrieves current holders of a specific NFT instance. For ERC-721, this will typically be a single address. For ERC-1155, multiple addresses may hold the same token ID.
       operationId: BlockScoutWeb.API.V2.TokenController.holders_by_instance
       parameters:
         - description: API key for rate limiting or for sensitive endpoints
@@ -7082,7 +7082,7 @@ paths:
                 type: object
                 x-struct:
                 x-validate:
-          description: List of token holders for the instance.
+          description: Current holders of the specified NFT instance, with pagination.
         '404':
           content:
             application/json:
@@ -7095,13 +7095,13 @@ paths:
               schema:
                 $ref: '#/components/schemas/JsonErrorResponse'
           description: Unprocessable Entity
-      summary: List holders for a specific token instance
+      summary: List current holders of a specific NFT
       tags:
         - tokens
   /v2/stats/hot-smart-contracts:
     get:
       callbacks: {}
-      description: Retrieves hot contracts
+      description: Retrieves paginated list of hot smart-contracts
       operationId: BlockScoutWeb.API.V2.StatsController.hot_smart_contracts
       parameters:
         - description: API key for rate limiting or for sensitive endpoints
@@ -7238,7 +7238,7 @@ paths:
                 type: object
                 x-struct:
                 x-validate:
-          description: Hot contracts.
+          description: Paginated list of hot smart-contracts.
         '403':
           content:
             application/json:
@@ -7251,13 +7251,13 @@ paths:
               schema:
                 $ref: '#/components/schemas/JsonErrorResponse'
           description: Unprocessable Entity
-      summary: Retrieve hot contracts
+      summary: Retrieve hot smart-contracts
       tags:
         - stats
   /v2/smart-contracts/{address_hash_param}:
     get:
       callbacks: {}
-      description: Returns details for a smart contract address.
+      description: Retrieves detailed information about a specific verified smart contract, including source code, ABI, and deployment details.
       operationId: BlockScoutWeb.API.V2.SmartContractController.smart_contract
       parameters:
         - description: Address hash in the path
@@ -7288,8 +7288,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/SmartContract'
-          description: Smart contract
-      summary: Smart contract
+          description: Detailed information about the specified verified smart contract.
+      summary: Retrieve detailed information about a verified smart contract
       tags:
         - smart_contracts
   /v2/tokens/{address_hash_param}/instances/{token_id_param}/transfers:
@@ -7380,7 +7380,7 @@ paths:
                 type: object
                 x-struct:
                 x-validate:
-          description: List of token transfers for the instance.
+          description: Transfer history for the specified NFT instance, with pagination.
         '404':
           content:
             application/json:
@@ -7432,7 +7432,7 @@ paths:
                 type: object
                 x-struct:
                 x-validate:
-          description: Backend version
+          description: Backend version.
         '422':
           content:
             application/json:
@@ -7445,7 +7445,7 @@ paths:
   /v2/token-transfers:
     get:
       callbacks: {}
-      description: Retrieves token transfers with optional filtering and pagination.
+      description: Retrieves a paginated list of token transfers across all token types (ERC-20, ERC-721, ERC-1155).
       operationId: BlockScoutWeb.API.V2.TokenTransferController.token_transfers
       parameters:
         - description: API key for rate limiting or for sensitive endpoints
@@ -7569,20 +7569,20 @@ paths:
                 type: object
                 x-struct:
                 x-validate:
-          description: Token transfers
+          description: List of token transfers with pagination information.
         '422':
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/JsonErrorResponse'
           description: Unprocessable Entity
-      summary: List token transfers
+      summary: List token transfers across all token types (ERC-20, ERC-721, ERC-1155)
       tags:
         - token_transfers
   /v2/transactions/{transaction_hash_param}/token-transfers:
     get:
       callbacks: {}
-      description: Retrieves token transfers for a specific transaction.
+      description: Retrieves token transfers that occurred within a specific transaction, with optional filtering by token type.
       operationId: BlockScoutWeb.API.V2.TransactionController.token_transfers
       parameters:
         - description: API key for rate limiting or for sensitive endpoints
@@ -7703,7 +7703,7 @@ paths:
                 type: object
                 x-struct:
                 x-validate:
-          description: Token transfers for transaction
+          description: Token transfers within the specified transaction, with pagination.
         '404':
           content:
             application/json:
@@ -7716,13 +7716,13 @@ paths:
               schema:
                 $ref: '#/components/schemas/JsonErrorResponse'
           description: Unprocessable Entity
-      summary: List token transfers for a transaction
+      summary: List token transfers within a specific transaction
       tags:
         - transactions
   /v2/stats/charts/market:
     get:
       callbacks: {}
-      description: Returns market history (price, market cap, tvl) for charting.
+      description: Retrieves time series data of market information (daily closing price, market cap) for rendering charts.
       operationId: BlockScoutWeb.API.V2.StatsController.market_chart
       parameters:
         - description: API key for rate limiting or for sensitive endpoints
@@ -7766,14 +7766,14 @@ paths:
                 type: object
                 x-struct:
                 x-validate:
-          description: Market chart data
+          description: Time series data for market charts and available token supply.
         '422':
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/JsonErrorResponse'
           description: Unprocessable Entity
-      summary: Market history chart data
+      summary: Get daily closing price and market cap for native coin
       tags:
         - stats
   /v2/search/quick:
@@ -7820,7 +7820,7 @@ paths:
                 type: array
                 x-struct:
                 x-validate:
-          description: Quick search results
+          description: Quick search results.
         '422':
           content:
             application/json:
@@ -7833,7 +7833,7 @@ paths:
   /v2/main-page/transactions:
     get:
       callbacks: {}
-      description: Retrieves last 6 transactions list.
+      description: Retrieves a limited set of recent transactions displayed on the home page.
       operationId: BlockScoutWeb.API.V2.MainPageController.transactions
       parameters:
         - description: API key for rate limiting or for sensitive endpoints
@@ -7864,14 +7864,14 @@ paths:
                 type: array
                 x-struct:
                 x-validate:
-          description: Transactions list on the main page.
+          description: List of recent transactions on the home page.
         '422':
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/JsonErrorResponse'
           description: Unprocessable Entity
-      summary: Last 6 transactions on the main page
+      summary: Retrieve recent transactions as displayed on Blockscout homepage
       tags:
         - main_page
   /v2/addresses/{address_hash_param}/counters:
@@ -7908,7 +7908,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/AddressCounters'
-          description: Count statistics for the specified address
+          description: Count statistics for the specified address.
         '403':
           content:
             application/json:
@@ -7927,7 +7927,7 @@ paths:
   /v2/tokens/{address_hash_param}/counters:
     get:
       callbacks: {}
-      description: Retrieves count statistics for a token, including transfers, holders, and other metrics.
+      description: Retrieves count statistics for a specific token, including holders count and transfers count.
       operationId: BlockScoutWeb.API.V2.TokenController.counters
       parameters:
         - description: Address hash in the path
@@ -7958,7 +7958,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/TokenCountersResponse'
-          description: Count statistics for the specified token
+          description: Count statistics for the specified token.
         '404':
           content:
             application/json:
@@ -7971,7 +7971,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/JsonErrorResponse'
           description: Unprocessable Entity
-      summary: Get activity count stats for a specific token
+      summary: Get holder and transfer count statistics for a specific token
       tags:
         - tokens
   /v2/config/smart-contracts/languages:
@@ -8011,7 +8011,7 @@ paths:
                 type: object
                 x-struct:
                 x-validate:
-          description: Smart contract languages
+          description: Smart contract languages.
         '422':
           content:
             application/json:
@@ -8024,7 +8024,7 @@ paths:
   /v2/tokens/{address_hash_param}/instances/{token_id_param}:
     get:
       callbacks: {}
-      description: Retrieves details for a specific token instance by token address and token ID.
+      description: Retrieves detailed information about a specific NFT instance, identified by its token contract address and token ID.
       operationId: BlockScoutWeb.API.V2.TokenController.instance
       parameters:
         - description: API key for rate limiting or for sensitive endpoints
@@ -8061,7 +8061,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/TokenInstance'
-          description: Details for the token instance.
+          description: Detailed information about the specified NFT instance.
         '404':
           content:
             application/json:
@@ -8074,13 +8074,13 @@ paths:
               schema:
                 $ref: '#/components/schemas/JsonErrorResponse'
           description: Unprocessable Entity
-      summary: Get details for a specific token instance
+      summary: Retrieve detailed information about a specific NFT
       tags:
         - tokens
   /v2/stats/charts/transactions:
     get:
       callbacks: {}
-      description: Returns transaction counts by date for charting.
+      description: Retrieves time series data of daily transaction counts for rendering charts.
       operationId: BlockScoutWeb.API.V2.StatsController.transactions_chart
       parameters:
         - description: API key for rate limiting or for sensitive endpoints
@@ -8116,14 +8116,14 @@ paths:
                 type: object
                 x-struct:
                 x-validate:
-          description: Transactions chart data
+          description: Time series data for transaction count charts.
         '422':
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/JsonErrorResponse'
           description: Unprocessable Entity
-      summary: Transactions chart data
+      summary: Get daily transaction counts
       tags:
         - stats
   /v2/addresses/{address_hash_param}/tabs-counters:
@@ -8179,7 +8179,7 @@ paths:
   /v2/smart-contracts/:
     get:
       callbacks: {}
-      description: Returns a paginated list of verified smart contract addresses. Supports search, filtering and pagination keys.
+      description: Retrieves a paginated list of verified smart contracts with optional filtering by proxy status or programming language.
       operationId: BlockScoutWeb.API.V2.SmartContractController.smart_contracts_list
       parameters:
         - description: API key for rate limiting or for sensitive endpoints
@@ -8329,14 +8329,14 @@ paths:
                 type: object
                 x-struct:
                 x-validate:
-          description: Smart contracts
+          description: List of verified smart contracts matching the filter criteria, with pagination.
         '422':
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/JsonErrorResponse'
           description: Unprocessable Entity
-      summary: Smart contracts list
+      summary: List verified smart contracts with optional filtering options
       tags:
         - smart_contracts
   /v2/addresses/{address_hash_param}/coin-balance-history:
@@ -8508,7 +8508,7 @@ paths:
   /v2/transactions/{transaction_hash_param}/state-changes:
     get:
       callbacks: {}
-      description: Retrieves state changes for a specific transaction.
+      description: Retrieves state changes (balance changes, token transfers) caused by a specific transaction.
       operationId: BlockScoutWeb.API.V2.TransactionController.state_changes
       parameters:
         - description: Transaction hash in the path
@@ -8581,7 +8581,7 @@ paths:
                 type: object
                 x-struct:
                 x-validate:
-          description: State changes for transaction
+          description: State changes caused by the specified transaction, with pagination.
         '404':
           content:
             application/json:
@@ -8594,7 +8594,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/JsonErrorResponse'
           description: Unprocessable Entity
-      summary: List state changes for a transaction
+      summary: Get on-chain state changes caused by a specific transaction
       tags:
         - transactions
   /v2/addresses/{address_hash_param}:
@@ -9041,7 +9041,7 @@ paths:
   /v2/internal-transactions:
     get:
       callbacks: {}
-      description: Retrieves internal transactions with optional filtering and pagination.
+      description: Retrieves a paginated list of internal transactions. Internal transactions are generated during contract execution and not directly recorded on the blockchain.
       operationId: BlockScoutWeb.API.V2.InternalTransactionController.internal_transactions
       parameters:
         - description: API key for rate limiting or for sensitive endpoints
@@ -9142,14 +9142,14 @@ paths:
                 type: object
                 x-struct:
                 x-validate:
-          description: Internal transactions
+          description: List of internal transactions with pagination information.
         '422':
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/JsonErrorResponse'
           description: Unprocessable Entity
-      summary: List internal transactions
+      summary: List internal transactions generated during smart contract execution
       tags:
         - internal_transactions
   /v2/addresses/{address_hash_param}/coin-balance-history-by-day:
@@ -9222,7 +9222,7 @@ paths:
   /v2/smart-contracts/counters:
     get:
       callbacks: {}
-      description: Returns counts for smart contracts and related metrics.
+      description: Retrieves count statistics for smart contracts, including total contracts, verified contracts, and new contracts in the last 24 hours.
       operationId: BlockScoutWeb.API.V2.SmartContractController.smart_contracts_counters
       parameters:
         - description: API key for rate limiting or for sensitive endpoints
@@ -9247,20 +9247,20 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Counters'
-          description: Smart contracts counters
+          description: Count statistics for smart contracts.
         '422':
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/JsonErrorResponse'
           description: Unprocessable Entity
-      summary: Smart contracts counters
+      summary: Get count statistics (new & newly verified) for deployed smart contracts
       tags:
         - smart_contracts
   /v2/tokens/{address_hash_param}/instances/{token_id_param}/transfers-count:
     get:
       callbacks: {}
-      description: Retrieves the number of transfers for a specific token instance (by token address and token ID).
+      description: Retrieves the total number of transfers for a specific NFT instance. Useful for determining how frequently an NFT has changed hands.
       operationId: BlockScoutWeb.API.V2.TokenController.transfers_count_by_instance
       parameters:
         - description: API key for rate limiting or for sensitive endpoints
@@ -9304,7 +9304,7 @@ paths:
                 type: object
                 x-struct:
                 x-validate:
-          description: Transfer count for the instance.
+          description: Total number of transfers for the specified NFT instance.
         '404':
           content:
             application/json:
@@ -9317,13 +9317,13 @@ paths:
               schema:
                 $ref: '#/components/schemas/JsonErrorResponse'
           description: Unprocessable Entity
-      summary: Get transfer count for a specific token instance
+      summary: Get total number of ownership transfers for a specific NFT
       tags:
         - tokens
   /v2/main-page/indexing-status:
     get:
       callbacks: {}
-      description: Returns current indexing progress and ratios for blocks and internal transactions.
+      description: Retrieves the current status of blockchain data indexing by the BlockScout instance.
       operationId: BlockScoutWeb.API.V2.MainPageController.indexing_status
       parameters:
         - description: API key for rate limiting or for sensitive endpoints
@@ -9370,14 +9370,14 @@ paths:
                 type: object
                 x-struct:
                 x-validate:
-          description: Indexing status
-      summary: Get indexing status
+          description: Current blockchain indexing status.
+      summary: Check if indexing is finished with indexing ratio
       tags:
         - main_page
   /v2/blocks/{block_hash_or_number_param}/transactions:
     get:
       callbacks: {}
-      description: Retrieves transactions included in a specific block with optional filtering and sorting.
+      description: Retrieves transactions included in a specific block, ordered by transaction index.
       operationId: BlockScoutWeb.API.V2.BlockController.transactions
       parameters:
         - description: API key for rate limiting or for sensitive endpoints
@@ -9409,12 +9409,12 @@ paths:
             x-struct:
             x-validate:
         - description: |
-            Filter transactions by type:
-            * coin_transfer - Only show coin transfer transactions
-            * contract_call - Only show contract call transactions
-            * contract_creation - Only show contract creation transactions
-            * token_transfer - Only show token transfer transactions
-            * token_creation - Only show token creation transactions
+            Filter by transaction type. Comma-separated list of:
+            * token_transfer - Token transfer transactions
+            * contract_creation - Contract deployment transactions
+            * contract_call - Contract method call transactions
+            * coin_transfer - Native coin transfer transactions
+            * token_creation - Token creation transactions
             * blob_transaction - Only show blob transactions (Ethereum only)
           in: query
           name: type
@@ -9487,7 +9487,7 @@ paths:
                 type: object
                 x-struct:
                 x-validate:
-          description: Transactions in the specified block.
+          description: Transactions in the specified block, with pagination.
         '404':
           content:
             application/json:
@@ -9500,13 +9500,13 @@ paths:
               schema:
                 $ref: '#/components/schemas/JsonErrorResponse'
           description: Unprocessable Entity
-      summary: List transactions in a specific block
+      summary: List transactions and tx details included in a specific block
       tags:
         - blocks
   /v2/transactions/{transaction_hash_param}/summary:
     get:
       callbacks: {}
-      description: Retrieves interpreted summary for a specific transaction.
+      description: Retrieves a human-readable summary of what a transaction did, presented in natural language.
       operationId: BlockScoutWeb.API.V2.TransactionController.summary
       parameters:
         - description: API key for rate limiting or for sensitive endpoints
@@ -9549,7 +9549,7 @@ paths:
                   - $ref: '#/components/schemas/SummaryJustRequestBody'
                 x-struct:
                 x-validate:
-          description: Transaction summary
+          description: Human-readable summary of the specified transaction.
         '404':
           content:
             application/json:
@@ -9562,7 +9562,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/JsonErrorResponse'
           description: Unprocessable Entity
-      summary: Get interpreted summary for a transaction
+      summary: Get a human-readable, LLM-based transaction summary
       tags:
         - transactions
   /v2/withdrawals/counters:
@@ -9593,7 +9593,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Counter'
-          description: Withdrawals counters
+          description: Withdrawals counters.
         '422':
           content:
             application/json:
@@ -9606,7 +9606,7 @@ paths:
   /v2/blocks:
     get:
       callbacks: {}
-      description: Retrieves a paginated list of blocks with optional filtering by block type and sorting options.
+      description: Retrieves a paginated list of blocks with optional filtering by block type.
       operationId: BlockScoutWeb.API.V2.BlockController.blocks
       parameters:
         - description: API key for rate limiting or for sensitive endpoints
@@ -9627,9 +9627,9 @@ paths:
             x-validate:
         - description: |
             Filter by block type:
-            * reorg - Only show reorgs
-            * uncle - Only show uncle blocks
-            * block - Only show main blocks
+            * block - Standard blocks in the main chain
+            * uncle - Uncle/ommer blocks (valid but not in main chain)
+            * reorg - Blocks from chain reorganizations
             If omitted, default value "block" is used.
           in: query
           name: type
@@ -9691,14 +9691,14 @@ paths:
                 type: object
                 x-struct:
                 x-validate:
-          description: List of blocks with pagination.
-      summary: List blocks with optional filtering and sorting
+          description: List of blocks with pagination information.
+      summary: List blocks with optional filtering by block type
       tags:
         - blocks
   /v2/tokens/{address_hash_param}/instances/{token_id_param}/refetch-metadata:
     patch:
       callbacks: {}
-      description: Triggers a metadata refetch for a specific token instance (by token address and token ID).
+      description: Triggers a refresh of metadata for a specific NFT instance. Useful when the NFT's metadata has been updated but is not yet reflected in the BlockScout database.
       operationId: BlockScoutWeb.API.V2.TokenController.refetch_metadata
       parameters:
         - description: API key for rate limiting or for sensitive endpoints
@@ -9750,7 +9750,7 @@ paths:
                 type: object
                 x-struct:
                 x-validate:
-          description: Metadata refetch triggered.
+          description: Metadata refresh has been successfully initiated.
         '404':
           content:
             application/json:
@@ -9763,7 +9763,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/JsonErrorResponse'
           description: Unprocessable Entity
-      summary: Trigger metadata refetch for a specific token instance
+      summary: Trigger a refresh of metadata for a specific NFT
       tags:
         - tokens
   /v2/addresses/{address_hash_param}/logs:
@@ -9990,7 +9990,7 @@ paths:
   /v2/search/check-redirect:
     get:
       callbacks: {}
-      description: Check whether the query resolves to a single redirect target (eg. an address or tx) and return it.
+      description: Checks if a search query redirects to a specific entity page rather than showing search results.
       operationId: BlockScoutWeb.API.V2.SearchController.check_redirect
       parameters:
         - description: Search query filter
@@ -10048,14 +10048,14 @@ paths:
                 type: object
                 x-struct:
                 x-validate:
-          description: Redirect check result
+          description: Response indicating whether the query should redirect to a specific entity page.
         '422':
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/JsonErrorResponse'
           description: Unprocessable Entity
-      summary: Check redirect target for a query
+      summary: Check if search query should redirect to a specific entity page
       tags:
         - search
   /v2/transactions/stats:
@@ -10087,7 +10087,7 @@ paths:
                 type: object
                 x-struct:
                 x-validate:
-          description: Transaction statistics
+          description: Transaction statistics.
         '422':
           content:
             application/json:
@@ -10132,7 +10132,7 @@ paths:
                 type: object
                 x-struct:
                 x-validate:
-          description: Public metrics config
+          description: Public metrics config.
         '422':
           content:
             application/json:
@@ -10145,7 +10145,7 @@ paths:
   /v1/search:
     get:
       callbacks: {}
-      description: Performs a joint search for blocks, transactions, addresses and other resources.
+      description: Performs a unified search across multiple blockchain entity types including tokens, addresses, contracts, blocks, transactions and other resources.
       operationId: BlockScoutWeb.API.V2.SearchController.search
       parameters:
         - description: Search query filter
@@ -10267,20 +10267,22 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/SearchResult'
-          description: Search results
+          description: |-
+            Successful search response containing matched items and pagination information.
+                        Results are ordered by relevance and limited to 50 items per page.
         '422':
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/JsonErrorResponse'
           description: Unprocessable Entity
-      summary: Search across blocks, transactions and addresses
+      summary: Search for tokens, addresses, contracts, blocks, or transactions by identifier
       tags:
         - search
   /v2/transactions/{transaction_hash_param}/logs:
     get:
       callbacks: {}
-      description: Retrieves logs for a specific transaction.
+      description: Retrieves event logs emitted during the execution of a specific transaction. Logs contain information about contract events and state changes.
       operationId: BlockScoutWeb.API.V2.TransactionController.logs
       parameters:
         - description: Transaction hash in the path
@@ -10363,7 +10365,7 @@ paths:
                 type: object
                 x-struct:
                 x-validate:
-          description: Logs for transaction
+          description: Event logs for the specified transaction, with pagination.
         '404':
           content:
             application/json:
@@ -10376,7 +10378,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/JsonErrorResponse'
           description: Unprocessable Entity
-      summary: List logs for a transaction
+      summary: List event logs emitted during a specific transaction
       tags:
         - transactions
   /v2/transactions/watchlist:
@@ -10459,7 +10461,7 @@ paths:
                 type: object
                 x-struct:
                 x-validate:
-          description: Watchlist transactions
+          description: Watchlist transactions.
         '403':
           content:
             application/json:
@@ -10478,7 +10480,7 @@ paths:
   /v2/transactions/{transaction_hash_param}/internal-transactions:
     get:
       callbacks: {}
-      description: Retrieves internal transactions for a specific transaction.
+      description: Retrieves internal transactions generated during the execution of a specific transaction. Useful for analyzing contract interactions and debugging failed transactions.
       operationId: BlockScoutWeb.API.V2.TransactionController.internal_transactions
       parameters:
         - description: Transaction hash in the path
@@ -10570,7 +10572,7 @@ paths:
                 type: object
                 x-struct:
                 x-validate:
-          description: Internal transactions for transaction
+          description: Internal transactions for the specified transaction, with pagination.
         '404':
           content:
             application/json:
@@ -10583,7 +10585,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/JsonErrorResponse'
           description: Unprocessable Entity
-      summary: List internal transactions for a transaction
+      summary: List internal transactions triggered during a specific transaction
       tags:
         - transactions
   /v2/addresses/{address_hash_param}/logs/csv:
@@ -10702,7 +10704,7 @@ paths:
   /v2/withdrawals:
     get:
       callbacks: {}
-      description: Retrieves withdrawals with optional filtering and pagination.
+      description: Retrieves a paginated list of withdrawals, typically for proof-of-stake networks supporting validator withdrawals.
       operationId: BlockScoutWeb.API.V2.WithdrawalController.withdrawals_list
       parameters:
         - description: API key for rate limiting or for sensitive endpoints
@@ -10769,20 +10771,20 @@ paths:
                 type: object
                 x-struct:
                 x-validate:
-          description: Withdrawals
+          description: List of withdrawals with pagination.
         '422':
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/JsonErrorResponse'
           description: Unprocessable Entity
-      summary: List withdrawals
+      summary: List validator withdrawal details on proof-of-stake networks
       tags:
         - withdrawals
   /v2/search:
     get:
       callbacks: {}
-      description: Performs a joint search for blocks, transactions, addresses and other resources.
+      description: Performs a unified search across multiple blockchain entity types including tokens, addresses, contracts, blocks, transactions and other resources.
       operationId: BlockScoutWeb.API.V2.SearchController.search (2)
       parameters:
         - description: Search query filter
@@ -10904,14 +10906,16 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/SearchResult'
-          description: Search results
+          description: |-
+            Successful search response containing matched items and pagination information.
+                        Results are ordered by relevance and limited to 50 items per page.
         '422':
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/JsonErrorResponse'
           description: Unprocessable Entity
-      summary: Search across blocks, transactions and addresses
+      summary: Search for tokens, addresses, contracts, blocks, or transactions by identifier
       tags:
         - search
   /v2/addresses/{address_hash_param}/transactions:
@@ -11111,7 +11115,7 @@ paths:
   /v2/transactions/{transaction_hash_param}/raw-trace:
     get:
       callbacks: {}
-      description: Retrieves the raw trace for a specific transaction, including internal operations and execution details.
+      description: Retrieves the raw execution trace for a transaction, showing the step-by-step execution path and all contract interactions.
       operationId: BlockScoutWeb.API.V2.TransactionController.raw_trace
       parameters:
         - description: Transaction hash in the path
@@ -11142,7 +11146,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/RawTrace'
-          description: Raw trace for transaction
+          description: Raw execution trace for the specified transaction.
         '404':
           content:
             application/json:
@@ -11155,7 +11159,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/JsonErrorResponse'
           description: Unprocessable Entity
-      summary: Get raw trace for a transaction
+      summary: Get step-by-step execution trace for a specific transaction
       tags:
         - transactions
   /v2/addresses/{address_hash_param}/transactions/csv:
