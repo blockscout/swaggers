@@ -3077,6 +3077,14 @@ definitions:
         type: string
       memory:
         type: string
+      disk_overage_cost_per_gb_hour:
+        type: string
+      free_disk_quota_gb:
+        type: string
+      user_ops_cost_per_hour:
+        type: string
+      stats_cost_per_hour:
+        type: string
   v1StatsPluginConfig:
     type: object
     properties:
