@@ -2116,6 +2116,8 @@ definitions:
         $ref: '#/definitions/v1StatsPluginConfig'
       user_ops_plugin_config:
         $ref: '#/definitions/v1UserOpsPluginConfig'
+      monitoring:
+        $ref: '#/definitions/v1MonitoringConfig'
     required:
       - rpc_url
       - server_size
@@ -2676,6 +2678,13 @@ definitions:
         type: boolean
       seo_enhanced_data_enabled:
         type: boolean
+  v1MonitoringConfig:
+    type: object
+    properties:
+      enabled:
+        type: boolean
+      client_label:
+        type: string
   v1MostExpensiveInstances:
     type: object
     properties:
