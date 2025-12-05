@@ -9157,6 +9157,71 @@ paths:
       summary: Get holder and transfer count statistics for a specific token
       tags:
         - tokens
+  /v2/config/indexer:
+    get:
+      callbacks: {}
+      description: Returns config of indexer.
+      operationId: BlockScoutWeb.API.V2.ConfigController.indexer
+      parameters:
+        - description: API key for rate limiting or for sensitive endpoints
+          in: query
+          name: apikey
+          required: false
+          schema:
+            type: string
+            x-struct:
+            x-validate:
+        - description: Secret key for getting access to restricted resources
+          in: query
+          name: key
+          required: false
+          schema:
+            type: string
+            x-struct:
+            x-validate:
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                properties:
+                  block_reward_fetcher_enabled:
+                    type: boolean
+                    x-struct:
+                    x-validate:
+                  indexer_enabled:
+                    type: boolean
+                    x-struct:
+                    x-validate:
+                  internal_transactions_fetcher_enabled:
+                    type: boolean
+                    x-struct:
+                    x-validate:
+                  pending_transactions_fetcher_enabled:
+                    type: boolean
+                    x-struct:
+                    x-validate:
+                  token_instance_retry_fetcher_enabled:
+                    type: boolean
+                    x-struct:
+                    x-validate:
+                  token_instance_sanitize_fetcher_enabled:
+                    type: boolean
+                    x-struct:
+                    x-validate:
+                type: object
+                x-struct:
+                x-validate:
+          description: Indexer configuration.
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JsonErrorResponse'
+          description: Unprocessable Entity
+      summary: Indexer configuration
+      tags:
+        - config
   /v2/config/smart-contracts/languages:
     get:
       callbacks: {}
