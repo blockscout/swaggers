@@ -2329,8 +2329,9 @@ components:
           x-validate:
         next_page_params:
           example:
-            block_index: 8
+            index: 8
             items_count: 50
+            transaction_index: 3
           nullable: true
           type: object
           x-struct:
@@ -5139,9 +5140,17 @@ paths:
             type: string
             x-struct:
             x-validate:
-        - description: Block index for paging
+        - description: Transaction index for paging
           in: query
-          name: block_index
+          name: transaction_index
+          required: false
+          schema:
+            type: integer
+            x-struct:
+            x-validate:
+        - description: Transaction index for paging
+          in: query
+          name: index
           required: false
           schema:
             type: integer
@@ -5174,8 +5183,9 @@ paths:
                     x-validate:
                   next_page_params:
                     example:
-                      block_index: 8
+                      index: 8
                       items_count: 50
+                      transaction_index: 3
                     nullable: true
                     type: object
                     x-struct:
