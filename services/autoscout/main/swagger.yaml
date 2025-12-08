@@ -1469,7 +1469,7 @@ definitions:
       base_tokens_count:
         type: string
         format: uint64
-      overage_price_per_token_usd:
+      price_per_token_usd:
         type: string
   AutoscoutUpdateConfigBody:
     type: object
@@ -1644,14 +1644,23 @@ definitions:
       base_tokens_count:
         type: string
         format: uint64
-      overage_price_per_token_usd:
+      price_per_token_usd:
         type: string
+      mode:
+        $ref: '#/definitions/v1ApaySubscriptionPlanMode'
     required:
       - id
       - name
       - base_price_usd
       - base_tokens_count
-      - overage_price_per_token_usd
+      - price_per_token_usd
+      - mode
+  v1ApaySubscriptionPlanMode:
+    type: string
+    enum:
+      - FLAT_FEE_AND_OVERAGES
+      - PAY_AS_YOU_GO
+    default: FLAT_FEE_AND_OVERAGES
   v1ApaySubscriptionStatus:
     type: string
     enum:
@@ -1811,13 +1820,14 @@ definitions:
       base_tokens_count:
         type: string
         format: uint64
-      overage_price_per_token_usd:
+      price_per_token_usd:
         type: string
+      mode:
+        $ref: '#/definitions/v1ApaySubscriptionPlanMode'
     required:
       - name
-      - base_price_usd
-      - base_tokens_count
-      - overage_price_per_token_usd
+      - price_per_token_usd
+      - mode
   v1CreateApaySubscriptionPlanResponse:
     type: object
     properties:
