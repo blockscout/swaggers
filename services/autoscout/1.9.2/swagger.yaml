@@ -1,0 +1,3472 @@
+swagger: "2.0"
+info:
+  title: Autoscout service
+  version: 0.1.1
+  contact:
+    name: Blockscout
+    url: https://blockscout.com
+    email: support@blockscout.com
+tags:
+  - name: Instances
+  - name: Deployments
+  - name: Users
+  - name: Autoscout
+  - name: Apay
+  - name: Health
+host: autoscout.services.blockscout.com
+schemes:
+  - https
+consumes:
+  - application/json
+produces:
+  - application/json
+paths:
+  /api/v1/admin/instances:
+    get:
+      summary: Search instances matching a set of filters
+      operationId: Autoscout_SearchInstances
+      responses:
+        "200":
+          description: A successful response.
+          schema:
+            $ref: '#/definitions/v1SearchInstancesResponse'
+        default:
+          description: An unexpected error response.
+          schema:
+            $ref: '#/definitions/rpcStatus'
+      parameters:
+        - name: instance_id
+          in: query
+          required: false
+          type: integer
+          format: int32
+        - name: instance_uuid
+          in: query
+          required: false
+          type: string
+        - name: instance_slug
+          in: query
+          required: false
+          type: string
+        - name: user_id
+          in: query
+          required: false
+          type: integer
+          format: int32
+        - name: user_email
+          in: query
+          required: false
+          type: string
+        - name: deployment_status
+          in: query
+          required: false
+          type: string
+          enum:
+            - NO_STATUS
+            - CREATED
+            - PENDING
+            - UNHEALTHY
+            - RUNNING
+            - STOPPING
+            - STOPPED
+            - FAILED
+            - QUEUED
+          default: NO_STATUS
+        - name: page
+          in: query
+          required: false
+          type: integer
+          format: int64
+        - name: per_page
+          in: query
+          required: false
+          type: integer
+          format: int64
+      tags:
+        - Instances
+      security:
+        - ApiKeyAuth: []
+  /api/v1/admin/users:
+    get:
+      summary: Search users matching a set of filters
+      operationId: Autoscout_SearchUsers
+      responses:
+        "200":
+          description: A successful response.
+          schema:
+            $ref: '#/definitions/v1SearchUsersResponse'
+        default:
+          description: An unexpected error response.
+          schema:
+            $ref: '#/definitions/rpcStatus'
+      parameters:
+        - name: user_id
+          in: query
+          required: false
+          type: integer
+          format: int32
+        - name: user_email
+          in: query
+          required: false
+          type: string
+        - name: user_roles
+          in: query
+          required: false
+          type: array
+          items:
+            type: string
+          collectionFormat: multi
+        - name: created_before
+          in: query
+          required: false
+          type: string
+        - name: created_after
+          in: query
+          required: false
+          type: string
+        - name: page
+          in: query
+          required: false
+          type: integer
+          format: int64
+        - name: per_page
+          in: query
+          required: false
+          type: integer
+          format: int64
+      tags:
+        - Users
+      security:
+        - ApiKeyAuth: []
+  /api/v1/apay/deposits:
+    get:
+      operationId: ListApayDeposits
+      responses:
+        "200":
+          description: A successful response.
+          schema:
+            $ref: '#/definitions/v1ListApayDepositsResponse'
+        default:
+          description: An unexpected error response.
+          schema:
+            $ref: '#/definitions/rpcStatus'
+      parameters:
+        - name: page
+          in: query
+          required: false
+          type: integer
+          format: int64
+        - name: per_page
+          in: query
+          required: false
+          type: integer
+          format: int64
+        - name: customer_id
+          in: query
+          required: false
+          type: string
+        - name: provider_type
+          in: query
+          required: false
+          type: string
+          enum:
+            - UNSPECIFIED_DEPOSIT_TYPE
+            - PROVIDER_TYPE_STRIPE
+            - PROVIDER_TYPE_DAIMO
+          default: UNSPECIFIED_DEPOSIT_TYPE
+      tags:
+        - Apay
+      security:
+        - ApiKeyAuth: []
+  /api/v1/apay/deposits/daimo:
+    post:
+      operationId: CreateApayDaimoDeposit
+      responses:
+        "200":
+          description: A successful response.
+          schema:
+            $ref: '#/definitions/v1CreateApayDepositResponse'
+        default:
+          description: An unexpected error response.
+          schema:
+            $ref: '#/definitions/rpcStatus'
+      parameters:
+        - name: body
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/v1CreateDaimoApayDepositRequest'
+      tags:
+        - Apay
+      security:
+        - ApiKeyAuth: []
+  /api/v1/apay/deposits/stripe:
+    post:
+      operationId: CreateApayStripeDeposit
+      responses:
+        "200":
+          description: A successful response.
+          schema:
+            $ref: '#/definitions/v1CreateApayDepositResponse'
+        default:
+          description: An unexpected error response.
+          schema:
+            $ref: '#/definitions/rpcStatus'
+      parameters:
+        - name: body
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/v1CreateStripeApayDepositRequest'
+      tags:
+        - Apay
+      security:
+        - ApiKeyAuth: []
+  /api/v1/apay/deposits/{deposit_id}:
+    get:
+      operationId: GetApayDeposit
+      responses:
+        "200":
+          description: A successful response.
+          schema:
+            $ref: '#/definitions/v1ApayDeposit'
+        default:
+          description: An unexpected error response.
+          schema:
+            $ref: '#/definitions/rpcStatus'
+      parameters:
+        - name: deposit_id
+          in: path
+          required: true
+          type: string
+      tags:
+        - Apay
+      security:
+        - ApiKeyAuth: []
+  /api/v1/apay/subscription_plans:
+    get:
+      operationId: GetApaySubscriptionPlans
+      responses:
+        "200":
+          description: A successful response.
+          schema:
+            $ref: '#/definitions/v1ListApaySubscriptionPlansResponse'
+        default:
+          description: An unexpected error response.
+          schema:
+            $ref: '#/definitions/rpcStatus'
+      parameters:
+        - name: page
+          in: query
+          required: false
+          type: integer
+          format: int64
+        - name: per_page
+          in: query
+          required: false
+          type: integer
+          format: int64
+      tags:
+        - Apay
+      security:
+        - ApiKeyAuth: []
+    post:
+      operationId: CreateApaySubscriptionPlan
+      responses:
+        "200":
+          description: A successful response.
+          schema:
+            $ref: '#/definitions/v1CreateApaySubscriptionPlanResponse'
+        default:
+          description: An unexpected error response.
+          schema:
+            $ref: '#/definitions/rpcStatus'
+      parameters:
+        - name: body
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/v1CreateApaySubscriptionPlanRequest'
+      tags:
+        - Apay
+      security:
+        - ApiKeyAuth: []
+  /api/v1/apay/subscription_plans/{subscription_plan_id}:
+    get:
+      operationId: GetApaySubscriptionPlan
+      responses:
+        "200":
+          description: A successful response.
+          schema:
+            $ref: '#/definitions/v1GetApaySubscriptionPlanResponse'
+        default:
+          description: An unexpected error response.
+          schema:
+            $ref: '#/definitions/rpcStatus'
+      parameters:
+        - name: subscription_plan_id
+          in: path
+          required: true
+          type: string
+      tags:
+        - Apay
+      security:
+        - ApiKeyAuth: []
+    delete:
+      operationId: DeleteApaySubscriptionPlan
+      responses:
+        "200":
+          description: A successful response.
+          schema:
+            $ref: '#/definitions/v1DeleteApaySubscriptionPlanResponse'
+        default:
+          description: An unexpected error response.
+          schema:
+            $ref: '#/definitions/rpcStatus'
+      parameters:
+        - name: subscription_plan_id
+          in: path
+          required: true
+          type: integer
+          format: int32
+      tags:
+        - Apay
+      security:
+        - ApiKeyAuth: []
+    put:
+      operationId: UpdateApaySubscriptionPlan
+      responses:
+        "200":
+          description: A successful response.
+          schema:
+            $ref: '#/definitions/v1UpdateApaySubscriptionPlanResponse'
+        default:
+          description: An unexpected error response.
+          schema:
+            $ref: '#/definitions/rpcStatus'
+      parameters:
+        - name: subscription_plan_id
+          in: path
+          required: true
+          type: string
+        - name: body
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/ApayUpdateApaySubscriptionPlanBody'
+      tags:
+        - Apay
+      security:
+        - ApiKeyAuth: []
+  /api/v1/apay/subscriptions:
+    get:
+      operationId: ListApaySubscriptions
+      responses:
+        "200":
+          description: A successful response.
+          schema:
+            $ref: '#/definitions/v1ListApaySubscriptionsResponse'
+        default:
+          description: An unexpected error response.
+          schema:
+            $ref: '#/definitions/rpcStatus'
+      parameters:
+        - name: customer_id
+          in: query
+          required: false
+          type: string
+        - name: subscription_plan_id
+          in: query
+          required: false
+          type: string
+        - name: page
+          in: query
+          required: false
+          type: integer
+          format: int64
+        - name: per_page
+          in: query
+          required: false
+          type: integer
+          format: int64
+      tags:
+        - Apay
+      security:
+        - ApiKeyAuth: []
+    post:
+      operationId: DeleteApaySubscription
+      responses:
+        "200":
+          description: A successful response.
+          schema:
+            $ref: '#/definitions/v1CreateApaySubscriptionResponse'
+        default:
+          description: An unexpected error response.
+          schema:
+            $ref: '#/definitions/rpcStatus'
+      parameters:
+        - name: body
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/v1CreateApaySubscriptionRequest'
+      tags:
+        - Apay
+      security:
+        - ApiKeyAuth: []
+  /api/v1/apay/subscriptions/cancel/{subscription_id}:
+    post:
+      operationId: CancelApaySubscription
+      responses:
+        "200":
+          description: A successful response.
+          schema:
+            $ref: '#/definitions/v1CancelApaySubscriptionResponse'
+        default:
+          description: An unexpected error response.
+          schema:
+            $ref: '#/definitions/rpcStatus'
+      parameters:
+        - name: subscription_id
+          in: path
+          required: true
+          type: string
+      tags:
+        - Apay
+      security:
+        - ApiKeyAuth: []
+  /api/v1/apay/subscriptions/report:
+    post:
+      operationId: ReportApaySubscriptionUsage
+      responses:
+        "200":
+          description: A successful response.
+          schema:
+            $ref: '#/definitions/v1ReportApaySubscriptionsUsageResponse'
+        default:
+          description: An unexpected error response.
+          schema:
+            $ref: '#/definitions/rpcStatus'
+      parameters:
+        - name: body
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/v1ReportApaySubscriptionsUsageRequest'
+      tags:
+        - Apay
+      security:
+        - ApiKeyAuth: []
+  /api/v1/apay/subscriptions/{subscription_id}:
+    get:
+      operationId: GetApaySubscription
+      responses:
+        "200":
+          description: A successful response.
+          schema:
+            $ref: '#/definitions/v1GetApaySubscriptionResponse'
+        default:
+          description: An unexpected error response.
+          schema:
+            $ref: '#/definitions/rpcStatus'
+      parameters:
+        - name: subscription_id
+          in: path
+          required: true
+          type: string
+      tags:
+        - Apay
+      security:
+        - ApiKeyAuth: []
+  /api/v1/apay/webhook-example:
+    post:
+      operationId: Apay_WebHookExample
+      responses:
+        "200":
+          description: A successful response.
+          schema:
+            $ref: '#/definitions/v1WebHookResponse'
+        default:
+          description: An unexpected error response.
+          schema:
+            $ref: '#/definitions/rpcStatus'
+      parameters:
+        - name: body
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/v1WebhookRequest'
+      tags:
+        - Apay
+      security:
+        - ApaySignature: []
+        - ApayVersion: []
+        - ApayAlgorithm: []
+  /api/v1/coinbase/deposits:
+    get:
+      operationId: Autoscout_ListCoinbaseDeposits
+      responses:
+        "200":
+          description: A successful response.
+          schema:
+            $ref: '#/definitions/v1ListCoinbaseDepositsResponse'
+        default:
+          description: An unexpected error response.
+          schema:
+            $ref: '#/definitions/rpcStatus'
+      tags:
+        - Deposits
+      security:
+        - ApiKeyAuth: []
+    post:
+      operationId: Autoscout_CreateCoinbaseDeposit
+      responses:
+        "200":
+          description: A successful response.
+          schema:
+            $ref: '#/definitions/v1CreateCoinbaseDepositResponse'
+        default:
+          description: An unexpected error response.
+          schema:
+            $ref: '#/definitions/rpcStatus'
+      parameters:
+        - name: body
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/v1CreateCoinbaseDepositRequest'
+      tags:
+        - Deposits
+      security:
+        - ApiKeyAuth: []
+  /api/v1/coinbase/deposits/{deposit_id}:
+    get:
+      operationId: Autoscout_GetCoinbaseDeposit
+      responses:
+        "200":
+          description: A successful response.
+          schema:
+            $ref: '#/definitions/v1Deposit'
+        default:
+          description: An unexpected error response.
+          schema:
+            $ref: '#/definitions/rpcStatus'
+      parameters:
+        - name: deposit_id
+          in: path
+          required: true
+          type: string
+      tags:
+        - Deposits
+      security:
+        - ApiKeyAuth: []
+    delete:
+      operationId: Autoscout_DeleteCoinbaseDeposit
+      responses:
+        "200":
+          description: A successful response.
+          schema:
+            $ref: '#/definitions/v1DeleteCoinbaseDepositResponse'
+        default:
+          description: An unexpected error response.
+          schema:
+            $ref: '#/definitions/rpcStatus'
+      parameters:
+        - name: deposit_id
+          in: path
+          required: true
+          type: string
+      tags:
+        - Deposits
+      security:
+        - ApiKeyAuth: []
+  /api/v1/deployments/{deployment_id}:
+    get:
+      summary: Get detailed information about specific deployment
+      operationId: Autoscout_GetDeployment
+      responses:
+        "200":
+          description: A successful response.
+          schema:
+            $ref: '#/definitions/v1Deployment'
+        default:
+          description: An unexpected error response.
+          schema:
+            $ref: '#/definitions/rpcStatus'
+      parameters:
+        - name: deployment_id
+          in: path
+          required: true
+          type: string
+      tags:
+        - Deployments
+      security:
+        - ApiKeyAuth: []
+  /api/v1/deployments/{deployment_id}/logs:
+    get:
+      operationId: Autoscout_ListDeploymentLogs
+      responses:
+        "200":
+          description: A successful response.
+          schema:
+            $ref: '#/definitions/v1ListDeploymentLogsResponse'
+        default:
+          description: An unexpected error response.
+          schema:
+            $ref: '#/definitions/rpcStatus'
+      parameters:
+        - name: deployment_id
+          in: path
+          required: true
+          type: string
+        - name: page
+          in: query
+          required: false
+          type: integer
+          format: int64
+        - name: per_page
+          in: query
+          required: false
+          type: integer
+          format: int64
+      tags:
+        - Deployments
+      security:
+        - ApiKeyAuth: []
+  /api/v1/deployments/{deployment_id}/logs/{id}:
+    get:
+      operationId: Autoscout_GetDeploymentLog
+      responses:
+        "200":
+          description: A successful response.
+          schema:
+            $ref: '#/definitions/v1DeploymentLog'
+        default:
+          description: An unexpected error response.
+          schema:
+            $ref: '#/definitions/rpcStatus'
+      parameters:
+        - name: deployment_id
+          in: path
+          required: true
+          type: string
+        - name: id
+          in: path
+          required: true
+          type: integer
+          format: int32
+      tags:
+        - Deployments
+      security:
+        - ApiKeyAuth: []
+  /api/v1/deployments/{deployment_id}/plugin-events:
+    get:
+      summary: Get detailed history of (all) plugin events
+      operationId: Autoscout_ListPluginEvents
+      responses:
+        "200":
+          description: A successful response.
+          schema:
+            $ref: '#/definitions/v1ListPluginEventsResponse'
+        default:
+          description: An unexpected error response.
+          schema:
+            $ref: '#/definitions/rpcStatus'
+      parameters:
+        - name: deployment_id
+          in: path
+          required: true
+          type: string
+        - name: variants
+          description: |-
+            comma-separated list of plugin variants to return;
+            see `PluginVariant` for available values
+          in: query
+          required: false
+          type: array
+          items:
+            type: string
+          collectionFormat: multi
+        - name: event_types
+          description: |-
+            comma-separated list of plugin event types to return;
+            see `PluginEventType` for available values
+          in: query
+          required: false
+          type: array
+          items:
+            type: string
+          collectionFormat: multi
+        - name: page
+          in: query
+          required: false
+          type: integer
+          format: int64
+        - name: per_page
+          in: query
+          required: false
+          type: integer
+          format: int64
+      tags:
+        - Plugins
+      security:
+        - ApiKeyAuth: []
+  /api/v1/deployments/{deployment_id}/plugin-logs:
+    get:
+      operationId: Autoscout_ListPluginLogs
+      responses:
+        "200":
+          description: A successful response.
+          schema:
+            $ref: '#/definitions/v1ListPluginLogsResponse'
+        default:
+          description: An unexpected error response.
+          schema:
+            $ref: '#/definitions/rpcStatus'
+      parameters:
+        - name: deployment_id
+          in: path
+          required: true
+          type: string
+        - name: plugin_variant
+          in: query
+          required: true
+          type: string
+        - name: page
+          in: query
+          required: false
+          type: integer
+          format: int64
+        - name: per_page
+          in: query
+          required: false
+          type: integer
+          format: int64
+      tags:
+        - Plugins
+      security:
+        - ApiKeyAuth: []
+  /api/v1/deployments/{deployment_id}/storage-usage:
+    get:
+      summary: Get hourly storage usage information on the deployment
+      operationId: Autoscout_GetDeploymentStorageUsage
+      responses:
+        "200":
+          description: A successful response.
+          schema:
+            $ref: '#/definitions/v1GetDeploymentStorageUsageResponse'
+        default:
+          description: An unexpected error response.
+          schema:
+            $ref: '#/definitions/rpcStatus'
+      parameters:
+        - name: deployment_id
+          in: path
+          required: true
+          type: string
+        - name: from
+          in: query
+          required: false
+          type: string
+        - name: to
+          in: query
+          required: false
+          type: string
+      tags:
+        - Deployments
+      security:
+        - ApiKeyAuth: []
+  /api/v1/deployments:sync-server-spec:
+    post:
+      operationId: Autoscout_SyncDeploymentsServerSpec
+      responses:
+        "200":
+          description: A successful response.
+          schema:
+            $ref: '#/definitions/v1SyncDeploymentsServerSpecResponse'
+        default:
+          description: An unexpected error response.
+          schema:
+            $ref: '#/definitions/rpcStatus'
+      parameters:
+        - name: body
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/v1SyncDeploymentsServerSpecRequest'
+      tags:
+        - Deployments
+      security:
+        - ApiKeyAuth: []
+  /api/v1/deposits:
+    get:
+      operationId: Autoscout_ListDeposits
+      responses:
+        "200":
+          description: A successful response.
+          schema:
+            $ref: '#/definitions/v1ListDepositsResponse'
+        default:
+          description: An unexpected error response.
+          schema:
+            $ref: '#/definitions/rpcStatus'
+      parameters:
+        - name: page
+          in: query
+          required: false
+          type: integer
+          format: int64
+        - name: per_page
+          in: query
+          required: false
+          type: integer
+          format: int64
+        - name: type
+          in: query
+          required: false
+          type: string
+          enum:
+            - UNSPECIFIED_DEPOSIT_TYPE
+            - DEPOSIT_TYPE_STRIPE
+            - DEPOSIT_TYPE_COINBASE
+            - DEPOSIT_TYPE_DAIMO
+            - DEPOSIT_TYPE_PROMOTION_FLAT_BONUS
+          default: UNSPECIFIED_DEPOSIT_TYPE
+      tags:
+        - Deposits
+      security:
+        - ApiKeyAuth: []
+  /api/v1/deposits/coinbase:
+    post:
+      operationId: Autoscout_CreateCoinbaseDeposit2
+      responses:
+        "200":
+          description: A successful response.
+          schema:
+            $ref: '#/definitions/v1CreateCoinbaseDepositResponse'
+        default:
+          description: An unexpected error response.
+          schema:
+            $ref: '#/definitions/rpcStatus'
+      parameters:
+        - name: body
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/v1CreateCoinbaseDepositRequest'
+      tags:
+        - Deposits
+      security:
+        - ApiKeyAuth: []
+  /api/v1/deposits/coinbase/{deposit_id}:
+    delete:
+      operationId: Autoscout_DeleteCoinbaseDeposit2
+      responses:
+        "200":
+          description: A successful response.
+          schema:
+            $ref: '#/definitions/v1DeleteCoinbaseDepositResponse'
+        default:
+          description: An unexpected error response.
+          schema:
+            $ref: '#/definitions/rpcStatus'
+      parameters:
+        - name: deposit_id
+          in: path
+          required: true
+          type: string
+      tags:
+        - Deposits
+      security:
+        - ApiKeyAuth: []
+  /api/v1/deposits/daimo:
+    post:
+      operationId: Autoscout_CreateDaimoDeposit
+      responses:
+        "200":
+          description: A successful response.
+          schema:
+            $ref: '#/definitions/v1CreateDaimoDepositResponse'
+        default:
+          description: An unexpected error response.
+          schema:
+            $ref: '#/definitions/rpcStatus'
+      parameters:
+        - name: body
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/v1CreateDaimoDepositRequest'
+      tags:
+        - Deposits
+      security:
+        - ApiKeyAuth: []
+  /api/v1/deposits/stripe:
+    post:
+      operationId: Autoscout_CreateStripeDeposit
+      responses:
+        "200":
+          description: A successful response.
+          schema:
+            $ref: '#/definitions/v1CreateStripeDepositResponse'
+        default:
+          description: An unexpected error response.
+          schema:
+            $ref: '#/definitions/rpcStatus'
+      parameters:
+        - name: body
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/v1CreateStripeDepositRequest'
+      tags:
+        - Deposits
+      security:
+        - ApiKeyAuth: []
+  /api/v1/deposits:preview:
+    post:
+      operationId: Autoscout_PreviewDeposit
+      responses:
+        "200":
+          description: A successful response.
+          schema:
+            $ref: '#/definitions/v1PreviewDepositResponse'
+        default:
+          description: An unexpected error response.
+          schema:
+            $ref: '#/definitions/rpcStatus'
+      parameters:
+        - name: body
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/v1PreviewDepositRequest'
+      tags:
+        - Deposits
+      security:
+        - ApiKeyAuth: []
+  /api/v1/instances:
+    get:
+      summary: Get list of all owned instances
+      operationId: Autoscout_ListInstances
+      responses:
+        "200":
+          description: A successful response.
+          schema:
+            $ref: '#/definitions/v1ListInstancesResponse'
+        default:
+          description: An unexpected error response.
+          schema:
+            $ref: '#/definitions/rpcStatus'
+      parameters:
+        - name: page
+          in: query
+          required: false
+          type: integer
+          format: int32
+        - name: per_page
+          in: query
+          required: false
+          type: integer
+          format: int32
+      tags:
+        - Instances
+      security:
+        - ApiKeyAuth: []
+    post:
+      summary: Creating blockscout instance with config
+      operationId: Autoscout_CreateInstance
+      responses:
+        "200":
+          description: A successful response.
+          schema:
+            $ref: '#/definitions/v1CreateInstanceResponse'
+        default:
+          description: An unexpected error response.
+          schema:
+            $ref: '#/definitions/rpcStatus'
+      parameters:
+        - name: body
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/v1CreateInstanceRequest'
+      tags:
+        - Instances
+      security:
+        - ApiKeyAuth: []
+  /api/v1/instances/{instance_id}:
+    get:
+      summary: Get detailed information of the instance
+      operationId: Autoscout_GetInstance
+      responses:
+        "200":
+          description: A successful response.
+          schema:
+            $ref: '#/definitions/v1Instance'
+        default:
+          description: An unexpected error response.
+          schema:
+            $ref: '#/definitions/rpcStatus'
+      parameters:
+        - name: instance_id
+          in: path
+          required: true
+          type: string
+      tags:
+        - Instances
+      security:
+        - ApiKeyAuth: []
+    delete:
+      summary: Delete instance
+      operationId: Autoscout_DeleteInstance
+      responses:
+        "200":
+          description: A successful response.
+          schema:
+            $ref: '#/definitions/v1DeleteInstanceResponse'
+        default:
+          description: An unexpected error response.
+          schema:
+            $ref: '#/definitions/rpcStatus'
+      parameters:
+        - name: instance_id
+          in: path
+          required: true
+          type: string
+      tags:
+        - Instances
+      security:
+        - ApiKeyAuth: []
+  /api/v1/instances/{instance_id}/config:
+    put:
+      summary: Update configuration of blockscout instance
+      operationId: Autoscout_UpdateConfig
+      responses:
+        "200":
+          description: A successful response.
+          schema:
+            $ref: '#/definitions/v1UpdateConfigResponse'
+        default:
+          description: An unexpected error response.
+          schema:
+            $ref: '#/definitions/rpcStatus'
+      parameters:
+        - name: instance_id
+          in: path
+          required: true
+          type: string
+        - name: body
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/AutoscoutUpdateConfigBody'
+      tags:
+        - Instances
+      security:
+        - ApiKeyAuth: []
+    patch:
+      summary: Update configuration of blockscout instance (partially)
+      operationId: Autoscout_UpdateConfigPartial
+      responses:
+        "200":
+          description: A successful response.
+          schema:
+            $ref: '#/definitions/v1UpdateConfigResponse'
+        default:
+          description: An unexpected error response.
+          schema:
+            $ref: '#/definitions/rpcStatus'
+      parameters:
+        - name: instance_id
+          in: path
+          required: true
+          type: string
+        - name: body
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/AutoscoutUpdateConfigPartialBody'
+      tags:
+        - Instances
+      security:
+        - ApiKeyAuth: []
+  /api/v1/instances/{instance_id}/deployments:
+    get:
+      summary: Get list of deployments of the instance
+      operationId: Autoscout_ListDeployments
+      responses:
+        "200":
+          description: A successful response.
+          schema:
+            $ref: '#/definitions/v1ListDeploymentsResponse'
+        default:
+          description: An unexpected error response.
+          schema:
+            $ref: '#/definitions/rpcStatus'
+      parameters:
+        - name: instance_id
+          in: path
+          required: true
+          type: string
+      tags:
+        - Deployments
+      security:
+        - ApiKeyAuth: []
+  /api/v1/instances/{instance_id}/deployments/current:
+    get:
+      summary: Get detailed information about current deployment of the instance
+      operationId: Autoscout_GetCurrentDeployment
+      responses:
+        "200":
+          description: A successful response.
+          schema:
+            $ref: '#/definitions/v1Deployment'
+        default:
+          description: An unexpected error response.
+          schema:
+            $ref: '#/definitions/rpcStatus'
+      parameters:
+        - name: instance_id
+          in: path
+          required: true
+          type: string
+      tags:
+        - Deployments
+      security:
+        - ApiKeyAuth: []
+  /api/v1/instances/{instance_id}/status:update:
+    post:
+      summary: Start or finish the instance
+      operationId: Autoscout_UpdateInstanceStatus
+      responses:
+        "200":
+          description: A successful response.
+          schema:
+            $ref: '#/definitions/v1UpdateInstanceStatusResponse'
+        default:
+          description: An unexpected error response.
+          schema:
+            $ref: '#/definitions/rpcStatus'
+      parameters:
+        - name: instance_id
+          in: path
+          required: true
+          type: string
+        - name: body
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/AutoscoutUpdateInstanceStatusBody'
+      tags:
+        - Instances
+      security:
+        - ApiKeyAuth: []
+  /api/v1/instances:regenerate-config-batch:
+    post:
+      operationId: Autoscout_RegenerateConfigBatch
+      responses:
+        "200":
+          description: A successful response.
+          schema:
+            $ref: '#/definitions/v1RegenerateConfigBatchResponse'
+        default:
+          description: An unexpected error response.
+          schema:
+            $ref: '#/definitions/rpcStatus'
+      parameters:
+        - name: body
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/v1RegenerateConfigBatchRequest'
+      tags:
+        - Instances
+      security:
+        - ApiKeyAuth: []
+  /api/v1/instances:update-status-batch:
+    post:
+      operationId: Autoscout_UpdateInstanceStatusBatch
+      responses:
+        "200":
+          description: A successful response.
+          schema:
+            $ref: '#/definitions/v1UpdateInstanceStatusBatchResponse'
+        default:
+          description: An unexpected error response.
+          schema:
+            $ref: '#/definitions/rpcStatus'
+      parameters:
+        - name: body
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/v1UpdateInstanceStatusBatchRequest'
+      tags:
+        - Instances
+      security:
+        - ApiKeyAuth: []
+  /api/v1/schemas/config:
+    get:
+      operationId: Autoscout_GetConfigSchema
+      responses:
+        "200":
+          description: A successful response.
+          schema:
+            $ref: '#/definitions/v1ConfigSchema'
+        default:
+          description: An unexpected error response.
+          schema:
+            $ref: '#/definitions/rpcStatus'
+      tags:
+        - Instances
+      security:
+        - ApiKeyAuth: []
+  /api/v1/users/acquisition_source:
+    post:
+      operationId: Autoscout_CreateUserAcquisitionSource
+      responses:
+        "200":
+          description: A successful response.
+          schema:
+            $ref: '#/definitions/v1CreateUserAcquisitionSourceResponse'
+        default:
+          description: An unexpected error response.
+          schema:
+            $ref: '#/definitions/rpcStatus'
+      parameters:
+        - name: body
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/v1CreateUserAcquisitionSourceRequest'
+      tags:
+        - Users
+      security:
+        - ApiKeyAuth: []
+  /api/v1/users/auth-tokens:
+    get:
+      summary: Get list of all auth tokens for current account
+      operationId: Autoscout_ListAuthTokens
+      responses:
+        "200":
+          description: A successful response.
+          schema:
+            $ref: '#/definitions/v1ListAuthTokensResponse'
+        default:
+          description: An unexpected error response.
+          schema:
+            $ref: '#/definitions/rpcStatus'
+      parameters:
+        - name: page
+          in: query
+          required: false
+          type: integer
+          format: int64
+        - name: per_page
+          in: query
+          required: false
+          type: integer
+          format: int64
+      tags:
+        - Users
+      security:
+        - ApiKeyAuth: []
+    post:
+      summary: Generate auth api token for current account
+      operationId: Autoscout_CreateAuthToken
+      responses:
+        "200":
+          description: A successful response.
+          schema:
+            $ref: '#/definitions/v1AuthToken'
+        default:
+          description: An unexpected error response.
+          schema:
+            $ref: '#/definitions/rpcStatus'
+      parameters:
+        - name: body
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/v1CreateAuthTokenRequest'
+      tags:
+        - Users
+      security:
+        - ApiKeyAuth: []
+  /api/v1/users/auth-tokens/{token_id}:
+    delete:
+      summary: Delete an auth token from current account
+      operationId: Autoscout_DeleteAuthToken
+      responses:
+        "200":
+          description: A successful response.
+          schema:
+            $ref: '#/definitions/v1DeleteAuthTokenResponse'
+        default:
+          description: An unexpected error response.
+          schema:
+            $ref: '#/definitions/rpcStatus'
+      parameters:
+        - name: token_id
+          in: path
+          required: true
+          type: string
+      tags:
+        - Users
+      security:
+        - ApiKeyAuth: []
+  /api/v1/users/profile:
+    get:
+      summary: Get information about current account
+      operationId: Autoscout_GetProfile
+      responses:
+        "200":
+          description: A successful response.
+          schema:
+            $ref: '#/definitions/v1UserProfile'
+        default:
+          description: An unexpected error response.
+          schema:
+            $ref: '#/definitions/rpcStatus'
+      tags:
+        - Users
+      security:
+        - ApiKeyAuth: []
+  /api/v1/users/profile:register:
+    post:
+      summary: Register new profile
+      operationId: Autoscout_RegisterProfile
+      responses:
+        "200":
+          description: A successful response.
+          schema:
+            $ref: '#/definitions/v1RegisterProfileResponse'
+        default:
+          description: An unexpected error response.
+          schema:
+            $ref: '#/definitions/rpcStatus'
+      parameters:
+        - name: body
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/v1RegisterProfileRequest'
+      tags:
+        - Users
+  /api/v1/users/promocodes:activate:
+    post:
+      operationId: Autoscout_ActivateRegularPromocode
+      responses:
+        "200":
+          description: A successful response.
+          schema:
+            $ref: '#/definitions/v1RegularPromocodeResponse'
+        default:
+          description: An unexpected error response.
+          schema:
+            $ref: '#/definitions/rpcStatus'
+      parameters:
+        - name: body
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/v1RegularPromocodeRequest'
+      tags:
+        - Users
+      security:
+        - ApiKeyAuth: []
+  /api/v1/users/promocodes:preview:
+    post:
+      operationId: Autoscout_PreviewRegularPromocode
+      responses:
+        "200":
+          description: A successful response.
+          schema:
+            $ref: '#/definitions/v1RegularPromocodeResponse'
+        default:
+          description: An unexpected error response.
+          schema:
+            $ref: '#/definitions/rpcStatus'
+      parameters:
+        - name: body
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/v1RegularPromocodeRequest'
+      tags:
+        - Users
+      security:
+        - ApiKeyAuth: []
+  /api/v1/users/terms/latest:
+    get:
+      operationId: Autoscout_GetLatestTermsOfService
+      responses:
+        "200":
+          description: A successful response.
+          schema:
+            $ref: '#/definitions/v1TermsOfService'
+        default:
+          description: An unexpected error response.
+          schema:
+            $ref: '#/definitions/rpcStatus'
+      tags:
+        - Users
+      security:
+        - ApiKeyAuth: []
+  /api/v1/users/terms:accept:
+    post:
+      operationId: Autoscout_AcceptTermsOfService
+      responses:
+        "200":
+          description: A successful response.
+          schema:
+            $ref: '#/definitions/v1TermsOfService'
+        default:
+          description: An unexpected error response.
+          schema:
+            $ref: '#/definitions/rpcStatus'
+      parameters:
+        - name: body
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/v1AcceptTermsOfServiceRequest'
+      tags:
+        - Users
+      security:
+        - ApiKeyAuth: []
+  /health:
+    get:
+      summary: |-
+        If the requested service is unknown, the call will fail with status
+        NOT_FOUND.
+      operationId: Health_Check
+      responses:
+        "200":
+          description: A successful response.
+          schema:
+            $ref: '#/definitions/v1HealthCheckResponse'
+        default:
+          description: An unexpected error response.
+          schema:
+            $ref: '#/definitions/rpcStatus'
+      parameters:
+        - name: service
+          in: query
+          required: false
+          type: string
+      tags:
+        - Health
+definitions:
+  ApayUpdateApaySubscriptionPlanBody:
+    type: object
+    properties:
+      name:
+        type: string
+      base_price_usd:
+        type: string
+      base_tokens_count:
+        type: string
+        format: uint64
+      price_per_token_usd:
+        type: string
+  AutoscoutUpdateConfigBody:
+    type: object
+    properties:
+      config:
+        $ref: '#/definitions/v1DeployConfig'
+      skip_validation_for_fields:
+        type: array
+        items:
+          type: string
+    required:
+      - config
+  AutoscoutUpdateConfigPartialBody:
+    type: object
+    properties:
+      config:
+        type: object
+        title: See `DeployConfig` for available fields
+      skip_validation_for_fields:
+        type: array
+        items:
+          type: string
+    required:
+      - config
+  AutoscoutUpdateInstanceStatusBody:
+    type: object
+    properties:
+      action:
+        $ref: '#/definitions/v1UpdateInstanceAction'
+    required:
+      - action
+  HealthCheckResponseServingStatus:
+    type: string
+    enum:
+      - UNKNOWN
+      - SERVING
+      - NOT_SERVING
+      - SERVICE_UNKNOWN
+    default: UNKNOWN
+    description: ' - SERVICE_UNKNOWN: Used only by the Watch method.'
+  protobufAny:
+    type: object
+    properties:
+      '@type':
+        type: string
+    additionalProperties: {}
+  protobufNullValue:
+    type: string
+    enum:
+      - NULL_VALUE
+    default: NULL_VALUE
+    description: |-
+      `NullValue` is a singleton enumeration to represent the null value for the
+      `Value` type union.
+
+      The JSON representation for `NullValue` is JSON `null`.
+
+       - NULL_VALUE: Null value.
+  rpcStatus:
+    type: object
+    properties:
+      code:
+        type: integer
+        format: int32
+      message:
+        type: string
+      details:
+        type: array
+        items:
+          type: object
+          $ref: '#/definitions/protobufAny'
+  v1AcceptTermsOfServiceRequest:
+    type: object
+    properties:
+      version:
+        type: string
+    required:
+      - version
+  v1AdBannerProvider:
+    type: string
+    enum:
+      - UNSPECIFIED_AD_BANNER_PROVIDER
+      - SLISE
+      - BANNER_NONE
+    default: UNSPECIFIED_AD_BANNER_PROVIDER
+  v1AdTextProvider:
+    type: string
+    enum:
+      - UNSPECIFIED_AD_TEXT_PROVIDER
+      - COINZILLA
+      - TEXT_NONE
+    default: UNSPECIFIED_AD_TEXT_PROVIDER
+  v1Ads:
+    type: object
+    properties:
+      text_provider:
+        $ref: '#/definitions/v1AdTextProvider'
+      banner_provider:
+        $ref: '#/definitions/v1AdBannerProvider'
+  v1ApayDeposit:
+    type: object
+    properties:
+      id:
+        type: string
+      amount:
+        type: string
+      url:
+        type: string
+      receipt_url:
+        type: string
+      customer_id:
+        type: string
+      provider_type:
+        $ref: '#/definitions/v1ApayProviderType'
+      status:
+        $ref: '#/definitions/v1DepositStatus'
+      metadata:
+        type: object
+      created_at:
+        type: string
+    required:
+      - id
+      - amount
+      - provider_type
+      - status
+      - created_at
+  v1ApayProviderType:
+    type: string
+    enum:
+      - UNSPECIFIED_DEPOSIT_TYPE
+      - PROVIDER_TYPE_STRIPE
+      - PROVIDER_TYPE_DAIMO
+    default: UNSPECIFIED_DEPOSIT_TYPE
+  v1ApaySubscription:
+    type: object
+    properties:
+      id:
+        type: string
+      user_id:
+        type: integer
+        format: int32
+      customer_id:
+        type: string
+      plan:
+        $ref: '#/definitions/v1ApaySubscriptionPlan'
+      status:
+        $ref: '#/definitions/v1ApaySubscriptionStatus'
+      stripe_payment_url:
+        type: string
+      deposits:
+        type: array
+        items:
+          type: object
+          $ref: '#/definitions/v1ApayDeposit'
+    required:
+      - id
+      - user_id
+      - customer_id
+      - plan
+      - status
+      - stripe_payment_url
+      - deposits
+  v1ApaySubscriptionPlan:
+    type: object
+    properties:
+      id:
+        type: string
+      name:
+        type: string
+      base_price_usd:
+        type: string
+      base_tokens_count:
+        type: string
+        format: uint64
+      price_per_token_usd:
+        type: string
+      mode:
+        $ref: '#/definitions/v1ApaySubscriptionPlanMode'
+    required:
+      - id
+      - name
+      - base_price_usd
+      - base_tokens_count
+      - price_per_token_usd
+      - mode
+  v1ApaySubscriptionPlanMode:
+    type: string
+    enum:
+      - FLAT_FEE_AND_OVERAGES
+      - PAY_AS_YOU_GO
+    default: FLAT_FEE_AND_OVERAGES
+  v1ApaySubscriptionStatus:
+    type: string
+    enum:
+      - Unconfirmed
+      - Active
+      - Paused
+      - Canceled
+    default: Unconfirmed
+  v1ArbitrumConfig:
+    type: object
+    properties:
+      arbsys_contract:
+        type: string
+      node_interface_contract:
+        type: string
+      l1_rpc_url:
+        type: string
+      l1_rpc_chunk_size:
+        type: string
+        format: int64
+      l1_rpc_historical_blocks_range:
+        type: string
+        format: int64
+      l1_rollup_contract:
+        type: string
+      l1_rollup_init_block:
+        type: string
+        format: int64
+      l1_common_start_block:
+        type: string
+        format: int64
+      l1_finalization_threshold:
+        type: string
+        format: int64
+      rollup_chunk_size:
+        type: string
+        format: int64
+      bridge_messages_tracking_enabled:
+        type: boolean
+      missed_messages_recheck_interval:
+        type: string
+        format: int64
+      missed_messages_blocks_depth:
+        type: string
+        format: int64
+      tracking_messages_on_l1_recheck_interval:
+        type: string
+        format: int64
+      batches_tracking_enabled:
+        type: boolean
+      batches_tracking_recheck_interval:
+        type: string
+        format: int64
+      batches_tracking_l1_finalization_check_enabled:
+        type: boolean
+      batches_tracking_messages_to_blocks_shift:
+        type: string
+        format: int64
+      missing_batches_range:
+        type: string
+        format: int64
+      confirmations_tracking_finalized:
+        type: boolean
+      new_batches_limit:
+        type: string
+        format: int64
+      l1_blockscout_url:
+        type: string
+        title: NEXT_PUBLIC_ROLLUP_L1_BASE_URL
+    title: https://github.com/blockscout/docs/blob/594e4c2ef83556b3cb41e9fd43bca776afb63c05/for-developers/information-and-settings/env-variables/backend-envs-chain-specific.md?plain=1#L136
+    required:
+      - l1_blockscout_url
+  v1AuthToken:
+    type: object
+    properties:
+      name:
+        type: string
+      token_value:
+        type: string
+      created_at:
+        type: string
+      id:
+        type: string
+      expires_at:
+        type: string
+    required:
+      - name
+      - token_value
+      - created_at
+      - id
+      - expires_at
+  v1BatchUpdateInstanceStatusItem:
+    type: object
+    properties:
+      ok:
+        type: boolean
+      error:
+        type: string
+      instance_slug:
+        type: string
+      instance_id:
+        type: string
+      deployment_id:
+        type: string
+      status:
+        $ref: '#/definitions/v1DeploymentStatus'
+    required:
+      - ok
+      - instance_slug
+      - instance_id
+  v1CancelApaySubscriptionResponse:
+    type: object
+  v1ChainType:
+    type: string
+    enum:
+      - UNSPECIFIED_CHAIN_TYPE
+      - ARBITRUM
+      - OPTIMISM
+      - POLYGON_ZKEVM
+      - ZKSYNC
+    default: UNSPECIFIED_CHAIN_TYPE
+  v1ColorTheme:
+    type: string
+    enum:
+      - UNSPECIFIED_COLOR_THEME
+      - LIGHT
+      - DIM
+      - MIDNIGHT
+      - DARK
+    default: UNSPECIFIED_COLOR_THEME
+  v1ConfigPropertiesSchema:
+    type: object
+    properties:
+      server_size:
+        $ref: '#/definitions/v1ServerSizeSchema'
+  v1ConfigSchema:
+    type: object
+    properties:
+      type:
+        type: string
+      properties:
+        $ref: '#/definitions/v1ConfigPropertiesSchema'
+  v1CreateApayDepositResponse:
+    type: object
+    properties:
+      deposit:
+        $ref: '#/definitions/v1ApayDeposit'
+    required:
+      - deposit
+  v1CreateApaySubscriptionPlanRequest:
+    type: object
+    properties:
+      name:
+        type: string
+      base_price_usd:
+        type: string
+      base_tokens_count:
+        type: string
+        format: uint64
+      price_per_token_usd:
+        type: string
+      mode:
+        $ref: '#/definitions/v1ApaySubscriptionPlanMode'
+    required:
+      - name
+      - price_per_token_usd
+      - mode
+  v1CreateApaySubscriptionPlanResponse:
+    type: object
+    properties:
+      plan:
+        $ref: '#/definitions/v1ApaySubscriptionPlan'
+    required:
+      - plan
+  v1CreateApaySubscriptionRequest:
+    type: object
+    properties:
+      customer_id:
+        type: string
+      customer_email:
+        type: string
+      subscription_plan_id:
+        type: string
+      metadata:
+        type: object
+      success_redirect_url:
+        type: string
+    required:
+      - customer_id
+      - subscription_plan_id
+  v1CreateApaySubscriptionResponse:
+    type: object
+    properties:
+      subscription:
+        $ref: '#/definitions/v1ApaySubscription'
+    required:
+      - subscription
+  v1CreateAuthTokenRequest:
+    type: object
+    properties:
+      name:
+        type: string
+      lifetime_days:
+        type: integer
+        format: int64
+    required:
+      - name
+  v1CreateCoinbaseDepositRequest:
+    type: object
+    properties:
+      amount_cents:
+        type: integer
+        format: int64
+      promocode:
+        type: string
+    required:
+      - amount_cents
+  v1CreateCoinbaseDepositResponse:
+    type: object
+    properties:
+      id:
+        type: string
+      url:
+        type: string
+    required:
+      - id
+      - url
+  v1CreateDaimoApayDepositRequest:
+    type: object
+    properties:
+      amount_cents:
+        type: integer
+        format: int64
+      customer_id:
+        type: string
+      metadata:
+        type: object
+      customization:
+        $ref: '#/definitions/v1DaimoCustomization'
+    required:
+      - amount_cents
+  v1CreateDaimoDepositRequest:
+    type: object
+    properties:
+      amount_cents:
+        type: integer
+        format: int64
+      promocode:
+        type: string
+    required:
+      - amount_cents
+  v1CreateDaimoDepositResponse:
+    type: object
+    properties:
+      id:
+        type: string
+      url:
+        type: string
+    required:
+      - id
+      - url
+  v1CreateInstanceRequest:
+    type: object
+    properties:
+      name:
+        type: string
+      config:
+        $ref: '#/definitions/v1DeployConfig'
+        title: initial config
+      skip_validation_for_fields:
+        type: array
+        items:
+          type: string
+    required:
+      - name
+      - config
+  v1CreateInstanceResponse:
+    type: object
+    properties:
+      instance_id:
+        type: string
+    required:
+      - instance_id
+  v1CreateStripeApayDepositRequest:
+    type: object
+    properties:
+      amount_cents:
+        type: integer
+        format: int64
+      customer_id:
+        type: string
+      customer_email:
+        type: string
+      metadata:
+        type: object
+      customization:
+        $ref: '#/definitions/v1StripeCustomization'
+    required:
+      - amount_cents
+  v1CreateStripeDepositRequest:
+    type: object
+    properties:
+      amount_cents:
+        type: integer
+        format: int64
+      promocode:
+        type: string
+    required:
+      - amount_cents
+  v1CreateStripeDepositResponse:
+    type: object
+    properties:
+      id:
+        type: string
+      url:
+        type: string
+    required:
+      - id
+      - url
+  v1CreateUserAcquisitionSourceRequest:
+    type: object
+    properties:
+      referrer:
+        type: string
+      utm_source:
+        type: string
+      utm_medium:
+        type: string
+      utm_campaign:
+        type: string
+      utm_term:
+        type: string
+      utm_content:
+        type: string
+    required:
+      - utm_source
+  v1CreateUserAcquisitionSourceResponse:
+    type: object
+  v1DaimoCustomization:
+    type: object
+    properties:
+      success_redirect_url:
+        type: string
+      title:
+        type: string
+      image:
+        type: string
+  v1DeleteApaySubscriptionPlanResponse:
+    type: object
+  v1DeleteAuthTokenResponse:
+    type: object
+  v1DeleteCoinbaseDepositResponse:
+    type: object
+  v1DeleteInstanceResponse:
+    type: object
+  v1DeployConfig:
+    type: object
+    properties:
+      rpc_url:
+        type: string
+      server_size:
+        type: string
+      chain_type:
+        $ref: '#/definitions/v1ChainType'
+      node_type:
+        $ref: '#/definitions/v1NodeType'
+      chain_id:
+        type: string
+      token_symbol:
+        type: string
+      custom_domain:
+        type: string
+      redirect_from_domain:
+        type: array
+        items:
+          type: string
+      logo_url:
+        type: string
+      logo_url_dark:
+        type: string
+      chain_name:
+        type: string
+      icon_url:
+        type: string
+      icon_url_dark:
+        type: string
+      homeplate_background:
+        type: string
+      homeplate_text_color:
+        type: string
+      is_testnet:
+        type: boolean
+      stats_enabled:
+        type: boolean
+      rpc_ws_url:
+        type: string
+      public_rpc_url:
+        type: string
+      wallet_connect_project_id:
+        type: string
+      eip_1559_elasticity:
+        type: string
+        format: int64
+      navigation_layout:
+        $ref: '#/definitions/v1NavigationLayout'
+      favicon_url:
+        type: string
+      og_image_url:
+        type: string
+      color_theme:
+        $ref: '#/definitions/v1ColorTheme'
+      identicon:
+        $ref: '#/definitions/v1Identicon'
+      chain_spec:
+        type: string
+      footer:
+        $ref: '#/definitions/v1Footer'
+        title: https://github.com/blockscout/frontend/blob/e2081d49104c9626aff9cfbf864699f69db5b8d8/docs/ENVS.md#footer
+      optimism:
+        $ref: '#/definitions/v1OptimismConfig'
+      arbitrum:
+        $ref: '#/definitions/v1ArbitrumConfig'
+      polygon_zkevm:
+        $ref: '#/definitions/v1PolygonZkEvmConfig'
+      zksync:
+        $ref: '#/definitions/v1ZksyncConfig'
+      ads:
+        $ref: '#/definitions/v1Ads'
+      meta_og:
+        $ref: '#/definitions/v1MetaOg'
+      final_config:
+        $ref: '#/definitions/v1FinalConfig'
+      api_spec_url:
+        type: string
+      hide_navigation:
+        type: array
+        items:
+          type: string
+      menu_other:
+        type: array
+        items:
+          type: object
+          $ref: '#/definitions/v1MenuItem'
+      disable_graphql:
+        type: boolean
+      maintenance_banner:
+        type: string
+      skip_cname_check:
+        type: boolean
+      wait_for_correct_cname:
+        type: boolean
+      indexer:
+        $ref: '#/definitions/v1IndexerConfig'
+      hero_banner:
+        $ref: '#/definitions/v1HeroBanner'
+      google_analytics_property_id:
+        type: string
+      production_ready:
+        type: boolean
+      api_docs_tabs:
+        $ref: '#/definitions/v1StringList'
+      stats_plugin_config:
+        $ref: '#/definitions/v1StatsPluginConfig'
+      user_ops_plugin_config:
+        $ref: '#/definitions/v1UserOpsPluginConfig'
+      monitoring:
+        $ref: '#/definitions/v1MonitoringConfig'
+    required:
+      - rpc_url
+      - server_size
+  v1Deployment:
+    type: object
+    properties:
+      deployment_id:
+        type: string
+      instance_id:
+        type: string
+      status:
+        $ref: '#/definitions/v1DeploymentStatus'
+      error:
+        type: string
+      created_at:
+        type: string
+      started_at:
+        type: string
+      finished_at:
+        type: string
+      config:
+        $ref: '#/definitions/v1DeployConfig'
+      config_state_hash:
+        type: string
+      blockscout_url:
+        type: string
+      total_cost:
+        type: string
+      health_status:
+        $ref: '#/definitions/v1HealthStatus'
+      indexing_status:
+        $ref: '#/definitions/v1IndexingStatus'
+      plugins_status:
+        $ref: '#/definitions/v1DeploymentPluginStatuses'
+    required:
+      - deployment_id
+      - instance_id
+      - status
+      - created_at
+      - config
+      - config_state_hash
+      - total_cost
+      - health_status
+      - plugins_status
+  v1DeploymentHourStorageUsage:
+    type: object
+    properties:
+      timestamp:
+        type: string
+      usage_mb:
+        type: integer
+        format: int32
+      free_quota_mb:
+        type: integer
+        format: int32
+      overage_cost_per_gb_hour:
+        type: string
+    required:
+      - timestamp
+      - usage_mb
+      - free_quota_mb
+      - overage_cost_per_gb_hour
+  v1DeploymentLog:
+    type: object
+    properties:
+      id:
+        type: integer
+        format: int32
+      message:
+        type: string
+      truncated_message:
+        type: string
+      timestamp:
+        type: string
+      bucket:
+        type: string
+      group_size:
+        type: integer
+        format: int32
+      severity:
+        type: string
+      container:
+        type: string
+    required:
+      - id
+      - message
+      - truncated_message
+      - timestamp
+      - bucket
+      - group_size
+      - severity
+      - container
+  v1DeploymentPluginStatuses:
+    type: object
+    properties:
+      stats_status:
+        $ref: '#/definitions/v1PluginStatuses'
+      user_ops_status:
+        $ref: '#/definitions/v1PluginStatuses'
+    required:
+      - stats_status
+      - user_ops_status
+  v1DeploymentStatus:
+    type: string
+    enum:
+      - NO_STATUS
+      - CREATED
+      - PENDING
+      - UNHEALTHY
+      - RUNNING
+      - STOPPING
+      - STOPPED
+      - FAILED
+      - QUEUED
+    default: NO_STATUS
+  v1Deposit:
+    type: object
+    properties:
+      id:
+        type: string
+      url:
+        type: string
+      receipt_url:
+        type: string
+      created_at:
+        type: string
+      amount:
+        type: string
+      status:
+        $ref: '#/definitions/v1DepositStatus'
+      type:
+        $ref: '#/definitions/v1DepositType'
+    required:
+      - id
+      - created_at
+      - status
+      - type
+  v1DepositStatus:
+    type: string
+    enum:
+      - UNSPECIFIED_DEPOSIT_STATUS
+      - DEPOSIT_STATUS_CREATED
+      - DEPOSIT_STATUS_PENDING
+      - DEPOSIT_STATUS_DELAYED
+      - DEPOSIT_STATUS_CONFIRMED
+      - DEPOSIT_STATUS_FAILED
+      - DEPOSIT_STATUS_RESOLVED
+    default: UNSPECIFIED_DEPOSIT_STATUS
+  v1DepositType:
+    type: string
+    enum:
+      - UNSPECIFIED_DEPOSIT_TYPE
+      - DEPOSIT_TYPE_STRIPE
+      - DEPOSIT_TYPE_COINBASE
+      - DEPOSIT_TYPE_DAIMO
+      - DEPOSIT_TYPE_PROMOTION_FLAT_BONUS
+    default: UNSPECIFIED_DEPOSIT_TYPE
+  v1ExpensiveInstance:
+    type: object
+    properties:
+      instance_id:
+        type: string
+      name:
+        type: string
+      slug:
+        type: string
+      deployment_status:
+        $ref: '#/definitions/v1DeploymentStatus'
+      created_at:
+        type: string
+      blockscout_url:
+        type: string
+      total_cost:
+        type: string
+      cost_per_month_approx:
+        type: string
+      icon_url:
+        type: string
+    required:
+      - instance_id
+      - name
+      - slug
+      - deployment_status
+      - created_at
+      - total_cost
+      - cost_per_month_approx
+  v1FinalConfig:
+    type: object
+    properties:
+      fields:
+        type: array
+        items:
+          type: object
+          $ref: '#/definitions/v1FinalConfigField'
+  v1FinalConfigField:
+    type: object
+    properties:
+      json_path:
+        type: string
+      value:
+        type: string
+  v1Footer:
+    type: object
+    properties:
+      columns:
+        type: array
+        items:
+          type: object
+          $ref: '#/definitions/v1FooterColumn'
+  v1FooterColumn:
+    type: object
+    properties:
+      title:
+        type: string
+      links:
+        type: array
+        items:
+          type: object
+          $ref: '#/definitions/v1FooterLink'
+  v1FooterLink:
+    type: object
+    properties:
+      text:
+        type: string
+      url:
+        type: string
+  v1GetApaySubscriptionPlanResponse:
+    type: object
+    properties:
+      plan:
+        $ref: '#/definitions/v1ApaySubscriptionPlan'
+    required:
+      - plan
+  v1GetApaySubscriptionResponse:
+    type: object
+    properties:
+      subscription:
+        $ref: '#/definitions/v1ApaySubscription'
+    required:
+      - subscription
+  v1GetDeploymentStorageUsageResponse:
+    type: object
+    properties:
+      storage_data:
+        type: array
+        items:
+          type: object
+          $ref: '#/definitions/v1DeploymentHourStorageUsage'
+      paid_until:
+        type: string
+        title: timestamp (hour) until which the deployment's storage has been paid for
+    required:
+      - storage_data
+  v1HealthCheckResponse:
+    type: object
+    properties:
+      status:
+        $ref: '#/definitions/HealthCheckResponseServingStatus'
+  v1HealthStatus:
+    type: object
+    properties:
+      ok:
+        type: boolean
+      last_check:
+        type: string
+      http_code:
+        type: integer
+        format: int32
+      error_description:
+        type: string
+      response:
+        type: object
+    required:
+      - ok
+      - last_check
+  v1HeroBanner:
+    type: object
+    properties:
+      background:
+        type: array
+        items:
+          type: string
+      text_color:
+        type: array
+        items:
+          type: string
+      border:
+        type: array
+        items:
+          type: string
+      button:
+        $ref: '#/definitions/v1HeroBannerButton'
+  v1HeroBannerButton:
+    type: object
+    properties:
+      default:
+        $ref: '#/definitions/v1HeroBannerButtonValue'
+      hover:
+        $ref: '#/definitions/v1HeroBannerButtonValue'
+      selected:
+        $ref: '#/definitions/v1HeroBannerButtonValue'
+  v1HeroBannerButtonValue:
+    type: object
+    properties:
+      background:
+        type: array
+        items:
+          type: string
+      text_color:
+        type: array
+        items:
+          type: string
+  v1Identicon:
+    type: string
+    enum:
+      - UNSPECIFIED_IDENTICON
+      - GITHUB
+      - JAZZICON
+      - GRADIENT_AVATAR
+      - BLOCKIE
+    default: UNSPECIFIED_IDENTICON
+  v1IndexerBlockTransformer:
+    type: string
+    enum:
+      - UNSPECIFIED_BLOCK_TRANSFORMER
+      - BASE
+      - CLIQUE
+    default: UNSPECIFIED_BLOCK_TRANSFORMER
+  v1IndexerConfig:
+    type: object
+    properties:
+      receipts_batch_size:
+        type: string
+        format: int64
+        title: INDEXER_RECEIPTS_BATCH_SIZE
+      receipts_concurrency:
+        type: string
+        format: int64
+        title: INDEXER_RECEIPTS_CONCURRENCY
+      internal_transactions_batch_size:
+        type: string
+        format: int64
+        title: INDEXER_INTERNAL_TRANSACTIONS_BATCH_SIZE
+      internal_transactions_concurrency:
+        type: string
+        format: int64
+        title: INDEXER_INTERNAL_TRANSACTIONS_CONCURRENCY
+      catchup_blocks_batch_size:
+        type: string
+        format: int64
+        title: INDEXER_CATCHUP_BLOCKS_BATCH_SIZE
+      catchup_blocks_concurrency:
+        type: string
+        format: int64
+        title: INDEXER_CATCHUP_BLOCKS_CONCURRENCY
+      coin_balances_batch_size:
+        type: string
+        format: int64
+        title: INDEXER_COIN_BALANCES_BATCH_SIZE
+      coin_balances_concurrency:
+        type: string
+        format: int64
+        title: INDEXER_COIN_BALANCES_CONCURRENCY
+      token_balances_batch_size:
+        type: string
+        format: int64
+        title: INDEXER_TOKEN_BALANCES_BATCH_SIZE
+      token_balances_concurrency:
+        type: string
+        format: int64
+        title: INDEXER_TOKEN_BALANCES_CONCURRENCY
+      disable_pending_fetcher:
+        type: boolean
+        title: INDEXER_DISABLE_PENDING_TRANSACTIONS_FETCHER
+      block_transformer:
+        $ref: '#/definitions/v1IndexerBlockTransformer'
+        title: BLOCK_TRANSFORMER
+  v1IndexingStatus:
+    type: object
+    properties:
+      finished_indexing:
+        type: boolean
+      finished_indexing_blocks:
+        type: boolean
+      indexed_blocks_ratio:
+        type: string
+      indexed_internal_transactions_ratio:
+        type: string
+    required:
+      - finished_indexing
+      - finished_indexing_blocks
+  v1Instance:
+    type: object
+    properties:
+      instance_id:
+        type: string
+      name:
+        type: string
+      slug:
+        type: string
+      created_at:
+        type: string
+      config:
+        $ref: '#/definitions/v1DeployConfig'
+      config_state_hash:
+        type: string
+      deployment:
+        $ref: '#/definitions/v1Deployment'
+    required:
+      - instance_id
+      - name
+      - slug
+      - created_at
+      - config
+      - config_state_hash
+      - deployment
+  v1ListApayDepositsResponse:
+    type: object
+    properties:
+      items:
+        type: array
+        items:
+          type: object
+          $ref: '#/definitions/v1ApayDeposit'
+      pagination:
+        $ref: '#/definitions/v1PaginationResult'
+  v1ListApaySubscriptionPlansResponse:
+    type: object
+    properties:
+      items:
+        type: array
+        items:
+          type: object
+          $ref: '#/definitions/v1ApaySubscriptionPlan'
+      pagination:
+        $ref: '#/definitions/v1PaginationResult'
+    required:
+      - items
+  v1ListApaySubscriptionsResponse:
+    type: object
+    properties:
+      items:
+        type: array
+        items:
+          type: object
+          $ref: '#/definitions/v1ApaySubscription'
+      pagination:
+        $ref: '#/definitions/v1PaginationResult'
+    required:
+      - items
+  v1ListAuthTokensResponse:
+    type: object
+    properties:
+      items:
+        type: array
+        items:
+          type: object
+          $ref: '#/definitions/v1AuthToken'
+      pagination:
+        $ref: '#/definitions/v1PaginationResult'
+    required:
+      - items
+  v1ListCoinbaseDepositsResponse:
+    type: object
+    properties:
+      items:
+        type: array
+        items:
+          type: object
+          $ref: '#/definitions/v1Deposit'
+    required:
+      - items
+  v1ListDeploymentLogsResponse:
+    type: object
+    properties:
+      items:
+        type: array
+        items:
+          type: object
+          $ref: '#/definitions/v1DeploymentLog'
+      pagination:
+        $ref: '#/definitions/v1PaginationResult'
+    required:
+      - items
+  v1ListDeploymentsResponse:
+    type: object
+    properties:
+      items:
+        type: array
+        items:
+          type: object
+          $ref: '#/definitions/v1Deployment'
+    required:
+      - items
+  v1ListDepositsResponse:
+    type: object
+    properties:
+      items:
+        type: array
+        items:
+          type: object
+          $ref: '#/definitions/v1Deposit'
+      pagination:
+        $ref: '#/definitions/v1PaginationResult'
+    required:
+      - items
+  v1ListInstancesResponse:
+    type: object
+    properties:
+      items:
+        type: array
+        items:
+          type: object
+          $ref: '#/definitions/v1Instance'
+      pagination:
+        $ref: '#/definitions/v1PaginationResult'
+    required:
+      - items
+  v1ListPluginEventsResponse:
+    type: object
+    properties:
+      items:
+        type: array
+        items:
+          type: object
+          $ref: '#/definitions/v1PluginEvent'
+      pagination:
+        $ref: '#/definitions/v1PaginationResult'
+    required:
+      - items
+  v1ListPluginLogsResponse:
+    type: object
+    properties:
+      items:
+        type: array
+        items:
+          type: object
+          $ref: '#/definitions/v1DeploymentLog'
+      pagination:
+        $ref: '#/definitions/v1PaginationResult'
+    required:
+      - items
+  v1MenuItem:
+    type: object
+    properties:
+      text:
+        type: string
+      url:
+        type: string
+  v1MetaOg:
+    type: object
+    properties:
+      description:
+        type: string
+      image_url:
+        type: string
+      enhanced_data_enabled:
+        type: boolean
+      seo_enhanced_data_enabled:
+        type: boolean
+  v1MonitoringConfig:
+    type: object
+    properties:
+      enabled:
+        type: boolean
+      client_label:
+        type: string
+  v1MostExpensiveInstances:
+    type: object
+    properties:
+      items:
+        type: array
+        items:
+          type: object
+          $ref: '#/definitions/v1ExpensiveInstance'
+      count:
+        type: integer
+        format: int64
+      total_monthly_cost:
+        type: string
+    required:
+      - items
+      - count
+      - total_monthly_cost
+  v1NavigationLayout:
+    type: string
+    enum:
+      - UNSPECIFIED_NAVIGATION_LAYOUT
+      - HORIZONTAL
+      - VERTICAL
+    default: UNSPECIFIED_NAVIGATION_LAYOUT
+  v1NodeType:
+    type: string
+    enum:
+      - UNSPECIFIED_NODE_TYPE
+      - PARITY
+      - ERIGON
+      - GETH
+      - BESU
+      - GANACHE
+      - ANVIL
+    default: UNSPECIFIED_NODE_TYPE
+  v1OptimismConfig:
+    type: object
+    properties:
+      l1_rpc_url:
+        type: string
+        title: changes blockscout env INDEXER_OPTIMISM_L1_RPC
+      l1_system_config_contract:
+        type: string
+        title: changes blockscout env INDEXER_OPTIMISM_L1_SYSTEM_CONFIG_CONTRACT
+      l1_batch_blockscout_blobs_api_url:
+        type: string
+        title: changes blockscout env INDEXER_OPTIMISM_L1_BATCH_BLOCKSCOUT_BLOBS_API_URL
+      l1_batch_celestia_blobs_api_url:
+        type: string
+        title: changes blockscout env INDEXER_OPTIMISM_L1_BATCH_CELESTIA_BLOBS_API_URL
+      l1_batch_blocks_chunk_size:
+        type: string
+        format: int64
+        title: changes blockscout env INDEXER_OPTIMISM_L1_BATCH_BLOCKS_CHUNK_SIZE
+      l2_batch_genesis_block_number:
+        type: string
+        format: int64
+        title: changes blockscout env INDEXER_OPTIMISM_L2_BATCH_GENESIS_BLOCK_NUMBER
+      l1_output_oracle_contract:
+        type: string
+        title: changes blockscout env INDEXER_OPTIMISM_L1_OUTPUT_ORACLE_CONTRACT
+      l1_deposits_batch_size:
+        type: string
+        format: int64
+        title: changes blockscout env INDEXER_OPTIMISM_L1_DEPOSITS_BATCH_SIZE
+      l2_withdrawals_start_block:
+        type: string
+        format: int64
+        title: changes blockscout env INDEXER_OPTIMISM_L2_WITHDRAWALS_START_BLOCK
+      l2_message_passer_contract:
+        type: string
+        title: changes blockscout env INDEXER_OPTIMISM_L2_MESSAGE_PASSER_CONTRACT
+      l1_blockscout_url:
+        type: string
+        title: NEXT_PUBLIC_ROLLUP_L1_BASE_URL
+      l2_withdrawal_url:
+        type: string
+        title: NEXT_PUBLIC_ROLLUP_L2_WITHDRAWAL_URL
+      l2_fault_proof_enabled:
+        type: boolean
+        title: NEXT_PUBLIC_FAULT_PROOF_ENABLED
+      has_mud_framework:
+        type: boolean
+        title: NEXT_PUBLIC_HAS_MUD_FRAMEWORK
+      beacon_rpc_url:
+        type: string
+      beacon_blob_fetcher_reference_slot:
+        type: string
+        format: int64
+      beacon_blob_fetcher_slot_duration:
+        type: string
+        format: int64
+      beacon_blob_fetcher_reference_timestamp:
+        type: string
+        format: int64
+    title: https://github.com/blockscout/docs/blob/df6996a0f8e553c2d4b1c3dcda6ef2518a8b39f9/for-developers/information-and-settings/env-variables/backend-envs-chain-specific.md?plain=1#L102-L119
+    required:
+      - l1_blockscout_url
+  v1PaginationResult:
+    type: object
+    properties:
+      page:
+        type: integer
+        format: int64
+      next_page:
+        type: integer
+        format: int64
+      per_page:
+        type: integer
+        format: int64
+      total_items:
+        type: integer
+        format: int64
+      total_pages:
+        type: integer
+        format: int64
+  v1PluginEvent:
+    type: object
+    properties:
+      variant:
+        $ref: '#/definitions/v1PluginVariant'
+      timestamp:
+        type: string
+      event_type:
+        $ref: '#/definitions/v1PluginEventType'
+      event_data:
+        type: object
+    required:
+      - variant
+      - timestamp
+      - event_type
+  v1PluginEventType:
+    type: string
+    enum:
+      - UNSPECIFIED_PLUGIN_EVENT_TYPE
+      - PLUGIN_EVENT_TYPE_STATUS_CHANGE
+      - PLUGIN_EVENT_TYPE_HEALTH_CHANGE
+    default: UNSPECIFIED_PLUGIN_EVENT_TYPE
+  v1PluginStatus:
+    type: string
+    enum:
+      - UNSPECIFIED_PLUGIN_STATUS
+      - PLUGIN_STATUS_STOPPED
+      - PLUGIN_STATUS_RUNNING
+    default: UNSPECIFIED_PLUGIN_STATUS
+  v1PluginStatuses:
+    type: object
+    properties:
+      launch_status:
+        $ref: '#/definitions/v1PluginStatus'
+      health_status:
+        $ref: '#/definitions/v1HealthStatus'
+    required:
+      - launch_status
+      - health_status
+  v1PluginVariant:
+    type: string
+    enum:
+      - UNSPECIFIED_PLUGIN_VARIANT
+      - PLUGIN_VARIANT_STATS
+      - PLUGIN_VARIANT_USER_OPS
+    default: UNSPECIFIED_PLUGIN_VARIANT
+  v1PolygonZkEvmConfig:
+    type: object
+    properties:
+      l1_rpc:
+        type: string
+        title: INDEXER_POLYGON_ZKEVM_L1_RPC
+      l1_bridge_start_block:
+        type: string
+        format: int64
+        title: INDEXER_POLYGON_ZKEVM_L1_BRIDGE_START_BLOCK
+      l1_bridge_contract:
+        type: string
+        title: INDEXER_POLYGON_ZKEVM_L1_BRIDGE_CONTRACT
+      l1_blockscout_url:
+        type: string
+        title: NEXT_PUBLIC_ROLLUP_L1_BASE_URL
+      batches_chunk_size:
+        type: string
+        format: int64
+        title: INDEXER_POLYGON_ZKEVM_BATCHES_CHUNK_SIZE
+      batches_recheck_interval:
+        type: string
+        format: int64
+        title: INDEXER_POLYGON_ZKEVM_BATCHES_RECHECK_INTERVAL
+      l1_bridge_network_id:
+        type: string
+        format: int64
+        title: INDEXER_POLYGON_ZKEVM_L1_BRIDGE_NETWORK_ID
+      l1_bridge_rollup_index:
+        type: string
+        format: int64
+        title: INDEXER_POLYGON_ZKEVM_L1_BRIDGE_ROLLUP_INDEX
+      l1_bridge_native_symbol:
+        type: string
+        title: INDEXER_POLYGON_ZKEVM_L1_BRIDGE_NATIVE_SYMBOL
+      l1_bridge_native_decimals:
+        type: string
+        format: int64
+        title: INDEXER_POLYGON_ZKEVM_L1_BRIDGE_NATIVE_DECIMALS
+      l2_bridge_start_block:
+        type: string
+        format: int64
+        title: INDEXER_POLYGON_ZKEVM_L2_BRIDGE_START_BLOCK
+      l2_bridge_contract:
+        type: string
+        title: INDEXER_POLYGON_ZKEVM_L2_BRIDGE_CONTRACT
+      l2_bridge_network_id:
+        type: string
+        format: int64
+        title: INDEXER_POLYGON_ZKEVM_L2_BRIDGE_NETWORK_ID
+      l2_bridge_rollup_index:
+        type: string
+        format: int64
+        title: INDEXER_POLYGON_ZKEVM_L2_BRIDGE_ROLLUP_INDEX
+    required:
+      - l1_blockscout_url
+  v1PreviewDepositRequest:
+    type: object
+    properties:
+      amount_cents:
+        type: integer
+        format: int64
+      promocode:
+        type: string
+    required:
+      - amount_cents
+  v1PreviewDepositResponse:
+    type: object
+    properties:
+      top_up_amount:
+        type: string
+      total_deposit_amount:
+        type: string
+      promotion_effect:
+        $ref: '#/definitions/v1PromotionEffect'
+    required:
+      - top_up_amount
+      - total_deposit_amount
+  v1PromotionEffect:
+    type: object
+    properties:
+      promo_id:
+        type: string
+      reward_amount:
+        type: string
+      reward_percentage:
+        type: string
+      reward_limit:
+        type: string
+    required:
+      - promo_id
+      - reward_amount
+  v1RegenerateConfigBatchItem:
+    type: object
+    properties:
+      instance_id:
+        type: string
+      instance_slug:
+        type: string
+      ok:
+        type: boolean
+      error:
+        type: string
+    required:
+      - instance_id
+      - instance_slug
+      - ok
+  v1RegenerateConfigBatchRequest:
+    type: object
+    properties:
+      instance_ids:
+        type: array
+        items:
+          type: string
+      skip_validation_for_fields:
+        type: array
+        items:
+          type: string
+    required:
+      - instance_ids
+  v1RegenerateConfigBatchResponse:
+    type: object
+    properties:
+      total:
+        type: integer
+        format: int64
+      total_errors:
+        type: integer
+        format: int64
+      items:
+        type: array
+        items:
+          type: object
+          $ref: '#/definitions/v1RegenerateConfigBatchItem'
+    required:
+      - total
+      - total_errors
+      - items
+  v1RegisterProfileRequest:
+    type: object
+    properties:
+      email:
+        type: string
+      project_title:
+        type: string
+      promo:
+        type: string
+    required:
+      - email
+      - project_title
+  v1RegisterProfileResponse:
+    type: object
+    properties:
+      profile:
+        $ref: '#/definitions/v1UserProfile'
+      initial_token:
+        $ref: '#/definitions/v1AuthToken'
+  v1RegularPromocodeRequest:
+    type: object
+    properties:
+      promocode:
+        type: string
+    required:
+      - promocode
+  v1RegularPromocodeResponse:
+    type: object
+    properties:
+      reward_amount:
+        type: string
+    required:
+      - reward_amount
+  v1ReportApaySubscriptionsUsageRequest:
+    type: object
+    properties:
+      reports:
+        type: array
+        items:
+          type: object
+          $ref: '#/definitions/v1SubscriptionUsageReport'
+    required:
+      - reports
+  v1ReportApaySubscriptionsUsageResponse:
+    type: object
+    properties:
+      results:
+        type: array
+        items:
+          type: object
+          $ref: '#/definitions/v1SubscriptionUsageReportResult'
+    required:
+      - results
+  v1SearchInstancesResponse:
+    type: object
+    properties:
+      items:
+        type: array
+        items:
+          type: object
+          $ref: '#/definitions/v1Instance'
+      pagination:
+        $ref: '#/definitions/v1PaginationResult'
+    required:
+      - items
+  v1SearchUsersResponse:
+    type: object
+    properties:
+      items:
+        type: array
+        items:
+          type: object
+          $ref: '#/definitions/v1User'
+      pagination:
+        $ref: '#/definitions/v1PaginationResult'
+    required:
+      - items
+  v1ServerSizeSchema:
+    type: object
+    properties:
+      type:
+        type: string
+      enum:
+        type: array
+        items:
+          type: string
+      description:
+        type: string
+      details:
+        type: object
+        additionalProperties:
+          $ref: '#/definitions/v1ServerSizeSchemaDetails'
+  v1ServerSizeSchemaDetails:
+    type: object
+    properties:
+      cost_per_hour:
+        type: string
+      cpu:
+        type: string
+      memory:
+        type: string
+      disk_overage_cost_per_gb_hour:
+        type: string
+      free_disk_quota_gb:
+        type: string
+      user_ops_cost_per_hour:
+        type: string
+      stats_cost_per_hour:
+        type: string
+  v1StatsPluginConfig:
+    type: object
+    properties:
+      enabled:
+        type: boolean
+  v1StringList:
+    type: object
+    properties:
+      values:
+        type: array
+        items:
+          type: string
+  v1StripeCustomization:
+    type: object
+    properties:
+      success_redirect_url:
+        type: string
+      title:
+        type: string
+      description:
+        type: string
+      image:
+        type: string
+    required:
+      - success_redirect_url
+  v1SubscriptionUsageReport:
+    type: object
+    properties:
+      subscription_id:
+        type: string
+      tokens_used:
+        type: integer
+        format: int64
+    required:
+      - subscription_id
+      - tokens_used
+  v1SubscriptionUsageReportResult:
+    type: object
+    properties:
+      status:
+        $ref: '#/definitions/v1SubscriptionUsageReportStatus'
+      message:
+        type: string
+    required:
+      - status
+  v1SubscriptionUsageReportStatus:
+    type: string
+    enum:
+      - SUCCESSFUL
+      - NOT_ALLOWED
+      - NOT_FOUND
+      - FAILED
+    default: SUCCESSFUL
+  v1SyncDeploymentsServerSpecItem:
+    type: object
+    properties:
+      ok:
+        type: boolean
+      error:
+        type: string
+      deployment_id:
+        type: string
+    required:
+      - ok
+      - deployment_id
+  v1SyncDeploymentsServerSpecRequest:
+    type: object
+    properties:
+      all_running:
+        type: boolean
+      deployment_ids:
+        type: array
+        items:
+          type: string
+      dry_run:
+        type: boolean
+  v1SyncDeploymentsServerSpecResponse:
+    type: object
+    properties:
+      total:
+        type: integer
+        format: int64
+      total_errors:
+        type: integer
+        format: int64
+      items:
+        type: array
+        items:
+          type: object
+          $ref: '#/definitions/v1SyncDeploymentsServerSpecItem'
+    required:
+      - total
+      - total_errors
+      - items
+  v1TermsOfService:
+    type: object
+    properties:
+      content_url:
+        type: string
+      version:
+        type: string
+      accepted:
+        type: boolean
+      accepted_at:
+        type: string
+    required:
+      - content_url
+      - version
+      - accepted
+  v1UpdateApaySubscriptionPlanResponse:
+    type: object
+    properties:
+      plan:
+        $ref: '#/definitions/v1ApaySubscriptionPlan'
+    required:
+      - plan
+  v1UpdateConfigResponse:
+    type: object
+    properties:
+      config:
+        $ref: '#/definitions/v1DeployConfig'
+    required:
+      - config
+  v1UpdateInstanceAction:
+    type: string
+    enum:
+      - START
+      - STOP
+      - RESTART
+    default: START
+  v1UpdateInstanceStatusBatchRequest:
+    type: object
+    properties:
+      all_running:
+        type: boolean
+      instance_ids:
+        type: array
+        items:
+          type: string
+      action:
+        $ref: '#/definitions/v1UpdateInstanceAction'
+      dry_run:
+        type: boolean
+    required:
+      - action
+  v1UpdateInstanceStatusBatchResponse:
+    type: object
+    properties:
+      total:
+        type: integer
+        format: int64
+      total_errors:
+        type: integer
+        format: int64
+      items:
+        type: array
+        items:
+          type: object
+          $ref: '#/definitions/v1BatchUpdateInstanceStatusItem'
+    required:
+      - total
+      - total_errors
+      - items
+  v1UpdateInstanceStatusResponse:
+    type: object
+    properties:
+      status:
+        $ref: '#/definitions/v1DeploymentStatus'
+      deployment_id:
+        type: string
+    required:
+      - status
+      - deployment_id
+  v1User:
+    type: object
+    properties:
+      email:
+        type: string
+      project_title:
+        type: string
+      created_at:
+        type: string
+      balance:
+        type: string
+    required:
+      - email
+      - created_at
+      - balance
+  v1UserAction:
+    type: object
+    properties:
+      action:
+        type: string
+      instance_id:
+        type: string
+      timestamp:
+        type: string
+    required:
+      - action
+      - timestamp
+  v1UserOpsEntrypointConfig:
+    type: object
+    properties:
+      enabled:
+        type: boolean
+        title: / Enabled by default
+      entry_point:
+        type: array
+        items:
+          type: string
+        title: / Empty - default (see user ops docs for default)
+  v1UserOpsPluginConfig:
+    type: object
+    properties:
+      enabled:
+        type: boolean
+      rpc_url:
+        type: string
+      entrypoints_v06:
+        $ref: '#/definitions/v1UserOpsEntrypointConfig'
+      entrypoints_v07:
+        $ref: '#/definitions/v1UserOpsEntrypointConfig'
+      entrypoints_v08:
+        $ref: '#/definitions/v1UserOpsEntrypointConfig'
+      realtime_enabled:
+        type: boolean
+      realtime_polling_interval:
+        type: string
+        format: uint64
+      realtime_polling_block_range:
+        type: integer
+        format: int64
+      realtime_max_block_range:
+        type: integer
+        format: int64
+      past_rpc_logs_indexer_enabled:
+        type: boolean
+      past_rpc_logs_indexer_block_range:
+        type: integer
+        format: int64
+      past_db_logs_indexer_enabled:
+        type: boolean
+      past_db_logs_indexer_start_block:
+        type: string
+        format: int64
+      past_db_logs_indexer_end_block:
+        type: string
+        format: int64
+      trace_client:
+        $ref: '#/definitions/v1UserOpsTraceClient'
+  v1UserOpsTraceClient:
+    type: string
+    enum:
+      - UNSPECIFIED_TRACE_CLIENT
+      - DEBUG
+      - TRACE
+    default: UNSPECIFIED_TRACE_CLIENT
+  v1UserProfile:
+    type: object
+    properties:
+      email:
+        type: string
+      project_title:
+        type: string
+      created_at:
+        type: string
+      balance:
+        type: string
+      recent_actions:
+        type: array
+        items:
+          type: object
+          $ref: '#/definitions/v1UserAction'
+      most_expensive_instances:
+        $ref: '#/definitions/v1MostExpensiveInstances'
+    required:
+      - email
+      - created_at
+      - balance
+      - recent_actions
+      - most_expensive_instances
+  v1WebHookResponse:
+    type: object
+  v1WebhookEvent:
+    type: object
+    properties:
+      type:
+        $ref: '#/definitions/v1WebhookEventType'
+      deposit:
+        $ref: '#/definitions/v1ApayDeposit'
+      subscription:
+        $ref: '#/definitions/v1ApaySubscription'
+      timestamp:
+        type: string
+    required:
+      - type
+      - timestamp
+  v1WebhookEventType:
+    type: string
+    enum:
+      - UNSPECIFIED_WEBHOOK_EVENT_TYPE
+      - DEPOSIT_CREATED
+      - DEPOSIT_UPDATED
+      - SUBSCRIPTION_CREATED
+      - SUBSCRIPTION_UPDATED
+      - SUBSCRIPTION_CANCELED
+      - SUBSCRIPTION_PAYMENT_SUCCEEDED
+      - SUBSCRIPTION_PAYMENT_FAILED
+    default: UNSPECIFIED_WEBHOOK_EVENT_TYPE
+  v1WebhookRequest:
+    type: object
+    properties:
+      event:
+        $ref: '#/definitions/v1WebhookEvent'
+      timestamp:
+        type: string
+    required:
+      - event
+      - timestamp
+  v1ZksyncConfig:
+    type: object
+    properties:
+      l1_rpc:
+        type: string
+        title: INDEXER_ZKSYNC_L1_RPC
+      l1_blockscout_url:
+        type: string
+        title: NEXT_PUBLIC_ROLLUP_L1_BASE_URL
+      batches_chunk_size:
+        type: string
+        format: int64
+        title: INDEXER_ZKSYNC_BATCHES_CHUNK_SIZE
+      new_batches_max_range:
+        type: string
+        format: int64
+        title: INDEXER_ZKSYNC_NEW_BATCHES_MAX_RANGE
+      new_batches_recheck_interval:
+        type: string
+        format: int64
+        title: INDEXER_ZKSYNC_NEW_BATCHES_RECHECK_INTERVAL
+      batches_status_recheck_interval:
+        type: string
+        format: int64
+        title: INDEXER_ZKSYNC_BATCHES_STATUS_RECHECK_INTERVAL
+    required:
+      - l1_blockscout_url
+securityDefinitions:
+  ApayAlgorithm:
+    type: apiKey
+    name: x-apay-alg
+    in: header
+  ApaySignature:
+    type: apiKey
+    name: x-apay-signature
+    in: header
+  ApayVersion:
+    type: apiKey
+    name: x-apay-version
+    in: header
+  ApiKeyAuth:
+    type: apiKey
+    name: x-api-key
+    in: header
+externalDocs:
+  description: More about blockscout microservices
+  url: https://github.com/blockscout/blockscout-rs
