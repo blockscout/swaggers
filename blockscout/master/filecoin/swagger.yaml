@@ -2,32 +2,6 @@
 components:
   responses: {}
   schemas:
-    TransactionStateChangesPaginatedResponse:
-      additionalProperties: false
-      nullable: false
-      properties:
-        items:
-          items:
-            $ref: '#/components/schemas/StateChange'
-          nullable: false
-          type: array
-          x-struct:
-          x-validate:
-        next_page_params:
-          example:
-            items_count: 50
-            state_changes:
-          nullable: true
-          type: object
-          x-struct:
-          x-validate:
-      required:
-        - items
-        - next_page_params
-      title: TransactionStateChangesPaginatedResponse
-      type: object
-      x-struct:
-      x-validate:
     Address:
       additionalProperties: false
       description: Address
@@ -283,33 +257,6 @@ components:
       type: object
       x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.General.WatchlistName
       x-validate:
-    TransactionsPaginatedResponse:
-      additionalProperties: false
-      nullable: false
-      properties:
-        items:
-          items:
-            $ref: '#/components/schemas/TransactionResponse'
-          nullable: false
-          type: array
-          x-struct:
-          x-validate:
-        next_page_params:
-          example:
-            block_number: 23532302
-            index: 375
-            items_count: 50
-          nullable: true
-          type: object
-          x-struct:
-          x-validate:
-      required:
-        - items
-        - next_page_params
-      title: TransactionsPaginatedResponse
-      type: object
-      x-struct:
-      x-validate:
     EmptyString:
       maxLength: 0
       minLength: 0
@@ -350,33 +297,6 @@ components:
       type: object
       x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.Proxy.Metadata
       x-validate:
-    AddressNFTCollectionsPaginatedResponse:
-      additionalProperties: false
-      nullable: false
-      properties:
-        items:
-          items:
-            $ref: '#/components/schemas/NFTCollection'
-          nullable: false
-          type: array
-          x-struct:
-          x-validate:
-        next_page_params:
-          example:
-            items_count: 50
-            token_contract_address_hash: '0x1ffe11b9fb7f6ff1b153ab8608cf403ecaf9d44a'
-            token_type: ERC-721
-          nullable: true
-          type: object
-          x-struct:
-          x-validate:
-      required:
-        - items
-        - next_page_params
-      title: AddressNFTCollectionsPaginatedResponse
-      type: object
-      x-struct:
-      x-validate:
     TotalERC721:
       additionalProperties: false
       properties:
@@ -394,51 +314,6 @@ components:
       title: TotalERC721
       type: object
       x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.TokenTransfer.TotalERC721
-      x-validate:
-    AddressCoinBalanceHistoryByDay:
-      additionalProperties: false
-      nullable: false
-      properties:
-        days:
-          nullable: false
-          type: integer
-          x-struct:
-          x-validate:
-        items:
-          items:
-            $ref: '#/components/schemas/CoinBalanceByDay'
-          type: array
-          x-struct:
-          x-validate:
-      title: AddressCoinBalanceHistoryByDay
-      type: object
-      x-struct:
-      x-validate:
-    TokenTransfersPaginatedResponse:
-      additionalProperties: false
-      nullable: false
-      properties:
-        items:
-          items:
-            $ref: '#/components/schemas/TokenTransfer'
-          nullable: false
-          type: array
-          x-struct:
-          x-validate:
-        next_page_params:
-          example:
-            block_number: 22133247
-            index: 50
-          nullable: true
-          type: object
-          x-struct:
-          x-validate:
-      required:
-        - items
-        - next_page_params
-      title: TokenTransfersPaginatedResponse
-      type: object
-      x-struct:
       x-validate:
     TotalERC1155:
       additionalProperties: false
@@ -643,123 +518,6 @@ components:
       title: Withdrawal
       type: object
       x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.Withdrawal
-      x-validate:
-    AddressTokenBalances:
-      items:
-        $ref: '#/components/schemas/TokenBalance'
-      title: AddressTokenBalances
-      type: array
-      x-struct:
-      x-validate:
-    TokenInstanceTransfersPaginatedResponse:
-      additionalProperties: false
-      nullable: false
-      properties:
-        items:
-          items:
-            $ref: '#/components/schemas/TokenTransfer'
-          nullable: false
-          type: array
-          x-struct:
-          x-validate:
-        next_page_params:
-          example:
-            block_number: 23489243
-            index: 920
-            token_id: '4'
-          nullable: true
-          type: object
-          x-struct:
-          x-validate:
-      required:
-        - items
-        - next_page_params
-      title: TokenInstanceTransfersPaginatedResponse
-      type: object
-      x-struct:
-      x-validate:
-    BlocksPaginatedResponse:
-      additionalProperties: false
-      nullable: false
-      properties:
-        items:
-          items:
-            $ref: '#/components/schemas/Block'
-          nullable: false
-          type: array
-          x-struct:
-          x-validate:
-        next_page_params:
-          example:
-            block_number: 22566361
-            items_count: 50
-          nullable: true
-          type: object
-          x-struct:
-          x-validate:
-      required:
-        - items
-        - next_page_params
-      title: BlocksPaginatedResponse
-      type: object
-      x-struct:
-      x-validate:
-    AddressCoinBalanceHistoryPaginatedResponse:
-      additionalProperties: false
-      nullable: false
-      properties:
-        items:
-          items:
-            $ref: '#/components/schemas/CoinBalance'
-          nullable: false
-          type: array
-          x-struct:
-          x-validate:
-        next_page_params:
-          example:
-            block_number: 22546398
-            items_count: 50
-          nullable: true
-          type: object
-          x-struct:
-          x-validate:
-      required:
-        - items
-        - next_page_params
-      title: AddressCoinBalanceHistoryPaginatedResponse
-      type: object
-      x-struct:
-      x-validate:
-    AddressTransactionsPaginatedResponse:
-      additionalProperties: false
-      nullable: false
-      properties:
-        items:
-          items:
-            $ref: '#/components/schemas/Transaction'
-          nullable: false
-          type: array
-          x-struct:
-          x-validate:
-        next_page_params:
-          example:
-            block_number: 22566361
-            fee: '19206937428000'
-            hash: '0xe38d616dade747097354b0731b5560f581536dacf22121feb4bb4a0b776018aa'
-            index: 103
-            inserted_at: 2025-05-26T10:26:51.474448Z
-            items_count: 50
-            value: '24741049597737'
-          nullable: true
-          type: object
-          x-struct:
-          x-validate:
-      required:
-        - items
-        - next_page_params
-      title: AddressTransactionsPaginatedResponse
-      type: object
-      x-struct:
       x-validate:
     AddressTabsCounters:
       additionalProperties: false
@@ -1245,65 +1003,6 @@ components:
       type: object
       x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.Address
       x-validate:
-    TokensPaginatedResponse:
-      additionalProperties: false
-      nullable: false
-      properties:
-        items:
-          items:
-            $ref: '#/components/schemas/Token'
-          nullable: false
-          type: array
-          x-struct:
-          x-validate:
-        next_page_params:
-          example:
-            contract_address_hash: '0xbe9895146f7af43049ca1c1ae358b0541ea49704'
-            fiat_value: '4724.32'
-            holders_count: 59731
-            is_name_null: false
-            items_count: 50
-            market_cap: '570958125.135513'
-            name: Wrapped Staked ETH
-          nullable: true
-          type: object
-          x-struct:
-          x-validate:
-      required:
-        - items
-        - next_page_params
-      title: TokensPaginatedResponse
-      type: object
-      x-struct:
-      x-validate:
-    AddressInternalTransactionsPaginatedResponse:
-      additionalProperties: false
-      nullable: false
-      properties:
-        items:
-          items:
-            $ref: '#/components/schemas/InternalTransaction'
-          nullable: false
-          type: array
-          x-struct:
-          x-validate:
-        next_page_params:
-          example:
-            block_number: 22530770
-            index: 8
-            items_count: 50
-            transaction_index: 8
-          nullable: true
-          type: object
-          x-struct:
-          x-validate:
-      required:
-        - items
-        - next_page_params
-      title: AddressInternalTransactionsPaginatedResponse
-      type: object
-      x-struct:
-      x-validate:
     RawTrace:
       items:
         additionalProperties: false
@@ -1431,7 +1130,24 @@ components:
                   - type: object
                     x-struct:
                     x-validate:
-                  - type: array
+                  - items:
+                      anyOf:
+                        - type: object
+                          x-struct:
+                          x-validate:
+                        - items:
+                            type: string
+                            x-struct:
+                            x-validate:
+                          type: array
+                          x-struct:
+                          x-validate:
+                        - type: string
+                          x-struct:
+                          x-validate:
+                      x-struct:
+                      x-validate:
+                    type: array
                     x-struct:
                     x-validate:
                   - type: string
@@ -1518,33 +1234,6 @@ components:
       type: string
       x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.General.FloatStringNullable
       x-validate:
-    BlockTransactionsPaginatedResponse:
-      additionalProperties: false
-      nullable: false
-      properties:
-        items:
-          items:
-            $ref: '#/components/schemas/Transaction'
-          nullable: false
-          type: array
-          x-struct:
-          x-validate:
-        next_page_params:
-          example:
-            block_number: 12345678
-            index: 103
-            items_count: 50
-          nullable: true
-          type: object
-          x-struct:
-          x-validate:
-      required:
-        - items
-        - next_page_params
-      title: BlockTransactionsPaginatedResponse
-      type: object
-      x-struct:
-      x-validate:
     Summary:
       additionalProperties: false
       properties:
@@ -1622,219 +1311,6 @@ components:
       type: string
       x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.General.URLNullable
       x-validate:
-    AddressWithdrawalsPaginatedResponse:
-      additionalProperties: false
-      nullable: false
-      properties:
-        items:
-          items:
-            $ref: '#/components/schemas/Withdrawal'
-          nullable: false
-          type: array
-          x-struct:
-          x-validate:
-        next_page_params:
-          example:
-            index: 88192653
-            items_count: 50
-          nullable: true
-          type: object
-          x-struct:
-          x-validate:
-      required:
-        - items
-        - next_page_params
-      title: AddressWithdrawalsPaginatedResponse
-      type: object
-      x-struct:
-      x-validate:
-    AddressListPaginatedResponse:
-      additionalProperties: false
-      nullable: false
-      properties:
-        exchange_rate:
-          $ref: '#/components/schemas/FloatStringNullable'
-        items:
-          items:
-            additionalProperties: false
-            description: Address
-            properties:
-              coin_balance:
-                $ref: '#/components/schemas/IntegerStringNullable'
-              ens_domain_name:
-                description: ENS domain name associated with the address
-                nullable: true
-                type: string
-                x-struct:
-                x-validate:
-              filecoin:
-                additionalProperties: false
-                properties:
-                  actor_type:
-                    description: Type of actor associated with the Filecoin address
-                    enum:
-                      - account
-                      - cron
-                      - datacap
-                      - eam
-                      - ethaccount
-                      - evm
-                      - init
-                      - market
-                      - miner
-                      - multisig
-                      - paych
-                      - placeholder
-                      - power
-                      - reward
-                      - system
-                      - verifreg
-                      - paymentchannel
-                    nullable: true
-                    type: string
-                    x-struct:
-                    x-validate:
-                  id:
-                    description: Short f0 Filecoin address that may change during chain reorgs
-                    example: f03248220
-                    nullable: true
-                    type: string
-                    x-struct:
-                    x-validate:
-                  robust:
-                    description: Robust f0/f1/f2/f3/f4 Filecoin address
-                    example: f25nml2cfbljvn4goqtclhifepvfnicv6g7mfmmvq
-                    nullable: true
-                    type: string
-                    x-struct:
-                    x-validate:
-                required:
-                  - id
-                  - robust
-                  - actor_type
-                type: object
-                x-struct:
-                x-validate:
-              hash:
-                $ref: '#/components/schemas/AddressHash'
-              implementations:
-                description: Implementations linked with the contract
-                items:
-                  $ref: '#/components/schemas/Implementation'
-                type: array
-                x-struct:
-                x-validate:
-              is_contract:
-                description: Has address contract code?
-                nullable: true
-                type: boolean
-                x-struct:
-                x-validate:
-              is_scam:
-                description: Has address scam badge?
-                nullable: false
-                type: boolean
-                x-struct:
-                x-validate:
-              is_verified:
-                description: Has address associated source code?
-                nullable: true
-                type: boolean
-                x-struct:
-                x-validate:
-              metadata:
-                allOf:
-                  - $ref: '#/components/schemas/Metadata'
-                nullable: true
-                x-struct:
-                x-validate:
-              name:
-                description: Name associated with the address
-                nullable: true
-                type: string
-                x-struct:
-                x-validate:
-              private_tags:
-                description: Private tags associated with the address
-                items:
-                  $ref: '#/components/schemas/Tag'
-                type: array
-                x-struct:
-                x-validate:
-              proxy_type:
-                $ref: '#/components/schemas/ProxyType'
-              public_tags:
-                description: Public tags associated with the address
-                items:
-                  $ref: '#/components/schemas/Tag'
-                type: array
-                x-struct:
-                x-validate:
-              reputation:
-                description: Reputation of the address
-                enum:
-                  - ok
-                  - scam
-                nullable: false
-                type: string
-                x-struct:
-                x-validate:
-              transactions_count:
-                anyOf:
-                  - $ref: '#/components/schemas/IntegerString'
-                  - $ref: '#/components/schemas/EmptyString'
-                nullable: true
-                x-struct:
-                x-validate:
-              watchlist_names:
-                description: Watchlist name associated with the address
-                items:
-                  $ref: '#/components/schemas/WatchlistName'
-                type: array
-                x-struct:
-                x-validate:
-            required:
-              - hash
-              - is_contract
-              - name
-              - is_scam
-              - reputation
-              - proxy_type
-              - implementations
-              - is_verified
-              - ens_domain_name
-              - metadata
-              - coin_balance
-              - transactions_count
-            title: AddressWithCoinBalanceAndTransactionsCount
-            type: object
-            x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.Address
-            x-validate:
-          nullable: false
-          type: array
-          x-struct:
-          x-validate:
-        next_page_params:
-          example:
-            fetched_coin_balance: '124355417998347240251800'
-            hash: '0x59708733fbbf64378d9293ec56b977c011a08fd2'
-            items_count: 50
-            transactions_count:
-          nullable: true
-          type: object
-          x-struct:
-          x-validate:
-        total_supply:
-          $ref: '#/components/schemas/FloatStringNullable'
-      required:
-        - items
-        - next_page_params
-        - exchange_rate
-        - total_supply
-      title: AddressListPaginatedResponse
-      type: object
-      x-struct:
-      x-validate:
     FloatString:
       pattern: ^([1-9][0-9]*|0)(\.[0-9]+)?$
       title: FloatString
@@ -1847,32 +1323,6 @@ components:
       title: FullHashNullable
       type: string
       x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.General.FullHashNullable
-      x-validate:
-    AddressBlocksValidatedPaginatedResponse:
-      additionalProperties: false
-      nullable: false
-      properties:
-        items:
-          items:
-            $ref: '#/components/schemas/Block'
-          nullable: false
-          type: array
-          x-struct:
-          x-validate:
-        next_page_params:
-          example:
-            block_number: 22546398
-            items_count: 50
-          nullable: true
-          type: object
-          x-struct:
-          x-validate:
-      required:
-        - items
-        - next_page_params
-      title: AddressBlocksValidatedPaginatedResponse
-      type: object
-      x-struct:
       x-validate:
     Block:
       additionalProperties: false
@@ -2057,61 +1507,6 @@ components:
       type: object
       x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.General.Implementation
       x-validate:
-    InternalTransactionsPaginatedResponse:
-      additionalProperties: false
-      nullable: false
-      properties:
-        items:
-          items:
-            $ref: '#/components/schemas/InternalTransaction'
-          nullable: false
-          type: array
-          x-struct:
-          x-validate:
-        next_page_params:
-          example:
-            block_number: 22133247
-            index: 50
-            items_count: 50
-            transaction_index: 68
-          nullable: true
-          type: object
-          x-struct:
-          x-validate:
-      required:
-        - items
-        - next_page_params
-      title: InternalTransactionsPaginatedResponse
-      type: object
-      x-struct:
-      x-validate:
-    TransactionLogsPaginatedResponse:
-      additionalProperties: false
-      nullable: false
-      properties:
-        items:
-          items:
-            $ref: '#/components/schemas/Log'
-          nullable: false
-          type: array
-          x-struct:
-          x-validate:
-        next_page_params:
-          example:
-            block_number: 21925703
-            index: 124
-            items_count: 50
-          nullable: true
-          type: object
-          x-struct:
-          x-validate:
-      required:
-        - items
-        - next_page_params
-      title: TransactionLogsPaginatedResponse
-      type: object
-      x-struct:
-      x-validate:
     AddressHash:
       nullable: false
       pattern: ^0x([A-Fa-f0-9]{40})$
@@ -2243,60 +1638,6 @@ components:
       type: object
       x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.CoinBalanceByDay
       x-validate:
-    HotSmartContractsPaginatedResponse:
-      additionalProperties: false
-      nullable: false
-      properties:
-        items:
-          items:
-            $ref: '#/components/schemas/HotContract'
-          nullable: false
-          type: array
-          x-struct:
-          x-validate:
-        next_page_params:
-          example:
-            contract_address_hash: '0x01a2A10583675E0e5dF52DE1b62734109201477a'
-            items_count: 50
-            total_gas_used: '100'
-            transactions_count: 100
-          nullable: true
-          type: object
-          x-struct:
-          x-validate:
-      required:
-        - items
-        - next_page_params
-      title: HotSmartContractsPaginatedResponse
-      type: object
-      x-struct:
-      x-validate:
-    TransactionTokenTransfersPaginatedResponse:
-      additionalProperties: false
-      nullable: false
-      properties:
-        items:
-          items:
-            $ref: '#/components/schemas/TokenTransfer'
-          nullable: false
-          type: array
-          x-struct:
-          x-validate:
-        next_page_params:
-          example:
-            block_number: 21307214
-            index: 442
-          nullable: true
-          type: object
-          x-struct:
-          x-validate:
-      required:
-        - items
-        - next_page_params
-      title: TransactionTokenTransfersPaginatedResponse
-      type: object
-      x-struct:
-      x-validate:
     Counter:
       additionalProperties: false
       properties:
@@ -2360,33 +1701,6 @@ components:
       title: Total
       type: object
       x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.TokenTransfer.Total
-      x-validate:
-    BlockInternalTransactionsPaginatedResponse:
-      additionalProperties: false
-      nullable: false
-      properties:
-        items:
-          items:
-            $ref: '#/components/schemas/InternalTransaction'
-          nullable: false
-          type: array
-          x-struct:
-          x-validate:
-        next_page_params:
-          example:
-            index: 8
-            items_count: 50
-            transaction_index: 3
-          nullable: true
-          type: object
-          x-struct:
-          x-validate:
-      required:
-        - items
-        - next_page_params
-      title: BlockInternalTransactionsPaginatedResponse
-      type: object
-      x-struct:
       x-validate:
     SearchResult:
       description: Search results containing blocks, transactions, and addresses
@@ -2696,33 +2010,6 @@ components:
       type: object
       x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.Proxy.MetadataTag
       x-validate:
-    TokenHoldersPaginatedResponse:
-      additionalProperties: false
-      nullable: false
-      properties:
-        items:
-          items:
-            $ref: '#/components/schemas/TokenHolderResponse'
-          nullable: false
-          type: array
-          x-struct:
-          x-validate:
-        next_page_params:
-          example:
-            address_hash: '0x48bb9b14483e43c7726df702b271d410e7460656'
-            items_count: 50
-            value: '200000000000000'
-          nullable: true
-          type: object
-          x-struct:
-          x-validate:
-      required:
-        - items
-        - next_page_params
-      title: TokenHoldersPaginatedResponse
-      type: object
-      x-struct:
-      x-validate:
     TokenInstanceInList:
       additionalProperties: false
       nullable: false
@@ -2854,7 +2141,24 @@ components:
                   - type: object
                     x-struct:
                     x-validate:
-                  - type: array
+                  - items:
+                      anyOf:
+                        - type: object
+                          x-struct:
+                          x-validate:
+                        - items:
+                            type: string
+                            x-struct:
+                            x-validate:
+                          type: array
+                          x-struct:
+                          x-validate:
+                        - type: string
+                          x-struct:
+                          x-validate:
+                      x-struct:
+                      x-validate:
+                    type: array
                     x-struct:
                     x-validate:
                   - type: string
@@ -2876,59 +2180,6 @@ components:
       title: DecodedInput
       type: object
       x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.General.DecodedInput
-      x-validate:
-    TokenInstancesPaginatedResponse:
-      additionalProperties: false
-      nullable: false
-      properties:
-        items:
-          items:
-            $ref: '#/components/schemas/TokenInstance'
-          nullable: false
-          type: array
-          x-struct:
-          x-validate:
-        next_page_params:
-          example:
-            unique_token: 782098
-          nullable: true
-          type: object
-          x-struct:
-          x-validate:
-      required:
-        - items
-        - next_page_params
-      title: TokenInstancesPaginatedResponse
-      type: object
-      x-struct:
-      x-validate:
-    TokenInstanceHoldersPaginatedResponse:
-      additionalProperties: false
-      nullable: false
-      properties:
-        items:
-          items:
-            $ref: '#/components/schemas/TokenHolderResponse'
-          nullable: false
-          type: array
-          x-struct:
-          x-validate:
-        next_page_params:
-          example:
-            address_hash: '0x1d2c163fbda9486c3a384b6fa5e34c96fe948e9a'
-            items_count: 50
-            token_id: '0'
-            value: '4217417051704137590935'
-          nullable: true
-          type: object
-          x-struct:
-          x-validate:
-      required:
-        - items
-        - next_page_params
-      title: TokenInstanceHoldersPaginatedResponse
-      type: object
-      x-struct:
       x-validate:
     AddressHashNullable:
       nullable: true
@@ -3060,61 +2311,6 @@ components:
       type: string
       x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.General.TimestampNullable
       x-validate:
-    AddressTokenTransfersPaginatedResponse:
-      additionalProperties: false
-      nullable: false
-      properties:
-        items:
-          items:
-            $ref: '#/components/schemas/TokenTransfer'
-          nullable: false
-          type: array
-          x-struct:
-          x-validate:
-        next_page_params:
-          example:
-            block_number: 12345678
-            index: 0
-            items_count: 50
-          nullable: true
-          type: object
-          x-struct:
-          x-validate:
-      required:
-        - items
-        - next_page_params
-      title: AddressTokenTransfersPaginatedResponse
-      type: object
-      x-struct:
-      x-validate:
-    TransactionInternalTransactionsPaginatedResponse:
-      additionalProperties: false
-      nullable: false
-      properties:
-        items:
-          items:
-            $ref: '#/components/schemas/InternalTransaction'
-          nullable: false
-          type: array
-          x-struct:
-          x-validate:
-        next_page_params:
-          example:
-            block_number: 22133247
-            index: 50
-            items_count: 50
-            transaction_index: 68
-          nullable: true
-          type: object
-          x-struct:
-          x-validate:
-      required:
-        - items
-        - next_page_params
-      title: TransactionInternalTransactionsPaginatedResponse
-      type: object
-      x-struct:
-      x-validate:
     TokenResponse:
       additionalProperties: false
       description: Token response
@@ -3202,32 +2398,6 @@ components:
       type: object
       x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.Token
       x-validate:
-    SmartContractsPaginatedResponse:
-      additionalProperties: false
-      nullable: false
-      properties:
-        items:
-          items:
-            $ref: '#/components/schemas/SmartContract'
-          nullable: false
-          type: array
-          x-struct:
-          x-validate:
-        next_page_params:
-          example:
-            items_count: 50
-            smart_contract_id: 1947801
-          nullable: true
-          type: object
-          x-struct:
-          x-validate:
-      required:
-        - items
-        - next_page_params
-      title: SmartContractsPaginatedResponse
-      type: object
-      x-struct:
-      x-validate:
     StateChange:
       additionalProperties: false
       properties:
@@ -3269,187 +2439,6 @@ components:
       title: StateChange
       type: object
       x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.Transaction.StateChange
-      x-validate:
-    BlockWithdrawalsPaginatedResponse:
-      additionalProperties: false
-      nullable: false
-      properties:
-        items:
-          items:
-            $ref: '#/components/schemas/Withdrawal'
-          nullable: false
-          type: array
-          x-struct:
-          x-validate:
-        next_page_params:
-          example:
-            index: 88192653
-            items_count: 50
-          nullable: true
-          type: object
-          x-struct:
-          x-validate:
-      required:
-        - items
-        - next_page_params
-      title: BlockWithdrawalsPaginatedResponse
-      type: object
-      x-struct:
-      x-validate:
-    AddressWithCoinBalanceAndTransactionsCount:
-      additionalProperties: false
-      description: Address
-      properties:
-        coin_balance:
-          $ref: '#/components/schemas/IntegerStringNullable'
-        ens_domain_name:
-          description: ENS domain name associated with the address
-          nullable: true
-          type: string
-          x-struct:
-          x-validate:
-        filecoin:
-          additionalProperties: false
-          properties:
-            actor_type:
-              description: Type of actor associated with the Filecoin address
-              enum:
-                - account
-                - cron
-                - datacap
-                - eam
-                - ethaccount
-                - evm
-                - init
-                - market
-                - miner
-                - multisig
-                - paych
-                - placeholder
-                - power
-                - reward
-                - system
-                - verifreg
-                - paymentchannel
-              nullable: true
-              type: string
-              x-struct:
-              x-validate:
-            id:
-              description: Short f0 Filecoin address that may change during chain reorgs
-              example: f03248220
-              nullable: true
-              type: string
-              x-struct:
-              x-validate:
-            robust:
-              description: Robust f0/f1/f2/f3/f4 Filecoin address
-              example: f25nml2cfbljvn4goqtclhifepvfnicv6g7mfmmvq
-              nullable: true
-              type: string
-              x-struct:
-              x-validate:
-          required:
-            - id
-            - robust
-            - actor_type
-          type: object
-          x-struct:
-          x-validate:
-        hash:
-          $ref: '#/components/schemas/AddressHash'
-        implementations:
-          description: Implementations linked with the contract
-          items:
-            $ref: '#/components/schemas/Implementation'
-          type: array
-          x-struct:
-          x-validate:
-        is_contract:
-          description: Has address contract code?
-          nullable: true
-          type: boolean
-          x-struct:
-          x-validate:
-        is_scam:
-          description: Has address scam badge?
-          nullable: false
-          type: boolean
-          x-struct:
-          x-validate:
-        is_verified:
-          description: Has address associated source code?
-          nullable: true
-          type: boolean
-          x-struct:
-          x-validate:
-        metadata:
-          allOf:
-            - $ref: '#/components/schemas/Metadata'
-          nullable: true
-          x-struct:
-          x-validate:
-        name:
-          description: Name associated with the address
-          nullable: true
-          type: string
-          x-struct:
-          x-validate:
-        private_tags:
-          description: Private tags associated with the address
-          items:
-            $ref: '#/components/schemas/Tag'
-          type: array
-          x-struct:
-          x-validate:
-        proxy_type:
-          $ref: '#/components/schemas/ProxyType'
-        public_tags:
-          description: Public tags associated with the address
-          items:
-            $ref: '#/components/schemas/Tag'
-          type: array
-          x-struct:
-          x-validate:
-        reputation:
-          description: Reputation of the address
-          enum:
-            - ok
-            - scam
-          nullable: false
-          type: string
-          x-struct:
-          x-validate:
-        transactions_count:
-          anyOf:
-            - $ref: '#/components/schemas/IntegerString'
-            - $ref: '#/components/schemas/EmptyString'
-          nullable: true
-          x-struct:
-          x-validate:
-        watchlist_names:
-          description: Watchlist name associated with the address
-          items:
-            $ref: '#/components/schemas/WatchlistName'
-          type: array
-          x-struct:
-          x-validate:
-      required:
-        - hash
-        - is_contract
-        - name
-        - is_scam
-        - reputation
-        - proxy_type
-        - implementations
-        - is_verified
-        - ens_domain_name
-        - metadata
-        - coin_balance
-        - transactions_count
-      title: AddressWithCoinBalanceAndTransactionsCount
-      type: object
-      x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.Address
       x-validate:
     BlockCountdown:
       description: Block countdown information showing estimated time until a target block is reached
@@ -3885,32 +2874,6 @@ components:
       type: object
       x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.SmartContract
       x-validate:
-    WithdrawalsPaginatedResponse:
-      additionalProperties: false
-      nullable: false
-      properties:
-        items:
-          items:
-            $ref: '#/components/schemas/Withdrawal'
-          nullable: false
-          type: array
-          x-struct:
-          x-validate:
-        next_page_params:
-          example:
-            index: 50
-            items_count: 50
-          nullable: true
-          type: object
-          x-struct:
-          x-validate:
-      required:
-        - items
-        - next_page_params
-      title: WithdrawalsPaginatedResponse
-      type: object
-      x-struct:
-      x-validate:
     Fee:
       additionalProperties: false
       properties:
@@ -4096,34 +3059,6 @@ components:
       title: Token
       type: object
       x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.Token
-      x-validate:
-    AddressNFTsPaginatedResponse:
-      additionalProperties: false
-      nullable: false
-      properties:
-        items:
-          items:
-            $ref: '#/components/schemas/TokenInstanceInList'
-          nullable: false
-          type: array
-          x-struct:
-          x-validate:
-        next_page_params:
-          example:
-            items_count: 50
-            token_contract_address_hash: '0x1ffe11b9fb7f6ff1b153ab8608cf403ecaf9d44a'
-            token_id: '24950'
-            token_type: ERC-721
-          nullable: true
-          type: object
-          x-struct:
-          x-validate:
-      required:
-        - items
-        - next_page_params
-      title: AddressNFTsPaginatedResponse
-      type: object
-      x-struct:
       x-validate:
     Transaction:
       additionalProperties: false
@@ -4422,61 +3357,6 @@ components:
       title: Transaction
       type: object
       x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.Transaction
-      x-validate:
-    AddressTokensPaginatedResponse:
-      additionalProperties: false
-      nullable: false
-      properties:
-        items:
-          items:
-            $ref: '#/components/schemas/TokenBalance'
-          nullable: false
-          type: array
-          x-struct:
-          x-validate:
-        next_page_params:
-          example:
-            fiat_value:
-            id: 12519063346
-            items_count: 50
-            value: '3750000000000000000000'
-          nullable: true
-          type: object
-          x-struct:
-          x-validate:
-      required:
-        - items
-        - next_page_params
-      title: AddressTokensPaginatedResponse
-      type: object
-      x-struct:
-      x-validate:
-    AddressLogsPaginatedResponse:
-      additionalProperties: false
-      nullable: false
-      properties:
-        items:
-          items:
-            $ref: '#/components/schemas/Log'
-          nullable: false
-          type: array
-          x-struct:
-          x-validate:
-        next_page_params:
-          example:
-            block_number: 22546398
-            index: 268
-            items_count: 50
-          nullable: true
-          type: object
-          x-struct:
-          x-validate:
-      required:
-        - items
-        - next_page_params
-      title: AddressLogsPaginatedResponse
-      type: object
-      x-struct:
       x-validate:
     SignedAuthorization:
       additionalProperties: false
@@ -4837,33 +3717,6 @@ components:
       type: string
       x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.General.Timestamp
       x-validate:
-    WatchlistTransactionsPaginatedResponse:
-      additionalProperties: false
-      nullable: false
-      properties:
-        items:
-          items:
-            $ref: '#/components/schemas/TransactionResponse'
-          nullable: false
-          type: array
-          x-struct:
-          x-validate:
-        next_page_params:
-          example:
-            block_number: 23617990
-            index: 128
-            items_count: 50
-          nullable: true
-          type: object
-          x-struct:
-          x-validate:
-      required:
-        - items
-        - next_page_params
-      title: WatchlistTransactionsPaginatedResponse
-      type: object
-      x-struct:
-      x-validate:
 info:
   contact:
     email: info@blockscout.com
@@ -5002,7 +3855,6 @@ paths:
                 required:
                   - items
                   - next_page_params
-                title: BlockInternalTransactionsPaginatedResponse
                 type: object
                 x-struct:
                 x-validate:
@@ -5194,7 +4046,6 @@ paths:
           content:
             application/json:
               schema:
-                additionalProperties: false
                 items:
                   $ref: '#/components/schemas/TransactionResponse'
                 nullable: false
@@ -5518,7 +4369,6 @@ paths:
                 required:
                   - items
                   - next_page_params
-                title: TokensPaginatedResponse
                 type: object
                 x-struct:
                 x-validate:
@@ -5680,7 +4530,6 @@ paths:
               schema:
                 items:
                   $ref: '#/components/schemas/TokenBalance'
-                title: AddressTokenBalances
                 type: array
                 x-struct:
                 x-validate:
@@ -5778,7 +4627,6 @@ paths:
                 required:
                   - items
                   - next_page_params
-                title: BlockWithdrawalsPaginatedResponse
                 type: object
                 x-struct:
                 x-validate:
@@ -5875,7 +4723,6 @@ paths:
                 required:
                   - items
                   - next_page_params
-                title: TokenHoldersPaginatedResponse
                 type: object
                 x-struct:
                 x-validate:
@@ -6063,7 +4910,6 @@ paths:
                 required:
                   - items
                   - next_page_params
-                title: AddressTokensPaginatedResponse
                 type: object
                 x-struct:
                 x-validate:
@@ -6405,7 +5251,6 @@ paths:
                 required:
                   - items
                   - next_page_params
-                title: AddressTokenTransfersPaginatedResponse
                 type: object
                 x-struct:
                 x-validate:
@@ -6528,7 +5373,6 @@ paths:
                 required:
                   - items
                   - next_page_params
-                title: AddressNFTsPaginatedResponse
                 type: object
                 x-struct:
                 x-validate:
@@ -6651,7 +5495,6 @@ paths:
                 required:
                   - items
                   - next_page_params
-                title: TokenInstancesPaginatedResponse
                 type: object
                 x-struct:
                 x-validate:
@@ -6698,7 +5541,6 @@ paths:
           content:
             application/json:
               schema:
-                additionalProperties: false
                 items:
                   $ref: '#/components/schemas/BlockResponse'
                 nullable: false
@@ -6831,7 +5673,6 @@ paths:
                 required:
                   - items
                   - next_page_params
-                title: AddressBlocksValidatedPaginatedResponse
                 type: object
                 x-struct:
                 x-validate:
@@ -6957,7 +5798,6 @@ paths:
                 required:
                   - items
                   - next_page_params
-                title: AddressInternalTransactionsPaginatedResponse
                 type: object
                 x-struct:
                 x-validate:
@@ -7137,7 +5977,6 @@ paths:
                 required:
                   - items
                   - next_page_params
-                title: TokenTransfersPaginatedResponse
                 type: object
                 x-struct:
                 x-validate:
@@ -7263,7 +6102,6 @@ paths:
                 required:
                   - items
                   - next_page_params
-                title: TransactionsPaginatedResponse
                 type: object
                 x-struct:
                 x-validate:
@@ -7367,7 +6205,6 @@ paths:
                 required:
                   - items
                   - next_page_params
-                title: TokenInstanceHoldersPaginatedResponse
                 type: object
                 x-struct:
                 x-validate:
@@ -7523,7 +6360,6 @@ paths:
                 required:
                   - items
                   - next_page_params
-                title: HotSmartContractsPaginatedResponse
                 type: object
                 x-struct:
                 x-validate:
@@ -7665,7 +6501,6 @@ paths:
                 required:
                   - items
                   - next_page_params
-                title: TokenInstanceTransfersPaginatedResponse
                 type: object
                 x-struct:
                 x-validate:
@@ -7854,7 +6689,6 @@ paths:
                 required:
                   - items
                   - next_page_params
-                title: TokenTransfersPaginatedResponse
                 type: object
                 x-struct:
                 x-validate:
@@ -7988,7 +6822,6 @@ paths:
                 required:
                   - items
                   - next_page_params
-                title: TransactionTokenTransfersPaginatedResponse
                 type: object
                 x-struct:
                 x-validate:
@@ -8146,7 +6979,6 @@ paths:
           content:
             application/json:
               schema:
-                additionalProperties: false
                 items:
                   $ref: '#/components/schemas/TransactionResponse'
                 nullable: false
@@ -8679,7 +7511,6 @@ paths:
                 required:
                   - items
                   - next_page_params
-                title: SmartContractsPaginatedResponse
                 type: object
                 x-struct:
                 x-validate:
@@ -8766,7 +7597,6 @@ paths:
                 required:
                   - items
                   - next_page_params
-                title: AddressCoinBalanceHistoryPaginatedResponse
                 type: object
                 x-struct:
                 x-validate:
@@ -8931,7 +7761,6 @@ paths:
                 required:
                   - items
                   - next_page_params
-                title: TransactionStateChangesPaginatedResponse
                 type: object
                 x-struct:
                 x-validate:
@@ -9309,7 +8138,7 @@ paths:
                         - metadata
                         - coin_balance
                         - transactions_count
-                      title: AddressWithCoinBalanceAndTransactionsCount
+                      title: Address
                       type: object
                       x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.Address
                       x-validate:
@@ -9334,7 +8163,6 @@ paths:
                   - next_page_params
                   - exchange_rate
                   - total_supply
-                title: AddressListPaginatedResponse
                 type: object
                 x-struct:
                 x-validate:
@@ -9420,7 +8248,6 @@ paths:
                 required:
                   - items
                   - next_page_params
-                title: AddressWithdrawalsPaginatedResponse
                 type: object
                 x-struct:
                 x-validate:
@@ -9540,7 +8367,6 @@ paths:
                 required:
                   - items
                   - next_page_params
-                title: InternalTransactionsPaginatedResponse
                 type: object
                 x-struct:
                 x-validate:
@@ -9601,7 +8427,6 @@ paths:
                     type: array
                     x-struct:
                     x-validate:
-                title: AddressCoinBalanceHistoryByDay
                 type: object
                 x-struct:
                 x-validate:
@@ -9885,7 +8710,6 @@ paths:
                 required:
                   - items
                   - next_page_params
-                title: BlockTransactionsPaginatedResponse
                 type: object
                 x-struct:
                 x-validate:
@@ -10089,7 +8913,6 @@ paths:
                 required:
                   - items
                   - next_page_params
-                title: BlocksPaginatedResponse
                 type: object
                 x-struct:
                 x-validate:
@@ -10256,7 +9079,6 @@ paths:
                 required:
                   - items
                   - next_page_params
-                title: AddressLogsPaginatedResponse
                 type: object
                 x-struct:
                 x-validate:
@@ -10763,7 +9585,6 @@ paths:
                 required:
                   - items
                   - next_page_params
-                title: TransactionLogsPaginatedResponse
                 type: object
                 x-struct:
                 x-validate:
@@ -10859,7 +9680,6 @@ paths:
                 required:
                   - items
                   - next_page_params
-                title: WatchlistTransactionsPaginatedResponse
                 type: object
                 x-struct:
                 x-validate:
@@ -10970,7 +9790,6 @@ paths:
                 required:
                   - items
                   - next_page_params
-                title: TransactionInternalTransactionsPaginatedResponse
                 type: object
                 x-struct:
                 x-validate:
@@ -11169,7 +9988,6 @@ paths:
                 required:
                   - items
                   - next_page_params
-                title: WithdrawalsPaginatedResponse
                 type: object
                 x-struct:
                 x-validate:
@@ -11494,7 +10312,6 @@ paths:
                 required:
                   - items
                   - next_page_params
-                title: AddressTransactionsPaginatedResponse
                 type: object
                 x-struct:
                 x-validate:
@@ -11773,7 +10590,6 @@ paths:
                 required:
                   - items
                   - next_page_params
-                title: AddressNFTCollectionsPaginatedResponse
                 type: object
                 x-struct:
                 x-validate:
