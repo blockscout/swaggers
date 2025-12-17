@@ -6129,6 +6129,18 @@ paths:
             type: string
             x-struct:
             x-validate:
+        - description: |
+            Filter by transaction type. Comma-separated list of:
+            * blob_transaction - Only show blob transactions
+          in: query
+          name: type
+          required: false
+          schema:
+            enum:
+              - blob_transaction
+            type: string
+            x-struct:
+            x-validate:
         - description: Block number for paging
           in: query
           name: block_number
