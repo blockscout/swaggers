@@ -4261,7 +4261,7 @@ info:
   contact:
     email: info@blockscout.com
   title: Blockscout
-  version: 9.3.0
+  version: 9.3.1
 openapi: 3.0.0
 paths:
   /v2/blocks/{block_hash_or_number_param}/internal-transactions:
