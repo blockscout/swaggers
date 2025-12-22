@@ -35,12 +35,12 @@ paths:
           schema:
             $ref: '#/definitions/rpcStatus'
       parameters:
-        - name: instance_id
+        - name: instance_private_id
           in: query
           required: false
           type: integer
           format: int32
-        - name: instance_uuid
+        - name: instance_public_id
           in: query
           required: false
           type: string
