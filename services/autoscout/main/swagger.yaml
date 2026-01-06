@@ -379,6 +379,16 @@ paths:
           in: query
           required: false
           type: string
+        - name: status
+          in: query
+          required: false
+          type: string
+          enum:
+            - Unconfirmed
+            - Active
+            - Paused
+            - Canceled
+          default: Unconfirmed
         - name: page
           in: query
           required: false
@@ -474,6 +484,31 @@ paths:
           in: path
           required: true
           type: string
+      tags:
+        - Apay
+      security:
+        - ApiKeyAuth: []
+    put:
+      operationId: UpdatelApaySubscription
+      responses:
+        "200":
+          description: A successful response.
+          schema:
+            $ref: '#/definitions/v1UpdateApaySubscriptionResponse'
+        default:
+          description: An unexpected error response.
+          schema:
+            $ref: '#/definitions/rpcStatus'
+      parameters:
+        - name: subscription_id
+          in: path
+          required: true
+          type: string
+        - name: body
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/ApayUpdateApaySubscriptionBody'
       tags:
         - Apay
       security:
@@ -1222,6 +1257,58 @@ paths:
         - Instances
       security:
         - ApiKeyAuth: []
+  /api/v1/subscriptions/stripe:
+    get:
+      operationId: Autoscout_GetStripeSubscriptionStatus
+      responses:
+        "200":
+          description: A successful response.
+          schema:
+            $ref: '#/definitions/v1GetStripeSubscriptionStatusResponse'
+        default:
+          description: An unexpected error response.
+          schema:
+            $ref: '#/definitions/rpcStatus'
+      tags:
+        - Subscription
+      security:
+        - ApiKeyAuth: []
+    delete:
+      operationId: Autoscout_CancelStripeSubscription
+      responses:
+        "200":
+          description: A successful response.
+          schema:
+            $ref: '#/definitions/v1CancelStripeSubscriptionResponse'
+        default:
+          description: An unexpected error response.
+          schema:
+            $ref: '#/definitions/rpcStatus'
+      tags:
+        - Subscription
+      security:
+        - ApiKeyAuth: []
+    post:
+      operationId: Autoscout_CreateStripeSubscription
+      responses:
+        "200":
+          description: A successful response.
+          schema:
+            $ref: '#/definitions/v1CreateStripeSubscriptionResponse'
+        default:
+          description: An unexpected error response.
+          schema:
+            $ref: '#/definitions/rpcStatus'
+      parameters:
+        - name: body
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/v1CreateStripeSubscriptionRequest'
+      tags:
+        - Subscriptions
+      security:
+        - ApiKeyAuth: []
   /api/v1/users/acquisition_source:
     post:
       operationId: Autoscout_CreateUserAcquisitionSource
@@ -1459,6 +1546,13 @@ paths:
       tags:
         - Health
 definitions:
+  ApayUpdateApaySubscriptionBody:
+    type: object
+    properties:
+      new_plan_id:
+        type: string
+    required:
+      - new_plan_id
   ApayUpdateApaySubscriptionPlanBody:
     type: object
     properties:
@@ -1648,6 +1742,8 @@ definitions:
         type: string
       mode:
         $ref: '#/definitions/v1ApaySubscriptionPlanMode'
+      aggregation_mode:
+        $ref: '#/definitions/v1ApayTokensAggregationMode'
     required:
       - id
       - name
@@ -1655,6 +1751,7 @@ definitions:
       - base_tokens_count
       - price_per_token_usd
       - mode
+      - aggregation_mode
   v1ApaySubscriptionPlanMode:
     type: string
     enum:
@@ -1669,6 +1766,12 @@ definitions:
       - Paused
       - Canceled
     default: Unconfirmed
+  v1ApayTokensAggregationMode:
+    type: string
+    enum:
+      - SUM
+      - LAST
+    default: SUM
   v1ArbitrumConfig:
     type: object
     properties:
@@ -1773,6 +1876,8 @@ definitions:
       - instance_id
   v1CancelApaySubscriptionResponse:
     type: object
+  v1CancelStripeSubscriptionResponse:
+    type: object
   v1ChainType:
     type: string
     enum:
@@ -1824,10 +1929,13 @@ definitions:
         type: string
       mode:
         $ref: '#/definitions/v1ApaySubscriptionPlanMode'
+      aggregation_mode:
+        $ref: '#/definitions/v1ApayTokensAggregationMode'
     required:
       - name
       - price_per_token_usd
       - mode
+      - aggregation_mode
   v1CreateApaySubscriptionPlanResponse:
     type: object
     properties:
@@ -1979,6 +2087,20 @@ definitions:
         type: string
     required:
       - id
+      - url
+  v1CreateStripeSubscriptionRequest:
+    type: object
+    properties:
+      success_redirect_url:
+        type: string
+    required:
+      - success_redirect_url
+  v1CreateStripeSubscriptionResponse:
+    type: object
+    properties:
+      url:
+        type: string
+    required:
       - url
   v1CreateUserAcquisitionSourceRequest:
     type: object
@@ -2381,6 +2503,11 @@ definitions:
         title: timestamp (hour) until which the deployment's storage has been paid for
     required:
       - storage_data
+  v1GetStripeSubscriptionStatusResponse:
+    type: object
+    properties:
+      is_active:
+        type: boolean
   v1HealthCheckResponse:
     type: object
     properties:
@@ -3220,6 +3347,11 @@ definitions:
         $ref: '#/definitions/v1ApaySubscriptionPlan'
     required:
       - plan
+  v1UpdateApaySubscriptionResponse:
+    type: object
+    properties:
+      subscription:
+        $ref: '#/definitions/v1ApaySubscription'
   v1UpdateConfigResponse:
     type: object
     properties:
