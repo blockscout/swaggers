@@ -380,15 +380,10 @@ paths:
           required: false
           type: string
         - name: status
+          description: comma separated ApaySubscriptionStatus array
           in: query
           required: false
           type: string
-          enum:
-            - Unconfirmed
-            - Active
-            - Paused
-            - Canceled
-          default: Unconfirmed
         - name: page
           in: query
           required: false
@@ -1761,11 +1756,11 @@ definitions:
   v1ApaySubscriptionStatus:
     type: string
     enum:
-      - Unconfirmed
-      - Active
-      - Paused
-      - Canceled
-    default: Unconfirmed
+      - UNCONFIRMED
+      - ACTIVE
+      - PAUSED
+      - CANCELED
+    default: UNCONFIRMED
   v1ApayTokensAggregationMode:
     type: string
     enum:
