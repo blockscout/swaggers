@@ -9987,6 +9987,79 @@ paths:
       summary: List event logs emitted during a specific transaction
       tags:
         - transactions
+  /v2/config/db-background-migrations:
+    get:
+      callbacks: {}
+      description: Returns list of background migrations that are not yet completed.
+      operationId: BlockScoutWeb.API.V2.ConfigController.db_background_migrations
+      parameters:
+        - description: API key for rate limiting or for sensitive endpoints
+          in: query
+          name: apikey
+          required: false
+          schema:
+            type: string
+            x-struct:
+            x-validate:
+        - description: Secret key for getting access to restricted resources
+          in: query
+          name: key
+          required: false
+          schema:
+            type: string
+            x-struct:
+            x-validate:
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                properties:
+                  migrations:
+                    items:
+                      properties:
+                        inserted_at:
+                          format: date-time
+                          type: string
+                          x-struct:
+                          x-validate:
+                        meta:
+                          nullable: true
+                          type: object
+                          x-struct:
+                          x-validate:
+                        migration_name:
+                          type: string
+                          x-struct:
+                          x-validate:
+                        status:
+                          type: string
+                          x-struct:
+                          x-validate:
+                        updated_at:
+                          format: date-time
+                          type: string
+                          x-struct:
+                          x-validate:
+                      type: object
+                      x-struct:
+                      x-validate:
+                    type: array
+                    x-struct:
+                    x-validate:
+                type: object
+                x-struct:
+                x-validate:
+          description: Uncompleted background migrations.
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JsonErrorResponse'
+          description: Unprocessable Entity
+      summary: Uncompleted background migrations
+      tags:
+        - config
   /v2/transactions/watchlist:
     get:
       callbacks: {}
