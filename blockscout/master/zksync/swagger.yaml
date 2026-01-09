@@ -3750,7 +3750,8 @@ paths:
           required: true
           schema:
             anyOf:
-              - type: integer
+              - minimum: 0
+                type: integer
                 x-struct:
                 x-validate:
               - $ref: '#/components/schemas/FullHash'
@@ -4673,7 +4674,8 @@ paths:
           required: true
           schema:
             anyOf:
-              - type: integer
+              - minimum: 0
+                type: integer
                 x-struct:
                 x-validate:
               - $ref: '#/components/schemas/FullHash'
@@ -4850,7 +4852,8 @@ paths:
           required: true
           schema:
             anyOf:
-              - type: integer
+              - minimum: 0
+                type: integer
                 x-struct:
                 x-validate:
               - $ref: '#/components/schemas/FullHash'
@@ -8689,7 +8692,8 @@ paths:
           required: true
           schema:
             anyOf:
-              - type: integer
+              - minimum: 0
+                type: integer
                 x-struct:
                 x-validate:
               - $ref: '#/components/schemas/FullHash'
