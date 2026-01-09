@@ -10303,6 +10303,52 @@ paths:
       summary: List internal transactions triggered during a specific transaction
       tags:
         - transactions
+  /v2/config/backend:
+    get:
+      callbacks: {}
+      description: Returns non-secret backend environment variables in the snake case (e.g., chain_type).
+      operationId: BlockScoutWeb.API.V2.ConfigController.backend
+      parameters:
+        - description: API key for rate limiting or for sensitive endpoints
+          in: query
+          name: apikey
+          required: false
+          schema:
+            type: string
+            x-struct:
+            x-validate:
+        - description: Secret key for getting access to restricted resources
+          in: query
+          name: key
+          required: false
+          schema:
+            type: string
+            x-struct:
+            x-validate:
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                properties:
+                  chain_type:
+                    nullable: true
+                    type: string
+                    x-struct:
+                    x-validate:
+                type: object
+                x-struct:
+                x-validate:
+          description: Backend environment configuration.
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JsonErrorResponse'
+          description: Unprocessable Entity
+      summary: Get backend environment configuration
+      tags:
+        - config
   /v2/addresses/{address_hash_param}/logs/csv:
     get:
       callbacks: {}
