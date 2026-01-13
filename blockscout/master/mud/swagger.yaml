@@ -11072,6 +11072,11 @@ paths:
                     type: string
                     x-struct:
                     x-validate:
+                  openapi_spec_folder_name:
+                    nullable: true
+                    type: string
+                    x-struct:
+                    x-validate:
                 type: object
                 x-struct:
                 x-validate:
