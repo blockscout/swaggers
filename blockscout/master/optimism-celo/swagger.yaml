@@ -1263,6 +1263,29 @@ components:
       type: string
       x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.General.FullHashNullable
       x-validate:
+    MainPage:
+      additionalProperties: false
+      description: Optimism Deposit struct for the main page.
+      properties:
+        l1_block_number:
+          type: integer
+          x-struct:
+          x-validate:
+        l1_block_timestamp:
+          $ref: '#/components/schemas/Timestamp'
+        l1_transaction_hash:
+          $ref: '#/components/schemas/FullHash'
+        l2_transaction_hash:
+          $ref: '#/components/schemas/FullHash'
+      required:
+        - l1_block_number
+        - l1_block_timestamp
+        - l1_transaction_hash
+        - l2_transaction_hash
+      title: MainPage
+      type: object
+      x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.Optimism.Deposit.MainPage
+      x-validate:
     Block:
       additionalProperties: false
       properties:
@@ -1760,6 +1783,39 @@ components:
       title: Counter
       type: object
       x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.Withdrawal.Counter
+      x-validate:
+    OutputRoot:
+      additionalProperties: false
+      description: Optimism Output Root struct.
+      properties:
+        l1_block_number:
+          type: integer
+          x-struct:
+          x-validate:
+        l1_timestamp:
+          $ref: '#/components/schemas/Timestamp'
+        l1_transaction_hash:
+          $ref: '#/components/schemas/FullHash'
+        l2_block_number:
+          type: integer
+          x-struct:
+          x-validate:
+        l2_output_index:
+          type: integer
+          x-struct:
+          x-validate:
+        output_root:
+          $ref: '#/components/schemas/FullHash'
+      required:
+        - l1_block_number
+        - l1_timestamp
+        - l1_transaction_hash
+        - l2_block_number
+        - l2_output_index
+        - output_root
+      title: OutputRoot
+      type: object
+      x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.Optimism.OutputRoot
       x-validate:
     IntegerStringNullable:
       nullable: true
@@ -2510,6 +2566,122 @@ components:
       title: AddressHashNullable
       type: string
       x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.General.AddressHashNullable
+      x-validate:
+    Batch:
+      additionalProperties: false
+      description: Optimism Batch struct.
+      nullable: true
+      properties:
+        batch_data_container:
+          enum:
+            - in_blob4844
+            - in_celestia
+            - in_eigenda
+            - in_alt_da
+            - in_calldata
+          nullable: true
+          type: string
+          x-struct:
+          x-validate:
+        blobs:
+          items:
+            additionalProperties: false
+            description: Blob struct bound with Optimism batch.
+            properties:
+              cert:
+                description: EigenDA cert raw bytes.
+                nullable: false
+                pattern: ^0x([A-Fa-f0-9]*)$
+                type: string
+                x-struct:
+                x-validate:
+              commitment:
+                description: Celestia or Alt-DA blob commitment.
+                nullable: false
+                pattern: ^0x([A-Fa-f0-9]*)$
+                type: string
+                x-struct:
+                x-validate:
+              hash:
+                description: EIP-4844 blob hash.
+                nullable: false
+                pattern: ^0x([A-Fa-f0-9]*)$
+                type: string
+                x-struct:
+                x-validate:
+              height:
+                description: Celestia block height.
+                nullable: false
+                type: integer
+                x-struct:
+                x-validate:
+              l1_timestamp:
+                description: L1 transaction timestamp bound with the blob.
+                format: date-time
+                nullable: false
+                type: string
+                x-struct:
+                x-validate:
+              l1_transaction_hash:
+                description: L1 transaction hash bound with the blob.
+                nullable: false
+                pattern: ^0x([A-Fa-f0-9]{64})$
+                type: string
+                x-struct:
+                x-validate:
+              namespace:
+                description: Celestia blob namespace.
+                nullable: false
+                pattern: ^0x([A-Fa-f0-9]*)$
+                type: string
+                x-struct:
+                x-validate:
+            required:
+              - l1_transaction_hash
+              - l1_timestamp
+            type: object
+            x-struct:
+            x-validate:
+          nullable: false
+          type: array
+          x-struct:
+          x-validate:
+        l1_timestamp:
+          $ref: '#/components/schemas/Timestamp'
+        l1_transaction_hashes:
+          items:
+            $ref: '#/components/schemas/FullHash'
+          nullable: false
+          type: array
+          x-struct:
+          x-validate:
+        l2_end_block_number:
+          type: integer
+          x-struct:
+          x-validate:
+        l2_start_block_number:
+          type: integer
+          x-struct:
+          x-validate:
+        number:
+          type: integer
+          x-struct:
+          x-validate:
+        transactions_count:
+          type: integer
+          x-struct:
+          x-validate:
+      required:
+        - number
+        - transactions_count
+        - l1_timestamp
+        - l1_transaction_hashes
+        - batch_data_container
+        - l2_end_block_number
+        - l2_start_block_number
+      title: Batch
+      type: object
+      x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.Optimism.Batch
       x-validate:
     InternalTransaction:
       additionalProperties: false
@@ -3820,6 +3992,35 @@ components:
       type: object
       x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.SignedAuthorization
       x-validate:
+    Deposit:
+      additionalProperties: false
+      description: Optimism Deposit struct.
+      properties:
+        l1_block_number:
+          type: integer
+          x-struct:
+          x-validate:
+        l1_block_timestamp:
+          $ref: '#/components/schemas/Timestamp'
+        l1_transaction_hash:
+          $ref: '#/components/schemas/FullHash'
+        l1_transaction_origin:
+          $ref: '#/components/schemas/AddressHash'
+        l2_transaction_gas_limit:
+          $ref: '#/components/schemas/IntegerString'
+        l2_transaction_hash:
+          $ref: '#/components/schemas/FullHash'
+      required:
+        - l1_block_number
+        - l1_block_timestamp
+        - l1_transaction_hash
+        - l1_transaction_origin
+        - l2_transaction_gas_limit
+        - l2_transaction_hash
+      title: Deposit
+      type: object
+      x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.Optimism.Deposit
+      x-validate:
     TransactionResponse:
       additionalProperties: false
       description: Transaction response
@@ -4249,6 +4450,49 @@ components:
       title: HexStringNullable
       type: string
       x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.General.HexStringNullable
+      x-validate:
+    Game:
+      additionalProperties: false
+      description: Optimism Dispute Game struct.
+      properties:
+        contract_address_hash:
+          $ref: '#/components/schemas/AddressHash'
+        created_at:
+          $ref: '#/components/schemas/Timestamp'
+        game_type:
+          type: integer
+          x-struct:
+          x-validate:
+        index:
+          type: integer
+          x-struct:
+          x-validate:
+        l2_block_number:
+          type: integer
+          x-struct:
+          x-validate:
+        resolved_at:
+          $ref: '#/components/schemas/TimestampNullable'
+        status:
+          enum:
+            - In progress
+            - Challenger wins
+            - Defender wins
+          nullable: false
+          type: string
+          x-struct:
+          x-validate:
+      required:
+        - contract_address_hash
+        - created_at
+        - game_type
+        - index
+        - l2_block_number
+        - resolved_at
+        - status
+      title: Game
+      type: object
+      x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.Optimism.Game
       x-validate:
     Timestamp:
       format: date-time
@@ -6103,6 +6347,46 @@ paths:
       summary: Celo chain configuration
       tags:
         - config
+  /v2/optimism/games/count:
+    get:
+      callbacks: {}
+      description: Retrieves a size of the games list.
+      operationId: BlockScoutWeb.API.V2.OptimismController.games_count
+      parameters:
+        - description: API key for rate limiting or for sensitive endpoints
+          in: query
+          name: apikey
+          required: false
+          schema:
+            type: string
+            x-struct:
+            x-validate:
+        - description: Secret key for getting access to restricted resources
+          in: query
+          name: key
+          required: false
+          schema:
+            type: string
+            x-struct:
+            x-validate:
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                nullable: false
+                type: integer
+                x-struct:
+                x-validate:
+          description: Number of items in the games list.
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JsonErrorResponse'
+          description: Unprocessable Entity
+      summary: Number of games in the list.
+      tags: []
   /v2/main-page/blocks:
     get:
       callbacks: {}
@@ -7731,6 +8015,61 @@ paths:
       summary: Get daily closing price and market cap for native coin
       tags:
         - stats
+  /v2/optimism/batches/da/celestia/{height}/{commitment}:
+    get:
+      callbacks: {}
+      description: Retrieves batch detailed info by the given celestia blob metadata (height and commitment).
+      operationId: BlockScoutWeb.API.V2.OptimismController.batch_by_celestia_blob
+      parameters:
+        - description: API key for rate limiting or for sensitive endpoints
+          in: query
+          name: apikey
+          required: false
+          schema:
+            type: string
+            x-struct:
+            x-validate:
+        - description: Secret key for getting access to restricted resources
+          in: query
+          name: key
+          required: false
+          schema:
+            type: string
+            x-struct:
+            x-validate:
+        - description: Celestia blob height in the path.
+          in: path
+          name: height
+          required: true
+          schema:
+            $ref: '#/components/schemas/IntegerString'
+        - description: Celestia blob commitment in the path.
+          in: path
+          name: commitment
+          required: true
+          schema:
+            $ref: '#/components/schemas/HexString'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Batch'
+          description: Batch detailed info.
+        '404':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFoundResponse'
+          description: Not Found
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JsonErrorResponse'
+          description: Unprocessable Entity
+      summary: Batch by celestia blob.
+      tags: []
   /v2/search/quick:
     get:
       callbacks: {}
@@ -7785,6 +8124,55 @@ paths:
       summary: Quick (unpaginated) search
       tags:
         - search
+  /v2/optimism/batches/{number}:
+    get:
+      callbacks: {}
+      description: Retrieves batch detailed info by the given number.
+      operationId: BlockScoutWeb.API.V2.OptimismController.batch_by_number
+      parameters:
+        - description: Batch number in the path.
+          in: path
+          name: number
+          required: true
+          schema:
+            $ref: '#/components/schemas/IntegerString'
+        - description: API key for rate limiting or for sensitive endpoints
+          in: query
+          name: apikey
+          required: false
+          schema:
+            type: string
+            x-struct:
+            x-validate:
+        - description: Secret key for getting access to restricted resources
+          in: query
+          name: key
+          required: false
+          schema:
+            type: string
+            x-struct:
+            x-validate:
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Batch'
+          description: Batch detailed info.
+        '404':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFoundResponse'
+          description: Not Found
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JsonErrorResponse'
+          description: Unprocessable Entity
+      summary: Batch by its number.
+      tags: []
   /v2/main-page/transactions:
     get:
       callbacks: {}
@@ -8194,6 +8582,124 @@ paths:
       summary: Retrieve detailed information about a specific NFT
       tags:
         - tokens
+  /v2/optimism/output-roots:
+    get:
+      callbacks: {}
+      description: Retrieves a paginated list of output roots.
+      operationId: BlockScoutWeb.API.V2.OptimismController.output_roots
+      parameters:
+        - description: API key for rate limiting or for sensitive endpoints
+          in: query
+          name: apikey
+          required: false
+          schema:
+            type: string
+            x-struct:
+            x-validate:
+        - description: Secret key for getting access to restricted resources
+          in: query
+          name: key
+          required: false
+          schema:
+            type: string
+            x-struct:
+            x-validate:
+        - description: Transaction index for paging
+          in: query
+          name: index
+          required: false
+          schema:
+            type: integer
+            x-struct:
+            x-validate:
+        - description: Number of items returned per page
+          in: query
+          name: items_count
+          required: false
+          schema:
+            maximum: 50
+            minimum: 1
+            type: integer
+            x-struct:
+            x-validate:
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                additionalProperties: false
+                nullable: false
+                properties:
+                  items:
+                    items:
+                      $ref: '#/components/schemas/OutputRoot'
+                    nullable: false
+                    type: array
+                    x-struct:
+                    x-validate:
+                  next_page_params:
+                    example:
+                      index: 8829
+                      items_count: 50
+                    nullable: true
+                    type: object
+                    x-struct:
+                    x-validate:
+                required:
+                  - items
+                  - next_page_params
+                type: object
+                x-struct:
+                x-validate:
+          description: List of output roots.
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JsonErrorResponse'
+          description: Unprocessable Entity
+      summary: List output roots.
+      tags: []
+  /v2/optimism/withdrawals/count:
+    get:
+      callbacks: {}
+      description: Retrieves a size of the withdrawals list.
+      operationId: BlockScoutWeb.API.V2.OptimismController.withdrawals_count
+      parameters:
+        - description: API key for rate limiting or for sensitive endpoints
+          in: query
+          name: apikey
+          required: false
+          schema:
+            type: string
+            x-struct:
+            x-validate:
+        - description: Secret key for getting access to restricted resources
+          in: query
+          name: key
+          required: false
+          schema:
+            type: string
+            x-struct:
+            x-validate:
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                nullable: false
+                type: integer
+                x-struct:
+                x-validate:
+          description: Number of items in the withdrawals list.
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JsonErrorResponse'
+          description: Unprocessable Entity
+      summary: Number of withdrawals in the list.
+      tags: []
   /v2/stats/charts/transactions:
     get:
       callbacks: {}
@@ -8711,6 +9217,84 @@ paths:
       summary: Get on-chain state changes caused by a specific transaction
       tags:
         - transactions
+  /v2/optimism/games:
+    get:
+      callbacks: {}
+      description: Retrieves a paginated list of games.
+      operationId: BlockScoutWeb.API.V2.OptimismController.games
+      parameters:
+        - description: API key for rate limiting or for sensitive endpoints
+          in: query
+          name: apikey
+          required: false
+          schema:
+            type: string
+            x-struct:
+            x-validate:
+        - description: Secret key for getting access to restricted resources
+          in: query
+          name: key
+          required: false
+          schema:
+            type: string
+            x-struct:
+            x-validate:
+        - description: Transaction index for paging
+          in: query
+          name: index
+          required: false
+          schema:
+            type: integer
+            x-struct:
+            x-validate:
+        - description: Number of items returned per page
+          in: query
+          name: items_count
+          required: false
+          schema:
+            maximum: 50
+            minimum: 1
+            type: integer
+            x-struct:
+            x-validate:
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                additionalProperties: false
+                nullable: false
+                properties:
+                  items:
+                    items:
+                      $ref: '#/components/schemas/Game'
+                    nullable: false
+                    type: array
+                    x-struct:
+                    x-validate:
+                  next_page_params:
+                    example:
+                      index: 12967
+                      items_count: 50
+                    nullable: true
+                    type: object
+                    x-struct:
+                    x-validate:
+                required:
+                  - items
+                  - next_page_params
+                type: object
+                x-struct:
+                x-validate:
+          description: List of games.
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JsonErrorResponse'
+          description: Unprocessable Entity
+      summary: List games.
+      tags: []
   /v2/addresses/{address_hash_param}:
     get:
       callbacks: {}
@@ -9059,6 +9643,46 @@ paths:
       summary: List addresses holding native coins sorted by balance - top accounts
       tags:
         - addresses
+  /v2/optimism/deposits/count:
+    get:
+      callbacks: {}
+      description: Retrieves a size of the deposits list.
+      operationId: BlockScoutWeb.API.V2.OptimismController.deposits_count
+      parameters:
+        - description: API key for rate limiting or for sensitive endpoints
+          in: query
+          name: apikey
+          required: false
+          schema:
+            type: string
+            x-struct:
+            x-validate:
+        - description: Secret key for getting access to restricted resources
+          in: query
+          name: key
+          required: false
+          schema:
+            type: string
+            x-struct:
+            x-validate:
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                nullable: false
+                type: integer
+                x-struct:
+                x-validate:
+          description: Number of items in the deposits list.
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JsonErrorResponse'
+          description: Unprocessable Entity
+      summary: Number of deposits in the list.
+      tags: []
   /v2/addresses/{address_hash_param}/withdrawals:
     get:
       callbacks: {}
@@ -9329,6 +9953,84 @@ paths:
       summary: Get daily native coin balance snapshots for an address from previous 10 days
       tags:
         - addresses
+  /v2/optimism/batches:
+    get:
+      callbacks: {}
+      description: Retrieves a paginated list of batches.
+      operationId: BlockScoutWeb.API.V2.OptimismController.batches
+      parameters:
+        - description: API key for rate limiting or for sensitive endpoints
+          in: query
+          name: apikey
+          required: false
+          schema:
+            type: string
+            x-struct:
+            x-validate:
+        - description: Secret key for getting access to restricted resources
+          in: query
+          name: key
+          required: false
+          schema:
+            type: string
+            x-struct:
+            x-validate:
+        - description: ID for paging
+          in: query
+          name: id
+          required: false
+          schema:
+            type: integer
+            x-struct:
+            x-validate:
+        - description: Number of items returned per page
+          in: query
+          name: items_count
+          required: false
+          schema:
+            maximum: 50
+            minimum: 1
+            type: integer
+            x-struct:
+            x-validate:
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                additionalProperties: false
+                nullable: false
+                properties:
+                  items:
+                    items:
+                      $ref: '#/components/schemas/Batch'
+                    nullable: false
+                    type: array
+                    x-struct:
+                    x-validate:
+                  next_page_params:
+                    example:
+                      id: 394591
+                      items_count: 50
+                    nullable: true
+                    type: object
+                    x-struct:
+                    x-validate:
+                required:
+                  - items
+                  - next_page_params
+                type: object
+                x-struct:
+                x-validate:
+          description: List of batches.
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JsonErrorResponse'
+          description: Unprocessable Entity
+      summary: List batches.
+      tags: []
   /v2/smart-contracts/counters:
     get:
       callbacks: {}
@@ -9982,6 +10684,82 @@ paths:
       summary: List event logs emitted by or involving a specific address
       tags:
         - addresses
+  /v2/optimism/withdrawals:
+    get:
+      callbacks: {}
+      description: Retrieves a paginated list of withdrawals.
+      operationId: BlockScoutWeb.API.V2.OptimismController.withdrawals
+      parameters:
+        - description: API key for rate limiting or for sensitive endpoints
+          in: query
+          name: apikey
+          required: false
+          schema:
+            type: string
+            x-struct:
+            x-validate:
+        - description: Secret key for getting access to restricted resources
+          in: query
+          name: key
+          required: false
+          schema:
+            type: string
+            x-struct:
+            x-validate:
+        - description: Number of items returned per page
+          in: query
+          name: items_count
+          required: false
+          schema:
+            maximum: 50
+            minimum: 1
+            type: integer
+            x-struct:
+            x-validate:
+        - description: Nonce for paging
+          in: query
+          name: nonce
+          required: false
+          schema:
+            $ref: '#/components/schemas/IntegerString'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                additionalProperties: false
+                nullable: false
+                properties:
+                  items:
+                    items:
+                      $ref: '#/components/schemas/Withdrawal'
+                    nullable: false
+                    type: array
+                    x-struct:
+                    x-validate:
+                  next_page_params:
+                    example:
+                      items_count: 50
+                      nonce: '1766847064778384329583297500742918515827483896875618958121606201292650102'
+                    nullable: true
+                    type: object
+                    x-struct:
+                    x-validate:
+                required:
+                  - items
+                  - next_page_params
+                type: object
+                x-struct:
+                x-validate:
+          description: List of withdrawals.
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JsonErrorResponse'
+          description: Unprocessable Entity
+      summary: List withdrawals.
+      tags: []
   /v2/addresses/{address_hash_param}/internal-transactions/csv:
     get:
       callbacks: {}
@@ -10205,6 +10983,46 @@ paths:
       summary: Get transaction statistics
       tags:
         - transactions
+  /v2/optimism/batches/count:
+    get:
+      callbacks: {}
+      description: Retrieves a size of the batch list.
+      operationId: BlockScoutWeb.API.V2.OptimismController.batches_count
+      parameters:
+        - description: API key for rate limiting or for sensitive endpoints
+          in: query
+          name: apikey
+          required: false
+          schema:
+            type: string
+            x-struct:
+            x-validate:
+        - description: Secret key for getting access to restricted resources
+          in: query
+          name: key
+          required: false
+          schema:
+            type: string
+            x-struct:
+            x-validate:
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                nullable: false
+                type: integer
+                x-struct:
+                x-validate:
+          description: Number of items in the batch list.
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JsonErrorResponse'
+          description: Unprocessable Entity
+      summary: Number of batches in the list.
+      tags: []
   /v2/config/public-metrics:
     get:
       callbacks: {}
@@ -11428,6 +12246,48 @@ paths:
       summary: List transactions involving a specific address with to-from filtering
       tags:
         - addresses
+  /v2/main-page/optimism-deposits:
+    get:
+      callbacks: {}
+      description: Retrieves a list of deposits for the main page.
+      operationId: BlockScoutWeb.API.V2.OptimismController.main_page_deposits
+      parameters:
+        - description: API key for rate limiting or for sensitive endpoints
+          in: query
+          name: apikey
+          required: false
+          schema:
+            type: string
+            x-struct:
+            x-validate:
+        - description: Secret key for getting access to restricted resources
+          in: query
+          name: key
+          required: false
+          schema:
+            type: string
+            x-struct:
+            x-validate:
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/MainPage'
+                nullable: false
+                type: array
+                x-struct:
+                x-validate:
+          description: List of deposits on the main page.
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JsonErrorResponse'
+          description: Unprocessable Entity
+      summary: List deposits on the main page.
+      tags: []
   /v2/transactions/{transaction_hash_param}/raw-trace:
     get:
       callbacks: {}
@@ -11591,6 +12451,132 @@ paths:
       summary: Export transactions as CSV
       tags:
         - addresses
+  /v2/optimism/deposits:
+    get:
+      callbacks: {}
+      description: Retrieves a paginated list of deposits.
+      operationId: BlockScoutWeb.API.V2.OptimismController.deposits
+      parameters:
+        - description: API key for rate limiting or for sensitive endpoints
+          in: query
+          name: apikey
+          required: false
+          schema:
+            type: string
+            x-struct:
+            x-validate:
+        - description: Secret key for getting access to restricted resources
+          in: query
+          name: key
+          required: false
+          schema:
+            type: string
+            x-struct:
+            x-validate:
+        - description: Number of items returned per page
+          in: query
+          name: items_count
+          required: false
+          schema:
+            maximum: 50
+            minimum: 1
+            type: integer
+            x-struct:
+            x-validate:
+        - description: L1 block number for paging
+          in: query
+          name: l1_block_number
+          required: false
+          schema:
+            minimum: 0
+            type: integer
+            x-struct:
+            x-validate:
+        - description: Transaction hash for paging
+          in: query
+          name: transaction_hash
+          required: false
+          schema:
+            $ref: '#/components/schemas/FullHash'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                additionalProperties: false
+                nullable: false
+                properties:
+                  items:
+                    items:
+                      $ref: '#/components/schemas/Deposit'
+                    nullable: false
+                    type: array
+                    x-struct:
+                    x-validate:
+                  next_page_params:
+                    example:
+                      items_count: 50
+                      l1_block_number: 23937283
+                      transaction_hash: '0x5dc155c382d95353c5876e735d675d284e3b29b1379e5859dc35cfd4a1dd5188'
+                    nullable: true
+                    type: object
+                    x-struct:
+                    x-validate:
+                required:
+                  - items
+                  - next_page_params
+                type: object
+                x-struct:
+                x-validate:
+          description: List of deposits.
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JsonErrorResponse'
+          description: Unprocessable Entity
+      summary: List deposits.
+      tags: []
+  /v2/optimism/output-roots/count:
+    get:
+      callbacks: {}
+      description: Retrieves a size of the output roots list.
+      operationId: BlockScoutWeb.API.V2.OptimismController.output_roots_count
+      parameters:
+        - description: API key for rate limiting or for sensitive endpoints
+          in: query
+          name: apikey
+          required: false
+          schema:
+            type: string
+            x-struct:
+            x-validate:
+        - description: Secret key for getting access to restricted resources
+          in: query
+          name: key
+          required: false
+          schema:
+            type: string
+            x-struct:
+            x-validate:
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                nullable: false
+                type: integer
+                x-struct:
+                x-validate:
+          description: Number of items in the output roots list.
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JsonErrorResponse'
+          description: Unprocessable Entity
+      summary: Number of output roots in the list.
+      tags: []
   /v2/addresses/{address_hash_param}/nft/collections:
     get:
       callbacks: {}
