@@ -440,6 +440,53 @@ paths:
         - Apay
       security:
         - ApiKeyAuth: []
+  /api/v1/apay/subscriptions/payment/{subscription_id}:
+    post:
+      operationId: PayForApaySubscription
+      responses:
+        "200":
+          description: A successful response.
+          schema:
+            $ref: '#/definitions/v1PayForApaySubscriptionResponse'
+        default:
+          description: An unexpected error response.
+          schema:
+            $ref: '#/definitions/rpcStatus'
+      parameters:
+        - name: subscription_id
+          in: path
+          required: true
+          type: string
+        - name: body
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/ApayPayForApaySubscriptionBody'
+      tags:
+        - Apay
+      security:
+        - ApiKeyAuth: []
+  /api/v1/apay/subscriptions/portal/{subscription_id}:
+    get:
+      operationId: GetStripeCustomerPortal
+      responses:
+        "200":
+          description: A successful response.
+          schema:
+            $ref: '#/definitions/blockscoutapayv1GetStripeCustomerPortalResponse'
+        default:
+          description: An unexpected error response.
+          schema:
+            $ref: '#/definitions/rpcStatus'
+      parameters:
+        - name: subscription_id
+          in: path
+          required: true
+          type: string
+      tags:
+        - Apay
+      security:
+        - ApiKeyAuth: []
   /api/v1/apay/subscriptions/report:
     post:
       operationId: ReportApaySubscriptionUsage
@@ -1252,6 +1299,22 @@ paths:
         - Instances
       security:
         - ApiKeyAuth: []
+  /api/v1/subscriptions/portal/stripe:
+    get:
+      operationId: Autoscout_GetStripeCustomerPortal
+      responses:
+        "200":
+          description: A successful response.
+          schema:
+            $ref: '#/definitions/blockscoutautoscoutv1GetStripeCustomerPortalResponse'
+        default:
+          description: An unexpected error response.
+          schema:
+            $ref: '#/definitions/rpcStatus'
+      tags:
+        - Subscription
+      security:
+        - ApiKeyAuth: []
   /api/v1/subscriptions/stripe:
     get:
       operationId: Autoscout_GetStripeSubscriptionStatus
@@ -1541,6 +1604,8 @@ paths:
       tags:
         - Health
 definitions:
+  ApayPayForApaySubscriptionBody:
+    type: object
   ApayUpdateApaySubscriptionBody:
     type: object
     properties:
@@ -1599,6 +1664,20 @@ definitions:
       - SERVICE_UNKNOWN
     default: UNKNOWN
     description: ' - SERVICE_UNKNOWN: Used only by the Watch method.'
+  blockscoutapayv1GetStripeCustomerPortalResponse:
+    type: object
+    properties:
+      customer_portal_url:
+        type: string
+    required:
+      - customer_portal_url
+  blockscoutautoscoutv1GetStripeCustomerPortalResponse:
+    type: object
+    properties:
+      customer_portal_url:
+        type: string
+    required:
+      - customer_portal_url
   protobufAny:
     type: object
     properties:
@@ -1714,6 +1793,12 @@ definitions:
           type: object
           $ref: '#/definitions/v1ApayDeposit'
       created_at:
+        type: string
+      new_plan:
+        $ref: '#/definitions/v1ApaySubscriptionPlan'
+      new_plan_starts_at:
+        type: string
+      cancels_at:
         type: string
     required:
       - id
@@ -1873,6 +1958,11 @@ definitions:
       - instance_id
   v1CancelApaySubscriptionResponse:
     type: object
+    properties:
+      subscription:
+        $ref: '#/definitions/v1ApaySubscription'
+    required:
+      - subscription
   v1CancelStripeSubscriptionResponse:
     type: object
   v1ChainType:
@@ -2935,6 +3025,13 @@ definitions:
       total_pages:
         type: integer
         format: int64
+  v1PayForApaySubscriptionResponse:
+    type: object
+    properties:
+      is_paid:
+        type: boolean
+    required:
+      - is_paid
   v1PluginEvent:
     type: object
     properties:
@@ -3349,6 +3446,9 @@ definitions:
     properties:
       subscription:
         $ref: '#/definitions/v1ApaySubscription'
+      tokens_offset:
+        type: string
+        format: uint64
   v1UpdateConfigResponse:
     type: object
     properties:
