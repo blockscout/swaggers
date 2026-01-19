@@ -194,6 +194,8 @@ components:
           type: integer
           x-struct:
           x-validate:
+        block_timestamp:
+          $ref: '#/components/schemas/TimestampNullable'
         data:
           $ref: '#/components/schemas/HexString'
         decoded:
@@ -232,6 +234,7 @@ components:
         - smart_contract
         - block_hash
         - block_number
+        - block_timestamp
       title: Log
       type: object
       x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.Log
