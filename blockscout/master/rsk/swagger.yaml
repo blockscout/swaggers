@@ -2053,7 +2053,7 @@ components:
       properties:
         block_index:
           description: The index of this internal transaction inside the block.
-          nullable: false
+          nullable: true
           type: integer
           x-struct:
           x-validate:
