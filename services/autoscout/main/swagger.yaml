@@ -2337,6 +2337,8 @@ definitions:
         $ref: '#/definitions/v1UserOpsPluginConfig'
       monitoring:
         $ref: '#/definitions/v1MonitoringConfig'
+      versions_stack:
+        type: string
     required:
       - rpc_url
       - server_size
