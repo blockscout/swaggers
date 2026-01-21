@@ -1758,6 +1758,8 @@ definitions:
         type: object
       created_at:
         type: string
+      subscription:
+        $ref: '#/definitions/v1ApaySubscription'
     required:
       - id
       - amount
@@ -1787,11 +1789,6 @@ definitions:
         $ref: '#/definitions/v1ApaySubscriptionStatus'
       stripe_payment_url:
         type: string
-      deposits:
-        type: array
-        items:
-          type: object
-          $ref: '#/definitions/v1ApayDeposit'
       created_at:
         type: string
       new_plan:
@@ -1807,7 +1804,6 @@ definitions:
       - plan
       - status
       - stripe_payment_url
-      - deposits
   v1ApaySubscriptionPlan:
     type: object
     properties:
