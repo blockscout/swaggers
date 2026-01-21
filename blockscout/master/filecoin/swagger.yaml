@@ -169,12 +169,11 @@ components:
       x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.NFTCollection
       x-validate:
     ForbiddenResponse:
-      additionalProperties: false
-      description: Response returned when the user is not authorized to access the resource
+      description: Response returned when the user is forbidden to access the resource
       properties:
         message:
-          description: Error message indicating the user is not authorized to access the resource
-          example: Restricted access
+          description: Error message indicating the user is forbidden to access the resource
+          example: Unverified email
           type: string
           x-struct:
           x-validate:
@@ -4094,12 +4093,6 @@ paths:
           required: true
           schema:
             $ref: '#/components/schemas/AddressHash'
-        - description: Address hash in the query
-          in: query
-          name: address_id
-          required: false
-          schema:
-            $ref: '#/components/schemas/AddressHash'
         - description: Start of the time period (ISO 8601 format) in CSV export
           in: query
           name: from_period
@@ -4412,12 +4405,6 @@ paths:
           in: path
           name: address_hash_param
           required: true
-          schema:
-            $ref: '#/components/schemas/AddressHash'
-        - description: Address hash in the query
-          in: query
-          name: address_id
-          required: false
           schema:
             $ref: '#/components/schemas/AddressHash'
         - description: Start of the time period (ISO 8601 format) in CSV export
@@ -9145,12 +9132,6 @@ paths:
           required: true
           schema:
             $ref: '#/components/schemas/AddressHash'
-        - description: Address hash in the query
-          in: query
-          name: address_id
-          required: false
-          schema:
-            $ref: '#/components/schemas/AddressHash'
         - description: Start of the time period (ISO 8601 format) in CSV export
           in: query
           name: from_period
@@ -9980,12 +9961,6 @@ paths:
           required: true
           schema:
             $ref: '#/components/schemas/AddressHash'
-        - description: Address hash in the query
-          in: query
-          name: address_id
-          required: false
-          schema:
-            $ref: '#/components/schemas/AddressHash'
         - description: Start of the time period (ISO 8601 format) in CSV export
           in: query
           name: from_period
@@ -10550,12 +10525,6 @@ paths:
           in: path
           name: address_hash_param
           required: true
-          schema:
-            $ref: '#/components/schemas/AddressHash'
-        - description: Address hash in the query
-          in: query
-          name: address_id
-          required: false
           schema:
             $ref: '#/components/schemas/AddressHash'
         - description: Start of the time period (ISO 8601 format) in CSV export
