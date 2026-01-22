@@ -72,6 +72,22 @@ paths:
             - FAILED
             - QUEUED
           default: NO_STATUS
+        - name: instance_versions_stack
+          in: query
+          required: false
+          type: string
+        - name: deployment_versions_stack
+          in: query
+          required: false
+          type: string
+        - name: user_config_updated_at_after
+          in: query
+          required: false
+          type: string
+        - name: user_config_updated_at_before
+          in: query
+          required: false
+          type: string
         - name: page
           in: query
           required: false
