@@ -1,8 +1,9 @@
 swagger: "2.0"
 info:
-  title: metadata_admin.proto
+  title: admin_management.proto
   version: version not set
 tags:
+  - name: AdminManagement
   - name: Admin
   - name: MarketplaceAdmin
   - name: Health
@@ -284,6 +285,106 @@ paths:
             $ref: '#/definitions/v1TokenInfoSubmission'
       tags:
         - Admin
+  /api/v1/instances:
+    post:
+      summary: Instance Management
+      operationId: AdminManagement_RegisterInstance
+      responses:
+        "200":
+          description: A successful response.
+          schema:
+            $ref: '#/definitions/v1RegisterInstanceResponse'
+        default:
+          description: An unexpected error response.
+          schema:
+            $ref: '#/definitions/rpcStatus'
+      parameters:
+        - name: body
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/v1RegisterInstanceRequest'
+      tags:
+        - AdminManagement
+  /api/v1/instances/{instancePublicId}:
+    get:
+      operationId: AdminManagement_GetInstance
+      responses:
+        "200":
+          description: A successful response.
+          schema:
+            $ref: '#/definitions/v1Instance'
+        default:
+          description: An unexpected error response.
+          schema:
+            $ref: '#/definitions/rpcStatus'
+      parameters:
+        - name: instancePublicId
+          in: path
+          required: true
+          type: string
+      tags:
+        - AdminManagement
+    delete:
+      operationId: AdminManagement_RemoveInstance
+      responses:
+        "200":
+          description: A successful response.
+          schema:
+            $ref: '#/definitions/v1RemoveInstanceResponse'
+        default:
+          description: An unexpected error response.
+          schema:
+            $ref: '#/definitions/rpcStatus'
+      parameters:
+        - name: instancePublicId
+          in: path
+          required: true
+          type: string
+      tags:
+        - AdminManagement
+    put:
+      operationId: AdminManagement_UpdateInstance
+      responses:
+        "200":
+          description: A successful response.
+          schema:
+            $ref: '#/definitions/v1UpdateInstanceResponse'
+        default:
+          description: An unexpected error response.
+          schema:
+            $ref: '#/definitions/rpcStatus'
+      parameters:
+        - name: instancePublicId
+          in: path
+          required: true
+          type: string
+        - name: body
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/AdminManagementUpdateInstanceBody'
+      tags:
+        - AdminManagement
+  /api/v1/instances/{instancePublicId}/api-key:
+    get:
+      operationId: AdminManagement_GetInstanceWithApiKey
+      responses:
+        "200":
+          description: A successful response.
+          schema:
+            $ref: '#/definitions/v1InstanceWithApiKey'
+        default:
+          description: An unexpected error response.
+          schema:
+            $ref: '#/definitions/rpcStatus'
+      parameters:
+        - name: instancePublicId
+          in: path
+          required: true
+          type: string
+      tags:
+        - AdminManagement
   /api/v1/marketplace/categories:
     get:
       operationId: MarketplaceAdmin_ListMarketplaceCategories
@@ -346,6 +447,64 @@ paths:
           type: string
       tags:
         - MarketplaceAdmin
+  /api/v1/roles:
+    post:
+      summary: Role Management (orgs/teams)
+      operationId: AdminManagement_RegisterRole
+      responses:
+        "200":
+          description: A successful response.
+          schema:
+            $ref: '#/definitions/v1RegisterRoleResponse'
+        default:
+          description: An unexpected error response.
+          schema:
+            $ref: '#/definitions/rpcStatus'
+      parameters:
+        - name: body
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/v1RegisterRoleRequest'
+      tags:
+        - AdminManagement
+  /api/v1/roles/{rolePublicId}:
+    get:
+      operationId: AdminManagement_GetRole
+      responses:
+        "200":
+          description: A successful response.
+          schema:
+            $ref: '#/definitions/v1GetRoleResponse'
+        default:
+          description: An unexpected error response.
+          schema:
+            $ref: '#/definitions/rpcStatus'
+      parameters:
+        - name: rolePublicId
+          in: path
+          required: true
+          type: string
+      tags:
+        - AdminManagement
+    delete:
+      operationId: AdminManagement_DeleteRole
+      responses:
+        "200":
+          description: A successful response.
+          schema:
+            $ref: '#/definitions/v1DeleteRoleResponse'
+        default:
+          description: An unexpected error response.
+          schema:
+            $ref: '#/definitions/rpcStatus'
+      parameters:
+        - name: rolePublicId
+          in: path
+          required: true
+          type: string
+      tags:
+        - AdminManagement
   /health:
     get:
       summary: |-
@@ -374,6 +533,13 @@ definitions:
     properties:
       submission:
         $ref: '#/definitions/v1MetadataTagSubmission'
+  AdminManagementUpdateInstanceBody:
+    type: object
+    properties:
+      url:
+        type: string
+      apiKey:
+        type: string
   HealthCheckResponseServingStatus:
     type: string
     enum:
@@ -446,11 +612,51 @@ definitions:
         format: int32
       createdAt:
         type: string
+  v1DeleteRoleResponse:
+    type: object
+  v1GetRoleResponse:
+    type: object
+    properties:
+      role:
+        $ref: '#/definitions/v1Role'
+      ownedInstances:
+        type: array
+        items:
+          type: object
+          $ref: '#/definitions/v1Instance'
+    required:
+      - role
   v1HealthCheckResponse:
     type: object
     properties:
       status:
         $ref: '#/definitions/HealthCheckResponseServingStatus'
+  v1Instance:
+    type: object
+    properties:
+      instancePublicId:
+        type: string
+        title: Public identifier provided by autoscout
+      slug:
+        type: string
+        title: Human-readable identifier
+      chainId:
+        type: string
+        format: uint64
+      url:
+        type: string
+      ownerRolePublicId:
+        type: string
+        title: Owner role (org/team) public ID
+  v1InstanceWithApiKey:
+    type: object
+    properties:
+      inner:
+        $ref: '#/definitions/v1Instance'
+      apiKey:
+        type: string
+    required:
+      - inner
   v1ListMarketplaceCategoriesResponse:
     type: object
     properties:
@@ -582,6 +788,47 @@ definitions:
         type: string
       companyWebsite:
         type: string
+  v1RegisterInstanceRequest:
+    type: object
+    properties:
+      instance:
+        $ref: '#/definitions/v1InstanceWithApiKey'
+    required:
+      - instance
+  v1RegisterInstanceResponse:
+    type: object
+    properties:
+      instancePublicId:
+        type: string
+      ownerRolePublicId:
+        type: string
+  v1RegisterRoleRequest:
+    type: object
+    properties:
+      role:
+        $ref: '#/definitions/v1Role'
+    required:
+      - role
+  v1RegisterRoleResponse:
+    type: object
+    properties:
+      rolePublicId:
+        type: string
+  v1RemoveInstanceResponse:
+    type: object
+  v1Role:
+    type: object
+    properties:
+      rolePublicId:
+        type: string
+        title: Public identifier for the role (org/team)
+      name:
+        type: string
+      description:
+        type: string
+      maxUsers:
+        type: integer
+        format: int32
   v1SearchMarketplaceDappsResponse:
     type: object
     properties:
@@ -664,3 +911,8 @@ definitions:
       - REJECTED
       - UPDATE_REQUIRED
     default: STATUS_UNKNOWN
+  v1UpdateInstanceResponse:
+    type: object
+    properties:
+      instancePublicId:
+        type: string
