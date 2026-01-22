@@ -3447,6 +3447,14 @@ definitions:
       tokens_offset:
         type: string
         format: uint64
+      status:
+        $ref: '#/definitions/v1UpdateApaySubscriptionStatus'
+  v1UpdateApaySubscriptionStatus:
+    type: string
+    enum:
+      - APPLIED
+      - ALREADY_APPLIED
+    default: APPLIED
   v1UpdateConfigResponse:
     type: object
     properties:
