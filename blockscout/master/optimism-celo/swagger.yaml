@@ -2,6 +2,19 @@
 components:
   responses: {}
   schemas:
+    NotImplementedResponse:
+      description: Response returned when the feature is not implemented
+      properties:
+        message:
+          description: Error message indicating the feature is not implemented
+          example: Feature not implemented
+          type: string
+          x-struct:
+          x-validate:
+      title: NotImplementedResponse
+      type: object
+      x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.ErrorResponses.NotImplementedResponse
+      x-validate:
     Address:
       additionalProperties: false
       description: Address
@@ -228,6 +241,103 @@ components:
       type: string
       x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.Token.Type
       x-validate:
+    AddressNullable:
+      additionalProperties: false
+      description: AddressNullable
+      nullable: true
+      properties:
+        ens_domain_name:
+          description: ENS domain name associated with the address
+          nullable: true
+          type: string
+          x-struct:
+          x-validate:
+        hash:
+          $ref: '#/components/schemas/AddressHash'
+        implementations:
+          description: Implementations linked with the contract
+          items:
+            $ref: '#/components/schemas/Implementation'
+          type: array
+          x-struct:
+          x-validate:
+        is_contract:
+          description: Has address contract code?
+          nullable: true
+          type: boolean
+          x-struct:
+          x-validate:
+        is_scam:
+          description: Has address scam badge?
+          nullable: false
+          type: boolean
+          x-struct:
+          x-validate:
+        is_verified:
+          description: Has address associated source code?
+          nullable: true
+          type: boolean
+          x-struct:
+          x-validate:
+        metadata:
+          allOf:
+            - $ref: '#/components/schemas/Metadata'
+          nullable: true
+          x-struct:
+          x-validate:
+        name:
+          description: Name associated with the address
+          nullable: true
+          type: string
+          x-struct:
+          x-validate:
+        private_tags:
+          description: Private tags associated with the address
+          items:
+            $ref: '#/components/schemas/Tag'
+          type: array
+          x-struct:
+          x-validate:
+        proxy_type:
+          $ref: '#/components/schemas/ProxyType'
+        public_tags:
+          description: Public tags associated with the address
+          items:
+            $ref: '#/components/schemas/Tag'
+          type: array
+          x-struct:
+          x-validate:
+        reputation:
+          description: Reputation of the address
+          enum:
+            - ok
+            - scam
+          nullable: false
+          type: string
+          x-struct:
+          x-validate:
+        watchlist_names:
+          description: Watchlist name associated with the address
+          items:
+            $ref: '#/components/schemas/WatchlistName'
+          type: array
+          x-struct:
+          x-validate:
+      required:
+        - hash
+        - is_contract
+        - name
+        - is_scam
+        - reputation
+        - proxy_type
+        - implementations
+        - is_verified
+        - ens_domain_name
+        - metadata
+      title: AddressNullable
+      type: object
+      x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.Address
+      x-validate:
     NullString:
       pattern: ^null$
       title: NullString
@@ -451,6 +561,19 @@ components:
       title: CeloElectionRewardType
       type: string
       x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.Celo.ElectionReward.Type
+      x-validate:
+    BadRequestResponse:
+      description: Response returned when the request is invalid
+      properties:
+        message:
+          description: Error message indicating the request is invalid
+          example: Invalid request
+          type: string
+          x-struct:
+          x-validate:
+      title: BadRequestResponse
+      type: object
+      x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.ErrorResponses.BadRequestResponse
       x-validate:
     Withdrawal:
       additionalProperties: false
@@ -944,6 +1067,47 @@ components:
       type: object
       x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.Address
       x-validate:
+    Status:
+      additionalProperties:
+        additionalProperties: false
+        properties:
+          enabled:
+            nullable: false
+            type: boolean
+            x-struct:
+            x-validate:
+          live:
+            nullable: false
+            type: boolean
+            x-struct:
+            x-validate:
+          past_db_logs_indexing_finished:
+            nullable: false
+            type: boolean
+            x-struct:
+            x-validate:
+          past_rpc_logs_indexing_finished:
+            nullable: false
+            type: boolean
+            x-struct:
+            x-validate:
+        type: object
+        x-struct:
+        x-validate:
+      description: Status struct.
+      nullable: false
+      properties:
+        finished_past_indexing:
+          nullable: false
+          type: boolean
+          x-struct:
+          x-validate:
+      required:
+        - finished_past_indexing
+      title: Status
+      type: object
+      x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.Proxy.AccountAbstraction.Status
+      x-validate:
     RawTrace:
       items:
         additionalProperties: false
@@ -1116,6 +1280,38 @@ components:
       title: DecodedLogInput
       type: object
       x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.General.DecodedLogInput
+      x-validate:
+    Account:
+      additionalProperties: false
+      description: Account struct.
+      nullable: false
+      properties:
+        address:
+          $ref: '#/components/schemas/Address'
+        creation_op_hash:
+          $ref: '#/components/schemas/FullHashNullable'
+        creation_timestamp:
+          $ref: '#/components/schemas/TimestampNullable'
+        creation_transaction_hash:
+          $ref: '#/components/schemas/FullHashNullable'
+        factory:
+          $ref: '#/components/schemas/AddressNullable'
+        total_ops:
+          minimum: 0
+          nullable: false
+          type: integer
+          x-struct:
+          x-validate:
+      required:
+        - address
+        - creation_op_hash
+        - creation_transaction_hash
+        - creation_timestamp
+        - factory
+        - total_ops
+      title: Account
+      type: object
+      x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.Proxy.AccountAbstraction.Account
       x-validate:
     Language:
       enum:
@@ -1655,6 +1851,69 @@ components:
       type: string
       x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.General.IntegerString
       x-validate:
+    Bundler:
+      additionalProperties: false
+      description: Bundler struct.
+      nullable: false
+      properties:
+        address:
+          $ref: '#/components/schemas/Address'
+        total_bundles:
+          minimum: 0
+          nullable: false
+          type: integer
+          x-struct:
+          x-validate:
+        total_ops:
+          minimum: 0
+          nullable: false
+          type: integer
+          x-struct:
+          x-validate:
+      required:
+        - address
+        - total_bundles
+        - total_ops
+      title: Bundler
+      type: object
+      x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.Proxy.AccountAbstraction.Bundler
+      x-validate:
+    Bundle:
+      additionalProperties: false
+      description: Bundle struct.
+      nullable: false
+      properties:
+        block_number:
+          $ref: '#/components/schemas/IntegerString'
+        bundle_index:
+          minimum: 0
+          nullable: false
+          type: integer
+          x-struct:
+          x-validate:
+        bundler:
+          $ref: '#/components/schemas/Address'
+        timestamp:
+          $ref: '#/components/schemas/Timestamp'
+        total_ops:
+          minimum: 0
+          nullable: false
+          type: integer
+          x-struct:
+          x-validate:
+        transaction_hash:
+          $ref: '#/components/schemas/FullHash'
+      required:
+        - transaction_hash
+        - bundler
+        - block_number
+        - bundle_index
+        - timestamp
+        - total_ops
+      title: Bundle
+      type: object
+      x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.Proxy.AccountAbstraction.Bundle
+      x-validate:
     TokenInstance:
       additionalProperties: false
       nullable: false
@@ -1904,6 +2163,299 @@ components:
       title: Total
       type: object
       x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.TokenTransfer.Total
+      x-validate:
+    UserOperationInList:
+      additionalProperties: false
+      description: UserOperationInList struct.
+      nullable: false
+      properties:
+        address:
+          $ref: '#/components/schemas/Address'
+        block_number:
+          $ref: '#/components/schemas/IntegerString'
+        entry_point:
+          $ref: '#/components/schemas/Address'
+        entry_point_version:
+          enum:
+            - v0.6
+            - v0.7
+            - v0.8
+            - v0.9
+          nullable: false
+          type: string
+          x-struct:
+          x-validate:
+        fee:
+          $ref: '#/components/schemas/IntegerString'
+        hash:
+          $ref: '#/components/schemas/FullHash'
+        status:
+          nullable: false
+          type: boolean
+          x-struct:
+          x-validate:
+        timestamp:
+          $ref: '#/components/schemas/TimestampNullable'
+        transaction_hash:
+          $ref: '#/components/schemas/FullHash'
+      required:
+        - hash
+        - address
+        - entry_point
+        - entry_point_version
+        - transaction_hash
+        - block_number
+        - status
+        - fee
+        - timestamp
+      title: UserOperationInList
+      type: object
+      x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.Proxy.AccountAbstraction.UserOperationInList
+      x-validate:
+    UserOperation:
+      additionalProperties: false
+      description: UserOperation struct.
+      nullable: false
+      properties:
+        aggregator_signature:
+          $ref: '#/components/schemas/HexStringNullable'
+        bundler:
+          $ref: '#/components/schemas/Address'
+        block_number:
+          $ref: '#/components/schemas/IntegerString'
+        entry_point:
+          $ref: '#/components/schemas/Address'
+        user_logs_count:
+          nullable: false
+          type: integer
+          x-struct:
+          x-validate:
+        paymaster:
+          $ref: '#/components/schemas/AddressNullable'
+        user_logs_start_index:
+          nullable: false
+          type: integer
+          x-struct:
+          x-validate:
+        nonce:
+          $ref: '#/components/schemas/FullHash'
+        timestamp:
+          $ref: '#/components/schemas/TimestampNullable'
+        consensus:
+          nullable: true
+          type: boolean
+          x-struct:
+          x-validate:
+        call_gas_limit:
+          $ref: '#/components/schemas/IntegerString'
+        factory:
+          $ref: '#/components/schemas/AddressNullable'
+        gas_price:
+          $ref: '#/components/schemas/IntegerString'
+        verification_gas_limit:
+          $ref: '#/components/schemas/IntegerString'
+        sender:
+          $ref: '#/components/schemas/Address'
+        execute_call_data:
+          $ref: '#/components/schemas/HexStringNullable'
+        fee:
+          $ref: '#/components/schemas/IntegerString'
+        status:
+          nullable: false
+          type: boolean
+          x-struct:
+          x-validate:
+        execute_target:
+          $ref: '#/components/schemas/AddressNullable'
+        gas_used:
+          $ref: '#/components/schemas/IntegerString'
+        signature:
+          $ref: '#/components/schemas/HexString'
+        entry_point_version:
+          enum:
+            - v0.6
+            - v0.7
+            - v0.8
+            - v0.9
+          nullable: false
+          type: string
+          x-struct:
+          x-validate:
+        call_data:
+          $ref: '#/components/schemas/HexString'
+        aggregator:
+          $ref: '#/components/schemas/AddressHashNullable'
+        max_priority_fee_per_gas:
+          $ref: '#/components/schemas/IntegerString'
+        index:
+          nullable: false
+          type: integer
+          x-struct:
+          x-validate:
+        block_hash:
+          $ref: '#/components/schemas/FullHash'
+        sponsor_type:
+          enum:
+            - wallet_deposit
+            - wallet_balance
+            - paymaster_sponsor
+            - paymaster_hybrid
+          nullable: false
+          type: string
+          x-struct:
+          x-validate:
+        revert_reason:
+          $ref: '#/components/schemas/HexStringNullable'
+        gas:
+          $ref: '#/components/schemas/IntegerString'
+        max_fee_per_gas:
+          $ref: '#/components/schemas/IntegerString'
+        hash:
+          $ref: '#/components/schemas/FullHash'
+        decoded_execute_call_data:
+          allOf:
+            - $ref: '#/components/schemas/DecodedInput'
+          nullable: true
+          x-struct:
+          x-validate:
+        bundle_index:
+          nullable: false
+          type: integer
+          x-struct:
+          x-validate:
+        decoded_call_data:
+          allOf:
+            - $ref: '#/components/schemas/DecodedInput'
+          nullable: true
+          x-struct:
+          x-validate:
+        pre_verification_gas:
+          $ref: '#/components/schemas/IntegerString'
+        raw:
+          anyOf:
+            - additionalProperties: false
+              description: Raw user operation data v0.6.
+              nullable: false
+              properties:
+                call_data:
+                  $ref: '#/components/schemas/HexString'
+                call_gas_limit:
+                  $ref: '#/components/schemas/IntegerString'
+                init_code:
+                  $ref: '#/components/schemas/HexString'
+                max_fee_per_gas:
+                  $ref: '#/components/schemas/IntegerString'
+                max_priority_fee_per_gas:
+                  $ref: '#/components/schemas/IntegerString'
+                nonce:
+                  $ref: '#/components/schemas/IntegerString'
+                paymaster_and_data:
+                  $ref: '#/components/schemas/HexString'
+                pre_verification_gas:
+                  $ref: '#/components/schemas/IntegerString'
+                sender:
+                  $ref: '#/components/schemas/AddressHash'
+                signature:
+                  $ref: '#/components/schemas/HexString'
+                verification_gas_limit:
+                  $ref: '#/components/schemas/IntegerString'
+              required:
+                - sender
+                - nonce
+                - init_code
+                - call_data
+                - call_gas_limit
+                - verification_gas_limit
+                - pre_verification_gas
+                - max_fee_per_gas
+                - max_priority_fee_per_gas
+                - paymaster_and_data
+                - signature
+              type: object
+              x-struct:
+              x-validate:
+            - additionalProperties: false
+              description: Raw user operation data v0.7-v0.9.
+              nullable: false
+              properties:
+                account_gas_limits:
+                  $ref: '#/components/schemas/FullHash'
+                call_data:
+                  $ref: '#/components/schemas/HexString'
+                gas_fees:
+                  $ref: '#/components/schemas/FullHash'
+                init_code:
+                  $ref: '#/components/schemas/HexString'
+                nonce:
+                  $ref: '#/components/schemas/IntegerString'
+                paymaster_and_data:
+                  $ref: '#/components/schemas/HexString'
+                pre_verification_gas:
+                  $ref: '#/components/schemas/IntegerString'
+                sender:
+                  $ref: '#/components/schemas/AddressHash'
+                signature:
+                  $ref: '#/components/schemas/HexString'
+              required:
+                - sender
+                - nonce
+                - init_code
+                - call_data
+                - account_gas_limits
+                - pre_verification_gas
+                - gas_fees
+                - paymaster_and_data
+                - signature
+              type: object
+              x-struct:
+              x-validate:
+          description: Raw user operation data.
+          x-struct:
+          x-validate:
+        transaction_hash:
+          $ref: '#/components/schemas/FullHash'
+      required:
+        - hash
+        - sender
+        - nonce
+        - call_data
+        - call_gas_limit
+        - verification_gas_limit
+        - pre_verification_gas
+        - max_fee_per_gas
+        - max_priority_fee_per_gas
+        - signature
+        - raw
+        - aggregator
+        - aggregator_signature
+        - entry_point
+        - entry_point_version
+        - transaction_hash
+        - block_number
+        - block_hash
+        - bundler
+        - bundle_index
+        - index
+        - factory
+        - paymaster
+        - status
+        - revert_reason
+        - gas
+        - gas_price
+        - gas_used
+        - sponsor_type
+        - user_logs_start_index
+        - user_logs_count
+        - fee
+        - consensus
+        - timestamp
+        - execute_target
+        - execute_call_data
+        - decoded_call_data
+        - decoded_execute_call_data
+      title: UserOperation
+      type: object
+      x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.Proxy.AccountAbstraction.UserOperation
       x-validate:
     SearchResult:
       description: Search results containing blocks, transactions, and addresses
@@ -2684,6 +3236,26 @@ components:
       title: Batch
       type: object
       x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.Optimism.Batch
+      x-validate:
+    Factory:
+      additionalProperties: false
+      description: Factory struct.
+      nullable: false
+      properties:
+        address:
+          $ref: '#/components/schemas/Address'
+        total_accounts:
+          minimum: 0
+          nullable: false
+          type: integer
+          x-struct:
+          x-validate:
+      required:
+        - address
+        - total_accounts
+      title: Factory
+      type: object
+      x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.Proxy.AccountAbstraction.Factory
       x-validate:
     InternalTransaction:
       additionalProperties: false
@@ -4445,6 +5017,26 @@ components:
       title: TransactionResponse
       type: object
       x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.Transaction
+      x-validate:
+    Paymaster:
+      additionalProperties: false
+      description: Paymaster struct.
+      nullable: false
+      properties:
+        address:
+          $ref: '#/components/schemas/Address'
+        total_ops:
+          minimum: 0
+          nullable: false
+          type: integer
+          x-struct:
+          x-validate:
+      required:
+        - address
+        - total_ops
+      title: Paymaster
+      type: object
+      x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.Proxy.AccountAbstraction.Paymaster
       x-validate:
     HexStringNullable:
       nullable: true
@@ -6377,6 +6969,74 @@ paths:
           description: Unprocessable Entity
       summary: Number of games in the list.
       tags: []
+  /v2/proxy/account-abstraction/operations/{operation_hash_param}/summary:
+    get:
+      callbacks: {}
+      description: Retrieves a human-readable summary of what a user operation did, presented in natural language.
+      operationId: BlockScoutWeb.API.V2.Proxy.AccountAbstractionController.summary
+      parameters:
+        - description: API key for rate limiting or for sensitive endpoints
+          in: query
+          name: apikey
+          required: false
+          schema:
+            type: string
+            x-struct:
+            x-validate:
+        - description: Secret key for getting access to restricted resources
+          in: query
+          name: key
+          required: false
+          schema:
+            type: string
+            x-struct:
+            x-validate:
+        - description: User operation hash in the path
+          in: path
+          name: operation_hash_param
+          required: true
+          schema:
+            $ref: '#/components/schemas/FullHash'
+        - description: If true, returns only the request body in the summary endpoint
+          in: query
+          name: just_request_body
+          required: false
+          schema:
+            type: boolean
+            x-struct:
+            x-validate:
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                anyOf:
+                  - $ref: '#/components/schemas/Summary'
+                  - $ref: '#/components/schemas/SummaryJustRequestBody'
+                x-struct:
+                x-validate:
+          description: Human-readable summary of the specified user operation.
+        '404':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFoundResponse'
+          description: Not Found
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JsonErrorResponse'
+          description: Unprocessable Entity
+        '501':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotImplementedResponse'
+          description: Not Implemented
+      summary: Get a human-readable, LLM-based user operation summary
+      tags:
+        - account_abstraction
   /v2/main-page/blocks:
     get:
       callbacks: {}
@@ -7373,6 +8033,44 @@ paths:
       summary: Retrieve hot smart-contracts
       tags:
         - stats
+  /v2/proxy/account-abstraction/status:
+    get:
+      callbacks: {}
+      description: Retrieves the status of the account abstraction microservice.
+      operationId: BlockScoutWeb.API.V2.Proxy.AccountAbstractionController.status
+      parameters:
+        - description: API key for rate limiting or for sensitive endpoints
+          in: query
+          name: apikey
+          required: false
+          schema:
+            type: string
+            x-struct:
+            x-validate:
+        - description: Secret key for getting access to restricted resources
+          in: query
+          name: key
+          required: false
+          schema:
+            type: string
+            x-struct:
+            x-validate:
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Status'
+          description: Status
+        '501':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotImplementedResponse'
+          description: Not Implemented
+      summary: Get the status of the account abstraction microservice
+      tags:
+        - account_abstraction
   /v2/addresses/{address_hash_param}/celo/election-rewards/csv:
     get:
       callbacks: {}
@@ -8157,6 +8855,62 @@ paths:
           description: Unprocessable Entity
       summary: Batch by its number.
       tags: []
+  /v2/proxy/account-abstraction/bundlers/{address_hash_param}:
+    get:
+      callbacks: {}
+      description: Retrieves a bundler by its address hash.
+      operationId: BlockScoutWeb.API.V2.Proxy.AccountAbstractionController.bundler
+      parameters:
+        - description: Address hash in the path
+          in: path
+          name: address_hash_param
+          required: true
+          schema:
+            $ref: '#/components/schemas/AddressHash'
+        - description: API key for rate limiting or for sensitive endpoints
+          in: query
+          name: apikey
+          required: false
+          schema:
+            type: string
+            x-struct:
+            x-validate:
+        - description: Secret key for getting access to restricted resources
+          in: query
+          name: key
+          required: false
+          schema:
+            type: string
+            x-struct:
+            x-validate:
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Bundler'
+          description: Bundler
+        '400':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequestResponse'
+          description: Bad Request
+        '404':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFoundResponse'
+          description: Not Found
+        '501':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotImplementedResponse'
+          description: Not Implemented
+      summary: Get a bundler by address hash
+      tags:
+        - account_abstraction
   /v2/main-page/transactions:
     get:
       callbacks: {}
@@ -9110,6 +9864,91 @@ paths:
       summary: Trigger metadata refetch for a token's NFT collection
       tags:
         - tokens
+  /v2/proxy/account-abstraction/bundlers:
+    get:
+      callbacks: {}
+      description: Retrieves a list of top bundlers.
+      operationId: BlockScoutWeb.API.V2.Proxy.AccountAbstractionController.bundlers
+      parameters:
+        - description: API key for rate limiting or for sensitive endpoints
+          in: query
+          name: apikey
+          required: false
+          schema:
+            type: string
+            x-struct:
+            x-validate:
+        - description: Secret key for getting access to restricted resources
+          in: query
+          name: key
+          required: false
+          schema:
+            type: string
+            x-struct:
+            x-validate:
+        - description: Number of items returned per page
+          in: query
+          name: page_size
+          required: false
+          schema:
+            maximum: 50
+            minimum: 1
+            type: integer
+            x-struct:
+            x-validate:
+        - description: Page token for paging
+          in: query
+          name: page_token
+          required: false
+          schema:
+            type: string
+            x-struct:
+            x-validate:
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                additionalProperties: false
+                nullable: false
+                properties:
+                  items:
+                    items:
+                      $ref: '#/components/schemas/Bundler'
+                    nullable: false
+                    type: array
+                    x-struct:
+                    x-validate:
+                  next_page_params:
+                    example:
+                      page_size: 50
+                      page_token: 5,0x9B67A24A474e9EC7372c23B023f36ab28831e4C4
+                    nullable: true
+                    type: object
+                    x-struct:
+                    x-validate:
+                required:
+                  - items
+                  - next_page_params
+                type: object
+                x-struct:
+                x-validate:
+          description: List of bundlers with pagination.
+        '400':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequestResponse'
+          description: Bad Request
+        '501':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotImplementedResponse'
+          description: Not Implemented
+      summary: List of top bundlers
+      tags:
+        - account_abstraction
   /v2/transactions/{transaction_hash_param}/state-changes:
     get:
       callbacks: {}
@@ -9758,6 +10597,118 @@ paths:
       summary: List validator withdrawals involving a specific address
       tags:
         - addresses
+  /v2/proxy/account-abstraction/operations/{operation_hash_param}:
+    get:
+      callbacks: {}
+      description: Retrieves a user operation by its hash.
+      operationId: BlockScoutWeb.API.V2.Proxy.AccountAbstractionController.operation
+      parameters:
+        - description: User operation hash in the path
+          in: path
+          name: operation_hash_param
+          required: true
+          schema:
+            $ref: '#/components/schemas/FullHash'
+        - description: API key for rate limiting or for sensitive endpoints
+          in: query
+          name: apikey
+          required: false
+          schema:
+            type: string
+            x-struct:
+            x-validate:
+        - description: Secret key for getting access to restricted resources
+          in: query
+          name: key
+          required: false
+          schema:
+            type: string
+            x-struct:
+            x-validate:
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserOperation'
+          description: User operation
+        '400':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequestResponse'
+          description: Bad Request
+        '404':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFoundResponse'
+          description: Not Found
+        '501':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotImplementedResponse'
+          description: Not Implemented
+      summary: Get a user operation by hash
+      tags:
+        - account_abstraction
+  /v2/proxy/account-abstraction/paymasters/{address_hash_param}:
+    get:
+      callbacks: {}
+      description: Retrieves a paymaster by its address hash.
+      operationId: BlockScoutWeb.API.V2.Proxy.AccountAbstractionController.paymaster
+      parameters:
+        - description: Address hash in the path
+          in: path
+          name: address_hash_param
+          required: true
+          schema:
+            $ref: '#/components/schemas/AddressHash'
+        - description: API key for rate limiting or for sensitive endpoints
+          in: query
+          name: apikey
+          required: false
+          schema:
+            type: string
+            x-struct:
+            x-validate:
+        - description: Secret key for getting access to restricted resources
+          in: query
+          name: key
+          required: false
+          schema:
+            type: string
+            x-struct:
+            x-validate:
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Paymaster'
+          description: Paymaster
+        '400':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequestResponse'
+          description: Bad Request
+        '404':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFoundResponse'
+          description: Not Found
+        '501':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotImplementedResponse'
+          description: Not Implemented
+      summary: Get a paymaster by address hash
+      tags:
+        - account_abstraction
   /v2/internal-transactions:
     get:
       callbacks: {}
@@ -9871,6 +10822,91 @@ paths:
       summary: List internal transactions generated during smart contract execution
       tags:
         - internal_transactions
+  /v2/proxy/account-abstraction/operations:
+    get:
+      callbacks: {}
+      description: Retrieves a list of recent user operations.
+      operationId: BlockScoutWeb.API.V2.Proxy.AccountAbstractionController.operations
+      parameters:
+        - description: API key for rate limiting or for sensitive endpoints
+          in: query
+          name: apikey
+          required: false
+          schema:
+            type: string
+            x-struct:
+            x-validate:
+        - description: Secret key for getting access to restricted resources
+          in: query
+          name: key
+          required: false
+          schema:
+            type: string
+            x-struct:
+            x-validate:
+        - description: Number of items returned per page
+          in: query
+          name: page_size
+          required: false
+          schema:
+            maximum: 50
+            minimum: 1
+            type: integer
+            x-struct:
+            x-validate:
+        - description: Page token for paging
+          in: query
+          name: page_token
+          required: false
+          schema:
+            type: string
+            x-struct:
+            x-validate:
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                additionalProperties: false
+                nullable: false
+                properties:
+                  items:
+                    items:
+                      $ref: '#/components/schemas/UserOperationInList'
+                    nullable: false
+                    type: array
+                    x-struct:
+                    x-validate:
+                  next_page_params:
+                    example:
+                      page_size: 50
+                      page_token: 3937439,0xbb680271614883525ac8056c388489e80b3518ec12ec46e1b910c7238c46b565
+                    nullable: true
+                    type: object
+                    x-struct:
+                    x-validate:
+                required:
+                  - items
+                  - next_page_params
+                type: object
+                x-struct:
+                x-validate:
+          description: List of user operations with pagination.
+        '400':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequestResponse'
+          description: Bad Request
+        '501':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotImplementedResponse'
+          description: Not Implemented
+      summary: List of recent user operations
+      tags:
+        - account_abstraction
   /v2/addresses/{address_hash_param}/coin-balance-history-by-day:
     get:
       callbacks: {}
@@ -10299,6 +11335,62 @@ paths:
       summary: List transactions and tx details included in a specific block
       tags:
         - blocks
+  /v2/proxy/account-abstraction/accounts/{address_hash_param}:
+    get:
+      callbacks: {}
+      description: Retrieves an account abstraction wallet by its address hash.
+      operationId: BlockScoutWeb.API.V2.Proxy.AccountAbstractionController.account
+      parameters:
+        - description: Address hash in the path
+          in: path
+          name: address_hash_param
+          required: true
+          schema:
+            $ref: '#/components/schemas/AddressHash'
+        - description: API key for rate limiting or for sensitive endpoints
+          in: query
+          name: apikey
+          required: false
+          schema:
+            type: string
+            x-struct:
+            x-validate:
+        - description: Secret key for getting access to restricted resources
+          in: query
+          name: key
+          required: false
+          schema:
+            type: string
+            x-struct:
+            x-validate:
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Account'
+          description: Account
+        '400':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequestResponse'
+          description: Bad Request
+        '404':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFoundResponse'
+          description: Not Found
+        '501':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotImplementedResponse'
+          description: Not Implemented
+      summary: Get an account abstraction wallet by address hash
+      tags:
+        - account_abstraction
   /v2/transactions/{transaction_hash_param}/summary:
     get:
       callbacks: {}
@@ -10361,6 +11453,91 @@ paths:
       summary: Get a human-readable, LLM-based transaction summary
       tags:
         - transactions
+  /v2/proxy/account-abstraction/factories:
+    get:
+      callbacks: {}
+      description: Retrieves a list of top wallet factories.
+      operationId: BlockScoutWeb.API.V2.Proxy.AccountAbstractionController.factories
+      parameters:
+        - description: API key for rate limiting or for sensitive endpoints
+          in: query
+          name: apikey
+          required: false
+          schema:
+            type: string
+            x-struct:
+            x-validate:
+        - description: Secret key for getting access to restricted resources
+          in: query
+          name: key
+          required: false
+          schema:
+            type: string
+            x-struct:
+            x-validate:
+        - description: Number of items returned per page
+          in: query
+          name: page_size
+          required: false
+          schema:
+            maximum: 50
+            minimum: 1
+            type: integer
+            x-struct:
+            x-validate:
+        - description: Page token for paging
+          in: query
+          name: page_token
+          required: false
+          schema:
+            type: string
+            x-struct:
+            x-validate:
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                additionalProperties: false
+                nullable: false
+                properties:
+                  items:
+                    items:
+                      $ref: '#/components/schemas/Factory'
+                    nullable: false
+                    type: array
+                    x-struct:
+                    x-validate:
+                  next_page_params:
+                    example:
+                      page_size: 50
+                      page_token: 3,0xC23957e7Fea98eBD017abe15a4e7770797ff6D8d
+                    nullable: true
+                    type: object
+                    x-struct:
+                    x-validate:
+                required:
+                  - items
+                  - next_page_params
+                type: object
+                x-struct:
+                x-validate:
+          description: List of factories with pagination.
+        '400':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequestResponse'
+          description: Bad Request
+        '501':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotImplementedResponse'
+          description: Not Implemented
+      summary: List of top wallet factories
+      tags:
+        - account_abstraction
   /v2/withdrawals/counters:
     get:
       callbacks: {}
@@ -10744,6 +11921,91 @@ paths:
           description: Unprocessable Entity
       summary: List withdrawals.
       tags: []
+  /v2/proxy/account-abstraction/accounts:
+    get:
+      callbacks: {}
+      description: Retrieves a list of account abstraction wallets.
+      operationId: BlockScoutWeb.API.V2.Proxy.AccountAbstractionController.accounts
+      parameters:
+        - description: API key for rate limiting or for sensitive endpoints
+          in: query
+          name: apikey
+          required: false
+          schema:
+            type: string
+            x-struct:
+            x-validate:
+        - description: Secret key for getting access to restricted resources
+          in: query
+          name: key
+          required: false
+          schema:
+            type: string
+            x-struct:
+            x-validate:
+        - description: Number of items returned per page
+          in: query
+          name: page_size
+          required: false
+          schema:
+            maximum: 50
+            minimum: 1
+            type: integer
+            x-struct:
+            x-validate:
+        - description: Page token for paging
+          in: query
+          name: page_token
+          required: false
+          schema:
+            type: string
+            x-struct:
+            x-validate:
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                additionalProperties: false
+                nullable: false
+                properties:
+                  items:
+                    items:
+                      $ref: '#/components/schemas/Account'
+                    nullable: false
+                    type: array
+                    x-struct:
+                    x-validate:
+                  next_page_params:
+                    example:
+                      page_size: 50
+                      page_token: '0x29cB129476609bBa26372b23427Af3b87cB23aF6'
+                    nullable: true
+                    type: object
+                    x-struct:
+                    x-validate:
+                required:
+                  - items
+                  - next_page_params
+                type: object
+                x-struct:
+                x-validate:
+          description: List of account abstraction wallets with pagination.
+        '400':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequestResponse'
+          description: Bad Request
+        '501':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotImplementedResponse'
+          description: Not Implemented
+      summary: List of account abstraction wallets
+      tags:
+        - account_abstraction
   /v2/addresses/{address_hash_param}/internal-transactions/csv:
     get:
       callbacks: {}
@@ -11183,6 +12445,62 @@ paths:
       summary: Search for tokens, addresses, contracts, blocks, or transactions by identifier
       tags:
         - search
+  /v2/proxy/account-abstraction/factories/{address_hash_param}:
+    get:
+      callbacks: {}
+      description: Retrieves a factory by its address hash.
+      operationId: BlockScoutWeb.API.V2.Proxy.AccountAbstractionController.factory
+      parameters:
+        - description: Address hash in the path
+          in: path
+          name: address_hash_param
+          required: true
+          schema:
+            $ref: '#/components/schemas/AddressHash'
+        - description: API key for rate limiting or for sensitive endpoints
+          in: query
+          name: apikey
+          required: false
+          schema:
+            type: string
+            x-struct:
+            x-validate:
+        - description: Secret key for getting access to restricted resources
+          in: query
+          name: key
+          required: false
+          schema:
+            type: string
+            x-struct:
+            x-validate:
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Factory'
+          description: Factory
+        '400':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequestResponse'
+          description: Bad Request
+        '404':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFoundResponse'
+          description: Not Found
+        '501':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotImplementedResponse'
+          description: Not Implemented
+      summary: Get a factory by address hash
+      tags:
+        - account_abstraction
   /v2/transactions/{transaction_hash_param}/logs:
     get:
       callbacks: {}
@@ -11446,6 +12764,91 @@ paths:
       summary: List L2 blocks in an Optimism batch
       tags:
         - blocks
+  /v2/proxy/account-abstraction/paymasters:
+    get:
+      callbacks: {}
+      description: Retrieves a list of top paymasters.
+      operationId: BlockScoutWeb.API.V2.Proxy.AccountAbstractionController.paymasters
+      parameters:
+        - description: API key for rate limiting or for sensitive endpoints
+          in: query
+          name: apikey
+          required: false
+          schema:
+            type: string
+            x-struct:
+            x-validate:
+        - description: Secret key for getting access to restricted resources
+          in: query
+          name: key
+          required: false
+          schema:
+            type: string
+            x-struct:
+            x-validate:
+        - description: Number of items returned per page
+          in: query
+          name: page_size
+          required: false
+          schema:
+            maximum: 50
+            minimum: 1
+            type: integer
+            x-struct:
+            x-validate:
+        - description: Page token for paging
+          in: query
+          name: page_token
+          required: false
+          schema:
+            type: string
+            x-struct:
+            x-validate:
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                additionalProperties: false
+                nullable: false
+                properties:
+                  items:
+                    items:
+                      $ref: '#/components/schemas/Paymaster'
+                    nullable: false
+                    type: array
+                    x-struct:
+                    x-validate:
+                  next_page_params:
+                    example:
+                      page_size: 50
+                      page_token: 19,0xB98Cb1dA4F9BD640879F0bBCb30A541c84163406
+                    nullable: true
+                    type: object
+                    x-struct:
+                    x-validate:
+                required:
+                  - items
+                  - next_page_params
+                type: object
+                x-struct:
+                x-validate:
+          description: List of paymasters with pagination.
+        '400':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequestResponse'
+          description: Bad Request
+        '501':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotImplementedResponse'
+          description: Not Implemented
+      summary: List of top paymasters
+      tags:
+        - account_abstraction
   /v2/transactions/watchlist:
     get:
       callbacks: {}
@@ -11651,6 +13054,91 @@ paths:
       summary: List internal transactions triggered during a specific transaction
       tags:
         - transactions
+  /v2/proxy/account-abstraction/bundles:
+    get:
+      callbacks: {}
+      description: Retrieves a list of recent bundles.
+      operationId: BlockScoutWeb.API.V2.Proxy.AccountAbstractionController.bundles
+      parameters:
+        - description: API key for rate limiting or for sensitive endpoints
+          in: query
+          name: apikey
+          required: false
+          schema:
+            type: string
+            x-struct:
+            x-validate:
+        - description: Secret key for getting access to restricted resources
+          in: query
+          name: key
+          required: false
+          schema:
+            type: string
+            x-struct:
+            x-validate:
+        - description: Number of items returned per page
+          in: query
+          name: page_size
+          required: false
+          schema:
+            maximum: 50
+            minimum: 1
+            type: integer
+            x-struct:
+            x-validate:
+        - description: Page token for paging
+          in: query
+          name: page_token
+          required: false
+          schema:
+            type: string
+            x-struct:
+            x-validate:
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                additionalProperties: false
+                nullable: false
+                properties:
+                  items:
+                    items:
+                      $ref: '#/components/schemas/Bundle'
+                    nullable: false
+                    type: array
+                    x-struct:
+                    x-validate:
+                  next_page_params:
+                    example:
+                      page_size: 50
+                      page_token: 3949699,0x275f7110df7d73e530f3381daa9d422dea80f036b514e56427d2d7e492c8a81f,0
+                    nullable: true
+                    type: object
+                    x-struct:
+                    x-validate:
+                required:
+                  - items
+                  - next_page_params
+                type: object
+                x-struct:
+                x-validate:
+          description: List of bundles with pagination.
+        '400':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequestResponse'
+          description: Bad Request
+        '501':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotImplementedResponse'
+          description: Not Implemented
+      summary: List of recent bundles
+      tags:
+        - account_abstraction
   /v2/config/backend:
     get:
       callbacks: {}
