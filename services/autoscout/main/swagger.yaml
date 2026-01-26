@@ -1813,6 +1813,9 @@ definitions:
         type: string
       cancels_at:
         type: string
+      tokens_offset:
+        type: string
+        format: int64
     required:
       - id
       - user_id
@@ -1820,6 +1823,7 @@ definitions:
       - plan
       - status
       - stripe_payment_url
+      - tokens_offset
   v1ApaySubscriptionPlan:
     type: object
     properties:
@@ -1836,8 +1840,6 @@ definitions:
         type: string
       mode:
         $ref: '#/definitions/v1ApaySubscriptionPlanMode'
-      aggregation_mode:
-        $ref: '#/definitions/v1ApayTokensAggregationMode'
     required:
       - id
       - name
@@ -1845,7 +1847,6 @@ definitions:
       - base_tokens_count
       - price_per_token_usd
       - mode
-      - aggregation_mode
   v1ApaySubscriptionPlanMode:
     type: string
     enum:
@@ -1860,12 +1861,6 @@ definitions:
       - PAUSED
       - CANCELED
     default: UNCONFIRMED
-  v1ApayTokensAggregationMode:
-    type: string
-    enum:
-      - SUM
-      - LAST
-    default: SUM
   v1ArbitrumConfig:
     type: object
     properties:
@@ -2028,13 +2023,10 @@ definitions:
         type: string
       mode:
         $ref: '#/definitions/v1ApaySubscriptionPlanMode'
-      aggregation_mode:
-        $ref: '#/definitions/v1ApayTokensAggregationMode'
     required:
       - name
       - price_per_token_usd
       - mode
-      - aggregation_mode
   v1CreateApaySubscriptionPlanResponse:
     type: object
     properties:
@@ -3460,9 +3452,6 @@ definitions:
     properties:
       subscription:
         $ref: '#/definitions/v1ApaySubscription'
-      tokens_offset:
-        type: string
-        format: uint64
       status:
         $ref: '#/definitions/v1UpdateApaySubscriptionStatus'
   v1UpdateApaySubscriptionStatus:
@@ -3470,6 +3459,7 @@ definitions:
     enum:
       - APPLIED
       - ALREADY_APPLIED
+      - FAILED_TO_APPLY
     default: APPLIED
   v1UpdateConfigResponse:
     type: object
@@ -3649,6 +3639,10 @@ definitions:
         $ref: '#/definitions/v1ApaySubscription'
       timestamp:
         type: string
+      fields_changed:
+        type: array
+        items:
+          type: string
     required:
       - type
       - timestamp
