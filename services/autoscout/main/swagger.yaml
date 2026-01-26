@@ -72,7 +72,11 @@ paths:
             - FAILED
             - QUEUED
           default: NO_STATUS
-        - name: instance_versions_stack
+        - name: instance_versions_stack_eq
+          in: query
+          required: false
+          type: string
+        - name: instance_versions_stack_not_eq
           in: query
           required: false
           type: string
