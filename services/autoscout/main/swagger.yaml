@@ -529,6 +529,27 @@ paths:
         - Apay
       security:
         - ApiKeyAuth: []
+  /api/v1/apay/subscriptions/resume/{subscription_id}:
+    post:
+      operationId: ResumeApaySubscription
+      responses:
+        "200":
+          description: A successful response.
+          schema:
+            $ref: '#/definitions/v1ResumeApaySubscriptionResponse'
+        default:
+          description: An unexpected error response.
+          schema:
+            $ref: '#/definitions/rpcStatus'
+      parameters:
+        - name: subscription_id
+          in: path
+          required: true
+          type: string
+      tags:
+        - Apay
+      security:
+        - ApiKeyAuth: []
   /api/v1/apay/subscriptions/{subscription_id}:
     get:
       operationId: GetApaySubscription
@@ -3279,6 +3300,13 @@ definitions:
           $ref: '#/definitions/v1SubscriptionUsageReportResult'
     required:
       - results
+  v1ResumeApaySubscriptionResponse:
+    type: object
+    properties:
+      subscription:
+        $ref: '#/definitions/v1ApaySubscription'
+    required:
+      - subscription
   v1SearchInstancesResponse:
     type: object
     properties:
