@@ -1841,6 +1841,8 @@ definitions:
       tokens_offset:
         type: string
         format: int64
+      cancellation_reason:
+        $ref: '#/definitions/v1ApaySubscriptionCancellationReason'
     required:
       - id
       - user_id
@@ -1849,6 +1851,15 @@ definitions:
       - status
       - stripe_payment_url
       - tokens_offset
+  v1ApaySubscriptionCancellationReason:
+    type: string
+    enum:
+      - UNSPECIFIED_CANCELLATION_REASON
+      - USER_REQUESTED
+      - PAYMENT_FAILED
+      - ADMIN_CANCELED
+      - CANCELLATION_REASON_UNKNOWN
+    default: UNSPECIFIED_CANCELLATION_REASON
   v1ApaySubscriptionPlan:
     type: object
     properties:
@@ -3689,6 +3700,8 @@ definitions:
       - SUBSCRIPTION_CANCELED
       - SUBSCRIPTION_PAYMENT_SUCCEEDED
       - SUBSCRIPTION_PAYMENT_FAILED
+      - SUBSCRIPTION_UPGRADE_PAYMENT_SUCCEEDED
+      - SUBSCRIPTION_UPGRADE_PAYMENT_FAILED
     default: UNSPECIFIED_WEBHOOK_EVENT_TYPE
   v1WebhookRequest:
     type: object
