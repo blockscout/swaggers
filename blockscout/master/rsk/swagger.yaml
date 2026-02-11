@@ -237,6 +237,7 @@ components:
         - ERC-721
         - ERC-1155
         - ERC-404
+        - ERC-7984
       title: Type
       type: string
       x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.Token.Type
@@ -1348,6 +1349,20 @@ components:
       title: Summary
       type: object
       x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.Transaction.Summary
+      x-validate:
+    TotalERC7984:
+      additionalProperties: false
+      properties:
+        decimals:
+          $ref: '#/components/schemas/IntegerStringNullable'
+        value:
+          $ref: '#/components/schemas/IntegerStringNullable'
+      required:
+        - value
+        - decimals
+      title: TotalERC7984
+      type: object
+      x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.TokenTransfer.TotalERC7984
       x-validate:
     URLNullable:
       example: https://example.com
@@ -2964,6 +2979,7 @@ components:
           anyOf:
             - $ref: '#/components/schemas/TotalERC721'
             - $ref: '#/components/schemas/TotalERC1155'
+            - $ref: '#/components/schemas/TotalERC7984'
             - $ref: '#/components/schemas/Total'
           nullable: true
           x-struct:
@@ -4644,7 +4660,7 @@ paths:
           schema:
             anyOf:
               - $ref: '#/components/schemas/EmptyString'
-              - pattern: ^\[?(ERC-20|ERC-721|ERC-1155|ERC-404)(,(ERC-20|ERC-721|ERC-1155|ERC-404))*\]?$
+              - pattern: ^\[?(ERC-20|ERC-721|ERC-1155|ERC-404|ERC-7984)(,(ERC-20|ERC-721|ERC-1155|ERC-404|ERC-7984))*\]?$
                 type: string
                 x-struct:
                 x-validate:
@@ -5269,7 +5285,7 @@ paths:
           schema:
             anyOf:
               - $ref: '#/components/schemas/EmptyString'
-              - pattern: ^\[?(ERC-20|ERC-721|ERC-1155|ERC-404)(,(ERC-20|ERC-721|ERC-1155|ERC-404))*\]?$
+              - pattern: ^\[?(ERC-20|ERC-721|ERC-1155|ERC-404|ERC-7984)(,(ERC-20|ERC-721|ERC-1155|ERC-404|ERC-7984))*\]?$
                 type: string
                 x-struct:
                 x-validate:
@@ -5585,7 +5601,7 @@ paths:
           schema:
             anyOf:
               - $ref: '#/components/schemas/EmptyString'
-              - pattern: ^\[?(ERC-20|ERC-721|ERC-1155|ERC-404)(,(ERC-20|ERC-721|ERC-1155|ERC-404))*\]?$
+              - pattern: ^\[?(ERC-20|ERC-721|ERC-1155|ERC-404|ERC-7984)(,(ERC-20|ERC-721|ERC-1155|ERC-404|ERC-7984))*\]?$
                 type: string
                 x-struct:
                 x-validate:
@@ -5739,7 +5755,7 @@ paths:
           schema:
             anyOf:
               - $ref: '#/components/schemas/EmptyString'
-              - pattern: ^\[?(ERC-20|ERC-721|ERC-1155|ERC-404)(,(ERC-20|ERC-721|ERC-1155|ERC-404))*\]?$
+              - pattern: ^\[?(ERC-20|ERC-721|ERC-1155|ERC-404|ERC-7984)(,(ERC-20|ERC-721|ERC-1155|ERC-404|ERC-7984))*\]?$
                 type: string
                 x-struct:
                 x-validate:
@@ -7149,7 +7165,7 @@ paths:
           schema:
             anyOf:
               - $ref: '#/components/schemas/EmptyString'
-              - pattern: ^\[?(ERC-20|ERC-721|ERC-1155|ERC-404)(,(ERC-20|ERC-721|ERC-1155|ERC-404))*\]?$
+              - pattern: ^\[?(ERC-20|ERC-721|ERC-1155|ERC-404|ERC-7984)(,(ERC-20|ERC-721|ERC-1155|ERC-404|ERC-7984))*\]?$
                 type: string
                 x-struct:
                 x-validate:
@@ -7291,7 +7307,7 @@ paths:
           schema:
             anyOf:
               - $ref: '#/components/schemas/EmptyString'
-              - pattern: ^\[?(ERC-20|ERC-721|ERC-1155|ERC-404)(,(ERC-20|ERC-721|ERC-1155|ERC-404))*\]?$
+              - pattern: ^\[?(ERC-20|ERC-721|ERC-1155|ERC-404|ERC-7984)(,(ERC-20|ERC-721|ERC-1155|ERC-404|ERC-7984))*\]?$
                 type: string
                 x-struct:
                 x-validate:
@@ -11930,7 +11946,7 @@ paths:
           schema:
             anyOf:
               - $ref: '#/components/schemas/EmptyString'
-              - pattern: ^\[?(ERC-20|ERC-721|ERC-1155|ERC-404)(,(ERC-20|ERC-721|ERC-1155|ERC-404))*\]?$
+              - pattern: ^\[?(ERC-20|ERC-721|ERC-1155|ERC-404|ERC-7984)(,(ERC-20|ERC-721|ERC-1155|ERC-404|ERC-7984))*\]?$
                 type: string
                 x-struct:
                 x-validate:
