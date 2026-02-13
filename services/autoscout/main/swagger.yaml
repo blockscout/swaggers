@@ -1843,6 +1843,8 @@ definitions:
         format: int64
       cancellation_reason:
         $ref: '#/definitions/v1ApaySubscriptionCancellationReason'
+      current_period_end:
+        type: string
     required:
       - id
       - user_id
@@ -2637,6 +2639,10 @@ definitions:
     properties:
       is_active:
         type: boolean
+      current_period_end:
+        type: string
+      cancels_at:
+        type: string
   v1HealthCheckResponse:
     type: object
     properties:
