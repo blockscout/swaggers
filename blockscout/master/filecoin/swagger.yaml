@@ -943,7 +943,7 @@ components:
         token_id:
           $ref: '#/components/schemas/IntegerStringNullable'
         value:
-          $ref: '#/components/schemas/IntegerString'
+          $ref: '#/components/schemas/IntegerStringNullable'
       required:
         - address
         - token_id
