@@ -5128,7 +5128,12 @@ paths:
           name: value
           required: false
           schema:
-            $ref: '#/components/schemas/IntegerString'
+            anyOf:
+              - $ref: '#/components/schemas/IntegerString'
+              - $ref: '#/components/schemas/EmptyString'
+              - $ref: '#/components/schemas/NullString'
+            x-struct:
+            x-validate:
         - description: Number of items returned per page
           in: query
           name: items_count
@@ -5325,7 +5330,12 @@ paths:
           name: value
           required: false
           schema:
-            $ref: '#/components/schemas/IntegerString'
+            anyOf:
+              - $ref: '#/components/schemas/IntegerString'
+              - $ref: '#/components/schemas/EmptyString'
+              - $ref: '#/components/schemas/NullString'
+            x-struct:
+            x-validate:
       responses:
         '200':
           content:
@@ -6700,7 +6710,12 @@ paths:
           name: value
           required: false
           schema:
-            $ref: '#/components/schemas/IntegerString'
+            anyOf:
+              - $ref: '#/components/schemas/IntegerString'
+              - $ref: '#/components/schemas/EmptyString'
+              - $ref: '#/components/schemas/NullString'
+            x-struct:
+            x-validate:
       responses:
         '200':
           content:
@@ -11681,7 +11696,12 @@ paths:
           name: value
           required: false
           schema:
-            $ref: '#/components/schemas/IntegerString'
+            anyOf:
+              - $ref: '#/components/schemas/IntegerString'
+              - $ref: '#/components/schemas/EmptyString'
+              - $ref: '#/components/schemas/NullString'
+            x-struct:
+            x-validate:
         - description: Transaction fee for paging
           in: query
           name: fee
