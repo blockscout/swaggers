@@ -1501,6 +1501,23 @@ paths:
         - Users
       security:
         - ApiKeyAuth: []
+  /api/v1/users/billing:
+    get:
+      summary: Get current billing status for the authenticated user
+      operationId: Autoscout_GetBilling
+      responses:
+        "200":
+          description: A successful response.
+          schema:
+            $ref: '#/definitions/v1GetBillingResponse'
+        default:
+          description: An unexpected error response.
+          schema:
+            $ref: '#/definitions/rpcStatus'
+      tags:
+        - Users
+      security:
+        - ApiKeyAuth: []
   /api/v1/users/profile:
     get:
       summary: Get information about current account
@@ -1844,6 +1861,8 @@ definitions:
         $ref: '#/definitions/v1ApaySubscriptionCancellationReason'
       current_period_end:
         type: string
+      current_period_start:
+        type: string
     required:
       - id
       - user_id
@@ -2009,6 +2028,104 @@ definitions:
       - ok
       - instance_slug
       - instance_id
+  v1BillingDeploymentStatus:
+    type: object
+    properties:
+      status:
+        $ref: '#/definitions/v1DeploymentStatus'
+    required:
+      - status
+  v1BillingInstanceItem:
+    type: object
+    properties:
+      name:
+        type: string
+      instance_id:
+        type: string
+      deployment:
+        $ref: '#/definitions/v1BillingDeploymentStatus'
+      price_estimation:
+        $ref: '#/definitions/v1BillingPriceEstimation'
+    required:
+      - name
+      - instance_id
+      - deployment
+      - price_estimation
+  v1BillingInstancesPrice:
+    type: object
+    properties:
+      total_items:
+        type: integer
+        format: int64
+      total_price_per_month:
+        type: string
+      items:
+        type: array
+        items:
+          type: object
+          $ref: '#/definitions/v1BillingInstanceItem'
+    required:
+      - total_items
+      - total_price_per_month
+      - items
+  v1BillingPluginPrice:
+    type: object
+    properties:
+      plugin_type:
+        $ref: '#/definitions/v1PluginVariant'
+      base_price_per_month_usd:
+        type: string
+    required:
+      - plugin_type
+      - base_price_per_month_usd
+  v1BillingPriceEstimation:
+    type: object
+    properties:
+      total_per_month_usd:
+        type: string
+      base_per_month_usd:
+        type: string
+      plugins:
+        type: array
+        items:
+          type: object
+          $ref: '#/definitions/v1BillingPluginPrice'
+      storage:
+        $ref: '#/definitions/v1BillingStorageEstimation'
+    required:
+      - total_per_month_usd
+      - base_per_month_usd
+      - plugins
+      - storage
+  v1BillingProviderType:
+    type: string
+    enum:
+      - UNSPECIFIED_BILLING_PROVIDER_TYPE
+      - BILLING_PROVIDER_TYPE_STRIPE
+      - BILLING_PROVIDER_TYPE_DAIMO
+    default: UNSPECIFIED_BILLING_PROVIDER_TYPE
+  v1BillingStorageEstimation:
+    type: object
+    properties:
+      current_overage_mb:
+        type: string
+      cost_per_gb_hour_usd:
+        type: string
+      per_month_if_usage_same_usd:
+        type: string
+    required:
+      - current_overage_mb
+      - cost_per_gb_hour_usd
+      - per_month_if_usage_same_usd
+  v1BillingSubscriptionStatus:
+    type: string
+    enum:
+      - UNSPECIFIED_BILLING_SUBSCRIPTION_STATUS
+      - BILLING_SUBSCRIPTION_STATUS_ACTIVE
+      - BILLING_SUBSCRIPTION_STATUS_PAUSED
+      - BILLING_SUBSCRIPTION_STATUS_CANCELED
+      - BILLING_SUBSCRIPTION_STATUS_UNCONFIRMED
+    default: UNSPECIFIED_BILLING_SUBSCRIPTION_STATUS
   v1CancelApaySubscriptionResponse:
     type: object
     properties:
@@ -2640,6 +2757,23 @@ definitions:
         $ref: '#/definitions/v1ApaySubscription'
     required:
       - subscription
+  v1GetBillingResponse:
+    type: object
+    properties:
+      pay_as_you_go:
+        $ref: '#/definitions/v1PayAsYouGoInfo'
+      balance_reaches_zero_in_seconds:
+        type: string
+      estimated_amount_usd_per_second:
+        type: string
+      estimated_total_amount_usd_per_month:
+        type: string
+      instances_price:
+        $ref: '#/definitions/v1BillingInstancesPrice'
+    required:
+      - pay_as_you_go
+      - estimated_amount_usd_per_second
+      - instances_price
   v1GetDeploymentStorageUsageResponse:
     type: object
     properties:
@@ -2661,6 +2795,8 @@ definitions:
       current_period_end:
         type: string
       cancels_at:
+        type: string
+      current_period_start:
         type: string
   v1HealthCheckResponse:
     type: object
@@ -3152,6 +3288,47 @@ definitions:
       decimals:
         type: string
         format: int64
+  v1PayAsYouGoEstimation:
+    type: object
+    properties:
+      amount_usd:
+        type: string
+      period_start:
+        type: string
+      period_seconds_passed:
+        type: string
+        format: int64
+      period_end:
+        type: string
+      period_seconds_remaining:
+        type: string
+        format: int64
+      estimated_amount_usd_for_remaining_period:
+        type: string
+      total_estimated_amount_usd_full_period:
+        type: string
+    required:
+      - amount_usd
+      - estimated_amount_usd_for_remaining_period
+      - total_estimated_amount_usd_full_period
+  v1PayAsYouGoInfo:
+    type: object
+    properties:
+      enabled:
+        type: boolean
+      estimation:
+        $ref: '#/definitions/v1PayAsYouGoEstimation'
+      provider_type:
+        $ref: '#/definitions/v1BillingProviderType'
+      status:
+        $ref: '#/definitions/v1BillingSubscriptionStatus'
+      customer_portal_url:
+        type: string
+    required:
+      - enabled
+      - estimation
+      - provider_type
+      - status
   v1PayForApaySubscriptionResponse:
     type: object
     properties:
