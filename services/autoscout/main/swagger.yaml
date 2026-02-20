@@ -347,8 +347,7 @@ paths:
         - name: subscription_plan_id
           in: path
           required: true
-          type: integer
-          format: int32
+          type: string
       tags:
         - Apay
       security:
