@@ -1981,6 +1981,15 @@ definitions:
       - created_at
       - id
       - expires_at
+  v1BasicAuthConfig:
+    type: object
+    properties:
+      enabled:
+        type: boolean
+      username:
+        type: string
+      password:
+        type: string
   v1BatchUpdateInstanceStatusItem:
     type: object
     properties:
@@ -2380,6 +2389,17 @@ definitions:
         $ref: '#/definitions/v1MonitoringConfig'
       versions_stack:
         type: string
+      parent_chain:
+        $ref: '#/definitions/v1ParentChainConfig'
+      rpc_user:
+        type: string
+      rpc_password:
+        type: string
+      eip_1559_base_fee_max_change_denominator:
+        type: string
+        format: int64
+      basic_auth:
+        $ref: '#/definitions/v1BasicAuthConfig'
     required:
       - rpc_url
       - server_size
@@ -3030,7 +3050,7 @@ definitions:
         title: changes blockscout env INDEXER_OPTIMISM_L2_MESSAGE_PASSER_CONTRACT
       l1_blockscout_url:
         type: string
-        title: NEXT_PUBLIC_ROLLUP_L1_BASE_URL
+        title: 'Deprecated: use parent_chain.base_url instead'
       l2_withdrawal_url:
         type: string
         title: NEXT_PUBLIC_ROLLUP_L2_WITHDRAWAL_URL
@@ -3040,6 +3060,39 @@ definitions:
       has_mud_framework:
         type: boolean
         title: NEXT_PUBLIC_HAS_MUD_FRAMEWORK
+      flashblocks_socket_url:
+        type: string
+        title: NEXT_PUBLIC_FLASHBLOCKS_SOCKET_URL
+      block_duration:
+        type: string
+        format: int64
+        title: INDEXER_OPTIMISM_BLOCK_DURATION
+      l1_deposits_transaction_type:
+        type: string
+        title: INDEXER_OPTIMISM_L1_DEPOSITS_TRANSACTION_TYPE
+      l1_eth_get_logs_range_size:
+        type: string
+        format: int64
+        title: INDEXER_OPTIMISM_L1_ETH_GET_LOGS_RANGE_SIZE
+      l2_eth_get_logs_range_size:
+        type: string
+        format: int64
+        title: INDEXER_OPTIMISM_L2_ETH_GET_LOGS_RANGE_SIZE
+      l2_holocene_timestamp:
+        type: string
+        format: int64
+        title: INDEXER_OPTIMISM_L2_HOLOCENE_TIMESTAMP
+      l2_isthmus_timestamp:
+        type: string
+        format: int64
+        title: INDEXER_OPTIMISM_L2_ISTHMUS_TIMESTAMP
+      l2_jovian_timestamp:
+        type: string
+        format: int64
+        title: INDEXER_OPTIMISM_L2_JOVIAN_TIMESTAMP
+      l1_batch_alt_da_server_url:
+        type: string
+        title: INDEXER_OPTIMISM_L1_BATCH_ALT_DA_SERVER_URL
       beacon_rpc_url:
         type: string
       beacon_blob_fetcher_reference_slot:
@@ -3052,8 +3105,6 @@ definitions:
         type: string
         format: int64
     title: https://github.com/blockscout/docs/blob/df6996a0f8e553c2d4b1c3dcda6ef2518a8b39f9/for-developers/information-and-settings/env-variables/backend-envs-chain-specific.md?plain=1#L102-L119
-    required:
-      - l1_blockscout_url
   v1PaginationResult:
     type: object
     properties:
@@ -3071,6 +3122,35 @@ definitions:
         format: int64
       total_pages:
         type: integer
+        format: int64
+  v1ParentChainConfig:
+    type: object
+    properties:
+      id:
+        type: string
+        format: int64
+      name:
+        type: string
+      base_url:
+        type: string
+        title: 'Required: parent chain blockscout explorer URL'
+      rpc_urls:
+        type: array
+        items:
+          type: string
+      currency:
+        $ref: '#/definitions/v1ParentChainCurrency'
+      is_testnet:
+        type: boolean
+  v1ParentChainCurrency:
+    type: object
+    properties:
+      name:
+        type: string
+      symbol:
+        type: string
+      decimals:
+        type: string
         format: int64
   v1PayForApaySubscriptionResponse:
     type: object
