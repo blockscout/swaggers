@@ -193,6 +193,7 @@ paths:
             - UNSPECIFIED_DEPOSIT_TYPE
             - PROVIDER_TYPE_STRIPE
             - PROVIDER_TYPE_DAIMO
+            - PROVIDER_TYPE_REQUEST_NETWORK
           default: UNSPECIFIED_DEPOSIT_TYPE
       tags:
         - Apay
@@ -216,6 +217,28 @@ paths:
           required: true
           schema:
             $ref: '#/definitions/v1CreateDaimoApayDepositRequest'
+      tags:
+        - Apay
+      security:
+        - ApiKeyAuth: []
+  /api/v1/apay/deposits/request-network:
+    post:
+      operationId: CreateApayRequestNetworkDeposit
+      responses:
+        "200":
+          description: A successful response.
+          schema:
+            $ref: '#/definitions/v1CreateApayDepositResponse'
+        default:
+          description: An unexpected error response.
+          schema:
+            $ref: '#/definitions/rpcStatus'
+      parameters:
+        - name: body
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/v1CreateRequestNetworkApayDepositRequest'
       tags:
         - Apay
       security:
@@ -948,6 +971,7 @@ paths:
             - DEPOSIT_TYPE_COINBASE
             - DEPOSIT_TYPE_DAIMO
             - DEPOSIT_TYPE_PROMOTION_FLAT_BONUS
+            - DEPOSIT_TYPE_REQUEST_NETWORK
           default: UNSPECIFIED_DEPOSIT_TYPE
       tags:
         - Deposits
@@ -1829,6 +1853,7 @@ definitions:
       - UNSPECIFIED_DEPOSIT_TYPE
       - PROVIDER_TYPE_STRIPE
       - PROVIDER_TYPE_DAIMO
+      - PROVIDER_TYPE_REQUEST_NETWORK
     default: UNSPECIFIED_DEPOSIT_TYPE
   v1ApaySubscription:
     type: object
@@ -2306,6 +2331,18 @@ definitions:
         type: string
     required:
       - instance_id
+  v1CreateRequestNetworkApayDepositRequest:
+    type: object
+    properties:
+      amount_cents:
+        type: integer
+        format: int64
+      customer_id:
+        type: string
+      metadata:
+        type: object
+    required:
+      - amount_cents
   v1CreateStripeApayDepositRequest:
     type: object
     properties:
@@ -2673,6 +2710,7 @@ definitions:
       - DEPOSIT_TYPE_COINBASE
       - DEPOSIT_TYPE_DAIMO
       - DEPOSIT_TYPE_PROMOTION_FLAT_BONUS
+      - DEPOSIT_TYPE_REQUEST_NETWORK
     default: UNSPECIFIED_DEPOSIT_TYPE
   v1ExpensiveInstance:
     type: object
