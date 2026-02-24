@@ -441,7 +441,7 @@ paths:
       security:
         - ApiKeyAuth: []
     post:
-      operationId: DeleteApaySubscription
+      operationId: CreateApaySubscription
       responses:
         "200":
           description: A successful response.
