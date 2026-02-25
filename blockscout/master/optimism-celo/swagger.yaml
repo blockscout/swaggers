@@ -5115,7 +5115,7 @@ info:
   contact:
     email: info@blockscout.com
   title: Blockscout
-  version: 10.0.0
+  version: 10.0.1
 openapi: 3.0.0
 paths:
   /v2/blocks/{block_hash_or_number_param}/internal-transactions:
