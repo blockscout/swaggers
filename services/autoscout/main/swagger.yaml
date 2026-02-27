@@ -2960,6 +2960,14 @@ definitions:
       block_transformer:
         $ref: '#/definitions/v1IndexerBlockTransformer'
         title: BLOCK_TRANSFORMER
+      first_block:
+        type: string
+        format: uint64
+        title: FIRST_BLOCK
+      last_block:
+        type: string
+        format: uint64
+        title: LAST_BLOCK
   v1IndexingStatus:
     type: object
     properties:
