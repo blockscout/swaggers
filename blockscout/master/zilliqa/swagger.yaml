@@ -1692,6 +1692,51 @@ components:
       type: string
       x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.General.AddressHash
       x-validate:
+    StakerDetailed:
+      additionalProperties: false
+      description: Zilliqa Staker struct.
+      properties:
+        added_at_block_number:
+          nullable: false
+          type: integer
+          x-struct:
+          x-validate:
+        balance:
+          $ref: '#/components/schemas/IntegerString'
+        bls_public_key:
+          $ref: '#/components/schemas/HexString'
+        control_address:
+          $ref: '#/components/schemas/AddressNullable'
+        index:
+          nullable: false
+          type: integer
+          x-struct:
+          x-validate:
+        peer_id:
+          $ref: '#/components/schemas/HexStringNullable'
+        reward_address:
+          $ref: '#/components/schemas/AddressNullable'
+        signing_address:
+          $ref: '#/components/schemas/AddressNullable'
+        stake_updated_at_block_number:
+          nullable: false
+          type: integer
+          x-struct:
+          x-validate:
+      required:
+        - balance
+        - bls_public_key
+        - index
+        - peer_id
+        - control_address
+        - reward_address
+        - signing_address
+        - added_at_block_number
+        - stake_updated_at_block_number
+      title: StakerDetailed
+      type: object
+      x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.Zilliqa.Staker
+      x-validate:
     IntegerString:
       nullable: false
       pattern: ^-?([1-9][0-9]*|0)$
@@ -3052,6 +3097,27 @@ components:
       title: TokenResponse
       type: object
       x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.Token
+      x-validate:
+    Staker:
+      additionalProperties: false
+      description: Zilliqa Staker struct.
+      properties:
+        balance:
+          $ref: '#/components/schemas/IntegerString'
+        bls_public_key:
+          $ref: '#/components/schemas/HexString'
+        index:
+          nullable: false
+          type: integer
+          x-struct:
+          x-validate:
+      required:
+        - balance
+        - bls_public_key
+        - index
+      title: Staker
+      type: object
+      x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.Zilliqa.Staker
       x-validate:
     StateChange:
       additionalProperties: false
@@ -4502,7 +4568,7 @@ paths:
             type: integer
             x-struct:
             x-validate:
-        - description: Transaction index for paging
+        - description: Item index for paging
           in: query
           name: index
           required: false
@@ -5265,7 +5331,7 @@ paths:
               - $ref: '#/components/schemas/FullHash'
             x-struct:
             x-validate:
-        - description: Transaction index for paging
+        - description: Item index for paging
           in: query
           name: index
           required: false
@@ -5873,7 +5939,7 @@ paths:
             type: integer
             x-struct:
             x-validate:
-        - description: Transaction index for paging
+        - description: Item index for paging
           in: query
           name: index
           required: false
@@ -6507,7 +6573,7 @@ paths:
             type: integer
             x-struct:
             x-validate:
-        - description: Transaction index for paging
+        - description: Item index for paging
           in: query
           name: index
           required: false
@@ -6665,7 +6731,7 @@ paths:
           required: true
           schema:
             $ref: '#/components/schemas/AddressHash'
-        - description: Transaction index for paging
+        - description: Item index for paging
           in: query
           name: index
           required: false
@@ -6817,7 +6883,7 @@ paths:
             type: integer
             x-struct:
             x-validate:
-        - description: Transaction index for paging
+        - description: Item index for paging
           in: query
           name: index
           required: false
@@ -7269,7 +7335,7 @@ paths:
           required: true
           schema:
             $ref: '#/components/schemas/IntegerStringNullable'
-        - description: Transaction index for paging
+        - description: Item index for paging
           in: query
           name: index
           required: false
@@ -7437,7 +7503,7 @@ paths:
             type: integer
             x-struct:
             x-validate:
-        - description: Transaction index for paging
+        - description: Item index for paging
           in: query
           name: index
           required: false
@@ -7571,7 +7637,7 @@ paths:
                 x-validate:
             x-struct:
             x-validate:
-        - description: Transaction index for paging
+        - description: Item index for paging
           in: query
           name: index
           required: false
@@ -9117,7 +9183,7 @@ paths:
           required: true
           schema:
             $ref: '#/components/schemas/AddressHash'
-        - description: Transaction index for paging
+        - description: Item index for paging
           in: query
           name: index
           required: false
@@ -9329,7 +9395,7 @@ paths:
             type: integer
             x-struct:
             x-validate:
-        - description: Transaction index for paging
+        - description: Item index for paging
           in: query
           name: index
           required: false
@@ -9556,6 +9622,106 @@ paths:
       summary: Get daily native coin balance snapshots for an address from previous 10 days
       tags:
         - addresses
+  /v2/validators/zilliqa:
+    get:
+      callbacks: {}
+      description: Retrieves the list of Zilliqa validators.
+      operationId: BlockScoutWeb.API.V2.ValidatorController.zilliqa_validators_list
+      parameters:
+        - description: API key for rate limiting or for sensitive endpoints
+          in: query
+          name: apikey
+          required: false
+          schema:
+            type: string
+            x-struct:
+            x-validate:
+        - description: Secret key for getting access to restricted resources
+          in: query
+          name: key
+          required: false
+          schema:
+            type: string
+            x-struct:
+            x-validate:
+        - description: Item index for paging
+          in: query
+          name: index
+          required: false
+          schema:
+            type: integer
+            x-struct:
+            x-validate:
+        - description: Number of items returned per page
+          in: query
+          name: items_count
+          required: false
+          schema:
+            maximum: 50
+            minimum: 1
+            type: integer
+            x-struct:
+            x-validate:
+        - in: query
+          name: sort
+          required: false
+          schema:
+            enum:
+              - index
+            nullable: false
+            type: string
+            x-struct:
+            x-validate:
+        - in: query
+          name: order
+          required: false
+          schema:
+            enum:
+              - asc
+              - desc
+            nullable: false
+            type: string
+            x-struct:
+            x-validate:
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                additionalProperties: false
+                nullable: false
+                properties:
+                  items:
+                    items:
+                      $ref: '#/components/schemas/Staker'
+                    nullable: false
+                    type: array
+                    x-struct:
+                    x-validate:
+                  next_page_params:
+                    example:
+                      index: 55
+                      items_count: 50
+                    nullable: true
+                    type: object
+                    x-struct:
+                    x-validate:
+                required:
+                  - items
+                  - next_page_params
+                type: object
+                x-struct:
+                x-validate:
+          description: List of validators.
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JsonErrorResponse'
+          description: Unprocessable Entity
+      summary: Zilliqa validators list.
+      tags:
+        - zilliqa
   /v2/smart-contracts/counters:
     get:
       callbacks: {}
@@ -9776,7 +9942,7 @@ paths:
             type: integer
             x-struct:
             x-validate:
-        - description: Transaction index for paging
+        - description: Item index for paging
           in: query
           name: index
           required: false
@@ -10286,7 +10452,7 @@ paths:
             type: integer
             x-struct:
             x-validate:
-        - description: Transaction index for paging
+        - description: Item index for paging
           in: query
           name: index
           required: false
@@ -10918,7 +11084,7 @@ paths:
             type: string
             x-struct:
             x-validate:
-        - description: Transaction index for paging
+        - description: Item index for paging
           in: query
           name: index
           required: false
@@ -11180,7 +11346,7 @@ paths:
             type: integer
             x-struct:
             x-validate:
-        - description: Transaction index for paging
+        - description: Item index for paging
           in: query
           name: index
           required: false
@@ -11272,7 +11438,7 @@ paths:
             type: string
             x-struct:
             x-validate:
-        - description: Transaction index for paging
+        - description: Item index for paging
           in: query
           name: index
           required: false
@@ -11619,7 +11785,7 @@ paths:
             type: string
             x-struct:
             x-validate:
-        - description: Transaction index for paging
+        - description: Item index for paging
           in: query
           name: index
           required: false
@@ -12283,6 +12449,61 @@ paths:
       summary: List NFTs owned by an address grouped by collection/project
       tags:
         - addresses
+  /v2/validators/zilliqa/{bls_public_key}:
+    get:
+      callbacks: {}
+      description: Retrieves Zilliqa validator detailed info by the given BLS public key.
+      operationId: BlockScoutWeb.API.V2.ValidatorController.zilliqa_validator
+      parameters:
+        - in: path
+          name: bls_public_key
+          required: true
+          schema:
+            $ref: '#/components/schemas/HexString'
+        - description: API key for rate limiting or for sensitive endpoints
+          in: query
+          name: apikey
+          required: false
+          schema:
+            type: string
+            x-struct:
+            x-validate:
+        - description: Secret key for getting access to restricted resources
+          in: query
+          name: key
+          required: false
+          schema:
+            type: string
+            x-struct:
+            x-validate:
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StakerDetailed'
+          description: Validator detailed info.
+        '400':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequestResponse'
+          description: Bad Request
+        '404':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFoundResponse'
+          description: Not Found
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JsonErrorResponse'
+          description: Unprocessable Entity
+      summary: Zilliqa validator by its BLS public key.
+      tags:
+        - zilliqa
 security: []
 servers:
   - url: http://localhost/api

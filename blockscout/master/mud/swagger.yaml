@@ -5225,7 +5225,7 @@ paths:
             type: integer
             x-struct:
             x-validate:
-        - description: Transaction index for paging
+        - description: Item index for paging
           in: query
           name: index
           required: false
@@ -6035,7 +6035,7 @@ paths:
               - $ref: '#/components/schemas/FullHash'
             x-struct:
             x-validate:
-        - description: Transaction index for paging
+        - description: Item index for paging
           in: query
           name: index
           required: false
@@ -6641,7 +6641,7 @@ paths:
             type: integer
             x-struct:
             x-validate:
-        - description: Transaction index for paging
+        - description: Item index for paging
           in: query
           name: index
           required: false
@@ -7016,7 +7016,8 @@ paths:
                 $ref: '#/components/schemas/JsonErrorResponse'
           description: Unprocessable Entity
       summary: Number of games in the list.
-      tags: []
+      tags:
+        - optimism
   /v2/proxy/account-abstraction/operations/{operation_hash_param}/summary:
     get:
       callbacks: {}
@@ -7315,7 +7316,7 @@ paths:
             type: integer
             x-struct:
             x-validate:
-        - description: Transaction index for paging
+        - description: Item index for paging
           in: query
           name: index
           required: false
@@ -7536,7 +7537,7 @@ paths:
           required: true
           schema:
             $ref: '#/components/schemas/AddressHash'
-        - description: Transaction index for paging
+        - description: Item index for paging
           in: query
           name: index
           required: false
@@ -7688,7 +7689,7 @@ paths:
             type: integer
             x-struct:
             x-validate:
-        - description: Transaction index for paging
+        - description: Item index for paging
           in: query
           name: index
           required: false
@@ -8140,7 +8141,7 @@ paths:
           required: true
           schema:
             $ref: '#/components/schemas/IntegerStringNullable'
-        - description: Transaction index for paging
+        - description: Item index for paging
           in: query
           name: index
           required: false
@@ -8307,7 +8308,7 @@ paths:
             type: integer
             x-struct:
             x-validate:
-        - description: Transaction index for paging
+        - description: Item index for paging
           in: query
           name: index
           required: false
@@ -8440,7 +8441,7 @@ paths:
                 x-validate:
             x-struct:
             x-validate:
-        - description: Transaction index for paging
+        - description: Item index for paging
           in: query
           name: index
           required: false
@@ -8641,7 +8642,8 @@ paths:
                 $ref: '#/components/schemas/JsonErrorResponse'
           description: Unprocessable Entity
       summary: Batch by celestia blob.
-      tags: []
+      tags:
+        - optimism
   /v2/search/quick:
     get:
       callbacks: {}
@@ -8817,7 +8819,8 @@ paths:
                 $ref: '#/components/schemas/JsonErrorResponse'
           description: Unprocessable Entity
       summary: Batch by its number.
-      tags: []
+      tags:
+        - optimism
   /v2/proxy/account-abstraction/bundlers/{address_hash_param}:
     get:
       callbacks: {}
@@ -9007,7 +9010,7 @@ paths:
             type: integer
             x-struct:
             x-validate:
-        - description: Transaction index for paging
+        - description: Item index for paging
           in: query
           name: index
           required: false
@@ -9489,7 +9492,7 @@ paths:
             type: string
             x-struct:
             x-validate:
-        - description: Transaction index for paging
+        - description: Item index for paging
           in: query
           name: index
           required: false
@@ -9544,7 +9547,8 @@ paths:
                 $ref: '#/components/schemas/JsonErrorResponse'
           description: Unprocessable Entity
       summary: List output roots.
-      tags: []
+      tags:
+        - optimism
   /v2/optimism/withdrawals/count:
     get:
       callbacks: {}
@@ -9584,7 +9588,8 @@ paths:
                 $ref: '#/components/schemas/JsonErrorResponse'
           description: Unprocessable Entity
       summary: Number of withdrawals in the list.
-      tags: []
+      tags:
+        - optimism
   /v2/stats/charts/transactions:
     get:
       callbacks: {}
@@ -10370,7 +10375,7 @@ paths:
             type: string
             x-struct:
             x-validate:
-        - description: Transaction index for paging
+        - description: Item index for paging
           in: query
           name: index
           required: false
@@ -10425,7 +10430,8 @@ paths:
                 $ref: '#/components/schemas/JsonErrorResponse'
           description: Unprocessable Entity
       summary: List games.
-      tags: []
+      tags:
+        - optimism
   /v2/addresses/{address_hash_param}:
     get:
       callbacks: {}
@@ -10813,7 +10819,8 @@ paths:
                 $ref: '#/components/schemas/JsonErrorResponse'
           description: Unprocessable Entity
       summary: Number of deposits in the list.
-      tags: []
+      tags:
+        - optimism
   /v2/addresses/{address_hash_param}/withdrawals:
     get:
       callbacks: {}
@@ -10842,7 +10849,7 @@ paths:
           required: true
           schema:
             $ref: '#/components/schemas/AddressHash'
-        - description: Transaction index for paging
+        - description: Item index for paging
           in: query
           name: index
           required: false
@@ -11054,7 +11061,7 @@ paths:
             type: integer
             x-struct:
             x-validate:
-        - description: Transaction index for paging
+        - description: Item index for paging
           in: query
           name: index
           required: false
@@ -11358,7 +11365,8 @@ paths:
                 $ref: '#/components/schemas/JsonErrorResponse'
           description: Unprocessable Entity
       summary: List batches.
-      tags: []
+      tags:
+        - optimism
   /v2/smart-contracts/counters:
     get:
       callbacks: {}
@@ -11579,7 +11587,7 @@ paths:
             type: integer
             x-struct:
             x-validate:
-        - description: Transaction index for paging
+        - description: Item index for paging
           in: query
           name: index
           required: false
@@ -12089,7 +12097,7 @@ paths:
             type: integer
             x-struct:
             x-validate:
-        - description: Transaction index for paging
+        - description: Item index for paging
           in: query
           name: index
           required: false
@@ -12228,7 +12236,8 @@ paths:
                 $ref: '#/components/schemas/JsonErrorResponse'
           description: Unprocessable Entity
       summary: List withdrawals.
-      tags: []
+      tags:
+        - optimism
   /v2/proxy/account-abstraction/accounts:
     get:
       callbacks: {}
@@ -12570,7 +12579,8 @@ paths:
                 $ref: '#/components/schemas/JsonErrorResponse'
           description: Unprocessable Entity
       summary: Number of batches in the list.
-      tags: []
+      tags:
+        - optimism
   /v2/config/public-metrics:
     get:
       callbacks: {}
@@ -12837,7 +12847,7 @@ paths:
             type: string
             x-struct:
             x-validate:
-        - description: Transaction index for paging
+        - description: Item index for paging
           in: query
           name: index
           required: false
@@ -13188,7 +13198,7 @@ paths:
             type: integer
             x-struct:
             x-validate:
-        - description: Transaction index for paging
+        - description: Item index for paging
           in: query
           name: index
           required: false
@@ -13280,7 +13290,7 @@ paths:
             type: string
             x-struct:
             x-validate:
-        - description: Transaction index for paging
+        - description: Item index for paging
           in: query
           name: index
           required: false
@@ -13627,7 +13637,7 @@ paths:
             type: string
             x-struct:
             x-validate:
-        - description: Transaction index for paging
+        - description: Item index for paging
           in: query
           name: index
           required: false
@@ -14128,7 +14138,8 @@ paths:
                 $ref: '#/components/schemas/JsonErrorResponse'
           description: Unprocessable Entity
       summary: List deposits on the main page.
-      tags: []
+      tags:
+        - optimism
   /v2/mud/worlds:
     get:
       callbacks: {}
@@ -14442,7 +14453,8 @@ paths:
                 $ref: '#/components/schemas/JsonErrorResponse'
           description: Unprocessable Entity
       summary: List deposits.
-      tags: []
+      tags:
+        - optimism
   /v2/optimism/output-roots/count:
     get:
       callbacks: {}
@@ -14482,7 +14494,8 @@ paths:
                 $ref: '#/components/schemas/JsonErrorResponse'
           description: Unprocessable Entity
       summary: Number of output roots in the list.
-      tags: []
+      tags:
+        - optimism
   /v2/addresses/{address_hash_param}/nft/collections:
     get:
       callbacks: {}

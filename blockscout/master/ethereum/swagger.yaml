@@ -4429,7 +4429,7 @@ paths:
             type: integer
             x-struct:
             x-validate:
-        - description: Transaction index for paging
+        - description: Item index for paging
           in: query
           name: index
           required: false
@@ -5272,7 +5272,7 @@ paths:
               - $ref: '#/components/schemas/FullHash'
             x-struct:
             x-validate:
-        - description: Transaction index for paging
+        - description: Item index for paging
           in: query
           name: index
           required: false
@@ -5878,7 +5878,7 @@ paths:
             type: integer
             x-struct:
             x-validate:
-        - description: Transaction index for paging
+        - description: Item index for paging
           in: query
           name: index
           required: false
@@ -6573,7 +6573,7 @@ paths:
             type: integer
             x-struct:
             x-validate:
-        - description: Transaction index for paging
+        - description: Item index for paging
           in: query
           name: index
           required: false
@@ -6731,7 +6731,7 @@ paths:
           required: true
           schema:
             $ref: '#/components/schemas/AddressHash'
-        - description: Transaction index for paging
+        - description: Item index for paging
           in: query
           name: index
           required: false
@@ -6883,7 +6883,7 @@ paths:
             type: integer
             x-struct:
             x-validate:
-        - description: Transaction index for paging
+        - description: Item index for paging
           in: query
           name: index
           required: false
@@ -7335,7 +7335,7 @@ paths:
           required: true
           schema:
             $ref: '#/components/schemas/IntegerStringNullable'
-        - description: Transaction index for paging
+        - description: Item index for paging
           in: query
           name: index
           required: false
@@ -7502,7 +7502,7 @@ paths:
             type: integer
             x-struct:
             x-validate:
-        - description: Transaction index for paging
+        - description: Item index for paging
           in: query
           name: index
           required: false
@@ -7635,7 +7635,7 @@ paths:
                 x-validate:
             x-struct:
             x-validate:
-        - description: Transaction index for paging
+        - description: Item index for paging
           in: query
           name: index
           required: false
@@ -9274,7 +9274,7 @@ paths:
           required: true
           schema:
             $ref: '#/components/schemas/AddressHash'
-        - description: Transaction index for paging
+        - description: Item index for paging
           in: query
           name: index
           required: false
@@ -9486,7 +9486,7 @@ paths:
             type: integer
             x-struct:
             x-validate:
-        - description: Transaction index for paging
+        - description: Item index for paging
           in: query
           name: index
           required: false
@@ -9934,7 +9934,7 @@ paths:
             type: integer
             x-struct:
             x-validate:
-        - description: Transaction index for paging
+        - description: Item index for paging
           in: query
           name: index
           required: false
@@ -10477,7 +10477,7 @@ paths:
             type: integer
             x-struct:
             x-validate:
-        - description: Transaction index for paging
+        - description: Item index for paging
           in: query
           name: index
           required: false
@@ -11109,7 +11109,7 @@ paths:
             type: string
             x-struct:
             x-validate:
-        - description: Transaction index for paging
+        - description: Item index for paging
           in: query
           name: index
           required: false
@@ -11371,7 +11371,7 @@ paths:
             type: integer
             x-struct:
             x-validate:
-        - description: Transaction index for paging
+        - description: Item index for paging
           in: query
           name: index
           required: false
@@ -11463,7 +11463,7 @@ paths:
             type: string
             x-struct:
             x-validate:
-        - description: Transaction index for paging
+        - description: Item index for paging
           in: query
           name: index
           required: false
@@ -11580,7 +11580,7 @@ paths:
               - $ref: '#/components/schemas/FullHash'
             x-struct:
             x-validate:
-        - description: Transaction index for paging
+        - description: Item index for paging
           in: query
           name: index
           required: false
@@ -11908,7 +11908,7 @@ paths:
             type: string
             x-struct:
             x-validate:
-        - description: Transaction index for paging
+        - description: Item index for paging
           in: query
           name: index
           required: false
@@ -12485,7 +12485,7 @@ paths:
             type: string
             x-struct:
             x-validate:
-        - description: Transaction index for paging
+        - description: Item index for paging
           in: query
           name: index
           required: false

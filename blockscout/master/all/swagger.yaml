@@ -5322,6 +5322,105 @@ components:
       type: object
       x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.Celo.ElectionReward
       x-validate: null
+    Bridge:
+      additionalProperties: false
+      description: Scroll Bridge item struct.
+      properties:
+        completion_transaction_hash:
+          $ref: '#/components/schemas/FullHashNullable'
+        id:
+          nullable: true
+          type: integer
+          x-struct: null
+          x-validate: null
+        origination_timestamp:
+          $ref: '#/components/schemas/TimestampNullable'
+        origination_transaction_block_number:
+          nullable: true
+          type: integer
+          x-struct: null
+          x-validate: null
+        origination_transaction_hash:
+          $ref: '#/components/schemas/FullHashNullable'
+        value:
+          $ref: '#/components/schemas/IntegerStringNullable'
+      required:
+        - completion_transaction_hash
+        - id
+        - origination_timestamp
+        - origination_transaction_block_number
+        - origination_transaction_hash
+        - value
+      title: Bridge
+      type: object
+      x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.Scroll.Bridge
+      x-validate: null
+    StakerDetailed:
+      additionalProperties: false
+      description: Zilliqa Staker struct.
+      properties:
+        added_at_block_number:
+          nullable: false
+          type: integer
+          x-struct: null
+          x-validate: null
+        balance:
+          $ref: '#/components/schemas/IntegerString'
+        bls_public_key:
+          $ref: '#/components/schemas/HexString'
+        control_address:
+          $ref: '#/components/schemas/AddressNullable'
+        index:
+          nullable: false
+          type: integer
+          x-struct: null
+          x-validate: null
+        peer_id:
+          $ref: '#/components/schemas/HexStringNullable'
+        reward_address:
+          $ref: '#/components/schemas/AddressNullable'
+        signing_address:
+          $ref: '#/components/schemas/AddressNullable'
+        stake_updated_at_block_number:
+          nullable: false
+          type: integer
+          x-struct: null
+          x-validate: null
+      required:
+        - balance
+        - bls_public_key
+        - index
+        - peer_id
+        - control_address
+        - reward_address
+        - signing_address
+        - added_at_block_number
+        - stake_updated_at_block_number
+      title: StakerDetailed
+      type: object
+      x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.Zilliqa.Staker
+      x-validate: null
+    Staker:
+      additionalProperties: false
+      description: Zilliqa Staker struct.
+      properties:
+        balance:
+          $ref: '#/components/schemas/IntegerString'
+        bls_public_key:
+          $ref: '#/components/schemas/HexString'
+        index:
+          nullable: false
+          type: integer
+          x-struct: null
+          x-validate: null
+      required:
+        - balance
+        - bls_public_key
+        - index
+      title: Staker
+      type: object
+      x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.Zilliqa.Staker
+      x-validate: null
 info:
   contact:
     email: info@blockscout.com
@@ -5418,7 +5517,7 @@ paths:
             type: integer
             x-struct: null
             x-validate: null
-        - description: Transaction index for paging
+        - description: Item index for paging
           in: query
           name: index
           required: false
@@ -6180,7 +6279,7 @@ paths:
               - $ref: '#/components/schemas/FullHash'
             x-struct: null
             x-validate: null
-        - description: Transaction index for paging
+        - description: Item index for paging
           in: query
           name: index
           required: false
@@ -6786,7 +6885,7 @@ paths:
             type: integer
             x-struct: null
             x-validate: null
-        - description: Transaction index for paging
+        - description: Item index for paging
           in: query
           name: index
           required: false
@@ -7420,7 +7519,7 @@ paths:
             type: integer
             x-struct: null
             x-validate: null
-        - description: Transaction index for paging
+        - description: Item index for paging
           in: query
           name: index
           required: false
@@ -7578,7 +7677,7 @@ paths:
           required: true
           schema:
             $ref: '#/components/schemas/AddressHash'
-        - description: Transaction index for paging
+        - description: Item index for paging
           in: query
           name: index
           required: false
@@ -7730,7 +7829,7 @@ paths:
             type: integer
             x-struct: null
             x-validate: null
-        - description: Transaction index for paging
+        - description: Item index for paging
           in: query
           name: index
           required: false
@@ -8182,7 +8281,7 @@ paths:
           required: true
           schema:
             $ref: '#/components/schemas/IntegerStringNullable'
-        - description: Transaction index for paging
+        - description: Item index for paging
           in: query
           name: index
           required: false
@@ -8349,7 +8448,7 @@ paths:
             type: integer
             x-struct: null
             x-validate: null
-        - description: Transaction index for paging
+        - description: Item index for paging
           in: query
           name: index
           required: false
@@ -8473,7 +8572,7 @@ paths:
             type: integer
             x-struct: null
             x-validate: null
-        - description: Transaction index for paging
+        - description: Item index for paging
           in: query
           name: index
           required: false
@@ -8580,7 +8679,7 @@ paths:
                 x-validate: null
             x-struct: null
             x-validate: null
-        - description: Transaction index for paging
+        - description: Item index for paging
           in: query
           name: index
           required: false
@@ -10126,7 +10225,7 @@ paths:
           required: true
           schema:
             $ref: '#/components/schemas/AddressHash'
-        - description: Transaction index for paging
+        - description: Item index for paging
           in: query
           name: index
           required: false
@@ -10338,7 +10437,7 @@ paths:
             type: integer
             x-struct: null
             x-validate: null
-        - description: Transaction index for paging
+        - description: Item index for paging
           in: query
           name: index
           required: false
@@ -10785,7 +10884,7 @@ paths:
             type: integer
             x-struct: null
             x-validate: null
-        - description: Transaction index for paging
+        - description: Item index for paging
           in: query
           name: index
           required: false
@@ -11295,7 +11394,7 @@ paths:
             type: integer
             x-struct: null
             x-validate: null
-        - description: Transaction index for paging
+        - description: Item index for paging
           in: query
           name: index
           required: false
@@ -12016,7 +12115,7 @@ paths:
             type: string
             x-struct: null
             x-validate: null
-        - description: Transaction index for paging
+        - description: Item index for paging
           in: query
           name: index
           required: false
@@ -12278,7 +12377,7 @@ paths:
             type: integer
             x-struct: null
             x-validate: null
-        - description: Transaction index for paging
+        - description: Item index for paging
           in: query
           name: index
           required: false
@@ -12370,7 +12469,7 @@ paths:
             type: string
             x-struct: null
             x-validate: null
-        - description: Transaction index for paging
+        - description: Item index for paging
           in: query
           name: index
           required: false
@@ -12717,7 +12816,7 @@ paths:
             type: string
             x-struct: null
             x-validate: null
-        - description: Transaction index for paging
+        - description: Item index for paging
           in: query
           name: index
           required: false
@@ -13684,7 +13783,7 @@ paths:
               - $ref: '#/components/schemas/FullHash'
             x-struct: null
             x-validate: null
-        - description: Transaction index for paging
+        - description: Item index for paging
           in: query
           name: index
           required: false
@@ -13775,7 +13874,7 @@ paths:
             type: string
             x-struct: null
             x-validate: null
-        - description: Transaction index for paging
+        - description: Item index for paging
           in: query
           name: index
           required: false
@@ -13925,7 +14024,8 @@ paths:
                 $ref: '#/components/schemas/JsonErrorResponse'
           description: Unprocessable Entity
       summary: Number of games in the list.
-      tags: []
+      tags:
+        - optimism
   /v2/mud/worlds/{world}/tables/count:
     get:
       callbacks: {}
@@ -14043,7 +14143,8 @@ paths:
                 $ref: '#/components/schemas/JsonErrorResponse'
           description: Unprocessable Entity
       summary: Batch by celestia blob.
-      tags: []
+      tags:
+        - optimism
   /v2/mud/worlds/{world}/tables/{table_id}/records/{record_id}:
     get:
       callbacks: {}
@@ -14165,7 +14266,8 @@ paths:
                 $ref: '#/components/schemas/JsonErrorResponse'
           description: Unprocessable Entity
       summary: Batch by its number.
-      tags: []
+      tags:
+        - optimism
   /v2/mud/worlds/{world}/systems/{system}:
     get:
       callbacks: {}
@@ -14256,7 +14358,7 @@ paths:
             type: integer
             x-struct: null
             x-validate: null
-        - description: Transaction index for paging
+        - description: Item index for paging
           in: query
           name: index
           required: false
@@ -14470,7 +14572,7 @@ paths:
             type: string
             x-struct: null
             x-validate: null
-        - description: Transaction index for paging
+        - description: Item index for paging
           in: query
           name: index
           required: false
@@ -14525,7 +14627,8 @@ paths:
                 $ref: '#/components/schemas/JsonErrorResponse'
           description: Unprocessable Entity
       summary: List output roots.
-      tags: []
+      tags:
+        - optimism
   /v2/optimism/withdrawals/count:
     get:
       callbacks: {}
@@ -14565,7 +14668,8 @@ paths:
                 $ref: '#/components/schemas/JsonErrorResponse'
           description: Unprocessable Entity
       summary: Number of withdrawals in the list.
-      tags: []
+      tags:
+        - optimism
   /v2/mud/worlds/{world}/tables/{table_id}/records:
     get:
       callbacks: {}
@@ -14749,7 +14853,7 @@ paths:
             type: string
             x-struct: null
             x-validate: null
-        - description: Transaction index for paging
+        - description: Item index for paging
           in: query
           name: index
           required: false
@@ -14804,7 +14908,8 @@ paths:
                 $ref: '#/components/schemas/JsonErrorResponse'
           description: Unprocessable Entity
       summary: List games.
-      tags: []
+      tags:
+        - optimism
   /v2/optimism/deposits/count:
     get:
       callbacks: {}
@@ -14844,7 +14949,8 @@ paths:
                 $ref: '#/components/schemas/JsonErrorResponse'
           description: Unprocessable Entity
       summary: Number of deposits in the list.
-      tags: []
+      tags:
+        - optimism
   /v2/optimism/batches:
     get:
       callbacks: {}
@@ -14922,7 +15028,8 @@ paths:
                 $ref: '#/components/schemas/JsonErrorResponse'
           description: Unprocessable Entity
       summary: List batches.
-      tags: []
+      tags:
+        - optimism
   /v2/optimism/withdrawals:
     get:
       callbacks: {}
@@ -14998,7 +15105,8 @@ paths:
                 $ref: '#/components/schemas/JsonErrorResponse'
           description: Unprocessable Entity
       summary: List withdrawals.
-      tags: []
+      tags:
+        - optimism
   /v2/optimism/batches/count:
     get:
       callbacks: {}
@@ -15038,7 +15146,8 @@ paths:
                 $ref: '#/components/schemas/JsonErrorResponse'
           description: Unprocessable Entity
       summary: Number of batches in the list.
-      tags: []
+      tags:
+        - optimism
   /v2/blocks/optimism-batch/{batch_number_param}:
     get:
       callbacks: {}
@@ -15237,7 +15346,8 @@ paths:
                 $ref: '#/components/schemas/JsonErrorResponse'
           description: Unprocessable Entity
       summary: List deposits on the main page.
-      tags: []
+      tags:
+        - optimism
   /v2/mud/worlds:
     get:
       callbacks: {}
@@ -15394,7 +15504,8 @@ paths:
                 $ref: '#/components/schemas/JsonErrorResponse'
           description: Unprocessable Entity
       summary: List deposits.
-      tags: []
+      tags:
+        - optimism
   /v2/optimism/output-roots/count:
     get:
       callbacks: {}
@@ -15434,7 +15545,8 @@ paths:
                 $ref: '#/components/schemas/JsonErrorResponse'
           description: Unprocessable Entity
       summary: Number of output roots in the list.
-      tags: []
+      tags:
+        - optimism
   /v2/config/celo:
     get:
       callbacks: {}
@@ -15765,6 +15877,126 @@ paths:
       summary: List L2 transactions in a Polygon ZkEVM batch
       tags:
         - transactions
+  /v2/scroll/batches:
+    get:
+      callbacks: {}
+      description: Retrieves a paginated list of batches.
+      operationId: BlockScoutWeb.API.V2.ScrollController.batches
+      parameters:
+        - description: API key for rate limiting or for sensitive endpoints
+          in: query
+          name: apikey
+          required: false
+          schema:
+            type: string
+            x-struct: null
+            x-validate: null
+        - description: Secret key for getting access to restricted resources
+          in: query
+          name: key
+          required: false
+          schema:
+            type: string
+            x-struct: null
+            x-validate: null
+        - description: Number of items returned per page
+          in: query
+          name: items_count
+          required: false
+          schema:
+            maximum: 50
+            minimum: 1
+            type: integer
+            x-struct: null
+            x-validate: null
+        - description: Number for paging
+          in: query
+          name: number
+          required: false
+          schema:
+            type: integer
+            x-struct: null
+            x-validate: null
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                additionalProperties: false
+                nullable: false
+                properties:
+                  items:
+                    items:
+                      $ref: '#/components/schemas/Batch'
+                    nullable: false
+                    type: array
+                    x-struct: null
+                    x-validate: null
+                  next_page_params:
+                    example:
+                      items_count: 50
+                      number: 502655
+                    nullable: true
+                    type: object
+                    x-struct: null
+                    x-validate: null
+                required:
+                  - items
+                  - next_page_params
+                type: object
+                x-struct: null
+                x-validate: null
+          description: List of batches.
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JsonErrorResponse'
+          description: Unprocessable Entity
+      summary: List batches.
+      tags:
+        - scroll
+  /v2/scroll/batches/count:
+    get:
+      callbacks: {}
+      description: Retrieves a size of the batch list.
+      operationId: BlockScoutWeb.API.V2.ScrollController.batches_count
+      parameters:
+        - description: API key for rate limiting or for sensitive endpoints
+          in: query
+          name: apikey
+          required: false
+          schema:
+            type: string
+            x-struct: null
+            x-validate: null
+        - description: Secret key for getting access to restricted resources
+          in: query
+          name: key
+          required: false
+          schema:
+            type: string
+            x-struct: null
+            x-validate: null
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                nullable: false
+                type: integer
+                x-struct: null
+                x-validate: null
+          description: Number of items in the batch list.
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JsonErrorResponse'
+          description: Unprocessable Entity
+      summary: Number of batches in the list.
+      tags:
+        - scroll
   /v2/transactions/scroll-batch/{batch_number_param}:
     get:
       callbacks: {}
@@ -15805,7 +16037,7 @@ paths:
             type: integer
             x-struct: null
             x-validate: null
-        - description: Transaction index for paging
+        - description: Item index for paging
           in: query
           name: index
           required: false
@@ -15863,6 +16095,296 @@ paths:
       summary: List L2 transactions in a Scroll batch
       tags:
         - transactions
+  /v2/scroll/withdrawals:
+    get:
+      callbacks: {}
+      description: Retrieves a paginated list of withdrawals.
+      operationId: BlockScoutWeb.API.V2.ScrollController.withdrawals
+      parameters:
+        - description: API key for rate limiting or for sensitive endpoints
+          in: query
+          name: apikey
+          required: false
+          schema:
+            type: string
+            x-struct: null
+            x-validate: null
+        - description: Secret key for getting access to restricted resources
+          in: query
+          name: key
+          required: false
+          schema:
+            type: string
+            x-struct: null
+            x-validate: null
+        - description: Number of items returned per page
+          in: query
+          name: items_count
+          required: false
+          schema:
+            maximum: 50
+            minimum: 1
+            type: integer
+            x-struct: null
+            x-validate: null
+        - description: ID for paging
+          in: query
+          name: id
+          required: false
+          schema:
+            type: integer
+            x-struct: null
+            x-validate: null
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                additionalProperties: false
+                nullable: false
+                properties:
+                  items:
+                    items:
+                      $ref: '#/components/schemas/Bridge'
+                    nullable: false
+                    type: array
+                    x-struct: null
+                    x-validate: null
+                  next_page_params:
+                    example:
+                      id: 220243
+                      items_count: 50
+                    nullable: true
+                    type: object
+                    x-struct: null
+                    x-validate: null
+                required:
+                  - items
+                  - next_page_params
+                type: object
+                x-struct: null
+                x-validate: null
+          description: List of withdrawals.
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JsonErrorResponse'
+          description: Unprocessable Entity
+      summary: List withdrawals.
+      tags:
+        - scroll
+  /v2/scroll/batches/{number}:
+    get:
+      callbacks: {}
+      description: Retrieves batch info by the given number.
+      operationId: BlockScoutWeb.API.V2.ScrollController.batch
+      parameters:
+        - description: Batch number in the path.
+          in: path
+          name: number
+          required: true
+          schema:
+            $ref: '#/components/schemas/IntegerString'
+        - description: API key for rate limiting or for sensitive endpoints
+          in: query
+          name: apikey
+          required: false
+          schema:
+            type: string
+            x-struct: null
+            x-validate: null
+        - description: Secret key for getting access to restricted resources
+          in: query
+          name: key
+          required: false
+          schema:
+            type: string
+            x-struct: null
+            x-validate: null
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Batch'
+          description: Batch info.
+        '404':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFoundResponse'
+          description: Not Found
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JsonErrorResponse'
+          description: Unprocessable Entity
+      summary: Batch by its number.
+      tags:
+        - scroll
+  /v2/scroll/deposits/count:
+    get:
+      callbacks: {}
+      description: Retrieves a size of the deposits list.
+      operationId: BlockScoutWeb.API.V2.ScrollController.deposits_count
+      parameters:
+        - description: API key for rate limiting or for sensitive endpoints
+          in: query
+          name: apikey
+          required: false
+          schema:
+            type: string
+            x-struct: null
+            x-validate: null
+        - description: Secret key for getting access to restricted resources
+          in: query
+          name: key
+          required: false
+          schema:
+            type: string
+            x-struct: null
+            x-validate: null
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                nullable: true
+                type: integer
+                x-struct: null
+                x-validate: null
+          description: Number of items in the deposits list.
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JsonErrorResponse'
+          description: Unprocessable Entity
+      summary: Number of deposits in the list.
+      tags:
+        - scroll
+  /v2/scroll/deposits:
+    get:
+      callbacks: {}
+      description: Retrieves a paginated list of deposits.
+      operationId: BlockScoutWeb.API.V2.ScrollController.deposits
+      parameters:
+        - description: API key for rate limiting or for sensitive endpoints
+          in: query
+          name: apikey
+          required: false
+          schema:
+            type: string
+            x-struct: null
+            x-validate: null
+        - description: Secret key for getting access to restricted resources
+          in: query
+          name: key
+          required: false
+          schema:
+            type: string
+            x-struct: null
+            x-validate: null
+        - description: Number of items returned per page
+          in: query
+          name: items_count
+          required: false
+          schema:
+            maximum: 50
+            minimum: 1
+            type: integer
+            x-struct: null
+            x-validate: null
+        - description: ID for paging
+          in: query
+          name: id
+          required: false
+          schema:
+            type: integer
+            x-struct: null
+            x-validate: null
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                additionalProperties: false
+                nullable: false
+                properties:
+                  items:
+                    items:
+                      $ref: '#/components/schemas/Bridge'
+                    nullable: false
+                    type: array
+                    x-struct: null
+                    x-validate: null
+                  next_page_params:
+                    example:
+                      id: 986043
+                      items_count: 50
+                    nullable: true
+                    type: object
+                    x-struct: null
+                    x-validate: null
+                required:
+                  - items
+                  - next_page_params
+                type: object
+                x-struct: null
+                x-validate: null
+          description: List of deposits.
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JsonErrorResponse'
+          description: Unprocessable Entity
+      summary: List deposits.
+      tags:
+        - scroll
+  /v2/scroll/withdrawals/count:
+    get:
+      callbacks: {}
+      description: Retrieves a size of the withdrawals list.
+      operationId: BlockScoutWeb.API.V2.ScrollController.withdrawals_count
+      parameters:
+        - description: API key for rate limiting or for sensitive endpoints
+          in: query
+          name: apikey
+          required: false
+          schema:
+            type: string
+            x-struct: null
+            x-validate: null
+        - description: Secret key for getting access to restricted resources
+          in: query
+          name: key
+          required: false
+          schema:
+            type: string
+            x-struct: null
+            x-validate: null
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                nullable: true
+                type: integer
+                x-struct: null
+                x-validate: null
+          description: Number of items in the withdrawals list.
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JsonErrorResponse'
+          description: Unprocessable Entity
+      summary: Number of withdrawals in the list.
+      tags:
+        - scroll
   /v2/blocks/scroll-batch/{batch_number_param}:
     get:
       callbacks: {}
@@ -15952,6 +16474,161 @@ paths:
       summary: List L2 blocks in a Scroll batch
       tags:
         - blocks
+  /v2/validators/zilliqa:
+    get:
+      callbacks: {}
+      description: Retrieves the list of Zilliqa validators.
+      operationId: BlockScoutWeb.API.V2.ValidatorController.zilliqa_validators_list
+      parameters:
+        - description: API key for rate limiting or for sensitive endpoints
+          in: query
+          name: apikey
+          required: false
+          schema:
+            type: string
+            x-struct: null
+            x-validate: null
+        - description: Secret key for getting access to restricted resources
+          in: query
+          name: key
+          required: false
+          schema:
+            type: string
+            x-struct: null
+            x-validate: null
+        - description: Item index for paging
+          in: query
+          name: index
+          required: false
+          schema:
+            type: integer
+            x-struct: null
+            x-validate: null
+        - description: Number of items returned per page
+          in: query
+          name: items_count
+          required: false
+          schema:
+            maximum: 50
+            minimum: 1
+            type: integer
+            x-struct: null
+            x-validate: null
+        - in: query
+          name: sort
+          required: false
+          schema:
+            enum:
+              - index
+            nullable: false
+            type: string
+            x-struct: null
+            x-validate: null
+        - in: query
+          name: order
+          required: false
+          schema:
+            enum:
+              - asc
+              - desc
+            nullable: false
+            type: string
+            x-struct: null
+            x-validate: null
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                additionalProperties: false
+                nullable: false
+                properties:
+                  items:
+                    items:
+                      $ref: '#/components/schemas/Staker'
+                    nullable: false
+                    type: array
+                    x-struct: null
+                    x-validate: null
+                  next_page_params:
+                    example:
+                      index: 55
+                      items_count: 50
+                    nullable: true
+                    type: object
+                    x-struct: null
+                    x-validate: null
+                required:
+                  - items
+                  - next_page_params
+                type: object
+                x-struct: null
+                x-validate: null
+          description: List of validators.
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JsonErrorResponse'
+          description: Unprocessable Entity
+      summary: Zilliqa validators list.
+      tags:
+        - zilliqa
+  /v2/validators/zilliqa/{bls_public_key}:
+    get:
+      callbacks: {}
+      description: Retrieves Zilliqa validator detailed info by the given BLS public key.
+      operationId: BlockScoutWeb.API.V2.ValidatorController.zilliqa_validator
+      parameters:
+        - in: path
+          name: bls_public_key
+          required: true
+          schema:
+            $ref: '#/components/schemas/HexString'
+        - description: API key for rate limiting or for sensitive endpoints
+          in: query
+          name: apikey
+          required: false
+          schema:
+            type: string
+            x-struct: null
+            x-validate: null
+        - description: Secret key for getting access to restricted resources
+          in: query
+          name: key
+          required: false
+          schema:
+            type: string
+            x-struct: null
+            x-validate: null
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StakerDetailed'
+          description: Validator detailed info.
+        '400':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequestResponse'
+          description: Bad Request
+        '404':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFoundResponse'
+          description: Not Found
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JsonErrorResponse'
+          description: Unprocessable Entity
+      summary: Zilliqa validator by its BLS public key.
+      tags:
+        - zilliqa
   /v2/transactions/zksync-batch/{batch_number_param}:
     get:
       callbacks: {}
@@ -15992,7 +16669,7 @@ paths:
             type: integer
             x-struct: null
             x-validate: null
-        - description: Transaction index for paging
+        - description: Item index for paging
           in: query
           name: index
           required: false
