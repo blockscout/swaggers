@@ -2071,6 +2071,8 @@ definitions:
         $ref: '#/definitions/v1BillingDeploymentStatus'
       price_estimation:
         $ref: '#/definitions/v1BillingPriceEstimation'
+      icon_url:
+        type: string
     required:
       - name
       - instance_id
@@ -2151,6 +2153,65 @@ definitions:
       - BILLING_SUBSCRIPTION_STATUS_CANCELED
       - BILLING_SUBSCRIPTION_STATUS_UNCONFIRMED
     default: UNSPECIFIED_BILLING_SUBSCRIPTION_STATUS
+  v1BillingUsage:
+    type: object
+    properties:
+      period_start:
+        type: string
+      period_end:
+        type: string
+      total_amount_usd:
+        type: string
+      instances:
+        type: array
+        items:
+          type: object
+          $ref: '#/definitions/v1BillingUsageByInstance'
+      deducted_from_balance_usd:
+        type: string
+    required:
+      - period_start
+      - period_end
+      - total_amount_usd
+      - instances
+      - deducted_from_balance_usd
+  v1BillingUsageByInstance:
+    type: object
+    properties:
+      instance_name:
+        type: string
+      instance_id:
+        type: string
+      total_amount_usd:
+        type: string
+      base_amount_usd:
+        type: string
+      storage_amount_usd:
+        type: string
+      plugins:
+        type: array
+        items:
+          type: object
+          $ref: '#/definitions/v1BillingUsagePlugin'
+      icon_url:
+        type: string
+    required:
+      - instance_name
+      - instance_id
+      - total_amount_usd
+      - base_amount_usd
+      - storage_amount_usd
+      - plugins
+  v1BillingUsagePlugin:
+    type: object
+    properties:
+      plugin_type:
+        $ref: '#/definitions/v1PluginVariant'
+      amount_usd:
+        type: string
+    required:
+      - plugin_type
+      - amount_usd
   v1CancelApaySubscriptionResponse:
     type: object
     properties:
@@ -2808,10 +2869,13 @@ definitions:
         type: string
       instances_price:
         $ref: '#/definitions/v1BillingInstancesPrice'
+      usage:
+        $ref: '#/definitions/v1BillingUsage'
     required:
       - pay_as_you_go
       - estimated_amount_usd_per_second
       - instances_price
+      - usage
   v1GetDeploymentStorageUsageResponse:
     type: object
     properties:
