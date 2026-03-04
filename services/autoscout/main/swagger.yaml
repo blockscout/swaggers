@@ -2073,11 +2073,14 @@ definitions:
         $ref: '#/definitions/v1BillingPriceEstimation'
       icon_url:
         type: string
+      server_size:
+        type: string
     required:
       - name
       - instance_id
       - deployment
       - price_estimation
+      - server_size
   v1BillingInstancesPrice:
     type: object
     properties:
@@ -2195,6 +2198,8 @@ definitions:
           $ref: '#/definitions/v1BillingUsagePlugin'
       icon_url:
         type: string
+      server_size:
+        type: string
     required:
       - instance_name
       - instance_id
@@ -2202,6 +2207,7 @@ definitions:
       - base_amount_usd
       - storage_amount_usd
       - plugins
+      - server_size
   v1BillingUsagePlugin:
     type: object
     properties:
@@ -2871,11 +2877,14 @@ definitions:
         $ref: '#/definitions/v1BillingInstancesPrice'
       usage:
         $ref: '#/definitions/v1BillingUsage'
+      balance_usd:
+        type: string
     required:
       - pay_as_you_go
       - estimated_amount_usd_per_second
       - instances_price
       - usage
+      - balance_usd
   v1GetDeploymentStorageUsageResponse:
     type: object
     properties:
