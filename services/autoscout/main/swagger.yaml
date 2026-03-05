@@ -1042,6 +1042,28 @@ paths:
         - Deposits
       security:
         - ApiKeyAuth: []
+  /api/v1/deposits/request-network:
+    post:
+      operationId: Autoscout_CreateRequestNetworkDeposit
+      responses:
+        "200":
+          description: A successful response.
+          schema:
+            $ref: '#/definitions/v1CreateRequestNetworkDepositResponse'
+        default:
+          description: An unexpected error response.
+          schema:
+            $ref: '#/definitions/rpcStatus'
+      parameters:
+        - name: body
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/v1CreateRequestNetworkDepositRequest'
+      tags:
+        - Deposits
+      security:
+        - ApiKeyAuth: []
   /api/v1/deposits/stripe:
     post:
       operationId: Autoscout_CreateStripeDeposit
@@ -2410,6 +2432,26 @@ definitions:
         type: object
     required:
       - amount_cents
+  v1CreateRequestNetworkDepositRequest:
+    type: object
+    properties:
+      amount_cents:
+        type: integer
+        format: int64
+      promocode:
+        type: string
+    required:
+      - amount_cents
+  v1CreateRequestNetworkDepositResponse:
+    type: object
+    properties:
+      id:
+        type: string
+      url:
+        type: string
+    required:
+      - id
+      - url
   v1CreateStripeApayDepositRequest:
     type: object
     properties:
