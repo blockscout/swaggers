@@ -2194,12 +2194,15 @@ definitions:
           $ref: '#/definitions/v1BillingUsageByInstance'
       deducted_from_balance_usd:
         type: string
+      already_billed_usd:
+        type: string
     required:
       - period_start
       - period_end
       - total_amount_usd
       - instances
       - deducted_from_balance_usd
+      - already_billed_usd
   v1BillingUsageByInstance:
     type: object
     properties:
