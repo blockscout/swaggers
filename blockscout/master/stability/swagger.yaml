@@ -1233,6 +1233,53 @@ components:
       type: string
       x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.SmartContract.Language
       x-validate:
+    FheOperationsResponse:
+      additionalProperties: false
+      properties:
+        items:
+          items:
+            allOf:
+              - $ref: '#/components/schemas/FheOperation'
+            nullable: false
+            x-struct:
+            x-validate:
+          nullable: false
+          type: array
+          x-struct:
+          x-validate:
+        max_depth_hcu:
+          description: Maximum HCU depth across all operations in the transaction
+          example: 3
+          minimum: 0
+          nullable: false
+          type: integer
+          x-struct:
+          x-validate:
+        operation_count:
+          description: Total number of FHE operations in the transaction
+          example: 5
+          minimum: 0
+          nullable: false
+          type: integer
+          x-struct:
+          x-validate:
+        total_hcu:
+          description: Total HCU (Homomorphic Compute Units) cost for all operations in the transaction
+          example: 500
+          minimum: 0
+          nullable: false
+          type: integer
+          x-struct:
+          x-validate:
+      required:
+        - items
+        - total_hcu
+        - max_depth_hcu
+        - operation_count
+      title: FheOperationsResponse
+      type: object
+      x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.FheOperationsResponse
+      x-validate:
     Counters:
       description: Smart contracts counters
       properties:
@@ -3467,6 +3514,142 @@ components:
       type: object
       x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.Token
       x-validate:
+    FheOperation:
+      additionalProperties: false
+      properties:
+        block_number:
+          example: 12345678
+          nullable: false
+          type: integer
+          x-struct:
+          x-validate:
+        caller:
+          allOf:
+            - $ref: '#/components/schemas/Address'
+          nullable: true
+          x-struct:
+          x-validate:
+        fhe_type:
+          enum:
+            - Bool
+            - Uint8
+            - Uint16
+            - Uint32
+            - Uint64
+            - Uint128
+            - Uint160
+            - Uint256
+            - Bytes64
+            - Bytes128
+            - Bytes256
+          example: Uint8
+          nullable: false
+          type: string
+          x-struct:
+          x-validate:
+        hcu_cost:
+          example: 100
+          minimum: 0
+          nullable: false
+          type: integer
+          x-struct:
+          x-validate:
+        hcu_depth:
+          example: 1
+          minimum: 0
+          nullable: false
+          type: integer
+          x-struct:
+          x-validate:
+        inputs:
+          additionalProperties: false
+          properties:
+            control:
+              nullable: true
+              type: string
+              x-struct:
+              x-validate:
+            ct:
+              nullable: true
+              type: string
+              x-struct:
+              x-validate:
+            if_false:
+              nullable: true
+              type: string
+              x-struct:
+              x-validate:
+            if_true:
+              nullable: true
+              type: string
+              x-struct:
+              x-validate:
+            lhs:
+              nullable: true
+              type: string
+              x-struct:
+              x-validate:
+            plaintext:
+              nullable: true
+              type: number
+              x-struct:
+              x-validate:
+            rhs:
+              nullable: true
+              type: string
+              x-struct:
+              x-validate:
+          type: object
+          x-struct:
+          x-validate:
+        is_scalar:
+          example: false
+          nullable: false
+          type: boolean
+          x-struct:
+          x-validate:
+        log_index:
+          nullable: false
+          type: integer
+          x-struct:
+          x-validate:
+        operation:
+          example: FheAdd
+          nullable: false
+          type: string
+          x-struct:
+          x-validate:
+        result:
+          $ref: '#/components/schemas/HexString'
+        type:
+          enum:
+            - arithmetic
+            - bitwise
+            - comparison
+            - unary
+            - control
+            - encryption
+            - random
+          example: arithmetic
+          nullable: false
+          type: string
+          x-struct:
+          x-validate:
+      required:
+        - log_index
+        - operation
+        - type
+        - fhe_type
+        - is_scalar
+        - hcu_cost
+        - hcu_depth
+        - inputs
+        - result
+        - block_number
+      title: FheOperation
+      type: object
+      x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.FheOperation
+      x-validate:
     Transaction:
       additionalProperties: false
       properties:
@@ -3517,6 +3700,12 @@ components:
             $ref: '#/components/schemas/TokenTransfer'
           nullable: true
           type: array
+          x-struct:
+          x-validate:
+        fhe_operations_count:
+          description: Number of FHE (Fully Homomorphic Encryption) operations in the transaction
+          nullable: false
+          type: integer
           x-struct:
           x-validate:
         stability_fee:
@@ -3787,6 +3976,7 @@ components:
         - has_error_in_internal_transactions
         - authorization_list
         - is_pending_update
+        - fhe_operations_count
       title: Transaction
       type: object
       x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.Transaction
@@ -3890,6 +4080,12 @@ components:
           type: array
           x-struct:
           x-validate:
+        fhe_operations_count:
+          description: Number of FHE (Fully Homomorphic Encryption) operations in the transaction
+          nullable: false
+          type: integer
+          x-struct:
+          x-validate:
         stability_fee:
           additionalProperties: false
           nullable: false
@@ -4158,6 +4354,7 @@ components:
         - has_error_in_internal_transactions
         - authorization_list
         - is_pending_update
+        - fhe_operations_count
       title: TransactionResponse
       type: object
       x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.Transaction
@@ -4856,6 +5053,56 @@ paths:
       summary: List tokens with optional filtering by name, symbol, or type
       tags:
         - tokens
+  /v2/transactions/{transaction_hash_param}/fhe-operations:
+    get:
+      callbacks: {}
+      description: Retrieves Fully Homomorphic Encryption (FHE) operations parsed from transaction logs. Includes operation details, HCU (Homomorphic Compute Unit) costs, operation types, and related metadata.
+      operationId: BlockScoutWeb.API.V2.TransactionController.fhe_operations
+      parameters:
+        - description: Transaction hash in the path
+          in: path
+          name: transaction_hash_param
+          required: true
+          schema:
+            $ref: '#/components/schemas/FullHash'
+        - description: API key for rate limiting or for sensitive endpoints
+          in: query
+          name: apikey
+          required: false
+          schema:
+            type: string
+            x-struct:
+            x-validate:
+        - description: Secret key for getting access to restricted resources
+          in: query
+          name: key
+          required: false
+          schema:
+            type: string
+            x-struct:
+            x-validate:
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FheOperationsResponse'
+          description: FHE operations for the specified transaction with transaction-level metrics.
+        '404':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFoundResponse'
+          description: Not Found
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JsonErrorResponse'
+          description: Unprocessable Entity
+      summary: List FHE operations for a specific transaction
+      tags:
+        - transactions
   /v2/addresses/{address_hash_param}/token-transfers/csv:
     get:
       callbacks: {}
