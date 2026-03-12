@@ -11129,6 +11129,60 @@ paths:
             type: string
             x-struct:
             x-validate:
+        - description: User operation sender address hash
+          in: query
+          name: sender
+          required: false
+          schema:
+            $ref: '#/components/schemas/AddressHash'
+        - description: User operation bundler address hash
+          in: query
+          name: bundler
+          required: false
+          schema:
+            $ref: '#/components/schemas/AddressHash'
+        - description: User operation paymaster address hash
+          in: query
+          name: paymaster
+          required: false
+          schema:
+            $ref: '#/components/schemas/AddressHash'
+        - description: User operation factory address hash
+          in: query
+          name: factory
+          required: false
+          schema:
+            $ref: '#/components/schemas/AddressHash'
+        - description: Transaction hash in the query
+          in: query
+          name: transaction_hash
+          required: false
+          schema:
+            $ref: '#/components/schemas/FullHash'
+        - description: User operation entry point address hash
+          in: query
+          name: entry_point
+          required: false
+          schema:
+            $ref: '#/components/schemas/AddressHash'
+        - description: User operation bundle index
+          in: query
+          name: bundle_index
+          required: false
+          schema:
+            minimum: 0
+            type: integer
+            x-struct:
+            x-validate:
+        - description: User operation block number
+          in: query
+          name: block_number
+          required: false
+          schema:
+            minimum: 0
+            type: integer
+            x-struct:
+            x-validate:
         - description: Number of items returned per page
           in: query
           name: page_size
@@ -12214,6 +12268,12 @@ paths:
       description: Retrieves a list of account abstraction wallets.
       operationId: BlockScoutWeb.API.V2.Proxy.AccountAbstractionController.accounts
       parameters:
+        - description: User operation factory address hash
+          in: query
+          name: factory
+          required: false
+          schema:
+            $ref: '#/components/schemas/AddressHash'
         - description: API key for rate limiting or for sensitive endpoints
           in: query
           name: apikey
@@ -13364,6 +13424,18 @@ paths:
             type: string
             x-struct:
             x-validate:
+        - description: User operation bundler address hash
+          in: query
+          name: bundler
+          required: false
+          schema:
+            $ref: '#/components/schemas/AddressHash'
+        - description: User operation entry point address hash
+          in: query
+          name: entry_point
+          required: false
+          schema:
+            $ref: '#/components/schemas/AddressHash'
         - description: Number of items returned per page
           in: query
           name: page_size
