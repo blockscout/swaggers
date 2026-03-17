@@ -2024,10 +2024,8 @@ definitions:
         format: int64
       l1_blockscout_url:
         type: string
-        title: NEXT_PUBLIC_ROLLUP_L1_BASE_URL
+        title: 'Deprecated: use parent_chain.base_url instead'
     title: https://github.com/blockscout/docs/blob/594e4c2ef83556b3cb41e9fd43bca776afb63c05/for-developers/information-and-settings/env-variables/backend-envs-chain-specific.md?plain=1#L136
-    required:
-      - l1_blockscout_url
   v1AuthToken:
     type: object
     properties:
@@ -3561,7 +3559,7 @@ definitions:
         title: INDEXER_POLYGON_ZKEVM_L1_BRIDGE_CONTRACT
       l1_blockscout_url:
         type: string
-        title: NEXT_PUBLIC_ROLLUP_L1_BASE_URL
+        title: 'Deprecated: use parent_chain.base_url instead'
       batches_chunk_size:
         type: string
         format: int64
@@ -3600,8 +3598,6 @@ definitions:
         type: string
         format: int64
         title: INDEXER_POLYGON_ZKEVM_L2_BRIDGE_ROLLUP_INDEX
-    required:
-      - l1_blockscout_url
   v1PreviewDepositRequest:
     type: object
     properties:
@@ -4143,7 +4139,7 @@ definitions:
         title: INDEXER_ZKSYNC_L1_RPC
       l1_blockscout_url:
         type: string
-        title: NEXT_PUBLIC_ROLLUP_L1_BASE_URL
+        title: 'Deprecated: use parent_chain.base_url instead'
       batches_chunk_size:
         type: string
         format: int64
@@ -4160,8 +4156,6 @@ definitions:
         type: string
         format: int64
         title: INDEXER_ZKSYNC_BATCHES_STATUS_RECHECK_INTERVAL
-    required:
-      - l1_blockscout_url
 securityDefinitions:
   ApayAlgorithm:
     type: apiKey
