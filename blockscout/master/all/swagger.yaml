@@ -16793,6 +16793,101 @@ paths:
       summary: List L2 blocks in a Scroll batch
       tags:
         - blocks
+  /v2/transactions/execution-node/{execution_node_hash_param}:
+    get:
+      callbacks: {}
+      description: Retrieves transactions that were executed on the specified execution node.
+      operationId: BlockScoutWeb.API.V2.TransactionController.execution_node
+      parameters:
+        - description: Execution node hash in the path
+          in: path
+          name: execution_node_hash_param
+          required: true
+          schema:
+            $ref: '#/components/schemas/AddressHash'
+        - description: API key for rate limiting or for sensitive endpoints
+          in: query
+          name: apikey
+          required: false
+          schema:
+            type: string
+            x-struct: null
+            x-validate: null
+        - description: Secret key for getting access to restricted resources
+          in: query
+          name: key
+          required: false
+          schema:
+            type: string
+            x-struct: null
+            x-validate: null
+        - description: Block number for paging
+          in: query
+          name: block_number
+          required: false
+          schema:
+            minimum: 0
+            type: integer
+            x-struct: null
+            x-validate: null
+        - description: Item index for paging
+          in: query
+          name: index
+          required: false
+          schema:
+            type: integer
+            x-struct: null
+            x-validate: null
+        - description: Number of items returned per page
+          in: query
+          name: items_count
+          required: false
+          schema:
+            maximum: 50
+            minimum: 1
+            type: integer
+            x-struct: null
+            x-validate: null
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                additionalProperties: false
+                nullable: false
+                properties:
+                  items:
+                    items:
+                      $ref: '#/components/schemas/TransactionResponse'
+                    nullable: false
+                    type: array
+                    x-struct: null
+                    x-validate: null
+                  next_page_params:
+                    example:
+                      block_number: 14127868
+                      index: 0
+                      items_count: 50
+                    nullable: true
+                    type: object
+                    x-struct: null
+                    x-validate: null
+                required:
+                  - items
+                  - next_page_params
+                type: object
+                x-struct: null
+                x-validate: null
+          description: List of transactions.
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JsonErrorResponse'
+          description: Unprocessable Entity
+      summary: List transactions executed on a specific execution node
+      tags:
+        - transactions
   /v2/validators/zilliqa:
     get:
       callbacks: {}
