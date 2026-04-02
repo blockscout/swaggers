@@ -4018,66 +4018,6 @@ components:
           $ref: '#/components/schemas/IntegerStringNullable'
         gas_limit:
           $ref: '#/components/schemas/IntegerString'
-        actions:
-          items:
-            additionalProperties: false
-            properties:
-              data:
-                description: Transaction action details (json formatted)
-                nullable: false
-                type: object
-                x-struct:
-                x-validate:
-              protocol:
-                enum:
-                  - uniswap_v3
-                  - opensea_v1_1
-                  - wrapping
-                  - approval
-                  - zkbob
-                  - aave_v3
-                nullable: false
-                type: string
-                x-struct:
-                x-validate:
-              type:
-                enum:
-                  - mint_nft
-                  - mint
-                  - burn
-                  - collect
-                  - swap
-                  - sale
-                  - cancel
-                  - transfer
-                  - wrap
-                  - unwrap
-                  - approve
-                  - revoke
-                  - withdraw
-                  - deposit
-                  - borrow
-                  - supply
-                  - repay
-                  - flash_loan
-                  - enable_collateral
-                  - disable_collateral
-                  - liquidation_call
-                nullable: false
-                type: string
-                x-struct:
-                x-validate:
-            required:
-              - protocol
-              - type
-              - data
-            type: object
-            x-struct:
-            x-validate:
-          nullable: true
-          type: array
-          x-struct:
-          x-validate:
         fee:
           $ref: '#/components/schemas/Fee'
         method:
@@ -4255,7 +4195,6 @@ components:
         - decoded_input
         - token_transfers
         - token_transfers_overflow
-        - actions
         - exchange_rate
         - historic_exchange_rate
         - method
@@ -4385,66 +4324,6 @@ components:
           $ref: '#/components/schemas/IntegerStringNullable'
         gas_limit:
           $ref: '#/components/schemas/IntegerString'
-        actions:
-          items:
-            additionalProperties: false
-            properties:
-              data:
-                description: Transaction action details (json formatted)
-                nullable: false
-                type: object
-                x-struct:
-                x-validate:
-              protocol:
-                enum:
-                  - uniswap_v3
-                  - opensea_v1_1
-                  - wrapping
-                  - approval
-                  - zkbob
-                  - aave_v3
-                nullable: false
-                type: string
-                x-struct:
-                x-validate:
-              type:
-                enum:
-                  - mint_nft
-                  - mint
-                  - burn
-                  - collect
-                  - swap
-                  - sale
-                  - cancel
-                  - transfer
-                  - wrap
-                  - unwrap
-                  - approve
-                  - revoke
-                  - withdraw
-                  - deposit
-                  - borrow
-                  - supply
-                  - repay
-                  - flash_loan
-                  - enable_collateral
-                  - disable_collateral
-                  - liquidation_call
-                nullable: false
-                type: string
-                x-struct:
-                x-validate:
-            required:
-              - protocol
-              - type
-              - data
-            type: object
-            x-struct:
-            x-validate:
-          nullable: true
-          type: array
-          x-struct:
-          x-validate:
         fee:
           $ref: '#/components/schemas/Fee'
         method:
@@ -4622,7 +4501,6 @@ components:
         - decoded_input
         - token_transfers
         - token_transfers_overflow
-        - actions
         - exchange_rate
         - historic_exchange_rate
         - method

@@ -3926,66 +3926,6 @@ components:
           $ref: '#/components/schemas/IntegerStringNullable'
         gas_limit:
           $ref: '#/components/schemas/IntegerString'
-        actions:
-          items:
-            additionalProperties: false
-            properties:
-              data:
-                description: Transaction action details (json formatted)
-                nullable: false
-                type: object
-                x-struct: null
-                x-validate: null
-              protocol:
-                enum:
-                  - uniswap_v3
-                  - opensea_v1_1
-                  - wrapping
-                  - approval
-                  - zkbob
-                  - aave_v3
-                nullable: false
-                type: string
-                x-struct: null
-                x-validate: null
-              type:
-                enum:
-                  - mint_nft
-                  - mint
-                  - burn
-                  - collect
-                  - swap
-                  - sale
-                  - cancel
-                  - transfer
-                  - wrap
-                  - unwrap
-                  - approve
-                  - revoke
-                  - withdraw
-                  - deposit
-                  - borrow
-                  - supply
-                  - repay
-                  - flash_loan
-                  - enable_collateral
-                  - disable_collateral
-                  - liquidation_call
-                nullable: false
-                type: string
-                x-struct: null
-                x-validate: null
-            required:
-              - protocol
-              - type
-              - data
-            type: object
-            x-struct: null
-            x-validate: null
-          nullable: true
-          type: array
-          x-struct: null
-          x-validate: null
         arbitrum:
           additionalProperties: false
           nullable: false
@@ -4268,7 +4208,6 @@ components:
         - decoded_input
         - token_transfers
         - token_transfers_overflow
-        - actions
         - exchange_rate
         - historic_exchange_rate
         - method
@@ -4397,66 +4336,6 @@ components:
           $ref: '#/components/schemas/IntegerStringNullable'
         gas_limit:
           $ref: '#/components/schemas/IntegerString'
-        actions:
-          items:
-            additionalProperties: false
-            properties:
-              data:
-                description: Transaction action details (json formatted)
-                nullable: false
-                type: object
-                x-struct: null
-                x-validate: null
-              protocol:
-                enum:
-                  - uniswap_v3
-                  - opensea_v1_1
-                  - wrapping
-                  - approval
-                  - zkbob
-                  - aave_v3
-                nullable: false
-                type: string
-                x-struct: null
-                x-validate: null
-              type:
-                enum:
-                  - mint_nft
-                  - mint
-                  - burn
-                  - collect
-                  - swap
-                  - sale
-                  - cancel
-                  - transfer
-                  - wrap
-                  - unwrap
-                  - approve
-                  - revoke
-                  - withdraw
-                  - deposit
-                  - borrow
-                  - supply
-                  - repay
-                  - flash_loan
-                  - enable_collateral
-                  - disable_collateral
-                  - liquidation_call
-                nullable: false
-                type: string
-                x-struct: null
-                x-validate: null
-            required:
-              - protocol
-              - type
-              - data
-            type: object
-            x-struct: null
-            x-validate: null
-          nullable: true
-          type: array
-          x-struct: null
-          x-validate: null
         arbitrum:
           additionalProperties: false
           nullable: false
@@ -4739,7 +4618,6 @@ components:
         - decoded_input
         - token_transfers
         - token_transfers_overflow
-        - actions
         - exchange_rate
         - historic_exchange_rate
         - method
