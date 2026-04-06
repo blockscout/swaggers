@@ -2865,12 +2865,6 @@ components:
     InternalTransaction:
       additionalProperties: false
       properties:
-        block_index:
-          description: The index of this internal transaction inside the block.
-          nullable: true
-          type: integer
-          x-struct: null
-          x-validate: null
         block_number:
           nullable: false
           type: integer
@@ -2936,7 +2930,6 @@ components:
         - timestamp
         - index
         - gas_limit
-        - block_index
       title: InternalTransaction
       type: object
       x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.InternalTransaction
