@@ -4740,6 +4740,118 @@ components:
       type: object
       x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.Optimism.Deposit
       x-validate:
+    Epoch:
+      additionalProperties: false
+      description: Celo epoch summary.
+      nullable: false
+      properties:
+        aggregated_election_rewards:
+          additionalProperties:
+            anyOf:
+              - additionalProperties: false
+                properties:
+                  count:
+                    minimum: 0
+                    nullable: false
+                    type: integer
+                    x-struct:
+                    x-validate:
+                  token:
+                    additionalProperties: true
+                    nullable: true
+                    type: object
+                    x-struct:
+                    x-validate:
+                  total:
+                    $ref: '#/components/schemas/IntegerString'
+                required:
+                  - total
+                  - count
+                  - token
+                type: object
+                x-struct:
+                x-validate:
+              - type: 'null'
+                x-struct:
+                x-validate:
+            x-struct:
+            x-validate:
+          nullable: true
+          type: object
+          x-struct:
+          x-validate:
+        distribution:
+          additionalProperties: true
+          nullable: true
+          type: object
+          x-struct:
+          x-validate:
+        end_block_number:
+          minimum: 0
+          nullable: false
+          type: integer
+          x-struct:
+          x-validate:
+        end_processing_block_hash:
+          $ref: '#/components/schemas/FullHashNullable'
+        end_processing_block_number:
+          minimum: 0
+          nullable: true
+          type: integer
+          x-struct:
+          x-validate:
+        is_finalized:
+          nullable: false
+          type: boolean
+          x-struct:
+          x-validate:
+        number:
+          minimum: 0
+          nullable: false
+          type: integer
+          x-struct:
+          x-validate:
+        start_block_number:
+          minimum: 0
+          nullable: false
+          type: integer
+          x-struct:
+          x-validate:
+        start_processing_block_hash:
+          $ref: '#/components/schemas/FullHashNullable'
+        start_processing_block_number:
+          minimum: 0
+          nullable: true
+          type: integer
+          x-struct:
+          x-validate:
+        timestamp:
+          $ref: '#/components/schemas/TimestampNullable'
+        type:
+          enum:
+            - L1
+            - L2
+          nullable: false
+          type: string
+          x-struct:
+          x-validate:
+      required:
+        - number
+        - type
+        - start_block_number
+        - end_block_number
+        - timestamp
+        - is_finalized
+        - distribution
+        - start_processing_block_hash
+        - start_processing_block_number
+        - end_processing_block_hash
+        - end_processing_block_number
+        - aggregated_election_rewards
+      title: Epoch
+      type: object
+      x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.Celo.Epoch
+      x-validate:
     TransactionResponse:
       additionalProperties: false
       description: Transaction response
@@ -5344,6 +5456,56 @@ paths:
       summary: List internal transactions in a specific block
       tags:
         - blocks
+  /v2/celo/epochs/{number}:
+    get:
+      callbacks: {}
+      description: Retrieves detailed information about a Celo epoch.
+      operationId: BlockScoutWeb.API.V2.CeloController.epoch
+      parameters:
+        - description: Epoch number in the path.
+          in: path
+          name: number
+          required: true
+          schema:
+            $ref: '#/components/schemas/IntegerString'
+        - description: API key for rate limiting or for sensitive endpoints
+          in: query
+          name: apikey
+          required: false
+          schema:
+            type: string
+            x-struct:
+            x-validate:
+        - description: Secret key for getting access to restricted resources
+          in: query
+          name: key
+          required: false
+          schema:
+            type: string
+            x-struct:
+            x-validate:
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Epoch'
+          description: Celo epoch details.
+        '404':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFoundResponse'
+          description: Not Found
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JsonErrorResponse'
+          description: Unprocessable Entity
+      summary: Get Celo epoch details.
+      tags:
+        - celo
   /v2/tokens/{address_hash_param}:
     get:
       callbacks: {}
@@ -5846,6 +6008,74 @@ paths:
       summary: List tokens with optional filtering by name, symbol, or type
       tags:
         - tokens
+  /v2/celo/epochs:
+    get:
+      callbacks: {}
+      description: Retrieves a paginated list of Celo epochs.
+      operationId: BlockScoutWeb.API.V2.CeloController.epochs
+      parameters:
+        - description: API key for rate limiting or for sensitive endpoints
+          in: query
+          name: apikey
+          required: false
+          schema:
+            type: string
+            x-struct:
+            x-validate:
+        - description: Secret key for getting access to restricted resources
+          in: query
+          name: key
+          required: false
+          schema:
+            type: string
+            x-struct:
+            x-validate:
+        - description: Number for paging
+          in: query
+          name: number
+          required: false
+          schema:
+            type: integer
+            x-struct:
+            x-validate:
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                additionalProperties: false
+                nullable: false
+                properties:
+                  items:
+                    items:
+                      $ref: '#/components/schemas/Epoch'
+                    nullable: false
+                    type: array
+                    x-struct:
+                    x-validate:
+                  next_page_params:
+                    example:
+                      number: 100
+                    nullable: true
+                    type: object
+                    x-struct:
+                    x-validate:
+                required:
+                  - items
+                  - next_page_params
+                type: object
+                x-struct:
+                x-validate:
+          description: List of Celo epochs.
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JsonErrorResponse'
+          description: Unprocessable Entity
+      summary: List Celo epochs.
+      tags:
+        - celo
   /v2/transactions/{transaction_hash_param}/fhe-operations:
     get:
       callbacks: {}
@@ -13992,6 +14222,98 @@ paths:
       summary: List deposits on the main page.
       tags:
         - optimism
+  /v2/celo/epochs/{number}/election-rewards/{type}:
+    get:
+      callbacks: {}
+      description: Retrieves a paginated list of election rewards for a Celo epoch and reward type.
+      operationId: BlockScoutWeb.API.V2.CeloController.election_rewards
+      parameters:
+        - description: Epoch number in the path.
+          in: path
+          name: number
+          required: true
+          schema:
+            $ref: '#/components/schemas/IntegerString'
+        - description: Reward type in the path.
+          in: path
+          name: type
+          required: true
+          schema:
+            $ref: '#/components/schemas/CeloElectionRewardType'
+        - description: API key for rate limiting or for sensitive endpoints
+          in: query
+          name: apikey
+          required: false
+          schema:
+            type: string
+            x-struct:
+            x-validate:
+        - description: Secret key for getting access to restricted resources
+          in: query
+          name: key
+          required: false
+          schema:
+            type: string
+            x-struct:
+            x-validate:
+        - description: Amount for paging
+          in: query
+          name: amount
+          required: false
+          schema:
+            $ref: '#/components/schemas/IntegerStringNullable'
+        - description: Account address hash for paging
+          in: query
+          name: account_address_hash
+          required: false
+          schema:
+            $ref: '#/components/schemas/AddressHash'
+        - description: Associated account address hash for paging
+          in: query
+          name: associated_account_address_hash
+          required: false
+          schema:
+            $ref: '#/components/schemas/AddressHash'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                additionalProperties: false
+                nullable: false
+                properties:
+                  items:
+                    items:
+                      $ref: '#/components/schemas/ElectionReward'
+                    nullable: false
+                    type: array
+                    x-struct:
+                    x-validate:
+                  next_page_params:
+                    example:
+                      account_address_hash: '0x1234567890123456789012345678901234567890'
+                      amount: '1000000000000000000'
+                      associated_account_address_hash: '0x0987654321098765432109876543210987654321'
+                    nullable: true
+                    type: object
+                    x-struct:
+                    x-validate:
+                required:
+                  - items
+                  - next_page_params
+                type: object
+                x-struct:
+                x-validate:
+          description: Election rewards for the specified Celo epoch.
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JsonErrorResponse'
+          description: Unprocessable Entity
+      summary: List Celo epoch election rewards.
+      tags:
+        - celo
   /v2/transactions/{transaction_hash_param}/raw-trace:
     get:
       callbacks: {}
