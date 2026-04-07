@@ -4733,6 +4733,32 @@ components:
       type: object
       x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.Optimism.Deposit
       x-validate:
+    Response:
+      properties:
+        expires_at:
+          format: date-time
+          nullable: true
+          type: string
+          x-struct:
+          x-validate:
+        file_id:
+          nullable: true
+          type: string
+          x-struct:
+          x-validate:
+        status:
+          enum:
+            - pending
+            - completed
+            - failed
+          nullable: false
+          type: string
+          x-struct:
+          x-validate:
+      title: Response
+      type: object
+      x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.CSVExport.Response
+      x-validate:
     Epoch:
       additionalProperties: false
       description: Celo epoch summary.
@@ -5577,6 +5603,10 @@ paths:
             application/json:
               schema:
                 properties:
+                  async_enabled:
+                    type: boolean
+                    x-struct:
+                    x-validate:
                   limit:
                     type: integer
                     x-struct:
@@ -5718,7 +5748,7 @@ paths:
         - description: Start of the time period (ISO 8601 format) in CSV export
           in: query
           name: from_period
-          required: true
+          required: false
           schema:
             anyOf:
               - nullable: false
@@ -5732,7 +5762,7 @@ paths:
         - description: End of the time period (ISO 8601 format) In CSV export
           in: query
           name: to_period
-          required: true
+          required: false
           schema:
             anyOf:
               - nullable: false
@@ -14592,6 +14622,54 @@ paths:
       summary: Number of output roots in the list.
       tags:
         - optimism
+  /v2/csv-exports/{uuid_param}:
+    get:
+      callbacks: {}
+      description: Gets a CSV export by UUID
+      operationId: BlockScoutWeb.API.V2.CsvExportController.get_csv_export
+      parameters:
+        - description: UUID for CSV export
+          in: path
+          name: uuid_param
+          required: true
+          schema:
+            format: uuid
+            pattern: ^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$
+            type: string
+            x-struct:
+            x-validate:
+        - description: API key for rate limiting or for sensitive endpoints
+          in: query
+          name: apikey
+          required: false
+          schema:
+            type: string
+            x-struct:
+            x-validate:
+        - description: Secret key for getting access to restricted resources
+          in: query
+          name: key
+          required: false
+          schema:
+            type: string
+            x-struct:
+            x-validate:
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Response'
+          description: Status of CSV export.
+        '404':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFoundResponse'
+          description: Not Found
+      summary: Get CSV export
+      tags:
+        - csv-export
   /v2/addresses/{address_hash_param}/nft/collections:
     get:
       callbacks: {}
