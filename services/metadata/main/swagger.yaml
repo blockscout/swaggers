@@ -36,8 +36,8 @@ paths:
           type: string
         - name: chainId
           description: |-
-            If not provided, only multichain tags will be returned
-            Either just `chain_id` or `chain_id:instance_public_id`
+            If not provided, only multichain tags will be returned.
+            Canonical `chain_specifier` (decimal chain id or `chain_id:autoscout_instance_id`).
           in: query
           required: false
           type: string
@@ -96,8 +96,9 @@ paths:
           type: string
         - name: chainId
           description: |-
-            If not provided, only multichain tags will be returned
-            Either just `chain_id` or `chain_id:instance_public_id`
+            If not provided, only multichain tags will be returned.
+            Instance scope: canonical `chain_specifier` string — decimal chain id (`"1"`)
+            for enterprise, or `chain_id:autoscout_instance_id` when disambiguating instances.
           in: query
           required: false
           type: string
@@ -167,7 +168,7 @@ paths:
             $ref: '#/definitions/rpcStatus'
       parameters:
         - name: chainId
-          description: Either just `chain_id` or `chain_id:instance_public_id`
+          description: Canonical `chain_specifier` (decimal chain id or `chain_id:autoscout_instance_id`).
           in: query
           required: false
           type: string
