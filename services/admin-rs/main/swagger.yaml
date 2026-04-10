@@ -7,6 +7,8 @@ tags:
   - name: Admin
   - name: MarketplaceAdmin
   - name: Health
+schemes:
+  - https
 consumes:
   - application/json
 produces:
@@ -100,10 +102,10 @@ paths:
             $ref: '#/definitions/rpcStatus'
       parameters:
         - name: chainId
+          description: Either just `chain_id` or `chain_id:instance_id`
           in: path
           required: true
           type: string
-          format: uint64
         - name: body
           in: body
           required: true
@@ -125,10 +127,10 @@ paths:
             $ref: '#/definitions/rpcStatus'
       parameters:
         - name: chainId
+          description: Either just `chain_id` or `chain_id:instance_id`
           in: path
           required: true
           type: string
-          format: uint64
         - name: id
           in: path
           required: true
@@ -153,10 +155,10 @@ paths:
             $ref: '#/definitions/rpcStatus'
       parameters:
         - name: chainId
+          description: Either just `chain_id` or `chain_id:instance_id`
           in: path
           required: true
           type: string
-          format: uint64
         - name: status
           description: Filter by submission status.
           in: query
@@ -188,10 +190,10 @@ paths:
             $ref: '#/definitions/rpcStatus'
       parameters:
         - name: chainId
+          description: Either just `chain_id` or `chain_id:instance_id`
           in: path
           required: true
           type: string
-          format: uint64
         - name: submission
           description: The token info submission resource to create.
           in: body
@@ -215,10 +217,10 @@ paths:
             $ref: '#/definitions/rpcStatus'
       parameters:
         - name: chainId
+          description: Either just `chain_id` or `chain_id:instance_id`
           in: path
           required: true
           type: string
-          format: uint64
       tags:
         - Admin
   /api/v1/chains/{chainId}/token-info-submissions/{id}:
@@ -236,10 +238,10 @@ paths:
             $ref: '#/definitions/rpcStatus'
       parameters:
         - name: chainId
+          description: Either just `chain_id` or `chain_id:instance_id`
           in: path
           required: true
           type: string
-          format: uint64
         - name: id
           description: The ID of the token info submission resource to retrieve.
           in: path
@@ -262,10 +264,10 @@ paths:
             $ref: '#/definitions/rpcStatus'
       parameters:
         - name: chainId
+          description: Either just `chain_id` or `chain_id:instance_id`
           in: path
           required: true
           type: string
-          format: uint64
         - name: id
           description: |-
             The ID of the token info submission resource to update.
@@ -306,6 +308,8 @@ paths:
             $ref: '#/definitions/v1RegisterInstanceRequest'
       tags:
         - AdminManagement
+      security:
+        - ApiKeyAuth: []
   /api/v1/instances/{instancePublicId}:
     get:
       operationId: AdminManagement_GetInstance
@@ -325,6 +329,8 @@ paths:
           type: string
       tags:
         - AdminManagement
+      security:
+        - ApiKeyAuth: []
     delete:
       operationId: AdminManagement_RemoveInstance
       responses:
@@ -343,6 +349,8 @@ paths:
           type: string
       tags:
         - AdminManagement
+      security:
+        - ApiKeyAuth: []
     put:
       operationId: AdminManagement_UpdateInstance
       responses:
@@ -366,6 +374,8 @@ paths:
             $ref: '#/definitions/AdminManagementUpdateInstanceBody'
       tags:
         - AdminManagement
+      security:
+        - ApiKeyAuth: []
   /api/v1/instances/{instancePublicId}/api-key:
     get:
       operationId: AdminManagement_GetInstanceWithApiKey
@@ -385,6 +395,50 @@ paths:
           type: string
       tags:
         - AdminManagement
+      security:
+        - ApiKeyAuth: []
+  /api/v1/instances/{instancePublicId}/disable:
+    post:
+      operationId: AdminManagement_DisableInstance
+      responses:
+        "200":
+          description: A successful response.
+          schema:
+            $ref: '#/definitions/v1DisableInstanceResponse'
+        default:
+          description: An unexpected error response.
+          schema:
+            $ref: '#/definitions/rpcStatus'
+      parameters:
+        - name: instancePublicId
+          in: path
+          required: true
+          type: string
+      tags:
+        - AdminManagement
+      security:
+        - ApiKeyAuth: []
+  /api/v1/instances/{instancePublicId}/enable:
+    post:
+      operationId: AdminManagement_EnableInstance
+      responses:
+        "200":
+          description: A successful response.
+          schema:
+            $ref: '#/definitions/v1EnableInstanceResponse'
+        default:
+          description: An unexpected error response.
+          schema:
+            $ref: '#/definitions/rpcStatus'
+      parameters:
+        - name: instancePublicId
+          in: path
+          required: true
+          type: string
+      tags:
+        - AdminManagement
+      security:
+        - ApiKeyAuth: []
   /api/v1/marketplace/categories:
     get:
       operationId: MarketplaceAdmin_ListMarketplaceCategories
@@ -468,6 +522,8 @@ paths:
             $ref: '#/definitions/v1RegisterRoleRequest'
       tags:
         - AdminManagement
+      security:
+        - ApiKeyAuth: []
   /api/v1/roles/{rolePublicId}:
     get:
       operationId: AdminManagement_GetRole
@@ -487,6 +543,8 @@ paths:
           type: string
       tags:
         - AdminManagement
+      security:
+        - ApiKeyAuth: []
     delete:
       operationId: AdminManagement_DeleteRole
       responses:
@@ -505,6 +563,132 @@ paths:
           type: string
       tags:
         - AdminManagement
+      security:
+        - ApiKeyAuth: []
+  /api/v1/roles/{rolePublicId}/permissions:
+    post:
+      operationId: AdminManagement_UpdateRolePermissions
+      responses:
+        "200":
+          description: A successful response.
+          schema:
+            $ref: '#/definitions/v1UpdateRolePermissionsResponse'
+        default:
+          description: An unexpected error response.
+          schema:
+            $ref: '#/definitions/rpcStatus'
+      parameters:
+        - name: rolePublicId
+          in: path
+          required: true
+          type: string
+        - name: body
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/AdminManagementUpdateRolePermissionsBody'
+      tags:
+        - AdminManagement
+      security:
+        - ApiKeyAuth: []
+  /api/v1/users:
+    post:
+      summary: User Management
+      operationId: AdminManagement_RegisterUser
+      responses:
+        "200":
+          description: A successful response.
+          schema:
+            $ref: '#/definitions/v1RegisterUserResponse'
+        default:
+          description: An unexpected error response.
+          schema:
+            $ref: '#/definitions/rpcStatus'
+      parameters:
+        - name: body
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/v1RegisterUserRequest'
+      tags:
+        - AdminManagement
+      security:
+        - ApiKeyAuth: []
+  /api/v1/users/{email}:
+    get:
+      operationId: AdminManagement_GetUser
+      responses:
+        "200":
+          description: A successful response.
+          schema:
+            $ref: '#/definitions/v1GetUserResponse'
+        default:
+          description: An unexpected error response.
+          schema:
+            $ref: '#/definitions/rpcStatus'
+      parameters:
+        - name: email
+          in: path
+          required: true
+          type: string
+      tags:
+        - AdminManagement
+      security:
+        - ApiKeyAuth: []
+  /api/v1/users/{userId}/password:
+    post:
+      operationId: AdminManagement_UpdateUserPassword
+      responses:
+        "200":
+          description: A successful response.
+          schema:
+            $ref: '#/definitions/v1UpdateUserPasswordResponse'
+        default:
+          description: An unexpected error response.
+          schema:
+            $ref: '#/definitions/rpcStatus'
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          type: string
+          format: int64
+        - name: body
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/AdminManagementUpdateUserPasswordBody'
+      tags:
+        - AdminManagement
+      security:
+        - ApiKeyAuth: []
+  /api/v1/users/{userId}/roles:
+    post:
+      operationId: AdminManagement_AddUserToRole
+      responses:
+        "200":
+          description: A successful response.
+          schema:
+            $ref: '#/definitions/v1AddUserToRoleResponse'
+        default:
+          description: An unexpected error response.
+          schema:
+            $ref: '#/definitions/rpcStatus'
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          type: string
+          format: int64
+        - name: body
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/AdminManagementAddUserToRoleBody'
+      tags:
+        - AdminManagement
+      security:
+        - ApiKeyAuth: []
   /health:
     get:
       summary: |-
@@ -533,6 +717,13 @@ definitions:
     properties:
       submission:
         $ref: '#/definitions/v1MetadataTagSubmission'
+  AdminManagementAddUserToRoleBody:
+    type: object
+    properties:
+      rolePublicId:
+        type: string
+    required:
+      - rolePublicId
   AdminManagementUpdateInstanceBody:
     type: object
     properties:
@@ -540,6 +731,26 @@ definitions:
         type: string
       apiKey:
         type: string
+  AdminManagementUpdateRolePermissionsBody:
+    type: object
+    properties:
+      updates:
+        type: array
+        items:
+          type: object
+          $ref: '#/definitions/v1PermissionUpdate'
+      addDefaultInstanceOwnerPermissions:
+        type: boolean
+        description: |-
+          If `true`, on top of `updates` it will add default permissions suitable for instance owner role.
+          This can be useful for initial regular role setup for a new instance.
+  AdminManagementUpdateUserPasswordBody:
+    type: object
+    properties:
+      newPassword:
+        type: string
+    required:
+      - newPassword
   HealthCheckResponseServingStatus:
     type: string
     enum:
@@ -593,6 +804,8 @@ definitions:
         items:
           type: object
           $ref: '#/definitions/protobufAny'
+  v1AddUserToRoleResponse:
+    type: object
   v1CreateDappRatingResponse:
     type: object
     properties:
@@ -614,6 +827,10 @@ definitions:
         type: string
   v1DeleteRoleResponse:
     type: object
+  v1DisableInstanceResponse:
+    type: object
+  v1EnableInstanceResponse:
+    type: object
   v1GetRoleResponse:
     type: object
     properties:
@@ -626,6 +843,14 @@ definitions:
           $ref: '#/definitions/v1Instance'
     required:
       - role
+  v1GetUserResponse:
+    type: object
+    properties:
+      id:
+        type: string
+        format: int64
+    required:
+      - id
   v1HealthCheckResponse:
     type: object
     properties:
@@ -648,6 +873,15 @@ definitions:
       ownerRolePublicId:
         type: string
         title: Owner role (org/team) public ID
+      disabledAt:
+        type: string
+        description: API key is sometimes omitted on purpose as a sensitive data
+        title: ISO 8601 format
+    required:
+      - instancePublicId
+      - slug
+      - chainId
+      - ownerRolePublicId
   v1InstanceWithApiKey:
     type: object
     properties:
@@ -788,6 +1022,35 @@ definitions:
         type: string
       companyWebsite:
         type: string
+  v1Permission:
+    type: string
+    enum:
+      - PERMISSION_UNSPECIFIED
+      - PERMISSION_TOKEN_INFO_SUBMISSIONS_ALL
+      - PERMISSION_TOKEN_INFO_SUBMISSIONS_OWN
+      - PERMISSION_METADATA_TAGS_ALL
+      - PERMISSION_METADATA_TAGS_OWN
+      - PERMISSION_NFT_REFETCH_ALL
+      - PERMISSION_NFT_REFETCH_OWN
+      - PERMISSION_USERS_ROLES_ALL
+      - PERMISSION_USERS_ROLES_OWN
+      - PERMISSION_INSTANCES_ALL
+    default: PERMISSION_UNSPECIFIED
+  v1PermissionAction:
+    type: string
+    enum:
+      - PERMISSION_ACTION_UNSPECIFIED
+      - PERMISSION_ACTION_ALLOW
+      - PERMISSION_ACTION_DENY
+    default: PERMISSION_ACTION_UNSPECIFIED
+    description: Unspecified is a no-op (permission unchanged). Only Allow and Deny change state.
+  v1PermissionUpdate:
+    type: object
+    properties:
+      permission:
+        $ref: '#/definitions/v1Permission'
+      action:
+        $ref: '#/definitions/v1PermissionAction'
   v1RegisterInstanceRequest:
     type: object
     properties:
@@ -814,6 +1077,27 @@ definitions:
     properties:
       rolePublicId:
         type: string
+  v1RegisterUserRequest:
+    type: object
+    properties:
+      email:
+        type: string
+      password:
+        type: string
+    required:
+      - email
+      - password
+  v1RegisterUserResponse:
+    type: object
+    properties:
+      id:
+        type: string
+        format: int64
+      email:
+        type: string
+    required:
+      - id
+      - email
   v1RemoveInstanceResponse:
     type: object
   v1Role:
@@ -829,6 +1113,9 @@ definitions:
       maxUsers:
         type: integer
         format: int32
+    required:
+      - rolePublicId
+      - name
   v1SearchMarketplaceDappsResponse:
     type: object
     properties:
@@ -916,3 +1203,12 @@ definitions:
     properties:
       instancePublicId:
         type: string
+  v1UpdateRolePermissionsResponse:
+    type: object
+  v1UpdateUserPasswordResponse:
+    type: object
+securityDefinitions:
+  ApiKeyAuth:
+    type: apiKey
+    name: x-api-key
+    in: header
