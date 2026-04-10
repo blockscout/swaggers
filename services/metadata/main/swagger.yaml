@@ -12,6 +12,9 @@ produces:
 paths:
   /api/v1/addresses:
     get:
+      summary: |-
+        Returns addresses associated with a public tag identified by slug and
+        tag_type, optionally filtered by chain_id.
       operationId: Metadata_GetPublicTagAddresses
       responses:
         "200":
@@ -32,11 +35,12 @@ paths:
           required: false
           type: string
         - name: chainId
-          description: If not provided, only multichain tags will be returned
+          description: |-
+            If not provided, only multichain tags will be returned
+            Either just `chain_id` or `chain_id:instance_public_id`
           in: query
           required: false
           type: string
-          format: int64
         - name: pageSize
           in: query
           required: false
@@ -50,6 +54,7 @@ paths:
         - Metadata
   /api/v1/addresses:submit:
     post:
+      summary: Enqueues the given addresses for processing by metadata extractors.
       operationId: Metadata_SubmitAddressesToExtractors
       responses:
         "200":
@@ -70,6 +75,9 @@ paths:
         - Metadata
   /api/v1/metadata:
     get:
+      summary: |-
+        Returns tags (metadata) for the given addresses, optionally filtered by
+        chain_id and tag_types. Use tags_limit to cap tags per address.
       operationId: Metadata_BatchGetMetadata
       responses:
         "200":
@@ -87,11 +95,12 @@ paths:
           required: false
           type: string
         - name: chainId
-          description: If not provided, only multichain tags will be returned
+          description: |-
+            If not provided, only multichain tags will be returned
+            Either just `chain_id` or `chain_id:instance_public_id`
           in: query
           required: false
           type: string
-          format: int64
         - name: tagsLimit
           description: If provided, the first `tags_limit` tags will be returned for each address
           in: query
@@ -107,6 +116,7 @@ paths:
         - Metadata
   /api/v1/public-tag-types:
     get:
+      summary: Returns the list of public tag types.
       operationId: Metadata_GetPublicTagTypes
       responses:
         "200":
@@ -121,6 +131,7 @@ paths:
         - Metadata
   /api/v1/reputation:
     get:
+      summary: Returns reputation scores for the given addresses.
       operationId: Metadata_BatchGetReputation
       responses:
         "200":
@@ -141,6 +152,9 @@ paths:
         - Metadata
   /api/v1/tags:search:
     get:
+      summary: |-
+        Searches public tags by chain, tag types, and name, with optional
+        pagination and address_limit per tag.
       operationId: Metadata_SearchPublicTags
       responses:
         "200":
@@ -153,10 +167,10 @@ paths:
             $ref: '#/definitions/rpcStatus'
       parameters:
         - name: chainId
+          description: Either just `chain_id` or `chain_id:instance_public_id`
           in: query
           required: false
           type: string
-          format: int64
         - name: tagTypes
           description: Comma separated list of tag types
           in: query
