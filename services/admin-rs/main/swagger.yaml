@@ -7,8 +7,6 @@ tags:
   - name: Admin
   - name: MarketplaceAdmin
   - name: Health
-schemes:
-  - https
 consumes:
   - application/json
 produces:
@@ -287,7 +285,53 @@ paths:
             $ref: '#/definitions/v1TokenInfoSubmission'
       tags:
         - Admin
+  /api/v1/explorer-instances/{chainSpecifier}:
+    get:
+      operationId: AdminManagement_GetExplorerInstance
+      responses:
+        "200":
+          description: A successful response.
+          schema:
+            $ref: '#/definitions/v1Instance'
+        default:
+          description: An unexpected error response.
+          schema:
+            $ref: '#/definitions/rpcStatus'
+      parameters:
+        - name: chainSpecifier
+          in: path
+          required: true
+          type: string
+      tags:
+        - AdminManagement
   /api/v1/instances:
+    get:
+      summary: 'Instance directory (service-to-service: contracts-info, metadata, autoscout)'
+      operationId: AdminManagement_ListExplorerInstances
+      responses:
+        "200":
+          description: ""
+          schema:
+            type: array
+            items:
+              type: object
+              $ref: '#/definitions/v1Instance'
+        default:
+          description: An unexpected error response.
+          schema:
+            $ref: '#/definitions/rpcStatus'
+      parameters:
+        - name: userId
+          in: query
+          required: false
+          type: string
+          format: int64
+        - name: userEmail
+          in: query
+          required: false
+          type: string
+      tags:
+        - AdminManagement
     post:
       summary: Instance Management
       operationId: AdminManagement_RegisterInstance
@@ -308,9 +352,7 @@ paths:
             $ref: '#/definitions/v1RegisterInstanceRequest'
       tags:
         - AdminManagement
-      security:
-        - ApiKeyAuth: []
-  /api/v1/instances/{instancePublicId}:
+  /api/v1/instances/{chainSpecifier}:
     get:
       operationId: AdminManagement_GetInstance
       responses:
@@ -323,14 +365,12 @@ paths:
           schema:
             $ref: '#/definitions/rpcStatus'
       parameters:
-        - name: instancePublicId
+        - name: chainSpecifier
           in: path
           required: true
           type: string
       tags:
         - AdminManagement
-      security:
-        - ApiKeyAuth: []
     delete:
       operationId: AdminManagement_RemoveInstance
       responses:
@@ -343,14 +383,12 @@ paths:
           schema:
             $ref: '#/definitions/rpcStatus'
       parameters:
-        - name: instancePublicId
+        - name: chainSpecifier
           in: path
           required: true
           type: string
       tags:
         - AdminManagement
-      security:
-        - ApiKeyAuth: []
     put:
       operationId: AdminManagement_UpdateInstance
       responses:
@@ -363,7 +401,7 @@ paths:
           schema:
             $ref: '#/definitions/rpcStatus'
       parameters:
-        - name: instancePublicId
+        - name: chainSpecifier
           in: path
           required: true
           type: string
@@ -374,9 +412,7 @@ paths:
             $ref: '#/definitions/AdminManagementUpdateInstanceBody'
       tags:
         - AdminManagement
-      security:
-        - ApiKeyAuth: []
-  /api/v1/instances/{instancePublicId}/api-key:
+  /api/v1/instances/{chainSpecifier}/api-key:
     get:
       operationId: AdminManagement_GetInstanceWithApiKey
       responses:
@@ -389,15 +425,13 @@ paths:
           schema:
             $ref: '#/definitions/rpcStatus'
       parameters:
-        - name: instancePublicId
+        - name: chainSpecifier
           in: path
           required: true
           type: string
       tags:
         - AdminManagement
-      security:
-        - ApiKeyAuth: []
-  /api/v1/instances/{instancePublicId}/disable:
+  /api/v1/instances/{chainSpecifier}/disable:
     post:
       operationId: AdminManagement_DisableInstance
       responses:
@@ -410,15 +444,13 @@ paths:
           schema:
             $ref: '#/definitions/rpcStatus'
       parameters:
-        - name: instancePublicId
+        - name: chainSpecifier
           in: path
           required: true
           type: string
       tags:
         - AdminManagement
-      security:
-        - ApiKeyAuth: []
-  /api/v1/instances/{instancePublicId}/enable:
+  /api/v1/instances/{chainSpecifier}/enable:
     post:
       operationId: AdminManagement_EnableInstance
       responses:
@@ -431,14 +463,12 @@ paths:
           schema:
             $ref: '#/definitions/rpcStatus'
       parameters:
-        - name: instancePublicId
+        - name: chainSpecifier
           in: path
           required: true
           type: string
       tags:
         - AdminManagement
-      security:
-        - ApiKeyAuth: []
   /api/v1/marketplace/categories:
     get:
       operationId: MarketplaceAdmin_ListMarketplaceCategories
@@ -522,8 +552,6 @@ paths:
             $ref: '#/definitions/v1RegisterRoleRequest'
       tags:
         - AdminManagement
-      security:
-        - ApiKeyAuth: []
   /api/v1/roles/{rolePublicId}:
     get:
       operationId: AdminManagement_GetRole
@@ -543,8 +571,6 @@ paths:
           type: string
       tags:
         - AdminManagement
-      security:
-        - ApiKeyAuth: []
     delete:
       operationId: AdminManagement_DeleteRole
       responses:
@@ -563,8 +589,6 @@ paths:
           type: string
       tags:
         - AdminManagement
-      security:
-        - ApiKeyAuth: []
   /api/v1/roles/{rolePublicId}/permissions:
     post:
       operationId: AdminManagement_UpdateRolePermissions
@@ -589,8 +613,6 @@ paths:
             $ref: '#/definitions/AdminManagementUpdateRolePermissionsBody'
       tags:
         - AdminManagement
-      security:
-        - ApiKeyAuth: []
   /api/v1/users:
     post:
       summary: User Management
@@ -612,56 +634,6 @@ paths:
             $ref: '#/definitions/v1RegisterUserRequest'
       tags:
         - AdminManagement
-      security:
-        - ApiKeyAuth: []
-  /api/v1/users/{email}:
-    get:
-      operationId: AdminManagement_GetUser
-      responses:
-        "200":
-          description: A successful response.
-          schema:
-            $ref: '#/definitions/v1GetUserResponse'
-        default:
-          description: An unexpected error response.
-          schema:
-            $ref: '#/definitions/rpcStatus'
-      parameters:
-        - name: email
-          in: path
-          required: true
-          type: string
-      tags:
-        - AdminManagement
-      security:
-        - ApiKeyAuth: []
-  /api/v1/users/{userId}/password:
-    post:
-      operationId: AdminManagement_UpdateUserPassword
-      responses:
-        "200":
-          description: A successful response.
-          schema:
-            $ref: '#/definitions/v1UpdateUserPasswordResponse'
-        default:
-          description: An unexpected error response.
-          schema:
-            $ref: '#/definitions/rpcStatus'
-      parameters:
-        - name: userId
-          in: path
-          required: true
-          type: string
-          format: int64
-        - name: body
-          in: body
-          required: true
-          schema:
-            $ref: '#/definitions/AdminManagementUpdateUserPasswordBody'
-      tags:
-        - AdminManagement
-      security:
-        - ApiKeyAuth: []
   /api/v1/users/{userId}/roles:
     post:
       operationId: AdminManagement_AddUserToRole
@@ -687,8 +659,6 @@ paths:
             $ref: '#/definitions/AdminManagementAddUserToRoleBody'
       tags:
         - AdminManagement
-      security:
-        - ApiKeyAuth: []
   /health:
     get:
       summary: |-
@@ -722,8 +692,6 @@ definitions:
     properties:
       rolePublicId:
         type: string
-    required:
-      - rolePublicId
   AdminManagementUpdateInstanceBody:
     type: object
     properties:
@@ -744,13 +712,6 @@ definitions:
         description: |-
           If `true`, on top of `updates` it will add default permissions suitable for instance owner role.
           This can be useful for initial regular role setup for a new instance.
-  AdminManagementUpdateUserPasswordBody:
-    type: object
-    properties:
-      newPassword:
-        type: string
-    required:
-      - newPassword
   HealthCheckResponseServingStatus:
     type: string
     enum:
@@ -843,14 +804,6 @@ definitions:
           $ref: '#/definitions/v1Instance'
     required:
       - role
-  v1GetUserResponse:
-    type: object
-    properties:
-      id:
-        type: string
-        format: int64
-    required:
-      - id
   v1HealthCheckResponse:
     type: object
     properties:
@@ -859,15 +812,12 @@ definitions:
   v1Instance:
     type: object
     properties:
-      instancePublicId:
+      chainSpecifier:
         type: string
-        title: Public identifier provided by autoscout
+        title: Explorer instance key (opaque string; often decimal chain id or `chain_id:autoscout_segment`)
       slug:
         type: string
         title: Human-readable identifier
-      chainId:
-        type: string
-        format: uint64
       url:
         type: string
       ownerRolePublicId:
@@ -877,11 +827,6 @@ definitions:
         type: string
         description: API key is sometimes omitted on purpose as a sensitive data
         title: ISO 8601 format
-    required:
-      - instancePublicId
-      - slug
-      - chainId
-      - ownerRolePublicId
   v1InstanceWithApiKey:
     type: object
     properties:
@@ -891,6 +836,14 @@ definitions:
         type: string
     required:
       - inner
+  v1ListExplorerInstancesResponse:
+    type: object
+    properties:
+      instances:
+        type: array
+        items:
+          type: object
+          $ref: '#/definitions/v1Instance'
   v1ListMarketplaceCategoriesResponse:
     type: object
     properties:
@@ -1026,15 +979,71 @@ definitions:
     type: string
     enum:
       - PERMISSION_UNSPECIFIED
-      - PERMISSION_TOKEN_INFO_SUBMISSIONS_ALL
-      - PERMISSION_TOKEN_INFO_SUBMISSIONS_OWN
-      - PERMISSION_METADATA_TAGS_ALL
-      - PERMISSION_METADATA_TAGS_OWN
-      - PERMISSION_NFT_REFETCH_ALL
-      - PERMISSION_NFT_REFETCH_OWN
-      - PERMISSION_USERS_ROLES_ALL
-      - PERMISSION_USERS_ROLES_OWN
-      - PERMISSION_INSTANCES_ALL
+      - PERMISSION_TOKEN_INFO_SUBMISSIONS_READ_ALL
+      - PERMISSION_TOKEN_INFO_SUBMISSIONS_READ_OWN
+      - PERMISSION_TOKEN_INFO_SUBMISSIONS_EDIT_ALL
+      - PERMISSION_TOKEN_INFO_SUBMISSIONS_EDIT_OWN
+      - PERMISSION_TOKEN_INFO_SUBMISSIONS_DELETE_ALL
+      - PERMISSION_TOKEN_INFO_SUBMISSIONS_DELETE_OWN
+      - PERMISSION_TOKEN_INFO_SUBMISSIONS_APPROVE_ALL
+      - PERMISSION_TOKEN_INFO_SUBMISSIONS_APPROVE_OWN
+      - PERMISSION_TOKEN_INFO_SUBMISSIONS_REJECT_ALL
+      - PERMISSION_TOKEN_INFO_SUBMISSIONS_REJECT_OWN
+      - PERMISSION_TOKEN_INFO_SUBMISSIONS_REQUIRE_UPDATES_ALL
+      - PERMISSION_TOKEN_INFO_SUBMISSIONS_REQUIRE_UPDATES_OWN
+      - PERMISSION_VERIFIED_ADDRESSES_READ_ALL
+      - PERMISSION_VERIFIED_ADDRESSES_READ_OWN
+      - PERMISSION_VERIFIED_ADDRESSES_EDIT_ALL
+      - PERMISSION_VERIFIED_ADDRESSES_EDIT_OWN
+      - PERMISSION_VERIFIED_ADDRESSES_DELETE_ALL
+      - PERMISSION_VERIFIED_ADDRESSES_DELETE_OWN
+      - PERMISSION_TOKEN_INFOS_READ_ALL
+      - PERMISSION_TOKEN_INFOS_READ_OWN
+      - PERMISSION_TOKEN_INFOS_EDIT_ALL
+      - PERMISSION_TOKEN_INFOS_EDIT_OWN
+      - PERMISSION_TOKEN_INFOS_DELETE_ALL
+      - PERMISSION_TOKEN_INFOS_DELETE_OWN
+      - PERMISSION_METADATA_TAGS_READ_ALL
+      - PERMISSION_METADATA_TAGS_READ_OWN
+      - PERMISSION_METADATA_TAGS_EDIT_ALL
+      - PERMISSION_METADATA_TAGS_EDIT_OWN
+      - PERMISSION_METADATA_TAGS_DELETE_ALL
+      - PERMISSION_METADATA_TAGS_DELETE_OWN
+      - PERMISSION_NFT_REFETCH_READ_ALL
+      - PERMISSION_NFT_REFETCH_READ_OWN
+      - PERMISSION_NFT_REFETCH_REFETCH_ALL
+      - PERMISSION_NFT_REFETCH_REFETCH_OWN
+      - PERMISSION_USERS_ROLES_READ_ALL
+      - PERMISSION_USERS_ROLES_READ_OWN
+      - PERMISSION_USERS_ROLES_EDIT_ALL
+      - PERMISSION_USERS_ROLES_EDIT_OWN
+      - PERMISSION_USERS_ROLES_DELETE_ALL
+      - PERMISSION_USERS_ROLES_DELETE_OWN
+      - PERMISSION_USERS_CREATE_ALL
+      - PERMISSION_USERS_READ_ALL
+      - PERMISSION_USERS_EDIT_ALL
+      - PERMISSION_USERS_DELETE_ALL
+      - PERMISSION_INSTANCES_READ_ALL
+      - PERMISSION_INSTANCES_READ_OWN
+      - PERMISSION_INSTANCES_EDIT_ALL
+      - PERMISSION_INSTANCES_EDIT_OWN
+      - PERMISSION_INSTANCES_DELETE_ALL
+      - PERMISSION_INSTANCES_DELETE_OWN
+      - PERMISSION_AUTOSCOUT_READ_ALL
+      - PERMISSION_AUTOSCOUT_EDIT_ALL
+      - PERMISSION_AUTOSCOUT_DELETE_ALL
+      - PERMISSION_MARKETPLACE_DAPPS_READ_ALL
+      - PERMISSION_MARKETPLACE_DAPPS_EDIT_ALL
+      - PERMISSION_MARKETPLACE_DAPPS_DELETE_ALL
+      - PERMISSION_MARKETPLACE_RATINGS_READ_ALL
+      - PERMISSION_MARKETPLACE_RATINGS_EDIT_ALL
+      - PERMISSION_MARKETPLACE_RATINGS_DELETE_ALL
+      - PERMISSION_MARKETPLACE_OVERRIDES_READ_ALL
+      - PERMISSION_MARKETPLACE_OVERRIDES_EDIT_ALL
+      - PERMISSION_MARKETPLACE_OVERRIDES_DELETE_ALL
+      - PERMISSION_MARKETPLACE_USER_VOTES_READ_ALL
+      - PERMISSION_MARKETPLACE_USER_VOTES_EDIT_ALL
+      - PERMISSION_MARKETPLACE_USER_VOTES_DELETE_ALL
     default: PERMISSION_UNSPECIFIED
   v1PermissionAction:
     type: string
@@ -1061,7 +1070,7 @@ definitions:
   v1RegisterInstanceResponse:
     type: object
     properties:
-      instancePublicId:
+      chainSpecifier:
         type: string
       ownerRolePublicId:
         type: string
@@ -1084,9 +1093,6 @@ definitions:
         type: string
       password:
         type: string
-    required:
-      - email
-      - password
   v1RegisterUserResponse:
     type: object
     properties:
@@ -1095,9 +1101,6 @@ definitions:
         format: int64
       email:
         type: string
-    required:
-      - id
-      - email
   v1RemoveInstanceResponse:
     type: object
   v1Role:
@@ -1113,9 +1116,6 @@ definitions:
       maxUsers:
         type: integer
         format: int32
-    required:
-      - rolePublicId
-      - name
   v1SearchMarketplaceDappsResponse:
     type: object
     properties:
@@ -1201,14 +1201,7 @@ definitions:
   v1UpdateInstanceResponse:
     type: object
     properties:
-      instancePublicId:
+      chainSpecifier:
         type: string
   v1UpdateRolePermissionsResponse:
     type: object
-  v1UpdateUserPasswordResponse:
-    type: object
-securityDefinitions:
-  ApiKeyAuth:
-    type: apiKey
-    name: x-api-key
-    in: header
