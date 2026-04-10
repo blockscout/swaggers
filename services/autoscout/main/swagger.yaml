@@ -1475,6 +1475,29 @@ paths:
         - Users
       security:
         - ApiKeyAuth: []
+  /api/v1/users/admin-password:reset:
+    post:
+      summary: Obtain a new admin service password for the admin services account associated with the requeester.
+      operationId: Autoscout_GetNewAdminPassword
+      responses:
+        "200":
+          description: A successful response.
+          schema:
+            $ref: '#/definitions/v1GetNewAdminPasswordResponse'
+        default:
+          description: An unexpected error response.
+          schema:
+            $ref: '#/definitions/rpcStatus'
+      parameters:
+        - name: body
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/v1GetNewAdminPasswordRequest'
+      tags:
+        - Deployments
+      security:
+        - ApiKeyAuth: []
   /api/v1/users/auth-tokens:
     get:
       summary: Get list of all auth tokens for current account
@@ -1833,6 +1856,11 @@ definitions:
       - COINZILLA
       - TEXT_NONE
     default: UNSPECIFIED_AD_TEXT_PROVIDER
+  v1AdminServicePluginConfig:
+    type: object
+    properties:
+      enabled:
+        type: boolean
   v1Ads:
     type: object
     properties:
@@ -2649,6 +2677,8 @@ definitions:
         $ref: '#/definitions/v1StatsPluginConfig'
       user_ops_plugin_config:
         $ref: '#/definitions/v1UserOpsPluginConfig'
+      admin_service_plugin_config:
+        $ref: '#/definitions/v1AdminServicePluginConfig'
       monitoring:
         $ref: '#/definitions/v1MonitoringConfig'
       versions_stack:
@@ -2763,9 +2793,12 @@ definitions:
         $ref: '#/definitions/v1PluginStatuses'
       user_ops_status:
         $ref: '#/definitions/v1PluginStatuses'
+      admin_service_status:
+        $ref: '#/definitions/v1PluginStatuses'
     required:
       - stats_status
       - user_ops_status
+      - admin_service_status
   v1DeploymentStatus:
     type: string
     enum:
@@ -2941,6 +2974,15 @@ definitions:
         title: timestamp (hour) until which the deployment's storage has been paid for
     required:
       - storage_data
+  v1GetNewAdminPasswordRequest:
+    type: object
+  v1GetNewAdminPasswordResponse:
+    type: object
+    properties:
+      generated_password:
+        type: string
+    required:
+      - generated_password
   v1GetStripeSubscriptionStatusResponse:
     type: object
     properties:
@@ -3084,6 +3126,9 @@ definitions:
         type: string
         format: uint64
         title: LAST_BLOCK
+      api_sensitive_endpoints_key_rotate:
+        type: boolean
+        title: service variable, not intended for regular users. can be used to regenerate the key
   v1IndexingStatus:
     type: object
     properties:
@@ -3543,6 +3588,7 @@ definitions:
       - UNSPECIFIED_PLUGIN_VARIANT
       - PLUGIN_VARIANT_STATS
       - PLUGIN_VARIANT_USER_OPS
+      - PLUGIN_VARIANT_ADMIN_SERVICE
     default: UNSPECIFIED_PLUGIN_VARIANT
   v1PolygonZkEvmConfig:
     type: object
@@ -3791,6 +3837,8 @@ definitions:
       user_ops_cost_per_hour:
         type: string
       stats_cost_per_hour:
+        type: string
+      admin_service_cost_per_hour:
         type: string
   v1StatsPluginConfig:
     type: object
