@@ -558,6 +558,7 @@ components:
         - validator
         - group
         - delegated_payment
+        - delegated-payment
       nullable: false
       title: CeloElectionRewardType
       type: string
@@ -2146,6 +2147,113 @@ components:
       title: IntegerStringNullable
       type: string
       x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.General.IntegerStringNullable
+      x-validate:
+    CeloEpochDetailed:
+      additionalProperties: false
+      description: Celo epoch summary.
+      nullable: false
+      properties:
+        aggregated_election_rewards:
+          additionalProperties:
+            additionalProperties: false
+            nullable: true
+            properties:
+              count:
+                minimum: 0
+                nullable: false
+                type: integer
+                x-struct:
+                x-validate:
+              token:
+                additionalProperties: true
+                nullable: true
+                type: object
+                x-struct:
+                x-validate:
+              total:
+                $ref: '#/components/schemas/IntegerString'
+            required:
+              - total
+              - count
+              - token
+            type: object
+            x-struct:
+            x-validate:
+          nullable: true
+          type: object
+          x-struct:
+          x-validate:
+        distribution:
+          additionalProperties: true
+          nullable: true
+          type: object
+          x-struct:
+          x-validate:
+        end_block_number:
+          minimum: 0
+          nullable: false
+          type: integer
+          x-struct:
+          x-validate:
+        end_processing_block_hash:
+          $ref: '#/components/schemas/FullHashNullable'
+        end_processing_block_number:
+          minimum: 0
+          nullable: true
+          type: integer
+          x-struct:
+          x-validate:
+        is_finalized:
+          nullable: false
+          type: boolean
+          x-struct:
+          x-validate:
+        number:
+          minimum: 0
+          nullable: false
+          type: integer
+          x-struct:
+          x-validate:
+        start_block_number:
+          minimum: 0
+          nullable: false
+          type: integer
+          x-struct:
+          x-validate:
+        start_processing_block_hash:
+          $ref: '#/components/schemas/FullHashNullable'
+        start_processing_block_number:
+          minimum: 0
+          nullable: true
+          type: integer
+          x-struct:
+          x-validate:
+        timestamp:
+          $ref: '#/components/schemas/TimestampNullable'
+        type:
+          enum:
+            - L1
+            - L2
+          nullable: false
+          type: string
+          x-struct:
+          x-validate:
+      required:
+        - number
+        - type
+        - start_block_number
+        - end_block_number
+        - timestamp
+        - is_finalized
+        - distribution
+        - start_processing_block_hash
+        - start_processing_block_number
+        - end_processing_block_hash
+        - end_processing_block_number
+        - aggregated_election_rewards
+      title: CeloEpochDetailed
+      type: object
+      x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.Celo.Epoch
       x-validate:
     ProxyType:
       enum:
@@ -4762,43 +4870,7 @@ components:
     Epoch:
       additionalProperties: false
       description: Celo epoch summary.
-      nullable: false
       properties:
-        aggregated_election_rewards:
-          additionalProperties:
-            anyOf:
-              - additionalProperties: false
-                properties:
-                  count:
-                    minimum: 0
-                    nullable: false
-                    type: integer
-                    x-struct:
-                    x-validate:
-                  token:
-                    additionalProperties: true
-                    nullable: true
-                    type: object
-                    x-struct:
-                    x-validate:
-                  total:
-                    $ref: '#/components/schemas/IntegerString'
-                required:
-                  - total
-                  - count
-                  - token
-                type: object
-                x-struct:
-                x-validate:
-              - type: 'null'
-                x-struct:
-                x-validate:
-            x-struct:
-            x-validate:
-          nullable: true
-          type: object
-          x-struct:
-          x-validate:
         distribution:
           additionalProperties: true
           nullable: true
@@ -4808,14 +4880,6 @@ components:
         end_block_number:
           minimum: 0
           nullable: false
-          type: integer
-          x-struct:
-          x-validate:
-        end_processing_block_hash:
-          $ref: '#/components/schemas/FullHashNullable'
-        end_processing_block_number:
-          minimum: 0
-          nullable: true
           type: integer
           x-struct:
           x-validate:
@@ -4833,14 +4897,6 @@ components:
         start_block_number:
           minimum: 0
           nullable: false
-          type: integer
-          x-struct:
-          x-validate:
-        start_processing_block_hash:
-          $ref: '#/components/schemas/FullHashNullable'
-        start_processing_block_number:
-          minimum: 0
-          nullable: true
           type: integer
           x-struct:
           x-validate:
@@ -4862,11 +4918,6 @@ components:
         - timestamp
         - is_finalized
         - distribution
-        - start_processing_block_hash
-        - start_processing_block_number
-        - end_processing_block_hash
-        - end_processing_block_number
-        - aggregated_election_rewards
       title: Epoch
       type: object
       x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.Celo.Epoch
@@ -5508,7 +5559,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Epoch'
+                $ref: '#/components/schemas/CeloEpochDetailed'
           description: Celo epoch details.
         '404':
           content:
@@ -7990,6 +8041,7 @@ paths:
               - validator
               - group
               - delegated_payment
+              - delegated-payment
             nullable: false
             title: CeloElectionRewardType
             type: string
