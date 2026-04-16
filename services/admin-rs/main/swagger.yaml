@@ -634,7 +634,26 @@ paths:
             $ref: '#/definitions/v1RegisterUserRequest'
       tags:
         - AdminManagement
-  /api/v1/users/{userId}/roles:
+  /api/v1/users/{userEmailOrId}:
+    get:
+      operationId: AdminManagement_GetUser
+      responses:
+        "200":
+          description: A successful response.
+          schema:
+            $ref: '#/definitions/v1GetUserResponse'
+        default:
+          description: An unexpected error response.
+          schema:
+            $ref: '#/definitions/rpcStatus'
+      parameters:
+        - name: userEmailOrId
+          in: path
+          required: true
+          type: string
+      tags:
+        - AdminManagement
+  /api/v1/users/{userEmailOrId}/roles:
     post:
       operationId: AdminManagement_AddUserToRole
       responses:
@@ -647,11 +666,10 @@ paths:
           schema:
             $ref: '#/definitions/rpcStatus'
       parameters:
-        - name: userId
+        - name: userEmailOrId
           in: path
           required: true
           type: string
-          format: int64
         - name: body
           in: body
           required: true
@@ -804,6 +822,14 @@ definitions:
           $ref: '#/definitions/v1Instance'
     required:
       - role
+  v1GetUserResponse:
+    type: object
+    properties:
+      id:
+        type: string
+        format: int64
+      email:
+        type: string
   v1HealthCheckResponse:
     type: object
     properties:
