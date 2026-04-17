@@ -653,6 +653,30 @@ paths:
           type: string
       tags:
         - AdminManagement
+  /api/v1/users/{userEmailOrId}/password:
+    post:
+      operationId: AdminManagement_UpdateUserPassword
+      responses:
+        "200":
+          description: A successful response.
+          schema:
+            $ref: '#/definitions/v1UpdateUserPasswordResponse'
+        default:
+          description: An unexpected error response.
+          schema:
+            $ref: '#/definitions/rpcStatus'
+      parameters:
+        - name: userEmailOrId
+          in: path
+          required: true
+          type: string
+        - name: body
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/AdminManagementUpdateUserPasswordBody'
+      tags:
+        - AdminManagement
   /api/v1/users/{userEmailOrId}/roles:
     post:
       operationId: AdminManagement_AddUserToRole
@@ -730,6 +754,11 @@ definitions:
         description: |-
           If `true`, on top of `updates` it will add default permissions suitable for instance owner role.
           This can be useful for initial regular role setup for a new instance.
+  AdminManagementUpdateUserPasswordBody:
+    type: object
+    properties:
+      newPassword:
+        type: string
   HealthCheckResponseServingStatus:
     type: string
     enum:
@@ -1230,4 +1259,6 @@ definitions:
       chainSpecifier:
         type: string
   v1UpdateRolePermissionsResponse:
+    type: object
+  v1UpdateUserPasswordResponse:
     type: object
