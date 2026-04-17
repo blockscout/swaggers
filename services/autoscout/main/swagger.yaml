@@ -1861,6 +1861,8 @@ definitions:
     properties:
       enabled:
         type: boolean
+      initial_password:
+        type: string
   v1Ads:
     type: object
     properties:
