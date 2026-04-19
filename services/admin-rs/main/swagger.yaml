@@ -1174,6 +1174,10 @@ definitions:
       maxUsers:
         type: integer
         format: int32
+      ownerUserId:
+        type: string
+        format: int64
+        description: 'Admin `users.id` of the user who may delegate `users_roles::edit::own` for this role (Autoscout: instance owner).'
   v1SearchMarketplaceDappsResponse:
     type: object
     properties:
