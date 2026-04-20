@@ -10,6 +10,7 @@ tags:
   - name: Instances
   - name: Deployments
   - name: Users
+  - name: Teams
   - name: Autoscout
   - name: Apay
   - name: Health
@@ -195,28 +196,6 @@ paths:
             - PROVIDER_TYPE_DAIMO
             - PROVIDER_TYPE_REQUEST_NETWORK
           default: UNSPECIFIED_DEPOSIT_TYPE
-      tags:
-        - Apay
-      security:
-        - ApiKeyAuth: []
-  /api/v1/apay/deposits/daimo:
-    post:
-      operationId: CreateApayDaimoDeposit
-      responses:
-        "200":
-          description: A successful response.
-          schema:
-            $ref: '#/definitions/v1CreateApayDepositResponse'
-        default:
-          description: An unexpected error response.
-          schema:
-            $ref: '#/definitions/rpcStatus'
-      parameters:
-        - name: body
-          in: body
-          required: true
-          schema:
-            $ref: '#/definitions/v1CreateDaimoApayDepositRequest'
       tags:
         - Apay
       security:
@@ -642,84 +621,6 @@ paths:
         - ApaySignature: []
         - ApayVersion: []
         - ApayAlgorithm: []
-  /api/v1/coinbase/deposits:
-    get:
-      operationId: Autoscout_ListCoinbaseDeposits
-      responses:
-        "200":
-          description: A successful response.
-          schema:
-            $ref: '#/definitions/v1ListCoinbaseDepositsResponse'
-        default:
-          description: An unexpected error response.
-          schema:
-            $ref: '#/definitions/rpcStatus'
-      tags:
-        - Deposits
-      security:
-        - ApiKeyAuth: []
-    post:
-      operationId: Autoscout_CreateCoinbaseDeposit
-      responses:
-        "200":
-          description: A successful response.
-          schema:
-            $ref: '#/definitions/v1CreateCoinbaseDepositResponse'
-        default:
-          description: An unexpected error response.
-          schema:
-            $ref: '#/definitions/rpcStatus'
-      parameters:
-        - name: body
-          in: body
-          required: true
-          schema:
-            $ref: '#/definitions/v1CreateCoinbaseDepositRequest'
-      tags:
-        - Deposits
-      security:
-        - ApiKeyAuth: []
-  /api/v1/coinbase/deposits/{deposit_id}:
-    get:
-      operationId: Autoscout_GetCoinbaseDeposit
-      responses:
-        "200":
-          description: A successful response.
-          schema:
-            $ref: '#/definitions/v1Deposit'
-        default:
-          description: An unexpected error response.
-          schema:
-            $ref: '#/definitions/rpcStatus'
-      parameters:
-        - name: deposit_id
-          in: path
-          required: true
-          type: string
-      tags:
-        - Deposits
-      security:
-        - ApiKeyAuth: []
-    delete:
-      operationId: Autoscout_DeleteCoinbaseDeposit
-      responses:
-        "200":
-          description: A successful response.
-          schema:
-            $ref: '#/definitions/v1DeleteCoinbaseDepositResponse'
-        default:
-          description: An unexpected error response.
-          schema:
-            $ref: '#/definitions/rpcStatus'
-      parameters:
-        - name: deposit_id
-          in: path
-          required: true
-          type: string
-      tags:
-        - Deposits
-      security:
-        - ApiKeyAuth: []
   /api/v1/deployments/{deployment_id}:
     get:
       summary: Get detailed information about specific deployment
@@ -977,71 +878,6 @@ paths:
         - Deposits
       security:
         - ApiKeyAuth: []
-  /api/v1/deposits/coinbase:
-    post:
-      operationId: Autoscout_CreateCoinbaseDeposit2
-      responses:
-        "200":
-          description: A successful response.
-          schema:
-            $ref: '#/definitions/v1CreateCoinbaseDepositResponse'
-        default:
-          description: An unexpected error response.
-          schema:
-            $ref: '#/definitions/rpcStatus'
-      parameters:
-        - name: body
-          in: body
-          required: true
-          schema:
-            $ref: '#/definitions/v1CreateCoinbaseDepositRequest'
-      tags:
-        - Deposits
-      security:
-        - ApiKeyAuth: []
-  /api/v1/deposits/coinbase/{deposit_id}:
-    delete:
-      operationId: Autoscout_DeleteCoinbaseDeposit2
-      responses:
-        "200":
-          description: A successful response.
-          schema:
-            $ref: '#/definitions/v1DeleteCoinbaseDepositResponse'
-        default:
-          description: An unexpected error response.
-          schema:
-            $ref: '#/definitions/rpcStatus'
-      parameters:
-        - name: deposit_id
-          in: path
-          required: true
-          type: string
-      tags:
-        - Deposits
-      security:
-        - ApiKeyAuth: []
-  /api/v1/deposits/daimo:
-    post:
-      operationId: Autoscout_CreateDaimoDeposit
-      responses:
-        "200":
-          description: A successful response.
-          schema:
-            $ref: '#/definitions/v1CreateDaimoDepositResponse'
-        default:
-          description: An unexpected error response.
-          schema:
-            $ref: '#/definitions/rpcStatus'
-      parameters:
-        - name: body
-          in: body
-          required: true
-          schema:
-            $ref: '#/definitions/v1CreateDaimoDepositRequest'
-      tags:
-        - Deposits
-      security:
-        - ApiKeyAuth: []
   /api/v1/deposits/request-network:
     post:
       operationId: Autoscout_CreateRequestNetworkDeposit
@@ -1132,6 +968,10 @@ paths:
           required: false
           type: integer
           format: int32
+        - name: team_id
+          in: query
+          required: false
+          type: string
       tags:
         - Instances
       security:
@@ -1397,6 +1237,11 @@ paths:
           description: An unexpected error response.
           schema:
             $ref: '#/definitions/rpcStatus'
+      parameters:
+        - name: team_id
+          in: query
+          required: false
+          type: string
       tags:
         - Subscription
       security:
@@ -1413,6 +1258,11 @@ paths:
           description: An unexpected error response.
           schema:
             $ref: '#/definitions/rpcStatus'
+      parameters:
+        - name: team_id
+          in: query
+          required: false
+          type: string
       tags:
         - Subscription
       security:
@@ -1428,6 +1278,11 @@ paths:
           description: An unexpected error response.
           schema:
             $ref: '#/definitions/rpcStatus'
+      parameters:
+        - name: team_id
+          in: query
+          required: false
+          type: string
       tags:
         - Subscription
       security:
@@ -1451,6 +1306,297 @@ paths:
             $ref: '#/definitions/v1CreateStripeSubscriptionRequest'
       tags:
         - Subscriptions
+      security:
+        - ApiKeyAuth: []
+  /api/v1/teams:
+    get:
+      operationId: Autoscout_ListTeams
+      responses:
+        "200":
+          description: A successful response.
+          schema:
+            $ref: '#/definitions/v1ListTeamsResponse'
+        default:
+          description: An unexpected error response.
+          schema:
+            $ref: '#/definitions/rpcStatus'
+      tags:
+        - Teams
+      security:
+        - ApiKeyAuth: []
+    post:
+      operationId: Autoscout_CreateTeam
+      responses:
+        "200":
+          description: A successful response.
+          schema:
+            $ref: '#/definitions/v1Team'
+        default:
+          description: An unexpected error response.
+          schema:
+            $ref: '#/definitions/rpcStatus'
+      parameters:
+        - name: body
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/v1CreateTeamRequest'
+      tags:
+        - Teams
+      security:
+        - ApiKeyAuth: []
+  /api/v1/teams/invites/{invite_id}:
+    delete:
+      operationId: Autoscout_DeleteTeamInvite
+      responses:
+        "200":
+          description: A successful response.
+          schema:
+            $ref: '#/definitions/v1DeleteTeamInviteResponse'
+        default:
+          description: An unexpected error response.
+          schema:
+            $ref: '#/definitions/rpcStatus'
+      parameters:
+        - name: invite_id
+          in: path
+          required: true
+          type: string
+      tags:
+        - Teams
+      security:
+        - ApiKeyAuth: []
+  /api/v1/teams/{team_id}:
+    get:
+      operationId: Autoscout_GetTeam
+      responses:
+        "200":
+          description: A successful response.
+          schema:
+            $ref: '#/definitions/v1Team'
+        default:
+          description: An unexpected error response.
+          schema:
+            $ref: '#/definitions/rpcStatus'
+      parameters:
+        - name: team_id
+          in: path
+          required: true
+          type: string
+      tags:
+        - Teams
+      security:
+        - ApiKeyAuth: []
+    delete:
+      operationId: Autoscout_DeleteTeam
+      responses:
+        "200":
+          description: A successful response.
+          schema:
+            $ref: '#/definitions/v1DeleteTeamResponse'
+        default:
+          description: An unexpected error response.
+          schema:
+            $ref: '#/definitions/rpcStatus'
+      parameters:
+        - name: team_id
+          in: path
+          required: true
+          type: string
+      tags:
+        - Teams
+      security:
+        - ApiKeyAuth: []
+    put:
+      operationId: Autoscout_UpdateTeam
+      responses:
+        "200":
+          description: A successful response.
+          schema:
+            $ref: '#/definitions/v1Team'
+        default:
+          description: An unexpected error response.
+          schema:
+            $ref: '#/definitions/rpcStatus'
+      parameters:
+        - name: team_id
+          in: path
+          required: true
+          type: string
+        - name: body
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/AutoscoutUpdateTeamBody'
+      tags:
+        - Teams
+      security:
+        - ApiKeyAuth: []
+  /api/v1/teams/{team_id}/invites:
+    get:
+      operationId: Autoscout_ListTeamInvites
+      responses:
+        "200":
+          description: A successful response.
+          schema:
+            $ref: '#/definitions/v1ListTeamInvitesResponse'
+        default:
+          description: An unexpected error response.
+          schema:
+            $ref: '#/definitions/rpcStatus'
+      parameters:
+        - name: team_id
+          in: path
+          required: true
+          type: string
+      tags:
+        - Teams
+      security:
+        - ApiKeyAuth: []
+    post:
+      operationId: Autoscout_CreateTeamInvite
+      responses:
+        "200":
+          description: A successful response.
+          schema:
+            $ref: '#/definitions/v1TeamInvite'
+        default:
+          description: An unexpected error response.
+          schema:
+            $ref: '#/definitions/rpcStatus'
+      parameters:
+        - name: team_id
+          in: path
+          required: true
+          type: string
+        - name: body
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/AutoscoutCreateTeamInviteBody'
+      tags:
+        - Teams
+      security:
+        - ApiKeyAuth: []
+  /api/v1/teams/{team_id}/members:
+    get:
+      operationId: Autoscout_ListTeamMembers
+      responses:
+        "200":
+          description: A successful response.
+          schema:
+            $ref: '#/definitions/v1ListTeamMembersResponse'
+        default:
+          description: An unexpected error response.
+          schema:
+            $ref: '#/definitions/rpcStatus'
+      parameters:
+        - name: team_id
+          in: path
+          required: true
+          type: string
+      tags:
+        - Teams
+      security:
+        - ApiKeyAuth: []
+  /api/v1/teams/{team_id}/members:remove:
+    post:
+      operationId: Autoscout_RemoveTeamMember
+      responses:
+        "200":
+          description: A successful response.
+          schema:
+            $ref: '#/definitions/v1RemoveTeamMemberResponse'
+        default:
+          description: An unexpected error response.
+          schema:
+            $ref: '#/definitions/rpcStatus'
+      parameters:
+        - name: team_id
+          in: path
+          required: true
+          type: string
+        - name: body
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/AutoscoutRemoveTeamMemberBody'
+      tags:
+        - Teams
+      security:
+        - ApiKeyAuth: []
+  /api/v1/teams/{team_id}/members:update-role:
+    post:
+      operationId: Autoscout_UpdateTeamMemberRole
+      responses:
+        "200":
+          description: A successful response.
+          schema:
+            $ref: '#/definitions/v1Team'
+        default:
+          description: An unexpected error response.
+          schema:
+            $ref: '#/definitions/rpcStatus'
+      parameters:
+        - name: team_id
+          in: path
+          required: true
+          type: string
+        - name: body
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/AutoscoutUpdateTeamMemberRoleBody'
+      tags:
+        - Teams
+      security:
+        - ApiKeyAuth: []
+  /api/v1/teams/{team_id}:leave:
+    post:
+      operationId: Autoscout_LeaveTeam
+      responses:
+        "200":
+          description: A successful response.
+          schema:
+            $ref: '#/definitions/v1LeaveTeamResponse'
+        default:
+          description: An unexpected error response.
+          schema:
+            $ref: '#/definitions/rpcStatus'
+      parameters:
+        - name: team_id
+          in: path
+          required: true
+          type: string
+        - name: body
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/AutoscoutLeaveTeamBody'
+      tags:
+        - Teams
+      security:
+        - ApiKeyAuth: []
+  /api/v1/teams:join:
+    post:
+      operationId: Autoscout_JoinTeam
+      responses:
+        "200":
+          description: A successful response.
+          schema:
+            $ref: '#/definitions/v1Team'
+        default:
+          description: An unexpected error response.
+          schema:
+            $ref: '#/definitions/rpcStatus'
+      parameters:
+        - name: body
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/v1JoinTeamRequest'
+      tags:
+        - Teams
       security:
         - ApiKeyAuth: []
   /api/v1/users/acquisition_source:
@@ -1583,6 +1729,11 @@ paths:
           description: An unexpected error response.
           schema:
             $ref: '#/definitions/rpcStatus'
+      parameters:
+        - name: team_id
+          in: query
+          required: false
+          type: string
       tags:
         - Users
       security:
@@ -1600,6 +1751,11 @@ paths:
           description: An unexpected error response.
           schema:
             $ref: '#/definitions/rpcStatus'
+      parameters:
+        - name: team_id
+          in: query
+          required: false
+          type: string
       tags:
         - Users
       security:
@@ -1751,6 +1907,24 @@ definitions:
         format: uint64
       price_per_token_usd:
         type: string
+  AutoscoutCreateTeamInviteBody:
+    type: object
+    properties:
+      max_uses:
+        type: integer
+        format: int32
+      expires_in_hours:
+        type: integer
+        format: int32
+  AutoscoutLeaveTeamBody:
+    type: object
+  AutoscoutRemoveTeamMemberBody:
+    type: object
+    properties:
+      member_email:
+        type: string
+    required:
+      - member_email
   AutoscoutUpdateConfigBody:
     type: object
     properties:
@@ -1781,6 +1955,23 @@ definitions:
         $ref: '#/definitions/v1UpdateInstanceAction'
     required:
       - action
+  AutoscoutUpdateTeamBody:
+    type: object
+    properties:
+      name:
+        type: string
+    required:
+      - name
+  AutoscoutUpdateTeamMemberRoleBody:
+    type: object
+    properties:
+      member_email:
+        type: string
+      role:
+        $ref: '#/definitions/v1TeamRole'
+    required:
+      - member_email
+      - role
   HealthCheckResponseServingStatus:
     type: string
     enum:
@@ -2182,7 +2373,6 @@ definitions:
     enum:
       - UNSPECIFIED_BILLING_PROVIDER_TYPE
       - BILLING_PROVIDER_TYPE_STRIPE
-      - BILLING_PROVIDER_TYPE_DAIMO
     default: UNSPECIFIED_BILLING_PROVIDER_TYPE
   v1BillingStorageEstimation:
     type: object
@@ -2375,60 +2565,6 @@ definitions:
         format: int64
     required:
       - name
-  v1CreateCoinbaseDepositRequest:
-    type: object
-    properties:
-      amount_cents:
-        type: integer
-        format: int64
-      promocode:
-        type: string
-    required:
-      - amount_cents
-  v1CreateCoinbaseDepositResponse:
-    type: object
-    properties:
-      id:
-        type: string
-      url:
-        type: string
-    required:
-      - id
-      - url
-  v1CreateDaimoApayDepositRequest:
-    type: object
-    properties:
-      amount_cents:
-        type: integer
-        format: int64
-      customer_id:
-        type: string
-      metadata:
-        type: object
-      customization:
-        $ref: '#/definitions/v1DaimoCustomization'
-    required:
-      - amount_cents
-  v1CreateDaimoDepositRequest:
-    type: object
-    properties:
-      amount_cents:
-        type: integer
-        format: int64
-      promocode:
-        type: string
-    required:
-      - amount_cents
-  v1CreateDaimoDepositResponse:
-    type: object
-    properties:
-      id:
-        type: string
-      url:
-        type: string
-    required:
-      - id
-      - url
   v1CreateInstanceRequest:
     type: object
     properties:
@@ -2441,6 +2577,9 @@ definitions:
         type: array
         items:
           type: string
+      team_id:
+        type: string
+        description: When unset, the user's default (oldest owned) team is used.
     required:
       - name
       - config
@@ -2470,6 +2609,8 @@ definitions:
         type: integer
         format: int64
       promocode:
+        type: string
+      team_id:
         type: string
     required:
       - amount_cents
@@ -2507,6 +2648,8 @@ definitions:
         format: int64
       promocode:
         type: string
+      team_id:
+        type: string
     required:
       - amount_cents
   v1CreateStripeDepositResponse:
@@ -2524,6 +2667,8 @@ definitions:
     properties:
       success_redirect_url:
         type: string
+      team_id:
+        type: string
     required:
       - success_redirect_url
   v1CreateStripeSubscriptionResponse:
@@ -2533,6 +2678,13 @@ definitions:
         type: string
     required:
       - url
+  v1CreateTeamRequest:
+    type: object
+    properties:
+      name:
+        type: string
+    required:
+      - name
   v1CreateUserAcquisitionSourceRequest:
     type: object
     properties:
@@ -2552,22 +2704,15 @@ definitions:
       - utm_source
   v1CreateUserAcquisitionSourceResponse:
     type: object
-  v1DaimoCustomization:
-    type: object
-    properties:
-      success_redirect_url:
-        type: string
-      title:
-        type: string
-      image:
-        type: string
   v1DeleteApaySubscriptionPlanResponse:
     type: object
   v1DeleteAuthTokenResponse:
     type: object
-  v1DeleteCoinbaseDepositResponse:
-    type: object
   v1DeleteInstanceResponse:
+    type: object
+  v1DeleteTeamInviteResponse:
+    type: object
+  v1DeleteTeamResponse:
     type: object
   v1DeployConfig:
     type: object
@@ -3162,6 +3307,8 @@ definitions:
         type: string
       deployment:
         $ref: '#/definitions/v1Deployment'
+      team_id:
+        type: string
     required:
       - instance_id
       - name
@@ -3170,6 +3317,16 @@ definitions:
       - config
       - config_state_hash
       - deployment
+      - team_id
+  v1JoinTeamRequest:
+    type: object
+    properties:
+      invite_code:
+        type: string
+    required:
+      - invite_code
+  v1LeaveTeamResponse:
+    type: object
   v1ListApayDepositsResponse:
     type: object
     properties:
@@ -3214,16 +3371,6 @@ definitions:
           $ref: '#/definitions/v1AuthToken'
       pagination:
         $ref: '#/definitions/v1PaginationResult'
-    required:
-      - items
-  v1ListCoinbaseDepositsResponse:
-    type: object
-    properties:
-      items:
-        type: array
-        items:
-          type: object
-          $ref: '#/definitions/v1Deposit'
     required:
       - items
   v1ListDeploymentLogsResponse:
@@ -3294,6 +3441,36 @@ definitions:
           $ref: '#/definitions/v1DeploymentLog'
       pagination:
         $ref: '#/definitions/v1PaginationResult'
+    required:
+      - items
+  v1ListTeamInvitesResponse:
+    type: object
+    properties:
+      items:
+        type: array
+        items:
+          type: object
+          $ref: '#/definitions/v1TeamInvite'
+    required:
+      - items
+  v1ListTeamMembersResponse:
+    type: object
+    properties:
+      items:
+        type: array
+        items:
+          type: object
+          $ref: '#/definitions/v1TeamMember'
+    required:
+      - items
+  v1ListTeamsResponse:
+    type: object
+    properties:
+      items:
+        type: array
+        items:
+          type: object
+          $ref: '#/definitions/v1Team'
     required:
       - items
   v1MenuItem:
@@ -3752,6 +3929,8 @@ definitions:
     properties:
       promocode:
         type: string
+      team_id:
+        type: string
     required:
       - promocode
   v1RegularPromocodeResponse:
@@ -3761,6 +3940,8 @@ definitions:
         type: string
     required:
       - reward_amount
+  v1RemoveTeamMemberResponse:
+    type: object
   v1ReportApaySubscriptionsUsageRequest:
     type: object
     properties:
@@ -3936,6 +4117,63 @@ definitions:
       - total
       - total_errors
       - items
+  v1Team:
+    type: object
+    properties:
+      team_id:
+        type: string
+      name:
+        type: string
+      created_at:
+        type: string
+    required:
+      - team_id
+      - name
+      - created_at
+  v1TeamInvite:
+    type: object
+    properties:
+      invite_id:
+        type: string
+      invite_code:
+        type: string
+      created_at:
+        type: string
+      expires_at:
+        type: string
+      max_uses:
+        type: integer
+        format: int32
+      use_count:
+        type: integer
+        format: int32
+    required:
+      - invite_id
+      - invite_code
+      - created_at
+      - use_count
+  v1TeamMember:
+    type: object
+    properties:
+      email:
+        type: string
+      role:
+        $ref: '#/definitions/v1TeamRole'
+      joined_at:
+        type: string
+    required:
+      - email
+      - role
+      - joined_at
+  v1TeamRole:
+    type: string
+    enum:
+      - UNSPECIFIED_TEAM_ROLE
+      - TEAM_ROLE_OWNER
+      - TEAM_ROLE_ADMIN
+      - TEAM_ROLE_EDITOR
+      - TEAM_ROLE_VIEWER
+    default: UNSPECIFIED_TEAM_ROLE
   v1TermsOfService:
     type: object
     properties:
