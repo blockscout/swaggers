@@ -16503,6 +16503,16 @@ paths:
             type: integer
             x-struct: null
             x-validate: null
+        - description: Number of items returned per page
+          in: query
+          name: items_count
+          required: false
+          schema:
+            maximum: 50
+            minimum: 1
+            type: integer
+            x-struct: null
+            x-validate: null
       responses:
         '200':
           content:
@@ -16520,6 +16530,7 @@ paths:
                     x-validate: null
                   next_page_params:
                     example:
+                      items_count: 50
                       number: 100
                     nullable: true
                     type: object
@@ -16866,6 +16877,16 @@ paths:
           required: false
           schema:
             $ref: '#/components/schemas/AddressHash'
+        - description: Number of items returned per page
+          in: query
+          name: items_count
+          required: false
+          schema:
+            maximum: 50
+            minimum: 1
+            type: integer
+            x-struct: null
+            x-validate: null
       responses:
         '200':
           content:
@@ -16886,6 +16907,7 @@ paths:
                       account_address_hash: '0x1234567890123456789012345678901234567890'
                       amount: '1000000000000000000'
                       associated_account_address_hash: '0x0987654321098765432109876543210987654321'
+                      items_count: 50
                     nullable: true
                     type: object
                     x-struct: null
