@@ -6300,13 +6300,8 @@ paths:
             x-struct: null
             x-validate: null
         - description: |
-            Sort transactions by:
-            * block_number - Sort by block number
-            * value - Sort by transaction value
-            * fee - Sort by transaction fee
-            * balance - Sort by account balance
-            * transactions_count - Sort by number of transactions on address
-            * fiat_value - Sort by fiat value of the token transfer
+            Sort results by:
+            * fiat_value - Sort by fiat value
             * holders_count - Sort by number of token holders
             * circulating_market_cap - Sort by circulating market cap of the token
             Should be used together with `order` parameter.
@@ -8451,15 +8446,9 @@ paths:
             x-struct: null
             x-validate: null
         - description: |
-            Sort transactions by:
-            * block_number - Sort by block number
-            * value - Sort by transaction value
-            * fee - Sort by transaction fee
-            * balance - Sort by account balance
-            * transactions_count - Sort by number of transactions on address
-            * fiat_value - Sort by fiat value of the token transfer
-            * holders_count - Sort by number of token holders
-            * circulating_market_cap - Sort by circulating market cap of the token
+            Sort results by:
+            * transactions_count - Sort by number of transactions
+            * total_gas_used - Sort by total gas used
             Should be used together with `order` parameter.
           in: query
           name: sort
@@ -9966,15 +9955,9 @@ paths:
             x-struct: null
             x-validate: null
         - description: |
-            Sort transactions by:
-            * block_number - Sort by block number
-            * value - Sort by transaction value
-            * fee - Sort by transaction fee
+            Sort results by:
             * balance - Sort by account balance
-            * transactions_count - Sort by number of transactions on address
-            * fiat_value - Sort by fiat value of the token transfer
-            * holders_count - Sort by number of token holders
-            * circulating_market_cap - Sort by circulating market cap of the token
+            * transactions_count - Sort by number of transactions
             Should be used together with `order` parameter.
           in: query
           name: sort
@@ -10572,15 +10555,9 @@ paths:
             x-struct: null
             x-validate: null
         - description: |
-            Sort transactions by:
-            * block_number - Sort by block number
-            * value - Sort by transaction value
-            * fee - Sort by transaction fee
+            Sort results by:
             * balance - Sort by account balance
-            * transactions_count - Sort by number of transactions on address
-            * fiat_value - Sort by fiat value of the token transfer
-            * holders_count - Sort by number of token holders
-            * circulating_market_cap - Sort by circulating market cap of the token
+            * transactions_count - Sort by number of transactions
             Should be used together with `order` parameter.
           in: query
           name: sort
@@ -13882,15 +13859,10 @@ paths:
             x-struct: null
             x-validate: null
         - description: |
-            Sort transactions by:
+            Sort results by:
             * block_number - Sort by block number
             * value - Sort by transaction value
             * fee - Sort by transaction fee
-            * balance - Sort by account balance
-            * transactions_count - Sort by number of transactions on address
-            * fiat_value - Sort by fiat value of the token transfer
-            * holders_count - Sort by number of token holders
-            * circulating_market_cap - Sort by circulating market cap of the token
             Should be used together with `order` parameter.
           in: query
           name: sort
@@ -15597,15 +15569,10 @@ paths:
             x-struct: null
             x-validate: null
         - description: |
-            Sort transactions by:
-            * block_number - Sort by block number
-            * value - Sort by transaction value
-            * fee - Sort by transaction fee
-            * balance - Sort by account balance
-            * transactions_count - Sort by number of transactions on address
-            * fiat_value - Sort by fiat value of the token transfer
-            * holders_count - Sort by number of token holders
-            * circulating_market_cap - Sort by circulating market cap of the token
+            Sort results by:
+            * key_bytes - Sort by MUD record key_bytes
+            * key0 - Sort by MUD record key0
+            * key1 - Sort by MUD record key1
             Should be used together with `order` parameter.
           in: query
           name: sort
