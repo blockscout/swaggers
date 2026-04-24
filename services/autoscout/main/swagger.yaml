@@ -4126,10 +4126,13 @@ definitions:
         type: string
       created_at:
         type: string
+      user_role:
+        $ref: '#/definitions/v1TeamRole'
     required:
       - team_id
       - name
       - created_at
+      - user_role
   v1TeamInvite:
     type: object
     properties:
@@ -4278,6 +4281,10 @@ definitions:
         type: string
       balance:
         type: string
+      name:
+        type: string
+      avatar_url:
+        type: string
     required:
       - email
       - created_at
@@ -4369,6 +4376,10 @@ definitions:
           $ref: '#/definitions/v1UserAction'
       most_expensive_instances:
         $ref: '#/definitions/v1MostExpensiveInstances'
+      name:
+        type: string
+      avatar_url:
+        type: string
     required:
       - email
       - created_at
