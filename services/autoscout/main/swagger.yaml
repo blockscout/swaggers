@@ -1945,8 +1945,11 @@ definitions:
       expires_in_hours:
         type: integer
         format: int32
+      role:
+        $ref: '#/definitions/v1TeamRole'
     required:
       - email
+      - role
   AutoscoutLeaveTeamBody:
     type: object
   AutoscoutRemoveTeamMemberBody:
@@ -4177,10 +4180,13 @@ definitions:
         type: string
       expires_at:
         type: string
+      role:
+        $ref: '#/definitions/v1TeamRole'
     required:
       - invite_id
       - invitee_email
       - created_at
+      - role
   v1TeamMember:
     type: object
     properties:
