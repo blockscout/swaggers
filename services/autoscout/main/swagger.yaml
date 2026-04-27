@@ -4196,10 +4196,27 @@ definitions:
         $ref: '#/definitions/v1TeamRole'
       joined_at:
         type: string
+      name:
+        type: string
+      avatar_url:
+        type: string
+      status:
+        $ref: '#/definitions/v1TeamMemberStatus'
+      invite_id:
+        type: string
+      invite_expires_at:
+        type: string
     required:
       - email
       - role
-      - joined_at
+      - status
+  v1TeamMemberStatus:
+    type: string
+    enum:
+      - UNSPECIFIED_TEAM_MEMBER_STATUS
+      - TEAM_MEMBER_STATUS_ACTIVE
+      - TEAM_MEMBER_STATUS_PENDING
+    default: UNSPECIFIED_TEAM_MEMBER_STATUS
   v1TeamRole:
     type: string
     enum:
