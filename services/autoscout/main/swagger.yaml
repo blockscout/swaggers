@@ -1790,6 +1790,28 @@ paths:
         - Users
       security:
         - ApiKeyAuth: []
+    patch:
+      summary: Update mutable fields of the current account profile
+      operationId: Autoscout_UpdateProfile
+      responses:
+        "200":
+          description: A successful response.
+          schema:
+            $ref: '#/definitions/v1UserProfile'
+        default:
+          description: An unexpected error response.
+          schema:
+            $ref: '#/definitions/rpcStatus'
+      parameters:
+        - name: body
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/v1UpdateProfileRequest'
+      tags:
+        - Users
+      security:
+        - ApiKeyAuth: []
   /api/v1/users/profile:register:
     post:
       summary: Register new profile
@@ -4319,6 +4341,13 @@ definitions:
     required:
       - status
       - deployment_id
+  v1UpdateProfileRequest:
+    type: object
+    properties:
+      name:
+        type: string
+      avatar_url:
+        type: string
   v1User:
     type: object
     properties:
