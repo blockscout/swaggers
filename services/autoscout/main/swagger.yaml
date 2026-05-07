@@ -2046,6 +2046,13 @@ definitions:
         type: string
     required:
       - customer_portal_url
+  blockscoutapayv1RequestNetworkChain:
+    type: string
+    enum:
+      - REQUEST_NETWORK_CHAIN_UNSPECIFIED
+      - REQUEST_NETWORK_CHAIN_EVM
+      - REQUEST_NETWORK_CHAIN_TRON
+    default: REQUEST_NETWORK_CHAIN_UNSPECIFIED
   blockscoutautoscoutv1GetStripeCustomerPortalResponse:
     type: object
     properties:
@@ -2053,6 +2060,13 @@ definitions:
         type: string
     required:
       - customer_portal_url
+  blockscoutautoscoutv1RequestNetworkChain:
+    type: string
+    enum:
+      - REQUEST_NETWORK_CHAIN_UNSPECIFIED
+      - REQUEST_NETWORK_CHAIN_EVM
+      - REQUEST_NETWORK_CHAIN_TRON
+    default: REQUEST_NETWORK_CHAIN_UNSPECIFIED
   protobufAny:
     type: object
     properties:
@@ -2665,6 +2679,8 @@ definitions:
         type: string
       metadata:
         type: object
+      chain:
+        $ref: '#/definitions/blockscoutapayv1RequestNetworkChain'
     required:
       - amount_cents
   v1CreateRequestNetworkDepositRequest:
@@ -2677,6 +2693,8 @@ definitions:
         type: string
       team_id:
         type: string
+      chain:
+        $ref: '#/definitions/blockscoutautoscoutv1RequestNetworkChain'
     required:
       - amount_cents
   v1CreateRequestNetworkDepositResponse:
