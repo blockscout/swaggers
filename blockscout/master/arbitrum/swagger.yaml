@@ -239,6 +239,203 @@ components:
       type: string
       x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.General.EmptyString
       x-validate:
+    Arbitrum.Withdrawal:
+      additionalProperties: false
+      description: Arbitrum Rollup withdrawal message.
+      properties:
+        arb_block_number:
+          description: Rollup block number.
+          minimum: 0
+          type: integer
+          x-struct:
+          x-validate:
+        caller_address_hash:
+          allOf:
+            - $ref: '#/components/schemas/AddressHash'
+          description: Address of the account that initiated the withdrawal on the Rollup.
+          x-struct:
+          x-validate:
+        callvalue:
+          allOf:
+            - $ref: '#/components/schemas/IntegerString'
+          description: Native coin amount in wei attached to the withdrawal message.
+          x-struct:
+          x-validate:
+        completion_transaction_hash:
+          $ref: '#/components/schemas/FullHashNullable'
+        data:
+          allOf:
+            - $ref: '#/components/schemas/HexString'
+          description: ABI-encoded calldata passed to the destination address when the withdrawal is executed on the Parent chain. Empty (`0x`) for plain native coin transfers.
+          x-struct:
+          x-validate:
+        destination_address_hash:
+          allOf:
+            - $ref: '#/components/schemas/AddressHash'
+          description: Recipient address on the Parent chain that will receive funds when the withdrawal is executed.
+          x-struct:
+          x-validate:
+        eth_block_number:
+          description: Parent chain block number.
+          minimum: 0
+          type: integer
+          x-struct:
+          x-validate:
+        id:
+          description: Withdrawal message ID.
+          minimum: 0
+          type: integer
+          x-struct:
+          x-validate:
+        l2_timestamp:
+          description: Unix timestamp of the originating transaction.
+          minimum: 0
+          type: integer
+          x-struct:
+          x-validate:
+        status:
+          description: Withdrawal lifecycle status. Progresses from `initiated` (L2ToL1Tx event emitted) through `sent` (included in an RBlock) and `confirmed` (RBlock confirmed on Parent chain) to `relayed` (executed on Parent chain). `unknown` indicates the status could not be determined, e.g. when the Parent chain RPC is unavailable.
+          enum:
+            - unknown
+            - initiated
+            - sent
+            - confirmed
+            - relayed
+          type: string
+          x-struct:
+          x-validate:
+        token:
+          additionalProperties: false
+          description: Token withdrawal details. Present when the withdrawal is for a bridged token, null for native coin.
+          nullable: true
+          properties:
+            address_hash:
+              allOf:
+                - $ref: '#/components/schemas/AddressHashNullable'
+              description: Token contract address on the Parent chain.
+              x-struct:
+              x-validate:
+            amount:
+              allOf:
+                - $ref: '#/components/schemas/IntegerString'
+              description: Token amount in the token's smallest unit.
+              x-struct:
+              x-validate:
+            decimals:
+              minimum: 0
+              nullable: true
+              type: integer
+              x-struct:
+              x-validate:
+            destination_address_hash:
+              allOf:
+                - $ref: '#/components/schemas/AddressHashNullable'
+              description: Token recipient address on the Parent chain.
+              x-struct:
+              x-validate:
+            name:
+              nullable: true
+              type: string
+              x-struct:
+              x-validate:
+            symbol:
+              nullable: true
+              type: string
+              x-struct:
+              x-validate:
+          required:
+            - address_hash
+            - destination_address_hash
+            - amount
+            - decimals
+            - name
+            - symbol
+          type: object
+          x-struct:
+          x-validate:
+      required:
+        - id
+        - status
+        - caller_address_hash
+        - destination_address_hash
+        - arb_block_number
+        - eth_block_number
+        - l2_timestamp
+        - callvalue
+        - data
+        - token
+        - completion_transaction_hash
+      title: Arbitrum.Withdrawal
+      type: object
+      x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.Arbitrum.Withdrawal
+      x-validate:
+    Anytrust:
+      additionalProperties: false
+      description: AnyTrust data availability certificate.
+      properties:
+        batch_data_container:
+          enum:
+            - in_anytrust
+          type: string
+          x-struct:
+          x-validate:
+        bls_signature:
+          description: Aggregated BLS signature of committee members.
+          nullable: true
+          type: string
+          x-struct:
+          x-validate:
+        data_hash:
+          description: AnyTrust data hash.
+          nullable: true
+          type: string
+          x-struct:
+          x-validate:
+        signers:
+          description: Committee members who guaranteed data availability.
+          items:
+            additionalProperties: false
+            properties:
+              key:
+                description: BLS public key.
+                type: string
+                x-struct:
+                x-validate:
+              proof:
+                description: Proof of possession (absent for trusted members).
+                type: string
+                x-struct:
+                x-validate:
+              trusted:
+                description: Whether the signer is a trusted member.
+                type: boolean
+                x-struct:
+                x-validate:
+            required:
+              - trusted
+              - key
+            type: object
+            x-struct:
+            x-validate:
+          type: array
+          x-struct:
+          x-validate:
+        timeout:
+          description: Data availability timeout (ISO 8601).
+          nullable: true
+          type: string
+          x-struct:
+          x-validate:
+      required:
+        - batch_data_container
+        - data_hash
+        - timeout
+        - bls_signature
+        - signers
+      title: Anytrust
+      type: object
+      x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.Arbitrum.DataAvailability.Anytrust
+      x-validate:
     Type:
       enum:
         - ERC-20
@@ -346,6 +543,40 @@ components:
       title: AddressNullable
       type: object
       x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.Address
+      x-validate:
+    MinimalMessage:
+      additionalProperties: false
+      description: Minimal Arbitrum cross-chain message with origination and completion fields.
+      properties:
+        completion_transaction_hash:
+          allOf:
+            - $ref: '#/components/schemas/FullHashNullable'
+          description: Hash of the transaction on the destination chain that executed this message.
+          x-struct:
+          x-validate:
+        origination_timestamp:
+          $ref: '#/components/schemas/TimestampNullable'
+        origination_transaction_block_number:
+          description: Block number on the originating chain containing the initiation transaction.
+          minimum: 0
+          nullable: true
+          type: integer
+          x-struct:
+          x-validate:
+        origination_transaction_hash:
+          allOf:
+            - $ref: '#/components/schemas/FullHashNullable'
+          description: Hash of the transaction on the originating chain that initiated this message.
+          x-struct:
+          x-validate:
+      required:
+        - origination_transaction_hash
+        - origination_timestamp
+        - origination_transaction_block_number
+        - completion_transaction_hash
+      title: MinimalMessage
+      type: object
+      x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.Arbitrum.MinimalMessage
       x-validate:
     NullString:
       pattern: ^null$
@@ -489,6 +720,36 @@ components:
       type: object
       x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.TokenTransfer.TotalERC1155
       x-validate:
+    Celestia:
+      additionalProperties: false
+      description: Celestia data availability blob reference.
+      properties:
+        batch_data_container:
+          enum:
+            - in_celestia
+          type: string
+          x-struct:
+          x-validate:
+        height:
+          description: Celestia block height.
+          nullable: true
+          type: integer
+          x-struct:
+          x-validate:
+        transaction_commitment:
+          description: Celestia transaction commitment hash.
+          nullable: true
+          type: string
+          x-struct:
+          x-validate:
+      required:
+        - batch_data_container
+        - height
+        - transaction_commitment
+      title: Celestia
+      type: object
+      x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.Arbitrum.DataAvailability.Celestia
+      x-validate:
     SummaryJustRequestBody:
       additionalProperties: false
       properties:
@@ -611,6 +872,19 @@ components:
       type: object
       x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.Transaction.SummaryJustRequestBody
       x-validate:
+    BatchDataContainer:
+      description: Data availability container type.
+      enum:
+        - in_blob4844
+        - in_calldata
+        - in_celestia
+        - in_anytrust
+        - in_eigenda
+      nullable: true
+      title: BatchDataContainer
+      type: string
+      x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.Arbitrum.BatchDataContainer
+      x-validate:
     HotContract:
       additionalProperties: false
       properties:
@@ -649,6 +923,39 @@ components:
       title: BadRequestResponse
       type: object
       x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.ErrorResponses.BadRequestResponse
+      x-validate:
+    CommitmentTransaction:
+      additionalProperties: false
+      description: Parent chain transaction that committed the batch.
+      properties:
+        block_number:
+          description: Parent chain block number containing this transaction.
+          minimum: 0
+          nullable: true
+          type: integer
+          x-struct:
+          x-validate:
+        hash:
+          $ref: '#/components/schemas/FullHashNullable'
+        status:
+          description: Finalization status of the Parent chain transaction.
+          enum:
+            - unfinalized
+            - finalized
+          nullable: true
+          type: string
+          x-struct:
+          x-validate:
+        timestamp:
+          $ref: '#/components/schemas/TimestampNullable'
+      required:
+        - hash
+        - block_number
+        - timestamp
+        - status
+      title: CommitmentTransaction
+      type: object
+      x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.Arbitrum.CommitmentTransaction
       x-validate:
     Withdrawal:
       additionalProperties: false
@@ -1061,6 +1368,63 @@ components:
       title: AddressResponse
       type: object
       x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.Address
+      x-validate:
+    Arbitrum.BatchByCelestia:
+      additionalProperties: false
+      description: Arbitrum batch with Celestia data availability.
+      properties:
+        after_acc_hash:
+          allOf:
+            - $ref: '#/components/schemas/FullHash'
+          description: Accumulator hash of the sequencer inbox after this batch was appended. Must equal `before_acc_hash` of the next batch.
+          x-struct:
+          x-validate:
+        before_acc_hash:
+          allOf:
+            - $ref: '#/components/schemas/FullHash'
+          description: 'Accumulator hash of the sequencer inbox before this batch was appended. Forms a hash chain: must equal `after_acc_hash` of the previous batch.'
+          x-struct:
+          x-validate:
+        commitment_transaction:
+          $ref: '#/components/schemas/CommitmentTransaction'
+        data_availability:
+          $ref: '#/components/schemas/Celestia'
+        end_block_number:
+          description: Last Rollup block included in the batch.
+          minimum: 0
+          type: integer
+          x-struct:
+          x-validate:
+        number:
+          description: Sequential identifier assigned to this batch by the sequencer.
+          minimum: 0
+          type: integer
+          x-struct:
+          x-validate:
+        start_block_number:
+          description: First Rollup block included in the batch.
+          minimum: 0
+          type: integer
+          x-struct:
+          x-validate:
+        transactions_count:
+          description: Number of transactions in the batch.
+          minimum: 0
+          type: integer
+          x-struct:
+          x-validate:
+      required:
+        - number
+        - transactions_count
+        - start_block_number
+        - end_block_number
+        - before_acc_hash
+        - after_acc_hash
+        - commitment_transaction
+        - data_availability
+      title: Arbitrum.BatchByCelestia
+      type: object
+      x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.Arbitrum.Batch
       x-validate:
     Status:
       additionalProperties:
@@ -2363,6 +2727,63 @@ components:
       type: object
       x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.Search.Results
       x-validate:
+    Arbitrum.BatchByAnytrust:
+      additionalProperties: false
+      description: Arbitrum batch with AnyTrust data availability.
+      properties:
+        after_acc_hash:
+          allOf:
+            - $ref: '#/components/schemas/FullHash'
+          description: Accumulator hash of the sequencer inbox after this batch was appended. Must equal `before_acc_hash` of the next batch.
+          x-struct:
+          x-validate:
+        before_acc_hash:
+          allOf:
+            - $ref: '#/components/schemas/FullHash'
+          description: 'Accumulator hash of the sequencer inbox before this batch was appended. Forms a hash chain: must equal `after_acc_hash` of the previous batch.'
+          x-struct:
+          x-validate:
+        commitment_transaction:
+          $ref: '#/components/schemas/CommitmentTransaction'
+        data_availability:
+          $ref: '#/components/schemas/Anytrust'
+        end_block_number:
+          description: Last Rollup block included in the batch.
+          minimum: 0
+          type: integer
+          x-struct:
+          x-validate:
+        number:
+          description: Sequential identifier assigned to this batch by the sequencer.
+          minimum: 0
+          type: integer
+          x-struct:
+          x-validate:
+        start_block_number:
+          description: First Rollup block included in the batch.
+          minimum: 0
+          type: integer
+          x-struct:
+          x-validate:
+        transactions_count:
+          description: Number of transactions in the batch.
+          minimum: 0
+          type: integer
+          x-struct:
+          x-validate:
+      required:
+        - number
+        - transactions_count
+        - start_block_number
+        - end_block_number
+        - before_acc_hash
+        - after_acc_hash
+        - commitment_transaction
+        - data_availability
+      title: Arbitrum.BatchByAnytrust
+      type: object
+      x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.Arbitrum.Batch
+      x-validate:
     TokenCountersResponse:
       additionalProperties: false
       description: Token counters response
@@ -2380,6 +2801,36 @@ components:
       title: TokenCountersResponse
       type: object
       x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.Token.Counters
+      x-validate:
+    Eigenda:
+      additionalProperties: false
+      description: EigenDA data availability blob reference.
+      properties:
+        batch_data_container:
+          enum:
+            - in_eigenda
+          type: string
+          x-struct:
+          x-validate:
+        blob_header:
+          description: ABI-encoded EigenDA blob header.
+          nullable: true
+          type: string
+          x-struct:
+          x-validate:
+        blob_verification_proof:
+          description: ABI-encoded EigenDA blob verification proof.
+          nullable: true
+          type: string
+          x-struct:
+          x-validate:
+      required:
+        - batch_data_container
+        - blob_header
+        - blob_verification_proof
+      title: Eigenda
+      type: object
+      x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.Arbitrum.DataAvailability.Eigenda
       x-validate:
     BlockResponse:
       additionalProperties: false
@@ -2944,6 +3395,70 @@ components:
       type: string
       x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.General.AddressHashNullable
       x-validate:
+    Batch:
+      additionalProperties: false
+      description: Detailed Arbitrum batch info.
+      properties:
+        after_acc_hash:
+          allOf:
+            - $ref: '#/components/schemas/FullHash'
+          description: Accumulator hash of the sequencer inbox after this batch was appended. Must equal `before_acc_hash` of the next batch.
+          x-struct:
+          x-validate:
+        before_acc_hash:
+          allOf:
+            - $ref: '#/components/schemas/FullHash'
+          description: 'Accumulator hash of the sequencer inbox before this batch was appended. Forms a hash chain: must equal `after_acc_hash` of the previous batch.'
+          x-struct:
+          x-validate:
+        commitment_transaction:
+          $ref: '#/components/schemas/CommitmentTransaction'
+        data_availability:
+          description: Data availability information. Structure varies by `batch_data_container` type.
+          oneOf:
+            - $ref: '#/components/schemas/Base'
+            - $ref: '#/components/schemas/Anytrust'
+            - $ref: '#/components/schemas/Celestia'
+            - $ref: '#/components/schemas/Eigenda'
+          x-struct:
+          x-validate:
+        end_block_number:
+          description: Last Rollup block included in the batch.
+          minimum: 0
+          type: integer
+          x-struct:
+          x-validate:
+        number:
+          description: Sequential identifier assigned to this batch by the sequencer.
+          minimum: 0
+          type: integer
+          x-struct:
+          x-validate:
+        start_block_number:
+          description: First Rollup block included in the batch.
+          minimum: 0
+          type: integer
+          x-struct:
+          x-validate:
+        transactions_count:
+          description: Number of transactions in the batch.
+          minimum: 0
+          type: integer
+          x-struct:
+          x-validate:
+      required:
+        - number
+        - transactions_count
+        - start_block_number
+        - end_block_number
+        - before_acc_hash
+        - after_acc_hash
+        - commitment_transaction
+        - data_availability
+      title: Batch
+      type: object
+      x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.Arbitrum.Batch
+      x-validate:
     Factory:
       additionalProperties: false
       description: Factory struct.
@@ -3073,12 +3588,88 @@ components:
       type: object
       x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.ErrorResponses.NotFoundResponse
       x-validate:
+    Base:
+      additionalProperties: false
+      description: Data availability info for batches posted via EIP-4844 blobs, calldata, or with no DA.
+      properties:
+        batch_data_container:
+          description: Data availability container type.
+          enum:
+            - in_blob4844
+            - in_calldata
+          nullable: true
+          type: string
+          x-struct:
+          x-validate:
+      required:
+        - batch_data_container
+      title: Base
+      type: object
+      x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.Arbitrum.DataAvailability.Base
+      x-validate:
     TimestampNullable:
       format: date-time
       nullable: true
       title: TimestampNullable
       type: string
       x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.General.TimestampNullable
+      x-validate:
+    Arbitrum.BatchByEigenda:
+      additionalProperties: false
+      description: Arbitrum batch with EigenDA data availability.
+      properties:
+        after_acc_hash:
+          allOf:
+            - $ref: '#/components/schemas/FullHash'
+          description: Accumulator hash of the sequencer inbox after this batch was appended. Must equal `before_acc_hash` of the next batch.
+          x-struct:
+          x-validate:
+        before_acc_hash:
+          allOf:
+            - $ref: '#/components/schemas/FullHash'
+          description: 'Accumulator hash of the sequencer inbox before this batch was appended. Forms a hash chain: must equal `after_acc_hash` of the previous batch.'
+          x-struct:
+          x-validate:
+        commitment_transaction:
+          $ref: '#/components/schemas/CommitmentTransaction'
+        data_availability:
+          $ref: '#/components/schemas/Eigenda'
+        end_block_number:
+          description: Last Rollup block included in the batch.
+          minimum: 0
+          type: integer
+          x-struct:
+          x-validate:
+        number:
+          description: Sequential identifier assigned to this batch by the sequencer.
+          minimum: 0
+          type: integer
+          x-struct:
+          x-validate:
+        start_block_number:
+          description: First Rollup block included in the batch.
+          minimum: 0
+          type: integer
+          x-struct:
+          x-validate:
+        transactions_count:
+          description: Number of transactions in the batch.
+          minimum: 0
+          type: integer
+          x-struct:
+          x-validate:
+      required:
+        - number
+        - transactions_count
+        - start_block_number
+        - end_block_number
+        - before_acc_hash
+        - after_acc_hash
+        - commitment_transaction
+        - data_availability
+      title: Arbitrum.BatchByEigenda
+      type: object
+      x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.Arbitrum.Batch
       x-validate:
     TokenResponse:
       additionalProperties: false
@@ -3267,6 +3858,28 @@ components:
       title: AddressCounters
       type: object
       x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.Address.Counters
+      x-validate:
+    Arbitrum.ClaimMessage:
+      additionalProperties: false
+      description: Calldata and outbox contract address needed to execute a withdrawal on the Parent chain.
+      properties:
+        calldata:
+          description: ABI-encoded calldata for the executeTransaction call.
+          type: string
+          x-struct:
+          x-validate:
+        outbox_address_hash:
+          allOf:
+            - $ref: '#/components/schemas/AddressHash'
+          description: Address of the Arbitrum Outbox contract on the Parent chain through which the withdrawal is executed.
+          x-struct:
+          x-validate:
+      required:
+        - calldata
+        - outbox_address_hash
+      title: Arbitrum.ClaimMessage
+      type: object
+      x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.Arbitrum.ClaimMessage
       x-validate:
     TokenTransfer:
       additionalProperties: false
@@ -4362,6 +4975,42 @@ components:
       type: object
       x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.SignedAuthorization
       x-validate:
+    BatchForList:
+      additionalProperties: false
+      description: Arbitrum batch summary for list endpoints.
+      properties:
+        batch_data_container:
+          $ref: '#/components/schemas/BatchDataContainer'
+        blocks_count:
+          description: Number of blocks included in the batch.
+          minimum: 0
+          type: integer
+          x-struct:
+          x-validate:
+        commitment_transaction:
+          $ref: '#/components/schemas/CommitmentTransaction'
+        number:
+          description: Sequential identifier assigned to this batch by the sequencer.
+          minimum: 0
+          type: integer
+          x-struct:
+          x-validate:
+        transactions_count:
+          description: Number of transactions in the batch.
+          minimum: 0
+          type: integer
+          x-struct:
+          x-validate:
+      required:
+        - number
+        - transactions_count
+        - blocks_count
+        - batch_data_container
+        - commitment_transaction
+      title: BatchForList
+      type: object
+      x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.Arbitrum.BatchForList
+      x-validate:
     Response:
       properties:
         expires_at:
@@ -4751,6 +5400,65 @@ components:
       title: TransactionResponse
       type: object
       x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.Transaction
+      x-validate:
+    Arbitrum.Message:
+      additionalProperties: false
+      description: Full Arbitrum cross-chain message.
+      properties:
+        completion_transaction_hash:
+          allOf:
+            - $ref: '#/components/schemas/FullHashNullable'
+          description: Hash of the transaction on the destination chain that executed this message.
+          x-struct:
+          x-validate:
+        id:
+          description: Unique cross-chain message identifier assigned by the protocol.
+          minimum: 0
+          type: integer
+          x-struct:
+          x-validate:
+        origination_address_hash:
+          allOf:
+            - $ref: '#/components/schemas/AddressHashNullable'
+          description: Address that initiated the message on the originating chain.
+          x-struct:
+          x-validate:
+        origination_timestamp:
+          $ref: '#/components/schemas/TimestampNullable'
+        origination_transaction_block_number:
+          description: Block number on the originating chain containing the initiation transaction.
+          minimum: 0
+          nullable: true
+          type: integer
+          x-struct:
+          x-validate:
+        origination_transaction_hash:
+          allOf:
+            - $ref: '#/components/schemas/FullHashNullable'
+          description: Hash of the transaction on the originating chain that initiated this message.
+          x-struct:
+          x-validate:
+        status:
+          description: 'Cross-chain message lifecycle. For Rollup→Parent messages: `initiated` (L2ToL1Tx event emitted on Rollup) → `sent` (included in a batch committed to Parent chain) → `confirmed` (batch state root posted to the Outbox contract) → `relayed` (executed on Parent chain). For Parent→Rollup messages only `initiated` and `relayed` apply.'
+          enum:
+            - initiated
+            - sent
+            - confirmed
+            - relayed
+          type: string
+          x-struct:
+          x-validate:
+      required:
+        - origination_transaction_hash
+        - origination_timestamp
+        - origination_transaction_block_number
+        - completion_transaction_hash
+        - id
+        - origination_address_hash
+        - status
+      title: Arbitrum.Message
+      type: object
+      x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.Arbitrum.MinimalMessage
       x-validate:
     Paymaster:
       additionalProperties: false
@@ -6789,6 +7497,162 @@ paths:
       summary: Secondary coin market history chart data
       tags:
         - stats
+  /v2/main-page/arbitrum/batches/committed:
+    get:
+      callbacks: {}
+      description: Retrieves a list of Arbitrum batches that have been committed to the Parent chain, displayed on the main page.
+      operationId: BlockScoutWeb.API.V2.ArbitrumController.batches_committed
+      parameters:
+        - description: API key for rate limiting or for sensitive endpoints
+          in: query
+          name: apikey
+          required: false
+          schema:
+            type: string
+            x-struct:
+            x-validate:
+        - description: Secret key for getting access to restricted resources
+          in: query
+          name: key
+          required: false
+          schema:
+            type: string
+            x-struct:
+            x-validate:
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                additionalProperties: false
+                properties:
+                  items:
+                    items:
+                      $ref: '#/components/schemas/BatchForList'
+                    nullable: false
+                    type: array
+                    x-struct:
+                    x-validate:
+                required:
+                  - items
+                type: object
+                x-struct:
+                x-validate:
+          description: List of committed Arbitrum batches.
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JsonErrorResponse'
+          description: Unprocessable Entity
+      summary: List committed batches on the main page.
+      tags:
+        - arbitrum
+        - main-page
+  /v2/arbitrum/batches/da/eigenda/{data_hash}:
+    get:
+      callbacks: {}
+      description: Retrieves an Arbitrum batch associated with the given EigenDA data hash. By default, returns the most recently associated batch. When `type=all`, returns a paginated list of all batches referencing this data hash.
+      operationId: BlockScoutWeb.API.V2.ArbitrumController.batch_by_eigenda_da_info
+      parameters:
+        - description: EigenDA data hash (Keccak-256 of the blob header).
+          in: path
+          name: data_hash
+          required: true
+          schema:
+            $ref: '#/components/schemas/FullHash'
+        - description: API key for rate limiting or for sensitive endpoints
+          in: query
+          name: apikey
+          required: false
+          schema:
+            type: string
+            x-struct:
+            x-validate:
+        - description: Secret key for getting access to restricted resources
+          in: query
+          name: key
+          required: false
+          schema:
+            type: string
+            x-struct:
+            x-validate:
+        - description: When set to `all`, returns a paginated list of all batches for this data hash.
+          in: query
+          name: type
+          required: false
+          schema:
+            enum:
+              - all
+            type: string
+            x-struct:
+            x-validate:
+        - description: Number for paging
+          in: query
+          name: number
+          required: false
+          schema:
+            type: integer
+            x-struct:
+            x-validate:
+        - description: Number of items returned per page
+          in: query
+          name: items_count
+          required: false
+          schema:
+            maximum: 50
+            minimum: 1
+            type: integer
+            x-struct:
+            x-validate:
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: '#/components/schemas/Arbitrum.BatchByEigenda'
+                  - additionalProperties: false
+                    nullable: false
+                    properties:
+                      items:
+                        items:
+                          $ref: '#/components/schemas/BatchForList'
+                        nullable: false
+                        type: array
+                        x-struct:
+                        x-validate:
+                      next_page_params:
+                        example:
+                          number: 123
+                        nullable: true
+                        type: object
+                        x-struct:
+                        x-validate:
+                    required:
+                      - items
+                      - next_page_params
+                    type: object
+                    x-struct:
+                    x-validate:
+                x-struct:
+                x-validate:
+          description: Batch info, or paginated batch list when `type=all`.
+        '404':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFoundResponse'
+          description: Not Found
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JsonErrorResponse'
+          description: Unprocessable Entity
+      summary: Get batch by EigenDA data hash.
+      tags:
+        - arbitrum
   /v2/addresses/{address_hash_param}/blocks-validated:
     get:
       callbacks: {}
@@ -7185,6 +8049,58 @@ paths:
       summary: List ownership transfer history for a specific NFT
       tags:
         - tokens
+  /v2/arbitrum/messages/{direction}/count:
+    get:
+      callbacks: {}
+      description: Retrieves the total count of Arbitrum cross-chain messages for the specified direction.
+      operationId: BlockScoutWeb.API.V2.ArbitrumController.messages_count
+      parameters:
+        - description: 'Message direction: `from-rollup` for Rollup to Parent chain, `to-rollup` for Parent chain to Rollup.'
+          in: path
+          name: direction
+          required: true
+          schema:
+            enum:
+              - from-rollup
+              - to-rollup
+            type: string
+            x-struct:
+            x-validate:
+        - description: API key for rate limiting or for sensitive endpoints
+          in: query
+          name: apikey
+          required: false
+          schema:
+            type: string
+            x-struct:
+            x-validate:
+        - description: Secret key for getting access to restricted resources
+          in: query
+          name: key
+          required: false
+          schema:
+            type: string
+            x-struct:
+            x-validate:
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                minimum: 0
+                type: integer
+                x-struct:
+                x-validate:
+          description: Total count of cross-chain messages for the specified direction.
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JsonErrorResponse'
+          description: Unprocessable Entity
+      summary: Get cross-chain messages count.
+      tags:
+        - arbitrum
   /v2/transactions:
     get:
       callbacks: {}
@@ -7430,6 +8346,97 @@ paths:
       summary: List current holders of a specific NFT
       tags:
         - tokens
+  /v2/arbitrum/batches:
+    get:
+      callbacks: {}
+      description: Retrieves a paginated list of Arbitrum batches committed to the Parent chain.
+      operationId: BlockScoutWeb.API.V2.ArbitrumController.batches
+      parameters:
+        - description: API key for rate limiting or for sensitive endpoints
+          in: query
+          name: apikey
+          required: false
+          schema:
+            type: string
+            x-struct:
+            x-validate:
+        - description: Secret key for getting access to restricted resources
+          in: query
+          name: key
+          required: false
+          schema:
+            type: string
+            x-struct:
+            x-validate:
+        - description: Optional list of specific batch numbers to retrieve.
+          in: query
+          name: batch_numbers
+          required: false
+          schema:
+            items:
+              minimum: 0
+              type: integer
+              x-struct:
+              x-validate:
+            type: array
+            x-struct:
+            x-validate:
+        - description: Number for paging
+          in: query
+          name: number
+          required: false
+          schema:
+            type: integer
+            x-struct:
+            x-validate:
+        - description: Number of items returned per page
+          in: query
+          name: items_count
+          required: false
+          schema:
+            maximum: 50
+            minimum: 1
+            type: integer
+            x-struct:
+            x-validate:
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                additionalProperties: false
+                nullable: false
+                properties:
+                  items:
+                    items:
+                      $ref: '#/components/schemas/BatchForList'
+                    nullable: false
+                    type: array
+                    x-struct:
+                    x-validate:
+                  next_page_params:
+                    example:
+                      number: 123
+                    nullable: true
+                    type: object
+                    x-struct:
+                    x-validate:
+                required:
+                  - items
+                  - next_page_params
+                type: object
+                x-struct:
+                x-validate:
+          description: Paginated list of Arbitrum batches.
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JsonErrorResponse'
+          description: Unprocessable Entity
+      summary: List batches.
+      tags:
+        - arbitrum
   /v2/stats/hot-smart-contracts:
     get:
       callbacks: {}
@@ -7617,6 +8624,106 @@ paths:
       summary: Get the status of the account abstraction microservice
       tags:
         - account-abstraction
+  /v2/arbitrum/batches/count:
+    get:
+      callbacks: {}
+      description: Retrieves the total count of Arbitrum batches committed to the Parent chain.
+      operationId: BlockScoutWeb.API.V2.ArbitrumController.batches_count
+      parameters:
+        - description: API key for rate limiting or for sensitive endpoints
+          in: query
+          name: apikey
+          required: false
+          schema:
+            type: string
+            x-struct:
+            x-validate:
+        - description: Secret key for getting access to restricted resources
+          in: query
+          name: key
+          required: false
+          schema:
+            type: string
+            x-struct:
+            x-validate:
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                minimum: 0
+                type: integer
+                x-struct:
+                x-validate:
+          description: Total count of batches.
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JsonErrorResponse'
+          description: Unprocessable Entity
+      summary: Get batches count.
+      tags:
+        - arbitrum
+  /v2/arbitrum/messages/claim/{message_id}:
+    get:
+      callbacks: {}
+      description: Returns the ABI-encoded calldata and outbox contract address required to execute a Rollup withdrawal on the Parent chain.
+      operationId: BlockScoutWeb.API.V2.ArbitrumController.claim_message
+      parameters:
+        - description: Withdrawal message ID.
+          in: path
+          name: message_id
+          required: true
+          schema:
+            minimum: 0
+            type: integer
+            x-struct:
+            x-validate:
+        - description: API key for rate limiting or for sensitive endpoints
+          in: query
+          name: apikey
+          required: false
+          schema:
+            type: string
+            x-struct:
+            x-validate:
+        - description: Secret key for getting access to restricted resources
+          in: query
+          name: key
+          required: false
+          schema:
+            type: string
+            x-struct:
+            x-validate:
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Arbitrum.ClaimMessage'
+          description: Claim data for the withdrawal.
+        '400':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequestResponse'
+          description: Withdrawal cannot be claimed. Returned when the withdrawal is unconfirmed, just initiated, or already executed.
+        '404':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFoundResponse'
+          description: Not Found
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JsonErrorResponse'
+          description: Unprocessable Entity
+      summary: Get claim data for a withdrawal.
+      tags:
+        - arbitrum
   /v2/smart-contracts/{address_hash_param}:
     get:
       callbacks: {}
@@ -8473,6 +9580,59 @@ paths:
       summary: Quick (unpaginated) search
       tags:
         - search
+  /v2/arbitrum/batches/{batch_number}:
+    get:
+      callbacks: {}
+      description: Retrieves detailed information about an Arbitrum batch by its number.
+      operationId: BlockScoutWeb.API.V2.ArbitrumController.batch
+      parameters:
+        - description: Batch number.
+          in: path
+          name: batch_number
+          required: true
+          schema:
+            minimum: 0
+            type: integer
+            x-struct:
+            x-validate:
+        - description: API key for rate limiting or for sensitive endpoints
+          in: query
+          name: apikey
+          required: false
+          schema:
+            type: string
+            x-struct:
+            x-validate:
+        - description: Secret key for getting access to restricted resources
+          in: query
+          name: key
+          required: false
+          schema:
+            type: string
+            x-struct:
+            x-validate:
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Batch'
+          description: Batch info.
+        '404':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFoundResponse'
+          description: Not Found
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JsonErrorResponse'
+          description: Unprocessable Entity
+      summary: Get batch by number.
+      tags:
+        - arbitrum
   /v2/proxy/account-abstraction/bundlers/{address_hash_param}:
     get:
       callbacks: {}
@@ -9095,6 +10255,48 @@ paths:
       summary: List verified smart contracts with optional filtering options
       tags:
         - smart-contracts
+  /v2/main-page/arbitrum/batches/latest-number:
+    get:
+      callbacks: {}
+      description: Retrieves the number of the most recent Arbitrum batch submitted to the Parent chain. Returns 0 if no batches exist.
+      operationId: BlockScoutWeb.API.V2.ArbitrumController.batch_latest_number
+      parameters:
+        - description: API key for rate limiting or for sensitive endpoints
+          in: query
+          name: apikey
+          required: false
+          schema:
+            type: string
+            x-struct:
+            x-validate:
+        - description: Secret key for getting access to restricted resources
+          in: query
+          name: key
+          required: false
+          schema:
+            type: string
+            x-struct:
+            x-validate:
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                minimum: 0
+                type: integer
+                x-struct:
+                x-validate:
+          description: Latest Arbitrum batch number.
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JsonErrorResponse'
+          description: Unprocessable Entity
+      summary: Get the latest batch number.
+      tags:
+        - arbitrum
+        - main-page
   /v2/addresses/{address_hash_param}/coin-balance-history:
     get:
       callbacks: {}
@@ -9345,6 +10547,110 @@ paths:
       summary: List of top bundlers
       tags:
         - account-abstraction
+  /v2/arbitrum/batches/da/anytrust/{data_hash}:
+    get:
+      callbacks: {}
+      description: Retrieves an Arbitrum batch associated with the given AnyTrust data hash. By default, returns the most recently associated batch. When `type=all`, returns a paginated list of all batches referencing this data hash.
+      operationId: BlockScoutWeb.API.V2.ArbitrumController.batch_by_anytrust_da_info
+      parameters:
+        - description: AnyTrust data hash.
+          in: path
+          name: data_hash
+          required: true
+          schema:
+            $ref: '#/components/schemas/FullHash'
+        - description: API key for rate limiting or for sensitive endpoints
+          in: query
+          name: apikey
+          required: false
+          schema:
+            type: string
+            x-struct:
+            x-validate:
+        - description: Secret key for getting access to restricted resources
+          in: query
+          name: key
+          required: false
+          schema:
+            type: string
+            x-struct:
+            x-validate:
+        - description: When set to `all`, returns a paginated list of all batches for this data hash.
+          in: query
+          name: type
+          required: false
+          schema:
+            enum:
+              - all
+            type: string
+            x-struct:
+            x-validate:
+        - description: Number for paging
+          in: query
+          name: number
+          required: false
+          schema:
+            type: integer
+            x-struct:
+            x-validate:
+        - description: Number of items returned per page
+          in: query
+          name: items_count
+          required: false
+          schema:
+            maximum: 50
+            minimum: 1
+            type: integer
+            x-struct:
+            x-validate:
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: '#/components/schemas/Arbitrum.BatchByAnytrust'
+                  - additionalProperties: false
+                    nullable: false
+                    properties:
+                      items:
+                        items:
+                          $ref: '#/components/schemas/BatchForList'
+                        nullable: false
+                        type: array
+                        x-struct:
+                        x-validate:
+                      next_page_params:
+                        example:
+                          number: 123
+                        nullable: true
+                        type: object
+                        x-struct:
+                        x-validate:
+                    required:
+                      - items
+                      - next_page_params
+                    type: object
+                    x-struct:
+                    x-validate:
+                x-struct:
+                x-validate:
+          description: Batch info, or paginated batch list when `type=all`.
+        '404':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFoundResponse'
+          description: Not Found
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JsonErrorResponse'
+          description: Unprocessable Entity
+      summary: Get batch by AnyTrust data hash.
+      tags:
+        - arbitrum
   /v2/transactions/{transaction_hash_param}/state-changes:
     get:
       callbacks: {}
@@ -9436,6 +10742,62 @@ paths:
       summary: Get on-chain state changes caused by a specific transaction
       tags:
         - transactions
+  /v2/arbitrum/messages/withdrawals/{transaction_hash}:
+    get:
+      callbacks: {}
+      description: Returns the list of Rollup withdrawal messages (L2ToL1Tx events) emitted by the given transaction.
+      operationId: BlockScoutWeb.API.V2.ArbitrumController.withdrawals
+      parameters:
+        - description: Transaction hash.
+          in: path
+          name: transaction_hash
+          required: true
+          schema:
+            $ref: '#/components/schemas/FullHash'
+        - description: API key for rate limiting or for sensitive endpoints
+          in: query
+          name: apikey
+          required: false
+          schema:
+            type: string
+            x-struct:
+            x-validate:
+        - description: Secret key for getting access to restricted resources
+          in: query
+          name: key
+          required: false
+          schema:
+            type: string
+            x-struct:
+            x-validate:
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                additionalProperties: false
+                properties:
+                  items:
+                    items:
+                      $ref: '#/components/schemas/Arbitrum.Withdrawal'
+                    type: array
+                    x-struct:
+                    x-validate:
+                required:
+                  - items
+                type: object
+                x-struct:
+                x-validate:
+          description: Withdrawal messages for the transaction.
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JsonErrorResponse'
+          description: Unprocessable Entity
+      summary: Get withdrawal messages for a transaction.
+      tags:
+        - arbitrum
   /v2/addresses/{address_hash_param}:
     get:
       callbacks: {}
@@ -9778,6 +11140,95 @@ paths:
       summary: List addresses holding native coins sorted by balance - top accounts
       tags:
         - addresses
+  /v2/arbitrum/messages/{direction}:
+    get:
+      callbacks: {}
+      description: Retrieves a paginated list of Arbitrum cross-chain messages filtered by the specified direction.
+      operationId: BlockScoutWeb.API.V2.ArbitrumController.messages
+      parameters:
+        - description: 'Message direction: `from-rollup` for Rollup to Parent chain, `to-rollup` for Parent chain to Rollup.'
+          in: path
+          name: direction
+          required: true
+          schema:
+            enum:
+              - from-rollup
+              - to-rollup
+            type: string
+            x-struct:
+            x-validate:
+        - description: API key for rate limiting or for sensitive endpoints
+          in: query
+          name: apikey
+          required: false
+          schema:
+            type: string
+            x-struct:
+            x-validate:
+        - description: Secret key for getting access to restricted resources
+          in: query
+          name: key
+          required: false
+          schema:
+            type: string
+            x-struct:
+            x-validate:
+        - description: ID for paging
+          in: query
+          name: id
+          required: false
+          schema:
+            type: integer
+            x-struct:
+            x-validate:
+        - description: Number of items returned per page
+          in: query
+          name: items_count
+          required: false
+          schema:
+            maximum: 50
+            minimum: 1
+            type: integer
+            x-struct:
+            x-validate:
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                additionalProperties: false
+                nullable: false
+                properties:
+                  items:
+                    items:
+                      $ref: '#/components/schemas/Arbitrum.Message'
+                    nullable: false
+                    type: array
+                    x-struct:
+                    x-validate:
+                  next_page_params:
+                    example:
+                      id: 123
+                    nullable: true
+                    type: object
+                    x-struct:
+                    x-validate:
+                required:
+                  - items
+                  - next_page_params
+                type: object
+                x-struct:
+                x-validate:
+          description: Paginated list of cross-chain messages.
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JsonErrorResponse'
+          description: Unprocessable Entity
+      summary: List cross-chain messages.
+      tags:
+        - arbitrum
   /v2/addresses/{address_hash_param}/withdrawals:
     get:
       callbacks: {}
@@ -9925,6 +11376,65 @@ paths:
       summary: Get a user operation by hash
       tags:
         - account-abstraction
+  /v2/arbitrum/batches/da/celestia/{height}/{transaction_commitment}:
+    get:
+      callbacks: {}
+      description: Retrieves an Arbitrum batch whose data availability blob is identified by the given Celestia block height and transaction commitment hash.
+      operationId: BlockScoutWeb.API.V2.ArbitrumController.batch_by_celestia_da_info
+      parameters:
+        - description: Celestia block height.
+          in: path
+          name: height
+          required: true
+          schema:
+            minimum: 0
+            type: integer
+            x-struct:
+            x-validate:
+        - description: Celestia transaction commitment hash.
+          in: path
+          name: transaction_commitment
+          required: true
+          schema:
+            $ref: '#/components/schemas/FullHash'
+        - description: API key for rate limiting or for sensitive endpoints
+          in: query
+          name: apikey
+          required: false
+          schema:
+            type: string
+            x-struct:
+            x-validate:
+        - description: Secret key for getting access to restricted resources
+          in: query
+          name: key
+          required: false
+          schema:
+            type: string
+            x-struct:
+            x-validate:
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Arbitrum.BatchByCelestia'
+          description: Batch info.
+        '404':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFoundResponse'
+          description: Not Found
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JsonErrorResponse'
+          description: Unprocessable Entity
+      summary: Get batch by Celestia blob reference.
+      tags:
+        - arbitrum
   /v2/proxy/account-abstraction/paymasters/{address_hash_param}:
     get:
       callbacks: {}
@@ -12606,6 +14116,58 @@ paths:
       summary: Get the latest block number
       tags:
         - legacy
+  /v2/main-page/arbitrum/messages/to-rollup:
+    get:
+      callbacks: {}
+      description: Retrieves the most recent relayed messages from Parent chain to Rollup, displayed on the main page.
+      operationId: BlockScoutWeb.API.V2.ArbitrumController.recent_messages_to_l2
+      parameters:
+        - description: API key for rate limiting or for sensitive endpoints
+          in: query
+          name: apikey
+          required: false
+          schema:
+            type: string
+            x-struct:
+            x-validate:
+        - description: Secret key for getting access to restricted resources
+          in: query
+          name: key
+          required: false
+          schema:
+            type: string
+            x-struct:
+            x-validate:
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                additionalProperties: false
+                properties:
+                  items:
+                    items:
+                      $ref: '#/components/schemas/MinimalMessage'
+                    nullable: false
+                    type: array
+                    x-struct:
+                    x-validate:
+                required:
+                  - items
+                type: object
+                x-struct:
+                x-validate:
+          description: List of recent Parent chain to Rollup messages.
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JsonErrorResponse'
+          description: Unprocessable Entity
+      summary: List recent Parent chain to Rollup messages on the main page.
+      tags:
+        - arbitrum
+        - main-page
   /v2/withdrawals:
     get:
       callbacks: {}
@@ -13354,4 +14916,5 @@ tags:
   - name: csv-export
   - name: account-abstraction
   - name: withdrawals
+  - name: arbitrum
   - name: legacy
