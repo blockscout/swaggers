@@ -4343,7 +4343,7 @@ info:
   contact:
     email: info@blockscout.com
   title: Blockscout
-  version: 11.0.2
+  version: 11.0.3
 openapi: 3.0.0
 paths:
   /v2/blocks/{block_hash_or_number_param}/internal-transactions:
