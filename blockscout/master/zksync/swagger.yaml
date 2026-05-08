@@ -611,6 +611,38 @@ components:
       type: object
       x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.Transaction.SummaryJustRequestBody
       x-validate:
+    AdvancedFilterResponse:
+      additionalProperties: false
+      properties:
+        items:
+          items:
+            $ref: '#/components/schemas/AdvancedFilterItem'
+          nullable: false
+          type: array
+          x-struct:
+          x-validate:
+        next_page_params:
+          example:
+            block_number: 23532302
+            internal_transaction_index:
+            items_count: 50
+            token_transfer_batch_index:
+            token_transfer_index: 0
+            transaction_index: 1
+          nullable: true
+          type: object
+          x-struct:
+          x-validate:
+        search_params:
+          $ref: '#/components/schemas/AdvancedFilterSearchParams'
+      required:
+        - items
+        - search_params
+        - next_page_params
+      title: AdvancedFilterResponse
+      type: object
+      x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.AdvancedFilter.Response
+      x-validate:
     HotContract:
       additionalProperties: false
       properties:
@@ -636,6 +668,21 @@ components:
       title: HotContract
       type: object
       x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.Stats.HotContract
+      x-validate:
+    IntegerStringOrEmptyOrNullLiteral:
+      oneOf:
+        - pattern: ^([1-9][0-9]*|0)$
+          type: string
+          x-struct:
+          x-validate:
+        - enum:
+            - ""
+            - 'null'
+          type: string
+          x-struct:
+          x-validate:
+      title: IntegerStringOrEmptyOrNullLiteral
+      x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.General.IntegerStringOrEmptyOrNullLiteral
       x-validate:
     BadRequestResponse:
       description: Response returned when the request is invalid
@@ -1516,6 +1563,30 @@ components:
       title: FullHashNullable
       type: string
       x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.General.FullHashNullable
+      x-validate:
+    AdvancedFilterMethod:
+      additionalProperties: false
+      description: Contract method identified by its 4-byte selector and human-readable name.
+      properties:
+        method_id:
+          description: 4-byte method selector prefixed with 0x (lowercase hex).
+          example: '0xa9059cbb'
+          pattern: ^0x[0-9a-f]{8}$
+          type: string
+          x-struct:
+          x-validate:
+        name:
+          description: Human-readable method name. Empty string if the name could not be resolved.
+          example: transfer
+          type: string
+          x-struct:
+          x-validate:
+      required:
+        - method_id
+        - name
+      title: AdvancedFilterMethod
+      type: object
+      x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.AdvancedFilter.Method
       x-validate:
     Block:
       additionalProperties: false
@@ -2616,6 +2687,21 @@ components:
       type: object
       x-struct: Elixir.OpenApiSpex.JsonErrorResponse
       x-validate:
+    AdvancedFilterCsvExportError:
+      additionalProperties: false
+      properties:
+        error:
+          description: Human-readable error description.
+          nullable: false
+          type: string
+          x-struct:
+          x-validate:
+      required:
+        - error
+      title: AdvancedFilterCsvExportError
+      type: object
+      x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.AdvancedFilter.CsvExportError
+      x-validate:
     MetadataTag:
       additionalProperties: false
       description: Metadata tag struct
@@ -3048,6 +3134,168 @@ components:
       type: object
       x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.Token
       x-validate:
+    AdvancedFilterCsvExportAccepted:
+      additionalProperties: false
+      description: Body returned when an asynchronous CSV export job has been queued. Poll `/api/v2/csv-exports/{request_id}` with the returned `request_id` to check status.
+      properties:
+        request_id:
+          description: UUID of the queued export request.
+          format: uuid
+          nullable: false
+          type: string
+          x-struct:
+          x-validate:
+      required:
+        - request_id
+      title: AdvancedFilterCsvExportAccepted
+      type: object
+      x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.AdvancedFilter.CsvExportAccepted
+      x-validate:
+    AdvancedFilterItem:
+      additionalProperties: false
+      properties:
+        block_number:
+          description: Number of the block that contains the parent transaction.
+          minimum: 0
+          nullable: false
+          type: integer
+          x-struct:
+          x-validate:
+        created_contract:
+          allOf:
+            - $ref: '#/components/schemas/Address'
+          description: Address of the contract deployed by this item. `null` unless the item is a contract creation.
+          nullable: true
+          x-struct:
+          x-validate:
+        fee:
+          description: Transaction fee paid by the sender, in the chain's base unit (e.g. wei).
+          nullable: false
+          pattern: ^([1-9][0-9]*|0)$
+          type: string
+          x-struct:
+          x-validate:
+        from:
+          allOf:
+            - $ref: '#/components/schemas/Address'
+          description: Sender address. `null` for contract-creation items.
+          nullable: true
+          x-struct:
+          x-validate:
+        hash:
+          $ref: '#/components/schemas/FullHash'
+        internal_transaction_index:
+          description: Zero-based position of the internal transaction within its parent transaction. Populated only for internal-transaction items; `null` otherwise.
+          minimum: 0
+          nullable: true
+          type: integer
+          x-struct:
+          x-validate:
+        method:
+          $ref: '#/components/schemas/MethodNameNullable'
+        status:
+          description: Execution status of the parent transaction. One of `pending`, `awaiting_internal_transactions`, `success`, or a free-form error reason string when the transaction reverted (e.g. `Reverted`).
+          nullable: false
+          type: string
+          x-struct:
+          x-validate:
+        timestamp:
+          description: Block timestamp of the parent transaction.
+          format: date-time
+          nullable: false
+          title: Timestamp
+          type: string
+          x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.General.Timestamp
+          x-validate:
+        to:
+          allOf:
+            - $ref: '#/components/schemas/Address'
+          description: Recipient address. `null` for contract-creation items and some internal transactions.
+          nullable: true
+          x-struct:
+          x-validate:
+        token:
+          allOf:
+            - $ref: '#/components/schemas/Token'
+          description: Token contract metadata. Populated only for token-transfer items; `null` otherwise.
+          nullable: true
+          x-struct:
+          x-validate:
+        token_transfer_batch_index:
+          description: Zero-based position within an ERC-1155 batch token transfer. Populated only for items that belong to a batch; `null` otherwise.
+          minimum: 0
+          nullable: true
+          type: integer
+          x-struct:
+          x-validate:
+        token_transfer_index:
+          description: Zero-based position of the token transfer, unique per parent transaction. Populated only for token-transfer items; `null` otherwise.
+          minimum: 0
+          nullable: true
+          type: integer
+          x-struct:
+          x-validate:
+        total:
+          anyOf:
+            - $ref: '#/components/schemas/TotalERC721'
+            - $ref: '#/components/schemas/TotalERC1155'
+            - $ref: '#/components/schemas/TotalERC7984'
+            - $ref: '#/components/schemas/Total'
+          description: Token transfer amount (or token id for NFTs). Populated only for token-transfer items; `null` otherwise.
+          nullable: true
+          x-struct:
+          x-validate:
+        transaction_index:
+          description: Zero-based position of the parent transaction within its block.
+          minimum: 0
+          nullable: false
+          type: integer
+          x-struct:
+          x-validate:
+        type:
+          description: Kind of activity represented by the item. Values `coin_transfer`, `contract_interaction`, and `contract_creation` apply to top-level transactions and internal transactions; the `ERC-*` values apply to token transfers.
+          enum:
+            - coin_transfer
+            - contract_interaction
+            - contract_creation
+            - ERC-20
+            - ERC-721
+            - ERC-1155
+            - ERC-404
+            - ERC-7984
+          nullable: false
+          type: string
+          x-struct:
+          x-validate:
+        value:
+          description: Native coin amount transferred, in the chain's base unit (e.g. wei). `null` for token-transfer items.
+          nullable: true
+          pattern: ^([1-9][0-9]*|0)$
+          type: string
+          x-struct:
+          x-validate:
+      required:
+        - hash
+        - type
+        - status
+        - method
+        - from
+        - to
+        - created_contract
+        - value
+        - total
+        - token
+        - timestamp
+        - block_number
+        - transaction_index
+        - internal_transaction_index
+        - token_transfer_index
+        - token_transfer_batch_index
+        - fee
+      title: AdvancedFilterItem
+      type: object
+      x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.AdvancedFilter
+      x-validate:
     StateChange:
       additionalProperties: false
       properties:
@@ -3089,6 +3337,33 @@ components:
       title: StateChange
       type: object
       x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.Transaction.StateChange
+      x-validate:
+    AdvancedFilterSearchParams:
+      additionalProperties: false
+      properties:
+        methods:
+          additionalProperties:
+            nullable: false
+            type: string
+            x-struct:
+            x-validate:
+          description: Map of 4-byte method selectors (keys) to resolved method names (values) for the `methods` filter.
+          type: object
+          x-struct:
+          x-validate:
+        tokens:
+          additionalProperties:
+            $ref: '#/components/schemas/Token'
+          description: Map of token contract address hashes (keys) to `Token` objects for tokens referenced in the `token_contract_address_hashes_to_include`/`_exclude` filters. At most 20 entries are returned (combined across both lists).
+          type: object
+          x-struct:
+          x-validate:
+      required:
+        - methods
+        - tokens
+      title: AdvancedFilterSearchParams
+      type: object
+      x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.AdvancedFilter.SearchParams
       x-validate:
     BlockCountdown:
       description: Block countdown information showing estimated time until a target block is reached
@@ -4514,6 +4789,7 @@ components:
       x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.General.HexStringNullable
       x-validate:
     Timestamp:
+      description: Block timestamp of the parent transaction.
       format: date-time
       nullable: false
       title: Timestamp
@@ -7409,6 +7685,228 @@ paths:
       summary: Retrieve hot smart-contracts
       tags:
         - stats
+  /v2/advanced-filters/csv:
+    get:
+      callbacks: {}
+      description: Streams the items matching the advanced filter criteria as a CSV file. When asynchronous CSV export is enabled on the deployment, returns `202 Accepted` with a `request_id` that can be polled via `/api/v2/csv-exports/{request_id}`; otherwise the CSV body is streamed inline.
+      operationId: BlockScoutWeb.API.V2.AdvancedFilterController.list_csv
+      parameters:
+        - description: API key for rate limiting or for sensitive endpoints
+          in: query
+          name: apikey
+          required: false
+          schema:
+            type: string
+            x-struct:
+            x-validate:
+        - description: Secret key for getting access to restricted resources
+          in: query
+          name: key
+          required: false
+          schema:
+            type: string
+            x-struct:
+            x-validate:
+        - description: 'Comma-separated list of transaction types to include. Allowed values: `COIN_TRANSFER`, `CONTRACT_INTERACTION`, `CONTRACT_CREATION`, `ERC-20`, `ERC-404`, `ERC-721`, `ERC-1155`, `ERC-7984` (plus `ZRC-2` on Zilliqa). Values are matched case-insensitively; unknown entries are silently dropped.'
+          example: COIN_TRANSFER,ERC-20
+          in: query
+          name: transaction_types
+          required: false
+          schema:
+            nullable: true
+            type: string
+            x-struct:
+            x-validate:
+        - description: Comma-separated list of 4-byte contract method selectors (lowercase, `0x`-prefixed). At most 20 unique entries are honored; invalid entries are dropped.
+          example: '0xa9059cbb,0x095ea7b3'
+          in: query
+          name: methods
+          required: false
+          schema:
+            nullable: true
+            type: string
+            x-struct:
+            x-validate:
+        - description: Inclusive lower bound on `timestamp` (ISO 8601).
+          example: 2024-01-01T00:00:00Z
+          in: query
+          name: age_from
+          required: false
+          schema:
+            nullable: true
+            type: string
+            x-struct:
+            x-validate:
+        - description: Inclusive upper bound on `timestamp` (ISO 8601).
+          example: 2024-12-31T23:59:59Z
+          in: query
+          name: age_to
+          required: false
+          schema:
+            nullable: true
+            type: string
+            x-struct:
+            x-validate:
+        - description: Comma-separated list of sender address hashes to include.
+          example: '0x5a52e96bacdabb82fd05763e25335261b270efcb,0x00000000219ab540356cbb839cbe05303d7705fa'
+          in: query
+          name: from_address_hashes_to_include
+          required: false
+          schema:
+            nullable: true
+            type: string
+            x-struct:
+            x-validate:
+        - description: Comma-separated list of sender address hashes to exclude.
+          example: '0x5a52e96bacdabb82fd05763e25335261b270efcb,0x00000000219ab540356cbb839cbe05303d7705fa'
+          in: query
+          name: from_address_hashes_to_exclude
+          required: false
+          schema:
+            nullable: true
+            type: string
+            x-struct:
+            x-validate:
+        - description: Comma-separated list of recipient address hashes to include.
+          example: '0x5a52e96bacdabb82fd05763e25335261b270efcb,0x00000000219ab540356cbb839cbe05303d7705fa'
+          in: query
+          name: to_address_hashes_to_include
+          required: false
+          schema:
+            nullable: true
+            type: string
+            x-struct:
+            x-validate:
+        - description: Comma-separated list of recipient address hashes to exclude.
+          example: '0x5a52e96bacdabb82fd05763e25335261b270efcb,0x00000000219ab540356cbb839cbe05303d7705fa'
+          in: query
+          name: to_address_hashes_to_exclude
+          required: false
+          schema:
+            nullable: true
+            type: string
+            x-struct:
+            x-validate:
+        - description: How to combine the `from_address_hashes_*` and `to_address_hashes_*` filters. Accepts `or` or `and` (case-insensitive). `or` (default) matches an item if either side matches; `and` requires both sides to match. Any other value is silently coerced to `nil` (no relation constraint).
+          example: and
+          in: query
+          name: address_relation
+          required: false
+          schema:
+            nullable: true
+            type: string
+            x-struct:
+            x-validate:
+        - description: "Inclusive lower bound on the item's transferred amount (decimal string in the token's base units)."
+          example: '0'
+          in: query
+          name: amount_from
+          required: false
+          schema:
+            nullable: true
+            type: string
+            x-struct:
+            x-validate:
+        - description: "Inclusive upper bound on the item's transferred amount (decimal string in the token's base units)."
+          example: '1000000'
+          in: query
+          name: amount_to
+          required: false
+          schema:
+            nullable: true
+            type: string
+            x-struct:
+            x-validate:
+        - description: Comma-separated list of token contract address hashes to include. Use the literal `native` to also include native coin transfers. Each list (include and exclude) is capped to 20 entries separately.
+          example: native,0xdac17f958d2ee523a2206206994597c13d831ec7
+          in: query
+          name: token_contract_address_hashes_to_include
+          required: false
+          schema:
+            nullable: true
+            type: string
+            x-struct:
+            x-validate:
+        - description: Comma-separated list of token contract address hashes to exclude. Use the literal `native` to also exclude native coin transfers. Each list (include and exclude) is capped to 20 entries separately.
+          example: '0x0000000000000000000000000000000000000000'
+          in: query
+          name: token_contract_address_hashes_to_exclude
+          required: false
+          schema:
+            nullable: true
+            type: string
+            x-struct:
+            x-validate:
+        - description: 'Keyset cursor: block number of the last item from the previous page.'
+          example: '23532302'
+          in: query
+          name: block_number
+          required: false
+          schema:
+            pattern: ^([1-9][0-9]*|0)$
+            type: string
+            x-struct:
+            x-validate:
+        - description: 'Keyset cursor: transaction index within the block of the last item from the previous page.'
+          example: '1'
+          in: query
+          name: transaction_index
+          required: false
+          schema:
+            pattern: ^([1-9][0-9]*|0)$
+            type: string
+            x-struct:
+            x-validate:
+        - description: 'Keyset cursor: internal-transaction index of the last item from the previous page. Use an empty string or the literal `null` when the previous item was not an internal transaction.'
+          in: query
+          name: internal_transaction_index
+          required: false
+          schema:
+            $ref: '#/components/schemas/IntegerStringOrEmptyOrNullLiteral'
+        - description: 'Keyset cursor: token-transfer index of the last item from the previous page. Use an empty string or the literal `null` when the previous item was not a token transfer.'
+          in: query
+          name: token_transfer_index
+          required: false
+          schema:
+            $ref: '#/components/schemas/IntegerStringOrEmptyOrNullLiteral'
+        - description: 'Keyset cursor: index within an ERC-1155 batch token transfer. Use an empty string or the literal `null` when the previous item was not part of a batch.'
+          in: query
+          name: token_transfer_batch_index
+          required: false
+          schema:
+            $ref: '#/components/schemas/IntegerStringOrEmptyOrNullLiteral'
+      responses:
+        '200':
+          content:
+            application/csv: {}
+          description: CSV file (sync export).
+        '202':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AdvancedFilterCsvExportAccepted'
+          description: Async export queued; poll `/api/v2/csv-exports/{request_id}` with the returned `request_id`.
+        '409':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AdvancedFilterCsvExportError'
+          description: Too many pending export requests for this client.
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JsonErrorResponse'
+          description: Unprocessable Entity
+        '500':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AdvancedFilterCsvExportError'
+          description: Failed to create CSV export request.
+      summary: Export advanced-filter results as CSV
+      tags:
+        - advanced-filters
   /v2/proxy/account-abstraction/status:
     get:
       callbacks: {}
@@ -8516,6 +9014,221 @@ paths:
       summary: Smart contract languages list
       tags:
         - config
+  /v2/advanced-filters:
+    get:
+      callbacks: {}
+      description: Returns a paginated, mixed list of activity — native value transfers, internal transactions and token transfers — filtered by transaction type, contract method, time window, address relations, value range and/or token contract. The response also echoes the resolved human-readable names of the methods and tokens referenced in the request filters.
+      operationId: BlockScoutWeb.API.V2.AdvancedFilterController.list
+      parameters:
+        - description: API key for rate limiting or for sensitive endpoints
+          in: query
+          name: apikey
+          required: false
+          schema:
+            type: string
+            x-struct:
+            x-validate:
+        - description: Secret key for getting access to restricted resources
+          in: query
+          name: key
+          required: false
+          schema:
+            type: string
+            x-struct:
+            x-validate:
+        - description: 'Comma-separated list of transaction types to include. Allowed values: `COIN_TRANSFER`, `CONTRACT_INTERACTION`, `CONTRACT_CREATION`, `ERC-20`, `ERC-404`, `ERC-721`, `ERC-1155`, `ERC-7984` (plus `ZRC-2` on Zilliqa). Values are matched case-insensitively; unknown entries are silently dropped.'
+          example: COIN_TRANSFER,ERC-20
+          in: query
+          name: transaction_types
+          required: false
+          schema:
+            nullable: true
+            type: string
+            x-struct:
+            x-validate:
+        - description: Comma-separated list of 4-byte contract method selectors (lowercase, `0x`-prefixed). At most 20 unique entries are honored; invalid entries are dropped.
+          example: '0xa9059cbb,0x095ea7b3'
+          in: query
+          name: methods
+          required: false
+          schema:
+            nullable: true
+            type: string
+            x-struct:
+            x-validate:
+        - description: Inclusive lower bound on `timestamp` (ISO 8601).
+          example: 2024-01-01T00:00:00Z
+          in: query
+          name: age_from
+          required: false
+          schema:
+            nullable: true
+            type: string
+            x-struct:
+            x-validate:
+        - description: Inclusive upper bound on `timestamp` (ISO 8601).
+          example: 2024-12-31T23:59:59Z
+          in: query
+          name: age_to
+          required: false
+          schema:
+            nullable: true
+            type: string
+            x-struct:
+            x-validate:
+        - description: Comma-separated list of sender address hashes to include.
+          example: '0x5a52e96bacdabb82fd05763e25335261b270efcb,0x00000000219ab540356cbb839cbe05303d7705fa'
+          in: query
+          name: from_address_hashes_to_include
+          required: false
+          schema:
+            nullable: true
+            type: string
+            x-struct:
+            x-validate:
+        - description: Comma-separated list of sender address hashes to exclude.
+          example: '0x5a52e96bacdabb82fd05763e25335261b270efcb,0x00000000219ab540356cbb839cbe05303d7705fa'
+          in: query
+          name: from_address_hashes_to_exclude
+          required: false
+          schema:
+            nullable: true
+            type: string
+            x-struct:
+            x-validate:
+        - description: Comma-separated list of recipient address hashes to include.
+          example: '0x5a52e96bacdabb82fd05763e25335261b270efcb,0x00000000219ab540356cbb839cbe05303d7705fa'
+          in: query
+          name: to_address_hashes_to_include
+          required: false
+          schema:
+            nullable: true
+            type: string
+            x-struct:
+            x-validate:
+        - description: Comma-separated list of recipient address hashes to exclude.
+          example: '0x5a52e96bacdabb82fd05763e25335261b270efcb,0x00000000219ab540356cbb839cbe05303d7705fa'
+          in: query
+          name: to_address_hashes_to_exclude
+          required: false
+          schema:
+            nullable: true
+            type: string
+            x-struct:
+            x-validate:
+        - description: How to combine the `from_address_hashes_*` and `to_address_hashes_*` filters. Accepts `or` or `and` (case-insensitive). `or` (default) matches an item if either side matches; `and` requires both sides to match. Any other value is silently coerced to `nil` (no relation constraint).
+          example: and
+          in: query
+          name: address_relation
+          required: false
+          schema:
+            nullable: true
+            type: string
+            x-struct:
+            x-validate:
+        - description: "Inclusive lower bound on the item's transferred amount (decimal string in the token's base units)."
+          example: '0'
+          in: query
+          name: amount_from
+          required: false
+          schema:
+            nullable: true
+            type: string
+            x-struct:
+            x-validate:
+        - description: "Inclusive upper bound on the item's transferred amount (decimal string in the token's base units)."
+          example: '1000000'
+          in: query
+          name: amount_to
+          required: false
+          schema:
+            nullable: true
+            type: string
+            x-struct:
+            x-validate:
+        - description: Comma-separated list of token contract address hashes to include. Use the literal `native` to also include native coin transfers. Each list (include and exclude) is capped to 20 entries separately.
+          example: native,0xdac17f958d2ee523a2206206994597c13d831ec7
+          in: query
+          name: token_contract_address_hashes_to_include
+          required: false
+          schema:
+            nullable: true
+            type: string
+            x-struct:
+            x-validate:
+        - description: Comma-separated list of token contract address hashes to exclude. Use the literal `native` to also exclude native coin transfers. Each list (include and exclude) is capped to 20 entries separately.
+          example: '0x0000000000000000000000000000000000000000'
+          in: query
+          name: token_contract_address_hashes_to_exclude
+          required: false
+          schema:
+            nullable: true
+            type: string
+            x-struct:
+            x-validate:
+        - description: 'Keyset cursor: block number of the last item from the previous page.'
+          example: '23532302'
+          in: query
+          name: block_number
+          required: false
+          schema:
+            pattern: ^([1-9][0-9]*|0)$
+            type: string
+            x-struct:
+            x-validate:
+        - description: 'Keyset cursor: transaction index within the block of the last item from the previous page.'
+          example: '1'
+          in: query
+          name: transaction_index
+          required: false
+          schema:
+            pattern: ^([1-9][0-9]*|0)$
+            type: string
+            x-struct:
+            x-validate:
+        - description: 'Keyset cursor: internal-transaction index of the last item from the previous page. Use an empty string or the literal `null` when the previous item was not an internal transaction.'
+          in: query
+          name: internal_transaction_index
+          required: false
+          schema:
+            $ref: '#/components/schemas/IntegerStringOrEmptyOrNullLiteral'
+        - description: 'Keyset cursor: token-transfer index of the last item from the previous page. Use an empty string or the literal `null` when the previous item was not a token transfer.'
+          in: query
+          name: token_transfer_index
+          required: false
+          schema:
+            $ref: '#/components/schemas/IntegerStringOrEmptyOrNullLiteral'
+        - description: 'Keyset cursor: index within an ERC-1155 batch token transfer. Use an empty string or the literal `null` when the previous item was not part of a batch.'
+          in: query
+          name: token_transfer_batch_index
+          required: false
+          schema:
+            $ref: '#/components/schemas/IntegerStringOrEmptyOrNullLiteral'
+        - description: Cumulative number of items already returned across previous pages.
+          in: query
+          name: items_count
+          required: false
+          schema:
+            minimum: 1
+            type: integer
+            x-struct:
+            x-validate:
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AdvancedFilterResponse'
+          description: List of matching items with pagination information and resolved search params.
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JsonErrorResponse'
+          description: Unprocessable Entity
+      summary: List transactions, internal transactions and token transfers matching the advanced filter criteria
+      tags:
+        - advanced-filters
   /v2/tokens/{address_hash_param}/instances/{token_id_param}:
     get:
       callbacks: {}
@@ -11626,6 +12339,59 @@ paths:
       summary: Uncompleted background migrations
       tags:
         - config
+  /v2/advanced-filters/methods:
+    get:
+      callbacks: {}
+      description: Returns a list of known contract methods. When the `q` parameter is provided, searches for a single method by its 4-byte selector or name. Without `q`, returns the default list of popular methods.
+      operationId: BlockScoutWeb.API.V2.AdvancedFilterController.list_methods
+      parameters:
+        - description: 'Search string: either a 4-byte method selector (e.g. `0xa9059cbb`) or a method name (e.g. `transfer`).'
+          example: transfer
+          in: query
+          name: q
+          required: false
+          schema:
+            nullable: true
+            type: string
+            x-struct:
+            x-validate:
+        - description: API key for rate limiting or for sensitive endpoints
+          in: query
+          name: apikey
+          required: false
+          schema:
+            type: string
+            x-struct:
+            x-validate:
+        - description: Secret key for getting access to restricted resources
+          in: query
+          name: key
+          required: false
+          schema:
+            type: string
+            x-struct:
+            x-validate:
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/AdvancedFilterMethod'
+                nullable: false
+                type: array
+                x-struct:
+                x-validate:
+          description: List of contract methods.
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JsonErrorResponse'
+          description: Unprocessable Entity
+      summary: List known contract methods
+      tags:
+        - advanced-filters
   /v2/proxy/account-abstraction/paymasters:
     get:
       callbacks: {}
@@ -12997,4 +13763,5 @@ tags:
   - name: csv-export
   - name: account-abstraction
   - name: withdrawals
+  - name: advanced-filters
   - name: legacy
