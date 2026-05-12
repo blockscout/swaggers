@@ -1625,20 +1625,34 @@ components:
       additionalProperties: false
       properties:
         base_fee_per_gas:
-          $ref: '#/components/schemas/IntegerStringNullable'
+          allOf:
+            - $ref: '#/components/schemas/IntegerStringNullable'
+          description: EIP-1559 base fee per gas, in wei. Null on blocks produced before EIP-1559 activation or on chains that do not implement EIP-1559.
+          x-struct:
+          x-validate:
         burnt_fees:
-          $ref: '#/components/schemas/IntegerStringNullable'
+          allOf:
+            - $ref: '#/components/schemas/IntegerStringNullable'
+          description: Sum of EIP-1559 base fees burned by transactions in this block, in wei.
+          x-struct:
+          x-validate:
         burnt_fees_percentage:
+          description: Burned base fees as a percentage of total transaction fees in this block.
           format: float
           nullable: true
           type: number
           x-struct:
           x-validate:
         difficulty:
-          $ref: '#/components/schemas/IntegerStringNullable'
+          allOf:
+            - $ref: '#/components/schemas/IntegerStringNullable'
+          description: Proof-of-work difficulty of this block. Zero on proof-of-stake chains.
+          x-struct:
+          x-validate:
         gas_limit:
           $ref: '#/components/schemas/IntegerString'
         gas_target_percentage:
+          description: Percent above the EIP-1559 elasticity target (gas_used vs. gas_limit / elasticity_multiplier).
           format: float
           nullable: false
           type: number
@@ -1647,6 +1661,7 @@ components:
         gas_used:
           $ref: '#/components/schemas/IntegerString'
         gas_used_percentage:
+          description: Gas used in this block as a percentage of `gas_limit`.
           format: float
           nullable: false
           type: number
@@ -1655,38 +1670,58 @@ components:
         hash:
           $ref: '#/components/schemas/FullHash'
         height:
+          description: Block number (zero-based index from genesis).
           minimum: 0
           nullable: false
           type: integer
           x-struct:
           x-validate:
         internal_transactions_count:
+          description: Number of internal transactions in this block; null when the count is unavailable.
+          minimum: 0
           nullable: true
           type: integer
           x-struct:
           x-validate:
         is_pending_update:
-          nullable: false
+          description: True when the block is scheduled for re-fetch; its fields may change once re-fetching completes.
+          nullable: true
           type: boolean
           x-struct:
           x-validate:
         miner:
-          $ref: '#/components/schemas/Address'
+          allOf:
+            - $ref: '#/components/schemas/Address'
+          description: Address credited with the block — the miner on PoW chains, the fee recipient / proposer on PoS chains, and the sequencer on rollups.
+          x-struct:
+          x-validate:
         nonce:
-          $ref: '#/components/schemas/HexStringNullable'
+          allOf:
+            - $ref: '#/components/schemas/HexString'
+          description: Proof-of-work nonce used to satisfy the difficulty target. Zero on proof-of-stake chains.
+          x-struct:
+          x-validate:
         parent_hash:
           $ref: '#/components/schemas/FullHash'
         priority_fee:
-          $ref: '#/components/schemas/IntegerStringNullable'
+          allOf:
+            - $ref: '#/components/schemas/IntegerStringNullable'
+          description: Sum of validator tips (EIP-1559 priority fees) paid by transactions in this block, in wei.
+          x-struct:
+          x-validate:
         rewards:
+          description: Block rewards grouped by recipient category. Each entry describes a reward paid for this block; the set of categories depends on the chain and block type.
           items:
             additionalProperties: false
             properties:
-              address_hash:
-                $ref: '#/components/schemas/AddressHash'
               reward:
                 $ref: '#/components/schemas/IntegerString'
               type:
+                description: Reward category (machine-readable identifier).
+                enum:
+                  - emission_funds
+                  - uncle
+                  - validator
                 nullable: false
                 type: string
                 x-struct:
@@ -1702,22 +1737,34 @@ components:
           x-struct:
           x-validate:
         size:
-          nullable: false
+          description: Block size in bytes (length of the RLP-encoded block).
+          minimum: 0
+          nullable: true
           type: integer
           x-struct:
           x-validate:
         timestamp:
           $ref: '#/components/schemas/Timestamp'
         total_difficulty:
-          $ref: '#/components/schemas/IntegerStringNullable'
+          allOf:
+            - $ref: '#/components/schemas/IntegerStringNullable'
+          description: Cumulative chain difficulty through this block (sum of `difficulty` of this block and all ancestors).
+          x-struct:
+          x-validate:
         transaction_fees:
-          $ref: '#/components/schemas/IntegerString'
+          allOf:
+            - $ref: '#/components/schemas/IntegerString'
+          description: Sum of transaction fees (gas price × gas used) paid by transactions in this block, in wei.
+          x-struct:
+          x-validate:
         transactions_count:
+          minimum: 0
           nullable: false
           type: integer
           x-struct:
           x-validate:
         type:
+          description: 'Block classification: `block` = main-chain consensus block; `uncle` = ommer (valid but not in main chain); `reorg` = former main-chain block lost to reorganization.'
           enum:
             - block
             - uncle
@@ -1727,6 +1774,7 @@ components:
           x-struct:
           x-validate:
         uncles_hashes:
+          description: Hashes of ommer (uncle) blocks referenced by this block.
           items:
             additionalProperties: false
             nullable: false
@@ -1743,6 +1791,7 @@ components:
           x-struct:
           x-validate:
         withdrawals_count:
+          description: Number of withdrawals included in this block; null when the count is unavailable.
           minimum: 0
           nullable: true
           type: integer
@@ -2390,20 +2439,34 @@ components:
       description: Block response
       properties:
         base_fee_per_gas:
-          $ref: '#/components/schemas/IntegerStringNullable'
+          allOf:
+            - $ref: '#/components/schemas/IntegerStringNullable'
+          description: EIP-1559 base fee per gas, in wei. Null on blocks produced before EIP-1559 activation or on chains that do not implement EIP-1559.
+          x-struct:
+          x-validate:
         burnt_fees:
-          $ref: '#/components/schemas/IntegerStringNullable'
+          allOf:
+            - $ref: '#/components/schemas/IntegerStringNullable'
+          description: Sum of EIP-1559 base fees burned by transactions in this block, in wei.
+          x-struct:
+          x-validate:
         burnt_fees_percentage:
+          description: Burned base fees as a percentage of total transaction fees in this block.
           format: float
           nullable: true
           type: number
           x-struct:
           x-validate:
         difficulty:
-          $ref: '#/components/schemas/IntegerStringNullable'
+          allOf:
+            - $ref: '#/components/schemas/IntegerStringNullable'
+          description: Proof-of-work difficulty of this block. Zero on proof-of-stake chains.
+          x-struct:
+          x-validate:
         gas_limit:
           $ref: '#/components/schemas/IntegerString'
         gas_target_percentage:
+          description: Percent above the EIP-1559 elasticity target (gas_used vs. gas_limit / elasticity_multiplier).
           format: float
           nullable: false
           type: number
@@ -2412,6 +2475,7 @@ components:
         gas_used:
           $ref: '#/components/schemas/IntegerString'
         gas_used_percentage:
+          description: Gas used in this block as a percentage of `gas_limit`.
           format: float
           nullable: false
           type: number
@@ -2420,38 +2484,54 @@ components:
         hash:
           $ref: '#/components/schemas/FullHash'
         height:
+          description: Block number (zero-based index from genesis).
           minimum: 0
           nullable: false
           type: integer
           x-struct:
           x-validate:
         internal_transactions_count:
+          description: Number of internal transactions in this block; null when the count is unavailable.
+          minimum: 0
           nullable: true
           type: integer
           x-struct:
           x-validate:
         is_pending_update:
-          nullable: false
+          description: True when the block is scheduled for re-fetch; its fields may change once re-fetching completes.
+          nullable: true
           type: boolean
           x-struct:
           x-validate:
         miner:
-          $ref: '#/components/schemas/Address'
+          allOf:
+            - $ref: '#/components/schemas/Address'
+          description: Address credited with the block — the miner on PoW chains, the fee recipient / proposer on PoS chains, and the sequencer on rollups.
+          x-struct:
+          x-validate:
         nonce:
-          $ref: '#/components/schemas/HexStringNullable'
+          allOf:
+            - $ref: '#/components/schemas/HexString'
+          description: Proof-of-work nonce used to satisfy the difficulty target. Zero on proof-of-stake chains.
+          x-struct:
+          x-validate:
         parent_hash:
           $ref: '#/components/schemas/FullHash'
         priority_fee:
-          $ref: '#/components/schemas/IntegerStringNullable'
+          allOf:
+            - $ref: '#/components/schemas/IntegerStringNullable'
+          description: Sum of validator tips (EIP-1559 priority fees) paid by transactions in this block, in wei.
+          x-struct:
+          x-validate:
         rewards:
+          description: 'Block rewards grouped by recipient category. Single-block variant: `type` is a human-readable label rather than a machine identifier.'
           items:
             additionalProperties: false
             properties:
-              address_hash:
-                $ref: '#/components/schemas/AddressHash'
               reward:
                 $ref: '#/components/schemas/IntegerString'
               type:
+                description: Human-readable reward category label (e.g. "Miner Reward", "Uncle Reward").
                 nullable: false
                 type: string
                 x-struct:
@@ -2467,22 +2547,34 @@ components:
           x-struct:
           x-validate:
         size:
-          nullable: false
+          description: Block size in bytes (length of the RLP-encoded block).
+          minimum: 0
+          nullable: true
           type: integer
           x-struct:
           x-validate:
         timestamp:
           $ref: '#/components/schemas/Timestamp'
         total_difficulty:
-          $ref: '#/components/schemas/IntegerStringNullable'
+          allOf:
+            - $ref: '#/components/schemas/IntegerStringNullable'
+          description: Cumulative chain difficulty through this block (sum of `difficulty` of this block and all ancestors).
+          x-struct:
+          x-validate:
         transaction_fees:
-          $ref: '#/components/schemas/IntegerString'
+          allOf:
+            - $ref: '#/components/schemas/IntegerString'
+          description: Sum of transaction fees (gas price × gas used) paid by transactions in this block, in wei.
+          x-struct:
+          x-validate:
         transactions_count:
+          minimum: 0
           nullable: false
           type: integer
           x-struct:
           x-validate:
         type:
+          description: 'Block classification: `block` = main-chain consensus block; `uncle` = ommer (valid but not in main chain); `reorg` = former main-chain block lost to reorganization.'
           enum:
             - block
             - uncle
@@ -2492,6 +2584,7 @@ components:
           x-struct:
           x-validate:
         uncles_hashes:
+          description: Hashes of ommer (uncle) blocks referenced by this block.
           items:
             additionalProperties: false
             nullable: false
@@ -2508,6 +2601,7 @@ components:
           x-struct:
           x-validate:
         withdrawals_count:
+          description: Number of withdrawals included in this block; null when the count is unavailable.
           minimum: 0
           nullable: true
           type: integer
@@ -3105,6 +3199,8 @@ components:
           x-validate:
         circulating_market_cap:
           $ref: '#/components/schemas/FloatStringNullable'
+        circulating_supply:
+          $ref: '#/components/schemas/FloatStringNullable'
         decimals:
           $ref: '#/components/schemas/IntegerStringNullable'
         exchange_rate:
@@ -3162,6 +3258,7 @@ components:
         - total_supply
         - icon_url
         - circulating_market_cap
+        - circulating_supply
         - reputation
       title: TokenResponse
       type: object
@@ -3942,6 +4039,8 @@ components:
           x-validate:
         circulating_market_cap:
           $ref: '#/components/schemas/FloatStringNullable'
+        circulating_supply:
+          $ref: '#/components/schemas/FloatStringNullable'
         decimals:
           $ref: '#/components/schemas/IntegerStringNullable'
         exchange_rate:
@@ -3999,6 +4098,7 @@ components:
         - total_supply
         - icon_url
         - circulating_market_cap
+        - circulating_supply
         - reputation
       title: Token
       type: object
@@ -11762,7 +11862,17 @@ paths:
   /v2/blocks:
     get:
       callbacks: {}
-      description: Retrieves a paginated list of blocks with optional filtering by block type.
+      description: |
+        Retrieves a paginated list of blocks ordered by descending block number.
+
+        When the `type` query parameter is omitted, only main-chain consensus blocks
+        (equivalent to `type=block`) are returned. Use `type=uncle` to list ommer
+        blocks (valid but not in the main chain) and `type=reorg` to list blocks
+        that lost consensus during a chain reorganization.
+
+        Pagination is cursor-based: the response contains `next_page_params` with
+        `block_number` and `items_count` — pass these back as query parameters on
+        the next request to fetch the following page.
       operationId: BlockScoutWeb.API.V2.BlockController.blocks
       parameters:
         - description: API key for rate limiting or for sensitive endpoints
@@ -11791,6 +11901,7 @@ paths:
           name: type
           required: false
           schema:
+            default: block
             enum:
               - uncle
               - reorg
@@ -11847,6 +11958,12 @@ paths:
                 x-struct:
                 x-validate:
           description: List of blocks with pagination information.
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JsonErrorResponse'
+          description: Unprocessable Entity
       summary: List blocks with optional filtering by block type
       tags:
         - blocks
