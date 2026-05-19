@@ -2140,6 +2140,21 @@ definitions:
         $ref: '#/definitions/v1AdTextProvider'
       banner_provider:
         $ref: '#/definitions/v1AdBannerProvider'
+  v1ApayBillingInterval:
+    type: string
+    enum:
+      - BILLING_INTERVAL_MONTH
+      - BILLING_INTERVAL_QUARTER
+      - BILLING_INTERVAL_YEAR
+    default: BILLING_INTERVAL_MONTH
+    description: |-
+      Billing cadence for the flat fee on a FlatFeeAndOverages plan. PayAsYouGo
+      plans are always implicitly MONTH (no flat fee to bill on a longer cadence).
+
+      Note: regardless of this value, metered usage is always reported on the
+      monthly meter cycle — Stripe restricts metered prices to short intervals.
+      On a non-monthly plan, the flat fee renews on the chosen cadence while the
+      free-tier (base_tokens_count) still resets every month.
   v1ApayDeposit:
     type: object
     properties:
@@ -2243,6 +2258,8 @@ definitions:
         type: string
       mode:
         $ref: '#/definitions/v1ApaySubscriptionPlanMode'
+      billing_interval:
+        $ref: '#/definitions/v1ApayBillingInterval'
     required:
       - id
       - name
@@ -2250,6 +2267,7 @@ definitions:
       - base_tokens_count
       - price_per_token_usd
       - mode
+      - billing_interval
   v1ApaySubscriptionPlanMode:
     type: string
     enum:
@@ -2600,6 +2618,11 @@ definitions:
         type: string
       mode:
         $ref: '#/definitions/v1ApaySubscriptionPlanMode'
+      billing_interval:
+        $ref: '#/definitions/v1ApayBillingInterval'
+        description: |-
+          Defaults to BILLING_INTERVAL_MONTH (= 0) when omitted, matching existing plans.
+          Must be MONTH for PAY_AS_YOU_GO plans.
     required:
       - name
       - price_per_token_usd
