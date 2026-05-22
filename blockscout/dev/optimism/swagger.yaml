@@ -13310,6 +13310,113 @@ paths:
       summary: Get transaction statistics
       tags:
         - transactions
+  /api/v2/tokens/{address_hash_param}/transfers/csv:
+    get:
+      callbacks: {}
+      description: Exports the transfers of a specific token as a CSV file.
+      operationId: BlockScoutWeb.API.V2.CsvExportController.export_token_transfers
+      parameters:
+        - description: API key for rate limiting or for sensitive endpoints
+          in: query
+          name: apikey
+          required: false
+          schema:
+            type: string
+            x-struct:
+            x-validate:
+        - description: Secret key for getting access to restricted resources
+          in: query
+          name: key
+          required: false
+          schema:
+            type: string
+            x-struct:
+            x-validate:
+        - description: Address hash in the path
+          in: path
+          name: address_hash_param
+          required: true
+          schema:
+            $ref: '#/components/schemas/AddressHash'
+        - description: Start of the time period (ISO 8601 format) in CSV export
+          in: query
+          name: from_period
+          required: true
+          schema:
+            anyOf:
+              - nullable: false
+                pattern: ^\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01])(?:T(?:[01]\d|2[0-3])(?:(?::|%3A)[0-5]\d(?:(?::|%3A)[0-5]\d(?:\.\d{1,9})?)?)?(?:Z|(?:\+|%2B|-)(?:[01]\d|2[0-3])(?:(?::|%3A)[0-5]\d)?)?)?$
+                type: string
+                x-struct:
+                x-validate:
+              - $ref: '#/components/schemas/NullString'
+            x-struct:
+            x-validate:
+        - description: End of the time period (ISO 8601 format) In CSV export
+          in: query
+          name: to_period
+          required: true
+          schema:
+            anyOf:
+              - nullable: false
+                pattern: ^\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01])(?:T(?:[01]\d|2[0-3])(?:(?::|%3A)[0-5]\d(?:(?::|%3A)[0-5]\d(?:\.\d{1,9})?)?)?(?:Z|(?:\+|%2B|-)(?:[01]\d|2[0-3])(?:(?::|%3A)[0-5]\d)?)?)?$
+                type: string
+                x-struct:
+                x-validate:
+              - $ref: '#/components/schemas/NullString'
+            x-struct:
+            x-validate:
+        - description: Filter type in CSV export
+          in: query
+          name: filter_type
+          required: false
+          schema:
+            anyOf:
+              - enum:
+                  - address
+                nullable: true
+                type: string
+                x-struct:
+                x-validate:
+              - $ref: '#/components/schemas/NullString'
+            x-struct:
+            x-validate:
+        - description: Filter value in CSV export
+          in: query
+          name: filter_value
+          required: false
+          schema:
+            anyOf:
+              - enum:
+                  - to
+                  - from
+                nullable: true
+                type: string
+                x-struct:
+                x-validate:
+              - $ref: '#/components/schemas/NullString'
+            x-struct:
+            x-validate:
+      responses:
+        '200':
+          content:
+            application/csv: {}
+          description: CSV file of token transfers.
+        '404':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFoundResponse'
+          description: Not Found
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JsonErrorResponse'
+          description: Unprocessable Entity
+      summary: Export token transfers as CSV
+      tags:
+        - tokens
   /api/v2/proxy/account-abstraction/paymasters/{address_hash_param}:
     get:
       callbacks: {}
