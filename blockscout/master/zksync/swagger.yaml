@@ -7937,6 +7937,36 @@ paths:
             type: string
             x-struct:
             x-validate:
+        - description: Comma-separated list of human-readable method names corresponding to the `methods` selectors.
+          example: transfer,approve
+          in: query
+          name: methods_names
+          required: false
+          schema:
+            nullable: true
+            type: string
+            x-struct:
+            x-validate:
+        - description: Comma-separated list of token symbols to include.
+          example: USDT,USDC
+          in: query
+          name: token_contract_symbols_to_include
+          required: false
+          schema:
+            nullable: true
+            type: string
+            x-struct:
+            x-validate:
+        - description: Comma-separated list of token symbols to exclude.
+          example: USDT,USDC
+          in: query
+          name: token_contract_symbols_to_exclude
+          required: false
+          schema:
+            nullable: true
+            type: string
+            x-struct:
+            x-validate:
         - description: 'Keyset cursor: block number of the last item from the previous page.'
           example: '23532302'
           in: query
@@ -9260,6 +9290,36 @@ paths:
           example: '0x0000000000000000000000000000000000000000'
           in: query
           name: token_contract_address_hashes_to_exclude
+          required: false
+          schema:
+            nullable: true
+            type: string
+            x-struct:
+            x-validate:
+        - description: Comma-separated list of human-readable method names corresponding to the `methods` selectors.
+          example: transfer,approve
+          in: query
+          name: methods_names
+          required: false
+          schema:
+            nullable: true
+            type: string
+            x-struct:
+            x-validate:
+        - description: Comma-separated list of token symbols to include.
+          example: USDT,USDC
+          in: query
+          name: token_contract_symbols_to_include
+          required: false
+          schema:
+            nullable: true
+            type: string
+            x-struct:
+            x-validate:
+        - description: Comma-separated list of token symbols to exclude.
+          example: USDT,USDC
+          in: query
+          name: token_contract_symbols_to_exclude
           required: false
           schema:
             nullable: true
