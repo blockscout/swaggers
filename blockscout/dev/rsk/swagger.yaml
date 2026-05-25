@@ -4960,7 +4960,7 @@ info:
   contact:
     email: info@blockscout.com
   title: Blockscout
-  version: 11.1.0
+  version: 11.1.1
 openapi: 3.0.0
 paths:
   /api/v2/addresses/{address_hash_param}/coin-balance-history-by-day:
@@ -6970,6 +6970,36 @@ paths:
           example: '0x0000000000000000000000000000000000000000'
           in: query
           name: token_contract_address_hashes_to_exclude
+          required: false
+          schema:
+            nullable: true
+            type: string
+            x-struct:
+            x-validate:
+        - description: Comma-separated list of human-readable method names corresponding to the `methods` selectors.
+          example: transfer,approve
+          in: query
+          name: methods_names
+          required: false
+          schema:
+            nullable: true
+            type: string
+            x-struct:
+            x-validate:
+        - description: Comma-separated list of token symbols to include.
+          example: USDT,USDC
+          in: query
+          name: token_contract_symbols_to_include
+          required: false
+          schema:
+            nullable: true
+            type: string
+            x-struct:
+            x-validate:
+        - description: Comma-separated list of token symbols to exclude.
+          example: USDT,USDC
+          in: query
+          name: token_contract_symbols_to_exclude
           required: false
           schema:
             nullable: true
@@ -11743,6 +11773,36 @@ paths:
           example: '0x0000000000000000000000000000000000000000'
           in: query
           name: token_contract_address_hashes_to_exclude
+          required: false
+          schema:
+            nullable: true
+            type: string
+            x-struct:
+            x-validate:
+        - description: Comma-separated list of human-readable method names corresponding to the `methods` selectors.
+          example: transfer,approve
+          in: query
+          name: methods_names
+          required: false
+          schema:
+            nullable: true
+            type: string
+            x-struct:
+            x-validate:
+        - description: Comma-separated list of token symbols to include.
+          example: USDT,USDC
+          in: query
+          name: token_contract_symbols_to_include
+          required: false
+          schema:
+            nullable: true
+            type: string
+            x-struct:
+            x-validate:
+        - description: Comma-separated list of token symbols to exclude.
+          example: USDT,USDC
+          in: query
+          name: token_contract_symbols_to_exclude
           required: false
           schema:
             nullable: true
