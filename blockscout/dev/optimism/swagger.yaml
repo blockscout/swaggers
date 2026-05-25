@@ -2169,12 +2169,32 @@ components:
       additionalProperties: false
       nullable: false
       properties:
+        animation_media_type:
+          description: Media type category of the token instance animation URL
+          enum:
+            - image
+            - video
+            - html
+          nullable: true
+          type: string
+          x-struct:
+          x-validate:
         animation_url:
           $ref: '#/components/schemas/URLNullable'
         external_app_url:
           $ref: '#/components/schemas/URLNullable'
         id:
           $ref: '#/components/schemas/IntegerString'
+        image_media_type:
+          description: Media type category of the token instance image URL
+          enum:
+            - image
+            - video
+            - html
+          nullable: true
+          type: string
+          x-struct:
+          x-validate:
         image_url:
           $ref: '#/components/schemas/URLNullable'
         is_unique:
@@ -3178,12 +3198,32 @@ components:
       additionalProperties: false
       nullable: false
       properties:
+        animation_media_type:
+          description: Media type category of the token instance animation URL
+          enum:
+            - image
+            - video
+            - html
+          nullable: true
+          type: string
+          x-struct:
+          x-validate:
         animation_url:
           $ref: '#/components/schemas/URLNullable'
         external_app_url:
           $ref: '#/components/schemas/URLNullable'
         id:
           $ref: '#/components/schemas/IntegerString'
+        image_media_type:
+          description: Media type category of the token instance image URL
+          enum:
+            - image
+            - video
+            - html
+          nullable: true
+          type: string
+          x-struct:
+          x-validate:
         image_url:
           $ref: '#/components/schemas/URLNullable'
         is_unique:
@@ -9034,6 +9074,83 @@ paths:
       summary: List Stability validators.
       tags:
         - stability
+  /api/v2/tokens/{address_hash_param}/instances/{token_id_param}/media-type:
+    get:
+      callbacks: {}
+      description: Determines and returns the media type categories (image/video/html) for the image and animation URLs of a specific NFT instance. Fetches via HTTP HEAD if not yet determined and stores the result.
+      operationId: BlockScoutWeb.API.V2.TokenController.media_type
+      parameters:
+        - description: API key for rate limiting or for sensitive endpoints
+          in: query
+          name: apikey
+          required: false
+          schema:
+            type: string
+            x-struct:
+            x-validate:
+        - description: Secret key for getting access to restricted resources
+          in: query
+          name: key
+          required: false
+          schema:
+            type: string
+            x-struct:
+            x-validate:
+        - description: Address hash in the path
+          in: path
+          name: address_hash_param
+          required: true
+          schema:
+            $ref: '#/components/schemas/AddressHash'
+        - description: Token ID for ERC-721/1155/404 tokens
+          in: path
+          name: token_id_param
+          required: true
+          schema:
+            $ref: '#/components/schemas/IntegerStringNullable'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                properties:
+                  animation_media_type:
+                    enum:
+                      - image
+                      - video
+                      - html
+                    nullable: true
+                    type: string
+                    x-struct:
+                    x-validate:
+                  image_media_type:
+                    enum:
+                      - image
+                      - video
+                      - html
+                    nullable: true
+                    type: string
+                    x-struct:
+                    x-validate:
+                type: object
+                x-struct:
+                x-validate:
+          description: Media type categories for the NFT instance.
+        '404':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFoundResponse'
+          description: Not Found
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JsonErrorResponse'
+          description: Unprocessable Entity
+      summary: Fetch media type for a specific NFT instance
+      tags:
+        - tokens
   /api/v2/proxy/account-abstraction/factories/{address_hash_param}:
     get:
       callbacks: {}
