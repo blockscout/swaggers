@@ -2123,7 +2123,7 @@ definitions:
     type: string
     enum:
       - UNSPECIFIED_AD_TEXT_PROVIDER
-      - COINZILLA
+      - SEVIO
       - TEXT_NONE
     default: UNSPECIFIED_AD_TEXT_PROVIDER
   v1AdminServicePluginConfig:
