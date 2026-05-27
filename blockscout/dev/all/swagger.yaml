@@ -7246,33 +7246,29 @@ components:
           description: Hash of the parent-chain transaction that committed this batch. `null` until the commit transaction is observed.
           nullable: true
           pattern: ^0x([A-Fa-f0-9]{64})$
-          title: FullHashNullable
           type: string
-          x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.General.FullHashNullable
+          x-struct: null
           x-validate: null
         commit_transaction_timestamp:
           description: Timestamp of the parent-chain transaction that committed this batch. `null` until the commit transaction is observed.
           format: date-time
           nullable: true
-          title: TimestampNullable
           type: string
-          x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.General.TimestampNullable
+          x-struct: null
           x-validate: null
         execute_transaction_hash:
           description: Hash of the parent-chain transaction that executed this batch. `null` until the execute transaction is observed.
           nullable: true
           pattern: ^0x([A-Fa-f0-9]{64})$
-          title: FullHashNullable
           type: string
-          x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.General.FullHashNullable
+          x-struct: null
           x-validate: null
         execute_transaction_timestamp:
           description: Timestamp of the parent-chain transaction that executed this batch. `null` until the execute transaction is observed.
           format: date-time
           nullable: true
-          title: TimestampNullable
           type: string
-          x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.General.TimestampNullable
+          x-struct: null
           x-validate: null
         number:
           description: Batch number on the rollup.
@@ -7284,17 +7280,15 @@ components:
           description: Hash of the parent-chain transaction that proved this batch. `null` until the prove transaction is observed.
           nullable: true
           pattern: ^0x([A-Fa-f0-9]{64})$
-          title: FullHashNullable
           type: string
-          x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.General.FullHashNullable
+          x-struct: null
           x-validate: null
         prove_transaction_timestamp:
           description: Timestamp of the parent-chain transaction that proved this batch. `null` until the prove transaction is observed.
           format: date-time
           nullable: true
-          title: TimestampNullable
           type: string
-          x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.General.TimestampNullable
+          x-struct: null
           x-validate: null
         status:
           description: |
@@ -7315,9 +7309,8 @@ components:
           description: Timestamp when the batch was sealed on the rollup.
           format: date-time
           nullable: false
-          title: Timestamp
           type: string
-          x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.General.Timestamp
+          x-struct: null
           x-validate: null
         transactions_count:
           description: Total number of transactions in the batch (parent-chain originated plus rollup originated).
@@ -7348,33 +7341,29 @@ components:
           description: Hash of the parent-chain transaction that committed this batch. `null` until the commit transaction is observed.
           nullable: true
           pattern: ^0x([A-Fa-f0-9]{64})$
-          title: FullHashNullable
           type: string
-          x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.General.FullHashNullable
+          x-struct: null
           x-validate: null
         commit_transaction_timestamp:
           description: Timestamp of the parent-chain transaction that committed this batch. `null` until the commit transaction is observed.
           format: date-time
           nullable: true
-          title: TimestampNullable
           type: string
-          x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.General.TimestampNullable
+          x-struct: null
           x-validate: null
         execute_transaction_hash:
           description: Hash of the parent-chain transaction that executed this batch. `null` until the execute transaction is observed.
           nullable: true
           pattern: ^0x([A-Fa-f0-9]{64})$
-          title: FullHashNullable
           type: string
-          x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.General.FullHashNullable
+          x-struct: null
           x-validate: null
         execute_transaction_timestamp:
           description: Timestamp of the parent-chain transaction that executed this batch. `null` until the execute transaction is observed.
           format: date-time
           nullable: true
-          title: TimestampNullable
           type: string
-          x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.General.TimestampNullable
+          x-struct: null
           x-validate: null
         number:
           description: Batch number on the rollup.
@@ -7386,17 +7375,15 @@ components:
           description: Hash of the parent-chain transaction that proved this batch. `null` until the prove transaction is observed.
           nullable: true
           pattern: ^0x([A-Fa-f0-9]{64})$
-          title: FullHashNullable
           type: string
-          x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.General.FullHashNullable
+          x-struct: null
           x-validate: null
         prove_transaction_timestamp:
           description: Timestamp of the parent-chain transaction that proved this batch. `null` until the prove transaction is observed.
           format: date-time
           nullable: true
-          title: TimestampNullable
           type: string
-          x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.General.TimestampNullable
+          x-struct: null
           x-validate: null
         status:
           description: |
@@ -7415,9 +7402,8 @@ components:
           description: Timestamp when the batch was sealed on the rollup.
           format: date-time
           nullable: false
-          title: Timestamp
           type: string
-          x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.General.Timestamp
+          x-struct: null
           x-validate: null
         transactions_count:
           description: Total number of transactions in the batch (parent-chain originated plus rollup originated).
@@ -7440,14 +7426,6 @@ components:
       type: object
       x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.ZkSync.MinimalBatch
       x-validate: null
-    NonNegativeIntegerString:
-      description: Rollup fair gas price for this batch, in wei.
-      nullable: false
-      pattern: ^([1-9][0-9]*|0)$
-      title: NonNegativeIntegerString
-      type: string
-      x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.General.NonNegativeIntegerString
-      x-validate: null
     ZkSync.Batch:
       additionalProperties: false
       description: ZkSync rollup batch - a group of rollup blocks settled together on the parent chain - with the corresponding parent-chain lifecycle data.
@@ -7456,17 +7434,15 @@ components:
           description: Hash of the parent-chain transaction that committed this batch. `null` until the commit transaction is observed.
           nullable: true
           pattern: ^0x([A-Fa-f0-9]{64})$
-          title: FullHashNullable
           type: string
-          x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.General.FullHashNullable
+          x-struct: null
           x-validate: null
         commit_transaction_timestamp:
           description: Timestamp of the parent-chain transaction that committed this batch. `null` until the commit transaction is observed.
           format: date-time
           nullable: true
-          title: TimestampNullable
           type: string
-          x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.General.TimestampNullable
+          x-struct: null
           x-validate: null
         end_block_number:
           description: Last rollup block included in the batch.
@@ -7478,25 +7454,22 @@ components:
           description: Hash of the parent-chain transaction that executed this batch. `null` until the execute transaction is observed.
           nullable: true
           pattern: ^0x([A-Fa-f0-9]{64})$
-          title: FullHashNullable
           type: string
-          x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.General.FullHashNullable
+          x-struct: null
           x-validate: null
         execute_transaction_timestamp:
           description: Timestamp of the parent-chain transaction that executed this batch. `null` until the execute transaction is observed.
           format: date-time
           nullable: true
-          title: TimestampNullable
           type: string
-          x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.General.TimestampNullable
+          x-struct: null
           x-validate: null
         l1_gas_price:
           description: Parent-chain gas price observed for this batch, in wei.
           nullable: false
           pattern: ^([1-9][0-9]*|0)$
-          title: NonNegativeIntegerString
           type: string
-          x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.General.NonNegativeIntegerString
+          x-struct: null
           x-validate: null
         l1_transactions_count:
           description: Number of transactions in the batch originating on the parent chain.
@@ -7508,9 +7481,8 @@ components:
           description: Rollup fair gas price for this batch, in wei.
           nullable: false
           pattern: ^([1-9][0-9]*|0)$
-          title: NonNegativeIntegerString
           type: string
-          x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.General.NonNegativeIntegerString
+          x-struct: null
           x-validate: null
         l2_transactions_count:
           description: Number of transactions in the batch originating on the rollup.
@@ -7528,25 +7500,22 @@ components:
           description: Hash of the parent-chain transaction that proved this batch. `null` until the prove transaction is observed.
           nullable: true
           pattern: ^0x([A-Fa-f0-9]{64})$
-          title: FullHashNullable
           type: string
-          x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.General.FullHashNullable
+          x-struct: null
           x-validate: null
         prove_transaction_timestamp:
           description: Timestamp of the parent-chain transaction that proved this batch. `null` until the prove transaction is observed.
           format: date-time
           nullable: true
-          title: TimestampNullable
           type: string
-          x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.General.TimestampNullable
+          x-struct: null
           x-validate: null
         root_hash:
           description: State root hash committed for this batch on the parent chain.
           nullable: false
           pattern: ^0x([A-Fa-f0-9]{64})$
-          title: FullHash
           type: string
-          x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.General.FullHash
+          x-struct: null
           x-validate: null
         start_block_number:
           description: First rollup block included in the batch.
@@ -7573,9 +7542,8 @@ components:
           description: Timestamp when the batch was sealed on the rollup.
           format: date-time
           nullable: false
-          title: Timestamp
           type: string
-          x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.General.Timestamp
+          x-struct: null
           x-validate: null
       required:
         - number
