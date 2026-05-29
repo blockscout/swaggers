@@ -5161,7 +5161,7 @@ info:
   contact:
     email: info@blockscout.com
   title: Blockscout
-  version: 11.1.1
+  version: 11.1.2
 openapi: 3.0.0
 paths:
   /api/v2/addresses/{address_hash_param}/coin-balance-history-by-day:
