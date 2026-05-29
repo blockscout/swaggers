@@ -2932,6 +2932,8 @@ definitions:
         $ref: '#/definitions/v1UserOpsPluginConfig'
       admin_service_plugin_config:
         $ref: '#/definitions/v1AdminServicePluginConfig'
+      name_service_plugin_config:
+        $ref: '#/definitions/v1NameServicePluginConfig'
       monitoring:
         $ref: '#/definitions/v1MonitoringConfig'
       versions_stack:
@@ -3048,10 +3050,13 @@ definitions:
         $ref: '#/definitions/v1PluginStatuses'
       admin_service_status:
         $ref: '#/definitions/v1PluginStatuses'
+      name_service_status:
+        $ref: '#/definitions/v1PluginStatuses'
     required:
       - stats_status
       - user_ops_status
       - admin_service_status
+      - name_service_status
   v1DeploymentStatus:
     type: string
     enum:
@@ -3614,6 +3619,18 @@ definitions:
       - items
       - count
       - total_monthly_cost
+  v1NameServicePluginConfig:
+    type: object
+    properties:
+      enabled:
+        type: boolean
+      protocols:
+        type: array
+        items:
+          type: string
+        description: |-
+          Domain name protocol ids the chain resolves against, e.g. ["ens"].
+          Validated against the supported set; passed to the frontend verbatim.
   v1NavigationLayout:
     type: string
     enum:
@@ -3867,6 +3884,7 @@ definitions:
       - PLUGIN_VARIANT_STATS
       - PLUGIN_VARIANT_USER_OPS
       - PLUGIN_VARIANT_ADMIN_SERVICE
+      - PLUGIN_VARIANT_NAME_SERVICE
     default: UNSPECIFIED_PLUGIN_VARIANT
   v1PolygonZkEvmConfig:
     type: object
