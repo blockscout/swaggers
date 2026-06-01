@@ -114,10 +114,68 @@ components:
     EthBlockNumberResult:
       description: Hex-encoded latest block number on the chain. Nullable in the schema for defensive reasons; always present in practice.
       nullable: true
-      pattern: ^0x[0-9a-fA-F]+$
+      pattern: ^0x([A-Fa-f0-9]+)$
       title: EthBlockNumberResult
       type: string
       x-struct: Elixir.BlockScoutWeb.Schemas.API.Legacy.EthBlockNumberResult
+      x-validate:
+    EthGetLogsResult:
+      properties:
+        address:
+          $ref: '#/components/schemas/AddressHash'
+        blockHash:
+          $ref: '#/components/schemas/FullHash'
+        blockNumber:
+          description: Hex-encoded block number.
+          pattern: ^0x([A-Fa-f0-9]+)$
+          type: string
+          x-struct:
+          x-validate:
+        data:
+          description: Hex-encoded event data payload.
+          pattern: ^0x([A-Fa-f0-9]*)$
+          type: string
+          x-struct:
+          x-validate:
+        logIndex:
+          description: Hex-encoded position of the log within the block.
+          pattern: ^0x([A-Fa-f0-9]+)$
+          type: string
+          x-struct:
+          x-validate:
+        removed:
+          description: '`true` if the log was removed due to a chain reorganization.'
+          type: boolean
+          x-struct:
+          x-validate:
+        topics:
+          description: Indexed event topics. Up to four 32-byte hex strings; unused slots are `null`.
+          items:
+            $ref: '#/components/schemas/FullHashNullable'
+          type: array
+          x-struct:
+          x-validate:
+        transactionHash:
+          $ref: '#/components/schemas/FullHash'
+        transactionIndex:
+          description: Hex-encoded position of the transaction within the block.
+          pattern: ^0x([A-Fa-f0-9]+)$
+          type: string
+          x-struct:
+          x-validate:
+      required:
+        - address
+        - blockHash
+        - blockNumber
+        - data
+        - logIndex
+        - removed
+        - topics
+        - transactionHash
+        - transactionIndex
+      title: EthGetLogsResult
+      type: object
+      x-struct: Elixir.BlockScoutWeb.Schemas.API.Legacy.EthRpc.EthGetLogsResult
       x-validate:
     NFTCollection:
       additionalProperties: false
@@ -169,7 +227,7 @@ components:
         block_timestamp:
           $ref: '#/components/schemas/TimestampNullable'
         data:
-          $ref: '#/components/schemas/HexString'
+          $ref: '#/components/schemas/HexData'
         decoded:
           allOf:
             - $ref: '#/components/schemas/DecodedLogInput'
@@ -189,7 +247,7 @@ components:
           x-validate:
         topics:
           items:
-            $ref: '#/components/schemas/HexStringNullable'
+            $ref: '#/components/schemas/HexDataNullable'
           nullable: false
           type: array
           x-struct:
@@ -231,6 +289,13 @@ components:
       title: WatchlistName
       type: object
       x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.General.WatchlistName
+      x-validate:
+    EthGetStorageAtResult:
+      description: Hex-encoded 32-byte storage value at the requested slot.
+      pattern: ^0x([A-Fa-f0-9]{64})$
+      title: EthGetStorageAtResult
+      type: string
+      x-struct: Elixir.BlockScoutWeb.Schemas.API.Legacy.EthRpc.EthGetStorageAtResult
       x-validate:
     EmptyString:
       maxLength: 0
@@ -417,83 +482,6 @@ components:
       title: Metadata
       type: object
       x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.Proxy.Metadata
-      x-validate:
-    LogItem:
-      additionalProperties: false
-      properties:
-        address:
-          $ref: '#/components/schemas/AddressHash'
-        blockNumber:
-          description: Hex-encoded block number.
-          pattern: ^0x[0-9a-fA-F]+$
-          type: string
-          x-struct:
-          x-validate:
-        data:
-          description: Hex-encoded event data payload (`0x`-prefixed, arbitrary length).
-          pattern: ^0x[0-9a-fA-F]*$
-          type: string
-          x-struct:
-          x-validate:
-        gasPrice:
-          description: Hex-encoded gas price in wei.
-          pattern: ^0x[0-9a-fA-F]+$
-          type: string
-          x-struct:
-          x-validate:
-        gasUsed:
-          description: Hex-encoded gas used by the transaction.
-          pattern: ^0x[0-9a-fA-F]+$
-          type: string
-          x-struct:
-          x-validate:
-        logIndex:
-          description: Hex-encoded position of the log within the block.
-          pattern: ^0x[0-9a-fA-F]+$
-          type: string
-          x-struct:
-          x-validate:
-        timeStamp:
-          description: Hex-encoded Unix timestamp in seconds of the block.
-          pattern: ^0x[0-9a-fA-F]+$
-          type: string
-          x-struct:
-          x-validate:
-        topics:
-          description: 32-byte indexed event topics. Always a 4-element array; unfilled slots are `null`.
-          items:
-            nullable: true
-            pattern: ^0x[0-9a-fA-F]{64}$
-            type: string
-            x-struct:
-            x-validate:
-          maxItems: 4
-          minItems: 4
-          type: array
-          x-struct:
-          x-validate:
-        transactionHash:
-          $ref: '#/components/schemas/FullHash'
-        transactionIndex:
-          description: Hex-encoded position of the transaction within the block.
-          pattern: ^0x[0-9a-fA-F]+$
-          type: string
-          x-struct:
-          x-validate:
-      required:
-        - address
-        - topics
-        - data
-        - blockNumber
-        - timeStamp
-        - gasPrice
-        - gasUsed
-        - logIndex
-        - transactionHash
-        - transactionIndex
-      title: LogItem
-      type: object
-      x-struct: Elixir.BlockScoutWeb.Schemas.API.Legacy.LogItem
       x-validate:
     TotalERC721:
       additionalProperties: false
@@ -763,6 +751,12 @@ components:
       type: object
       x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.Shibarium.Withdrawal
       x-validate:
+    HexData:
+      pattern: ^0x([A-Fa-f0-9]*)$
+      title: HexData
+      type: string
+      x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.General.HexData
+      x-validate:
     IntegerStringOrEmptyOrNullLiteral:
       oneOf:
         - pattern: ^([1-9][0-9]*|0)$
@@ -777,6 +771,13 @@ components:
           x-validate:
       title: IntegerStringOrEmptyOrNullLiteral
       x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.General.IntegerStringOrEmptyOrNullLiteral
+      x-validate:
+    HexDataNullable:
+      nullable: true
+      pattern: ^0x([A-Fa-f0-9]*)$
+      title: HexDataNullable
+      type: string
+      x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.General.HexDataNullable
       x-validate:
     BadRequestResponse:
       description: Response returned when the request is invalid
@@ -1253,15 +1254,15 @@ components:
               from:
                 $ref: '#/components/schemas/AddressHash'
               gas:
-                $ref: '#/components/schemas/HexString'
+                $ref: '#/components/schemas/HexData'
               init:
-                $ref: '#/components/schemas/HexString'
+                $ref: '#/components/schemas/HexData'
               input:
-                $ref: '#/components/schemas/HexString'
+                $ref: '#/components/schemas/HexData'
               to:
                 $ref: '#/components/schemas/AddressHash'
               value:
-                $ref: '#/components/schemas/HexString'
+                $ref: '#/components/schemas/HexData'
             required:
               - from
               - gas
@@ -1274,9 +1275,9 @@ components:
             additionalProperties: false
             properties:
               gasUsed:
-                $ref: '#/components/schemas/HexString'
+                $ref: '#/components/schemas/HexData'
               output:
-                $ref: '#/components/schemas/HexString'
+                $ref: '#/components/schemas/HexData'
             required:
               - gasUsed
               - output
@@ -1406,6 +1407,23 @@ components:
       title: DecodedLogInput
       type: object
       x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.General.DecodedLogInput
+      x-validate:
+    BlockTag:
+      anyOf:
+        - pattern: ^0x([A-Fa-f0-9]+)$
+          type: string
+          x-struct:
+          x-validate:
+        - enum:
+            - latest
+            - earliest
+            - pending
+          type: string
+          x-struct:
+          x-validate:
+      description: 'Block parameter: a hex-encoded block number (`0x` prefix) or one of the tags `latest`, `earliest`, `pending`.'
+      title: BlockTag
+      x-struct: Elixir.BlockScoutWeb.Schemas.API.Legacy.EthRpc.BlockTag
       x-validate:
     Account:
       additionalProperties: false
@@ -1751,7 +1769,6 @@ components:
           x-validate:
         nonce:
           description: Proof-of-work nonce used to satisfy the difficulty target. Zero on proof-of-stake chains.
-          nullable: false
           pattern: ^0x([A-Fa-f0-9]*)$
           type: string
           x-struct:
@@ -2235,7 +2252,7 @@ components:
       nullable: false
       properties:
         aggregator_signature:
-          $ref: '#/components/schemas/HexStringNullable'
+          $ref: '#/components/schemas/HexDataNullable'
         bundler:
           $ref: '#/components/schemas/Address'
         block_number:
@@ -2274,7 +2291,7 @@ components:
         sender:
           $ref: '#/components/schemas/Address'
         execute_call_data:
-          $ref: '#/components/schemas/HexStringNullable'
+          $ref: '#/components/schemas/HexDataNullable'
         fee:
           $ref: '#/components/schemas/IntegerString'
         status:
@@ -2287,7 +2304,7 @@ components:
         gas_used:
           $ref: '#/components/schemas/IntegerString'
         signature:
-          $ref: '#/components/schemas/HexString'
+          $ref: '#/components/schemas/HexData'
         entry_point_version:
           enum:
             - v0.6
@@ -2299,7 +2316,7 @@ components:
           x-struct:
           x-validate:
         call_data:
-          $ref: '#/components/schemas/HexString'
+          $ref: '#/components/schemas/HexData'
         aggregator:
           $ref: '#/components/schemas/AddressHashNullable'
         max_priority_fee_per_gas:
@@ -2322,7 +2339,7 @@ components:
           x-struct:
           x-validate:
         revert_reason:
-          $ref: '#/components/schemas/HexStringNullable'
+          $ref: '#/components/schemas/HexDataNullable'
         gas:
           $ref: '#/components/schemas/IntegerString'
         max_fee_per_gas:
@@ -2355,11 +2372,11 @@ components:
               nullable: false
               properties:
                 call_data:
-                  $ref: '#/components/schemas/HexString'
+                  $ref: '#/components/schemas/HexData'
                 call_gas_limit:
                   $ref: '#/components/schemas/IntegerString'
                 init_code:
-                  $ref: '#/components/schemas/HexString'
+                  $ref: '#/components/schemas/HexData'
                 max_fee_per_gas:
                   $ref: '#/components/schemas/IntegerString'
                 max_priority_fee_per_gas:
@@ -2367,13 +2384,13 @@ components:
                 nonce:
                   $ref: '#/components/schemas/IntegerString'
                 paymaster_and_data:
-                  $ref: '#/components/schemas/HexString'
+                  $ref: '#/components/schemas/HexData'
                 pre_verification_gas:
                   $ref: '#/components/schemas/IntegerString'
                 sender:
                   $ref: '#/components/schemas/AddressHash'
                 signature:
-                  $ref: '#/components/schemas/HexString'
+                  $ref: '#/components/schemas/HexData'
                 verification_gas_limit:
                   $ref: '#/components/schemas/IntegerString'
               required:
@@ -2398,21 +2415,21 @@ components:
                 account_gas_limits:
                   $ref: '#/components/schemas/FullHash'
                 call_data:
-                  $ref: '#/components/schemas/HexString'
+                  $ref: '#/components/schemas/HexData'
                 gas_fees:
                   $ref: '#/components/schemas/FullHash'
                 init_code:
-                  $ref: '#/components/schemas/HexString'
+                  $ref: '#/components/schemas/HexData'
                 nonce:
                   $ref: '#/components/schemas/IntegerString'
                 paymaster_and_data:
-                  $ref: '#/components/schemas/HexString'
+                  $ref: '#/components/schemas/HexData'
                 pre_verification_gas:
                   $ref: '#/components/schemas/IntegerString'
                 sender:
                   $ref: '#/components/schemas/AddressHash'
                 signature:
-                  $ref: '#/components/schemas/HexString'
+                  $ref: '#/components/schemas/HexData'
               required:
                 - sender
                 - nonce
@@ -2592,7 +2609,6 @@ components:
           x-validate:
         nonce:
           description: Proof-of-work nonce used to satisfy the difficulty target. Zero on proof-of-stake chains.
-          nullable: false
           pattern: ^0x([A-Fa-f0-9]*)$
           type: string
           x-struct:
@@ -2724,6 +2740,7 @@ components:
       x-validate:
     GetBlockNumberByTimeResult:
       additionalProperties: false
+      description: Block number closest to the requested timestamp; `null` if the lookup fails.
       nullable: true
       properties:
         blockNumber:
@@ -2761,13 +2778,6 @@ components:
       title: AuditReport
       type: object
       x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.SmartContract.AuditReport
-      x-validate:
-    HexString:
-      nullable: false
-      pattern: ^0x([A-Fa-f0-9]*)$
-      title: HexString
-      type: string
-      x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.General.HexString
       x-validate:
     JsonErrorResponse:
       properties:
@@ -2865,6 +2875,13 @@ components:
       title: MetadataTag
       type: object
       x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.Proxy.MetadataTag
+      x-validate:
+    EthCallResult:
+      description: Hex-encoded return data from the executed call. May be `0x` if the call returned no data.
+      pattern: ^0x([A-Fa-f0-9]*)$
+      title: EthCallResult
+      type: string
+      x-struct: Elixir.BlockScoutWeb.Schemas.API.Legacy.EthRpc.EthCallResult
       x-validate:
     TokenInstanceInList:
       additionalProperties: false
@@ -3056,6 +3073,12 @@ components:
       title: DecodedInput
       type: object
       x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.General.DecodedInput
+      x-validate:
+    HexQuantity:
+      pattern: ^0x([A-Fa-f0-9]+)$
+      title: HexQuantity
+      type: string
+      x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.General.HexQuantity
       x-validate:
     AddressHashNullable:
       nullable: true
@@ -3604,6 +3627,13 @@ components:
       title: BlockCountdown
       type: object
       x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.Block.Countdown
+      x-validate:
+    EthGetBalanceResult:
+      description: Hex-encoded account balance in wei. Always at least one digit (`0x0` for zero).
+      pattern: ^0x([A-Fa-f0-9]+)$
+      title: EthGetBalanceResult
+      type: string
+      x-struct: Elixir.BlockScoutWeb.Schemas.API.Legacy.EthRpc.EthGetBalanceResult
       x-validate:
     AddressCounters:
       additionalProperties: false
@@ -4168,6 +4198,14 @@ components:
       type: object
       x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.Token
       x-validate:
+    EthSendRawTransactionResult:
+      description: Hash of the submitted transaction — 32 bytes, hex-encoded.
+      example: '0xe670ec64341771606e55d6b4ca35a1a6b75ee3d5145a99d05921026d1527331e'
+      pattern: ^0x([A-Fa-f0-9]{64})$
+      title: EthSendRawTransactionResult
+      type: string
+      x-struct: Elixir.BlockScoutWeb.Schemas.API.Legacy.EthRpc.EthSendRawTransactionResult
+      x-validate:
     FheOperation:
       additionalProperties: false
       properties:
@@ -4274,7 +4312,7 @@ components:
           x-struct:
           x-validate:
         result:
-          $ref: '#/components/schemas/HexString'
+          $ref: '#/components/schemas/HexData'
         type:
           enum:
             - arithmetic
@@ -4487,7 +4525,7 @@ components:
               properties:
                 raw:
                   anyOf:
-                    - $ref: '#/components/schemas/HexString'
+                    - $ref: '#/components/schemas/HexData'
                     - type: string
                       x-struct:
                       x-validate:
@@ -4529,7 +4567,7 @@ components:
           x-struct:
           x-validate:
         raw_input:
-          $ref: '#/components/schemas/HexString'
+          $ref: '#/components/schemas/HexData'
         priority_fee:
           $ref: '#/components/schemas/IntegerStringNullable'
       required:
@@ -4861,7 +4899,7 @@ components:
               properties:
                 raw:
                   anyOf:
-                    - $ref: '#/components/schemas/HexString'
+                    - $ref: '#/components/schemas/HexData'
                     - type: string
                       x-struct:
                       x-validate:
@@ -4903,7 +4941,7 @@ components:
           x-struct:
           x-validate:
         raw_input:
-          $ref: '#/components/schemas/HexString'
+          $ref: '#/components/schemas/HexData'
         priority_fee:
           $ref: '#/components/schemas/IntegerStringNullable'
       required:
@@ -4967,13 +5005,6 @@ components:
       title: Paymaster
       type: object
       x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.Proxy.AccountAbstraction.Paymaster
-      x-validate:
-    HexStringNullable:
-      nullable: true
-      pattern: ^0x([A-Fa-f0-9]*)$
-      title: HexStringNullable
-      type: string
-      x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.General.HexStringNullable
       x-validate:
     Timestamp:
       format: date-time
@@ -5797,6 +5828,185 @@ paths:
       summary: List verified smart contracts with optional filtering options
       tags:
         - smart-contracts
+  /api/legacy/eth/eth-send-raw-transaction:
+    post:
+      callbacks: {}
+      description: |
+        Submits a pre-signed transaction to the underlying JSON-RPC node for
+        inclusion in the mempool, and returns the transaction hash on acceptance.
+      operationId: BlockScoutWeb.API.Legacy.EthController.eth_send_raw_transaction
+      parameters:
+        - description: API key for rate limiting or for sensitive endpoints
+          in: query
+          name: apikey
+          required: false
+          schema:
+            type: string
+            x-struct:
+            x-validate:
+        - description: Secret key for getting access to restricted resources
+          in: query
+          name: key
+          required: false
+          schema:
+            type: string
+            x-struct:
+            x-validate:
+      requestBody:
+        content:
+          application/json:
+            schema:
+              example:
+                id: 0
+                jsonrpc: '2.0'
+                method: eth_sendRawTransaction
+                params:
+                  - '0xd46e8dd67c5d32be8d46e8dd67c5d32be8058bb8eb970870f072445675058bb8eb970870f072445675'
+              properties:
+                id:
+                  anyOf:
+                    - type: integer
+                      x-struct:
+                      x-validate:
+                    - type: string
+                      x-struct:
+                      x-validate:
+                  description: JSON-RPC request id. Echoed back in the response.
+                  nullable: true
+                  x-struct:
+                  x-validate:
+                jsonrpc:
+                  description: JSON-RPC protocol version, always `2.0`.
+                  enum:
+                    - '2.0'
+                  type: string
+                  x-struct:
+                  x-validate:
+                method:
+                  description: JSON-RPC method name. Must be `eth_sendRawTransaction` for this endpoint.
+                  enum:
+                    - eth_sendRawTransaction
+                  type: string
+                  x-struct:
+                  x-validate:
+                params:
+                  description: 'Single-element array `[<signed transaction data>]`: the signed transaction data is the RLP-encoded transaction bytes, hex-encoded with a `0x` prefix.'
+                  items:
+                    description: Hex-encoded signed transaction bytes.
+                    pattern: ^0x([A-Fa-f0-9]+)$
+                    type: string
+                    x-struct:
+                    x-validate:
+                  maxItems: 1
+                  minItems: 1
+                  type: array
+                  x-struct:
+                  x-validate:
+              required:
+                - jsonrpc
+                - method
+                - params
+                - id
+              type: object
+              x-struct:
+              x-validate:
+        description: JSON-RPC 2.0 request body. `method` must be `eth_sendRawTransaction`.
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                description: JSON-RPC 2.0 response envelope — `result` on success, `error` on failure.
+                oneOf:
+                  - additionalProperties: false
+                    properties:
+                      id:
+                        anyOf:
+                          - type: integer
+                            x-struct:
+                            x-validate:
+                          - type: string
+                            x-struct:
+                            x-validate:
+                        description: 'Echoes the request id as an integer or string. If the client sent `id: null`, the echo is coerced to an empty string. When the client omits `id` entirely, the response is always the error variant of this envelope with integer `0`.'
+                        x-struct:
+                        x-validate:
+                      jsonrpc:
+                        description: JSON-RPC protocol version, always `2.0`.
+                        enum:
+                          - '2.0'
+                        type: string
+                        x-struct:
+                        x-validate:
+                      result:
+                        $ref: '#/components/schemas/EthSendRawTransactionResult'
+                    required:
+                      - jsonrpc
+                      - result
+                      - id
+                    type: object
+                    x-struct:
+                    x-validate:
+                  - additionalProperties: false
+                    properties:
+                      error:
+                        anyOf:
+                          - type: string
+                            x-struct:
+                            x-validate:
+                          - additionalProperties: false
+                            properties:
+                              code:
+                                description: JSON-RPC error code.
+                                type: integer
+                                x-struct:
+                                x-validate:
+                              message:
+                                description: Human-readable error description.
+                                type: string
+                                x-struct:
+                                x-validate:
+                            required:
+                              - code
+                              - message
+                            type: object
+                            x-struct:
+                            x-validate:
+                        description: Error description — a human-readable string or a JSON-RPC error object.
+                        x-struct:
+                        x-validate:
+                      id:
+                        anyOf:
+                          - type: integer
+                            x-struct:
+                            x-validate:
+                          - type: string
+                            x-struct:
+                            x-validate:
+                        description: 'Echoes the request id as an integer or string. If the client sent `id: null`, the echo is coerced to an empty string. When the client omits `id` entirely, the response is always the error variant of this envelope with integer `0`.'
+                        x-struct:
+                        x-validate:
+                      jsonrpc:
+                        description: JSON-RPC protocol version, always `2.0`.
+                        enum:
+                          - '2.0'
+                        type: string
+                        x-struct:
+                        x-validate:
+                    required:
+                      - jsonrpc
+                      - error
+                      - id
+                    type: object
+                    x-struct:
+                    x-validate:
+                x-struct:
+                x-validate:
+          description: JSON-RPC 2.0 envelope (success or error; HTTP 200 regardless).
+      summary: Submit a signed transaction (eth_sendRawTransaction)
+      tags:
+        - legacy
   /api/v2/addresses/{address_hash_param}/withdrawals:
     get:
       callbacks: {}
@@ -6514,6 +6724,249 @@ paths:
       summary: List FHE operations for a specific transaction
       tags:
         - transactions
+  /api/legacy/eth/eth-get-logs:
+    post:
+      callbacks: {}
+      description: |
+        Returns event logs matching the supplied filter object, in JSON-RPC 2.0 format.
+        Up to a maximum of 1,000 log entries are returned per request.
+      operationId: BlockScoutWeb.API.Legacy.EthController.eth_get_logs
+      parameters:
+        - description: API key for rate limiting or for sensitive endpoints
+          in: query
+          name: apikey
+          required: false
+          schema:
+            type: string
+            x-struct:
+            x-validate:
+        - description: Secret key for getting access to restricted resources
+          in: query
+          name: key
+          required: false
+          schema:
+            type: string
+            x-struct:
+            x-validate:
+      requestBody:
+        content:
+          application/json:
+            schema:
+              example:
+                id: 0
+                jsonrpc: '2.0'
+                method: eth_getLogs
+                params:
+                  - address: '0x8bf38d4764929064f2d4d3a56520a76ab3df415b'
+                    fromBlock: '0x5'
+                    toBlock: '0xa'
+                    topics:
+                      - '0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef'
+              properties:
+                id:
+                  anyOf:
+                    - type: integer
+                      x-struct:
+                      x-validate:
+                    - type: string
+                      x-struct:
+                      x-validate:
+                  description: JSON-RPC request id. Echoed back in the response.
+                  nullable: true
+                  x-struct:
+                  x-validate:
+                jsonrpc:
+                  description: JSON-RPC protocol version, always `2.0`.
+                  enum:
+                    - '2.0'
+                  type: string
+                  x-struct:
+                  x-validate:
+                method:
+                  description: JSON-RPC method name. Must be `eth_getLogs` for this endpoint.
+                  enum:
+                    - eth_getLogs
+                  type: string
+                  x-struct:
+                  x-validate:
+                params:
+                  description: Single-element array containing a filter object.
+                  items:
+                    description: Log filter object. At least one of `address`, `topics` must be provided alongside `fromBlock` and `toBlock`.
+                    properties:
+                      address:
+                        description: Contract address to filter logs by. Optional.
+                        nullable: false
+                        pattern: ^0x([A-Fa-f0-9]{40})$
+                        type: string
+                        x-struct:
+                        x-validate:
+                      fromBlock:
+                        anyOf:
+                          - pattern: ^0x([A-Fa-f0-9]+)$
+                            type: string
+                            x-struct:
+                            x-validate:
+                          - enum:
+                              - latest
+                              - earliest
+                              - pending
+                            type: string
+                            x-struct:
+                            x-validate:
+                        description: Start of the block range to search.
+                        x-struct:
+                        x-validate:
+                      toBlock:
+                        anyOf:
+                          - pattern: ^0x([A-Fa-f0-9]+)$
+                            type: string
+                            x-struct:
+                            x-validate:
+                          - enum:
+                              - latest
+                              - earliest
+                              - pending
+                            type: string
+                            x-struct:
+                            x-validate:
+                        description: End of the block range to search.
+                        x-struct:
+                        x-validate:
+                      topics:
+                        description: Up to four topic filters. Each element is either a 32-byte hex topic string, an array of topic strings (OR semantics), or `null` to match any value in that position.
+                        items:
+                          anyOf:
+                            - $ref: '#/components/schemas/FullHash'
+                            - items:
+                                $ref: '#/components/schemas/FullHash'
+                              type: array
+                              x-struct:
+                              x-validate:
+                          nullable: true
+                          x-struct:
+                          x-validate:
+                        type: array
+                        x-struct:
+                        x-validate:
+                    type: object
+                    x-struct:
+                    x-validate:
+                  maxItems: 1
+                  minItems: 1
+                  type: array
+                  x-struct:
+                  x-validate:
+              required:
+                - jsonrpc
+                - method
+                - params
+                - id
+              type: object
+              x-struct:
+              x-validate:
+        description: JSON-RPC 2.0 request body. `method` must be `eth_getLogs`.
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                description: JSON-RPC 2.0 response envelope — `result` on success, `error` on failure.
+                oneOf:
+                  - additionalProperties: false
+                    properties:
+                      id:
+                        anyOf:
+                          - type: integer
+                            x-struct:
+                            x-validate:
+                          - type: string
+                            x-struct:
+                            x-validate:
+                        description: 'Echoes the request id as an integer or string. If the client sent `id: null`, the echo is coerced to an empty string. When the client omits `id` entirely, the response is always the error variant of this envelope with integer `0`.'
+                        x-struct:
+                        x-validate:
+                      jsonrpc:
+                        description: JSON-RPC protocol version, always `2.0`.
+                        enum:
+                          - '2.0'
+                        type: string
+                        x-struct:
+                        x-validate:
+                      result:
+                        items:
+                          $ref: '#/components/schemas/EthGetLogsResult'
+                        nullable: true
+                        type: array
+                        x-struct:
+                        x-validate:
+                    required:
+                      - jsonrpc
+                      - result
+                      - id
+                    type: object
+                    x-struct:
+                    x-validate:
+                  - additionalProperties: false
+                    properties:
+                      error:
+                        anyOf:
+                          - type: string
+                            x-struct:
+                            x-validate:
+                          - additionalProperties: false
+                            properties:
+                              code:
+                                description: JSON-RPC error code.
+                                type: integer
+                                x-struct:
+                                x-validate:
+                              message:
+                                description: Human-readable error description.
+                                type: string
+                                x-struct:
+                                x-validate:
+                            required:
+                              - code
+                              - message
+                            type: object
+                            x-struct:
+                            x-validate:
+                        description: Error description — a human-readable string or a JSON-RPC error object.
+                        x-struct:
+                        x-validate:
+                      id:
+                        anyOf:
+                          - type: integer
+                            x-struct:
+                            x-validate:
+                          - type: string
+                            x-struct:
+                            x-validate:
+                        description: 'Echoes the request id as an integer or string. If the client sent `id: null`, the echo is coerced to an empty string. When the client omits `id` entirely, the response is always the error variant of this envelope with integer `0`.'
+                        x-struct:
+                        x-validate:
+                      jsonrpc:
+                        description: JSON-RPC protocol version, always `2.0`.
+                        enum:
+                          - '2.0'
+                        type: string
+                        x-struct:
+                        x-validate:
+                    required:
+                      - jsonrpc
+                      - error
+                      - id
+                    type: object
+                    x-struct:
+                    x-validate:
+                x-struct:
+                x-validate:
+          description: JSON-RPC 2.0 envelope (success or error; HTTP 200 regardless).
+      summary: Get event logs (eth_getLogs)
+      tags:
+        - legacy
   /api/v2/csv-exports/{uuid_param}:
     get:
       callbacks: {}
@@ -8191,6 +8644,168 @@ paths:
       summary: List Stability validators.
       tags:
         - stability
+  /api/legacy/eth/eth-block-number:
+    post:
+      callbacks: {}
+      description: |
+        Returns the latest block number as a hex-encoded string in a JSON-RPC 2.0 response.
+      operationId: BlockScoutWeb.API.Legacy.EthController.eth_block_number
+      parameters:
+        - description: API key for rate limiting or for sensitive endpoints
+          in: query
+          name: apikey
+          required: false
+          schema:
+            type: string
+            x-struct:
+            x-validate:
+        - description: Secret key for getting access to restricted resources
+          in: query
+          name: key
+          required: false
+          schema:
+            type: string
+            x-struct:
+            x-validate:
+      requestBody:
+        content:
+          application/json:
+            schema:
+              example:
+                id: 1
+                jsonrpc: '2.0'
+                method: eth_blockNumber
+              properties:
+                id:
+                  anyOf:
+                    - type: integer
+                      x-struct:
+                      x-validate:
+                    - type: string
+                      x-struct:
+                      x-validate:
+                  description: JSON-RPC request id. Echoed back in the response.
+                  nullable: true
+                  x-struct:
+                  x-validate:
+                jsonrpc:
+                  description: JSON-RPC protocol version, always `2.0`.
+                  enum:
+                    - '2.0'
+                  type: string
+                  x-struct:
+                  x-validate:
+                method:
+                  description: JSON-RPC method name. Must be `eth_blockNumber` for this endpoint.
+                  enum:
+                    - eth_blockNumber
+                  type: string
+                  x-struct:
+                  x-validate:
+              required:
+                - jsonrpc
+                - method
+                - id
+              type: object
+              x-struct:
+              x-validate:
+        description: JSON-RPC 2.0 request body. `method` must be `eth_blockNumber`. No `params` field is needed.
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                description: JSON-RPC 2.0 response envelope — `result` on success, `error` on failure.
+                oneOf:
+                  - additionalProperties: false
+                    properties:
+                      id:
+                        anyOf:
+                          - type: integer
+                            x-struct:
+                            x-validate:
+                          - type: string
+                            x-struct:
+                            x-validate:
+                        description: 'Echoes the request id as an integer or string. If the client sent `id: null`, the echo is coerced to an empty string. When the client omits `id` entirely, the response is always the error variant of this envelope with integer `0`.'
+                        x-struct:
+                        x-validate:
+                      jsonrpc:
+                        description: JSON-RPC protocol version, always `2.0`.
+                        enum:
+                          - '2.0'
+                        type: string
+                        x-struct:
+                        x-validate:
+                      result:
+                        $ref: '#/components/schemas/EthBlockNumberResult'
+                    required:
+                      - jsonrpc
+                      - result
+                      - id
+                    type: object
+                    x-struct:
+                    x-validate:
+                  - additionalProperties: false
+                    properties:
+                      error:
+                        anyOf:
+                          - type: string
+                            x-struct:
+                            x-validate:
+                          - additionalProperties: false
+                            properties:
+                              code:
+                                description: JSON-RPC error code.
+                                type: integer
+                                x-struct:
+                                x-validate:
+                              message:
+                                description: Human-readable error description.
+                                type: string
+                                x-struct:
+                                x-validate:
+                            required:
+                              - code
+                              - message
+                            type: object
+                            x-struct:
+                            x-validate:
+                        description: Error description — a human-readable string or a JSON-RPC error object.
+                        x-struct:
+                        x-validate:
+                      id:
+                        anyOf:
+                          - type: integer
+                            x-struct:
+                            x-validate:
+                          - type: string
+                            x-struct:
+                            x-validate:
+                        description: 'Echoes the request id as an integer or string. If the client sent `id: null`, the echo is coerced to an empty string. When the client omits `id` entirely, the response is always the error variant of this envelope with integer `0`.'
+                        x-struct:
+                        x-validate:
+                      jsonrpc:
+                        description: JSON-RPC protocol version, always `2.0`.
+                        enum:
+                          - '2.0'
+                        type: string
+                        x-struct:
+                        x-validate:
+                    required:
+                      - jsonrpc
+                      - error
+                      - id
+                    type: object
+                    x-struct:
+                    x-validate:
+                x-struct:
+                x-validate:
+          description: JSON-RPC 2.0 envelope (success or error; HTTP 200 regardless).
+      summary: Get the latest block number (eth_blockNumber)
+      tags:
+        - legacy
   /api/v2/tokens/{address_hash_param}/instances/{token_id_param}/media-type:
     get:
       callbacks: {}
@@ -10118,7 +10733,7 @@ paths:
           name: topic
           required: false
           schema:
-            $ref: '#/components/schemas/HexString'
+            $ref: '#/components/schemas/HexData'
         - description: Number of items per page
           in: query
           name: items_count
@@ -10240,131 +10855,15 @@ paths:
       summary: Retrieve detailed information about a specific address or contract
       tags:
         - addresses
-  /api/legacy/logs/get-logs:
-    get:
+  /api/legacy/eth/eth-call:
+    post:
       callbacks: {}
       description: |
-        Event logs for an address and topic. Use and/or with the topic operator to specify
-        topic retrieval options when adding multiple topics. Up to a maximum of 1,000 event logs.
-
-        Required:
-        - `fromBlock` and `toBlock`
-        - At least one of `address`, `topic0`, `topic1`, `topic2`, `topic3`
-        - If any pair of topic parameters is set, the corresponding `topicA_B_opr` is required.
-      operationId: BlockScoutWeb.API.Legacy.LogsController.get_logs
+        Performs a read-only EVM call against the given contract at the given block,
+        without creating a transaction or modifying chain state — useful for
+        querying contract data without spending gas.
+      operationId: BlockScoutWeb.API.Legacy.EthController.eth_call
       parameters:
-        - description: 'Start block: integer or the sentinel "latest"'
-          in: query
-          name: fromBlock
-          schema:
-            anyOf:
-              - $ref: '#/components/schemas/IntegerString'
-              - enum:
-                  - latest
-                type: string
-                x-struct:
-                x-validate:
-            x-struct:
-            x-validate:
-        - description: 'End block: integer or the sentinel "latest"'
-          in: query
-          name: toBlock
-          schema:
-            anyOf:
-              - $ref: '#/components/schemas/IntegerString'
-              - enum:
-                  - latest
-                type: string
-                x-struct:
-                x-validate:
-            x-struct:
-            x-validate:
-        - in: query
-          name: address
-          schema:
-            $ref: '#/components/schemas/AddressHash'
-        - in: query
-          name: topic0
-          schema:
-            pattern: ^0x[0-9a-fA-F]{64}$
-            type: string
-            x-struct:
-            x-validate:
-        - in: query
-          name: topic1
-          schema:
-            pattern: ^0x[0-9a-fA-F]{64}$
-            type: string
-            x-struct:
-            x-validate:
-        - in: query
-          name: topic2
-          schema:
-            pattern: ^0x[0-9a-fA-F]{64}$
-            type: string
-            x-struct:
-            x-validate:
-        - in: query
-          name: topic3
-          schema:
-            pattern: ^0x[0-9a-fA-F]{64}$
-            type: string
-            x-struct:
-            x-validate:
-        - in: query
-          name: topic0_1_opr
-          schema:
-            enum:
-              - and
-              - or
-            type: string
-            x-struct:
-            x-validate:
-        - in: query
-          name: topic0_2_opr
-          schema:
-            enum:
-              - and
-              - or
-            type: string
-            x-struct:
-            x-validate:
-        - in: query
-          name: topic0_3_opr
-          schema:
-            enum:
-              - and
-              - or
-            type: string
-            x-struct:
-            x-validate:
-        - in: query
-          name: topic1_2_opr
-          schema:
-            enum:
-              - and
-              - or
-            type: string
-            x-struct:
-            x-validate:
-        - in: query
-          name: topic1_3_opr
-          schema:
-            enum:
-              - and
-              - or
-            type: string
-            x-struct:
-            x-validate:
-        - in: query
-          name: topic2_3_opr
-          schema:
-            enum:
-              - and
-              - or
-            type: string
-            x-struct:
-            x-validate:
         - description: API key for rate limiting or for sensitive endpoints
           in: query
           name: apikey
@@ -10381,48 +10880,206 @@ paths:
             type: string
             x-struct:
             x-validate:
+      requestBody:
+        content:
+          application/json:
+            schema:
+              example:
+                id: 0
+                jsonrpc: '2.0'
+                method: eth_call
+                params:
+                  - from: '0x1643E812aE58766192Cf7D2Cf9567dF2C37e9B7F'
+                    input: '0xd4aae0c4'
+                    to: '0x1643E812aE58766192Cf7D2Cf9567dF2C37e9B7F'
+                  - latest
+              properties:
+                id:
+                  anyOf:
+                    - type: integer
+                      x-struct:
+                      x-validate:
+                    - type: string
+                      x-struct:
+                      x-validate:
+                  description: JSON-RPC request id. Echoed back in the response.
+                  nullable: true
+                  x-struct:
+                  x-validate:
+                jsonrpc:
+                  description: JSON-RPC protocol version, always `2.0`.
+                  enum:
+                    - '2.0'
+                  type: string
+                  x-struct:
+                  x-validate:
+                method:
+                  description: JSON-RPC method name. Must be `eth_call` for this endpoint.
+                  enum:
+                    - eth_call
+                  type: string
+                  x-struct:
+                  x-validate:
+                params:
+                  description: 'Two-element array `[<call object>, <block tag>]`: the call object specifies the target contract and call data; the block tag selects the chain state to execute against.'
+                  items:
+                    anyOf:
+                      - description: Transaction call object — at minimum `to` is required. Additional EVM call-object fields (`nonce`, `data`, `chainId`, `type`, `accessList`, `maxFeePerGas`, `maxPriorityFeePerGas`, `blobVersionedHashes`) are forwarded verbatim to the upstream JSON-RPC node and are not enforced here.
+                        properties:
+                          from:
+                            description: Caller address used as `msg.sender` during execution. Optional.
+                            nullable: false
+                            pattern: ^0x([A-Fa-f0-9]{40})$
+                            type: string
+                            x-struct:
+                            x-validate:
+                          gas:
+                            description: Hex-encoded gas limit.
+                            pattern: ^0x([A-Fa-f0-9]+)$
+                            type: string
+                            x-struct:
+                            x-validate:
+                          gasPrice:
+                            description: Hex-encoded gas price in wei.
+                            pattern: ^0x([A-Fa-f0-9]+)$
+                            type: string
+                            x-struct:
+                            x-validate:
+                          input:
+                            description: Hex-encoded calldata.
+                            pattern: ^0x([A-Fa-f0-9]*)$
+                            type: string
+                            x-struct:
+                            x-validate:
+                          to:
+                            description: Target contract address.
+                            nullable: false
+                            pattern: ^0x([A-Fa-f0-9]{40})$
+                            type: string
+                            x-struct:
+                            x-validate:
+                          value:
+                            description: Hex-encoded value sent with the call, in wei.
+                            pattern: ^0x([A-Fa-f0-9]+)$
+                            type: string
+                            x-struct:
+                            x-validate:
+                        required:
+                          - to
+                        type: object
+                        x-struct:
+                        x-validate:
+                      - $ref: '#/components/schemas/BlockTag'
+                    x-struct:
+                    x-validate:
+                  maxItems: 2
+                  minItems: 2
+                  type: array
+                  x-struct:
+                  x-validate:
+              required:
+                - jsonrpc
+                - method
+                - params
+                - id
+              type: object
+              x-struct:
+              x-validate:
+        description: JSON-RPC 2.0 request body. `method` must be `eth_call`.
+        required: true
       responses:
         '200':
           content:
             application/json:
               schema:
-                additionalProperties: false
-                properties:
-                  message:
-                    description: Human-readable status string — `OK` on success, a descriptive error message otherwise.
-                    type: string
-                    x-struct:
-                    x-validate:
-                  result:
-                    allOf:
-                      - items:
-                          $ref: '#/components/schemas/LogItem'
-                        nullable: true
-                        type: array
+                description: JSON-RPC 2.0 response envelope — `result` on success, `error` on failure.
+                oneOf:
+                  - additionalProperties: false
+                    properties:
+                      id:
+                        anyOf:
+                          - type: integer
+                            x-struct:
+                            x-validate:
+                          - type: string
+                            x-struct:
+                            x-validate:
+                        description: 'Echoes the request id as an integer or string. If the client sent `id: null`, the echo is coerced to an empty string. When the client omits `id` entirely, the response is always the error variant of this envelope with integer `0`.'
                         x-struct:
                         x-validate:
-                    description: Endpoint-specific payload on success; `null` on error.
-                    nullable: true
+                      jsonrpc:
+                        description: JSON-RPC protocol version, always `2.0`.
+                        enum:
+                          - '2.0'
+                        type: string
+                        x-struct:
+                        x-validate:
+                      result:
+                        $ref: '#/components/schemas/EthCallResult'
+                    required:
+                      - jsonrpc
+                      - result
+                      - id
+                    type: object
                     x-struct:
                     x-validate:
-                  status:
-                    description: '`1` = OK, `0` = error, `2` = pending.'
-                    enum:
-                      - '0'
-                      - '1'
-                      - '2'
-                    type: string
+                  - additionalProperties: false
+                    properties:
+                      error:
+                        anyOf:
+                          - type: string
+                            x-struct:
+                            x-validate:
+                          - additionalProperties: false
+                            properties:
+                              code:
+                                description: JSON-RPC error code.
+                                type: integer
+                                x-struct:
+                                x-validate:
+                              message:
+                                description: Human-readable error description.
+                                type: string
+                                x-struct:
+                                x-validate:
+                            required:
+                              - code
+                              - message
+                            type: object
+                            x-struct:
+                            x-validate:
+                        description: Error description — a human-readable string or a JSON-RPC error object.
+                        x-struct:
+                        x-validate:
+                      id:
+                        anyOf:
+                          - type: integer
+                            x-struct:
+                            x-validate:
+                          - type: string
+                            x-struct:
+                            x-validate:
+                        description: 'Echoes the request id as an integer or string. If the client sent `id: null`, the echo is coerced to an empty string. When the client omits `id` entirely, the response is always the error variant of this envelope with integer `0`.'
+                        x-struct:
+                        x-validate:
+                      jsonrpc:
+                        description: JSON-RPC protocol version, always `2.0`.
+                        enum:
+                          - '2.0'
+                        type: string
+                        x-struct:
+                        x-validate:
+                    required:
+                      - jsonrpc
+                      - error
+                      - id
+                    type: object
                     x-struct:
                     x-validate:
-                required:
-                  - status
-                  - message
-                  - result
-                type: object
                 x-struct:
                 x-validate:
-          description: Event logs
-      summary: Get Event Logs by Address and/or Topic(s)
+          description: JSON-RPC 2.0 envelope (success or error; HTTP 200 regardless).
+      summary: Execute a contract call (eth_call)
       tags:
         - legacy
   /api/v2/proxy/account-abstraction/accounts:
@@ -11324,6 +11981,185 @@ paths:
       summary: Get total number of ownership transfers for a specific NFT
       tags:
         - tokens
+  /api/legacy/eth/eth-get-balance:
+    post:
+      callbacks: {}
+      description: |
+        Returns the wei balance of the given address at the given block.
+      operationId: BlockScoutWeb.API.Legacy.EthController.eth_get_balance
+      parameters:
+        - description: API key for rate limiting or for sensitive endpoints
+          in: query
+          name: apikey
+          required: false
+          schema:
+            type: string
+            x-struct:
+            x-validate:
+        - description: Secret key for getting access to restricted resources
+          in: query
+          name: key
+          required: false
+          schema:
+            type: string
+            x-struct:
+            x-validate:
+      requestBody:
+        content:
+          application/json:
+            schema:
+              example:
+                id: 0
+                jsonrpc: '2.0'
+                method: eth_getBalance
+                params:
+                  - '0x0000000000000000000000000000000000000007'
+                  - latest
+              properties:
+                id:
+                  anyOf:
+                    - type: integer
+                      x-struct:
+                      x-validate:
+                    - type: string
+                      x-struct:
+                      x-validate:
+                  description: JSON-RPC request id. Echoed back in the response.
+                  nullable: true
+                  x-struct:
+                  x-validate:
+                jsonrpc:
+                  description: JSON-RPC protocol version, always `2.0`.
+                  enum:
+                    - '2.0'
+                  type: string
+                  x-struct:
+                  x-validate:
+                method:
+                  description: JSON-RPC method name. Must be `eth_getBalance` for this endpoint.
+                  enum:
+                    - eth_getBalance
+                  type: string
+                  x-struct:
+                  x-validate:
+                params:
+                  description: 'One- or two-element array `[<address>]` or `[<address>, <block tag>]`: the address is the account to query; the block tag selects the chain state to read from and defaults to `"latest"` when omitted.'
+                  items:
+                    anyOf:
+                      - $ref: '#/components/schemas/AddressHash'
+                      - $ref: '#/components/schemas/BlockTag'
+                    x-struct:
+                    x-validate:
+                  maxItems: 2
+                  minItems: 1
+                  type: array
+                  x-struct:
+                  x-validate:
+              required:
+                - jsonrpc
+                - method
+                - params
+                - id
+              type: object
+              x-struct:
+              x-validate:
+        description: JSON-RPC 2.0 request body. `method` must be `eth_getBalance`.
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                description: JSON-RPC 2.0 response envelope — `result` on success, `error` on failure.
+                oneOf:
+                  - additionalProperties: false
+                    properties:
+                      id:
+                        anyOf:
+                          - type: integer
+                            x-struct:
+                            x-validate:
+                          - type: string
+                            x-struct:
+                            x-validate:
+                        description: 'Echoes the request id as an integer or string. If the client sent `id: null`, the echo is coerced to an empty string. When the client omits `id` entirely, the response is always the error variant of this envelope with integer `0`.'
+                        x-struct:
+                        x-validate:
+                      jsonrpc:
+                        description: JSON-RPC protocol version, always `2.0`.
+                        enum:
+                          - '2.0'
+                        type: string
+                        x-struct:
+                        x-validate:
+                      result:
+                        $ref: '#/components/schemas/EthGetBalanceResult'
+                    required:
+                      - jsonrpc
+                      - result
+                      - id
+                    type: object
+                    x-struct:
+                    x-validate:
+                  - additionalProperties: false
+                    properties:
+                      error:
+                        anyOf:
+                          - type: string
+                            x-struct:
+                            x-validate:
+                          - additionalProperties: false
+                            properties:
+                              code:
+                                description: JSON-RPC error code.
+                                type: integer
+                                x-struct:
+                                x-validate:
+                              message:
+                                description: Human-readable error description.
+                                type: string
+                                x-struct:
+                                x-validate:
+                            required:
+                              - code
+                              - message
+                            type: object
+                            x-struct:
+                            x-validate:
+                        description: Error description — a human-readable string or a JSON-RPC error object.
+                        x-struct:
+                        x-validate:
+                      id:
+                        anyOf:
+                          - type: integer
+                            x-struct:
+                            x-validate:
+                          - type: string
+                            x-struct:
+                            x-validate:
+                        description: 'Echoes the request id as an integer or string. If the client sent `id: null`, the echo is coerced to an empty string. When the client omits `id` entirely, the response is always the error variant of this envelope with integer `0`.'
+                        x-struct:
+                        x-validate:
+                      jsonrpc:
+                        description: JSON-RPC protocol version, always `2.0`.
+                        enum:
+                          - '2.0'
+                        type: string
+                        x-struct:
+                        x-validate:
+                    required:
+                      - jsonrpc
+                      - error
+                      - id
+                    type: object
+                    x-struct:
+                    x-validate:
+                x-struct:
+                x-validate:
+          description: JSON-RPC 2.0 envelope (success or error; HTTP 200 regardless).
+      summary: Get an address balance (eth_getBalance)
+      tags:
+        - legacy
   /api/v2/addresses/{address_hash_param}/internal-transactions:
     get:
       callbacks: {}
@@ -13067,84 +13903,6 @@ paths:
       summary: Get a human-readable, LLM-based transaction summary
       tags:
         - transactions
-  /api/legacy/block/eth-block-number:
-    get:
-      callbacks: {}
-      description: |
-        Returns the latest block number as a hex-encoded string in a JSON-RPC 2.0 response.
-      operationId: BlockScoutWeb.API.Legacy.BlockController.eth_block_number
-      parameters:
-        - description: JSON-RPC request id echoed back in the response. Defaults to 1 when omitted.
-          in: query
-          name: id
-          schema:
-            anyOf:
-              - type: integer
-                x-struct:
-                x-validate:
-              - type: string
-                x-struct:
-                x-validate:
-            x-struct:
-            x-validate:
-        - description: API key for rate limiting or for sensitive endpoints
-          in: query
-          name: apikey
-          required: false
-          schema:
-            type: string
-            x-struct:
-            x-validate:
-        - description: Secret key for getting access to restricted resources
-          in: query
-          name: key
-          required: false
-          schema:
-            type: string
-            x-struct:
-            x-validate:
-      responses:
-        '200':
-          content:
-            application/json:
-              schema:
-                additionalProperties: false
-                properties:
-                  id:
-                    anyOf:
-                      - type: integer
-                        x-struct:
-                        x-validate:
-                      - type: string
-                        x-struct:
-                        x-validate:
-                    description: Echoes the request id. When the client omits it, the server echoes integer `1`.
-                    x-struct:
-                    x-validate:
-                  jsonrpc:
-                    description: JSON-RPC protocol version, always `2.0`.
-                    enum:
-                      - '2.0'
-                    type: string
-                    x-struct:
-                    x-validate:
-                  result:
-                    allOf:
-                      - $ref: '#/components/schemas/EthBlockNumberResult'
-                    description: Endpoint-specific payload.
-                    x-struct:
-                    x-validate:
-                required:
-                  - jsonrpc
-                  - result
-                  - id
-                type: object
-                x-struct:
-                x-validate:
-          description: Latest block number
-      summary: Get the latest block number
-      tags:
-        - legacy
   /api/v2/proxy/account-abstraction/operations/{operation_hash_param}/summary:
     get:
       callbacks: {}
@@ -13682,12 +14440,7 @@ paths:
                     x-struct:
                     x-validate:
                   result:
-                    allOf:
-                      - $ref: '#/components/schemas/GetBlockNumberByTimeResult'
-                    description: Endpoint-specific payload on success; `null` on error.
-                    nullable: true
-                    x-struct:
-                    x-validate:
+                    $ref: '#/components/schemas/GetBlockNumberByTimeResult'
                   status:
                     description: '`1` = OK, `0` = error, `2` = pending.'
                     enum:
@@ -14349,6 +15102,188 @@ paths:
       summary: List of recent user operations
       tags:
         - account-abstraction
+  /api/legacy/eth/eth-get-storage-at:
+    post:
+      callbacks: {}
+      description: |
+        Returns the raw storage value at the given slot of the given contract
+        address at the given block.
+      operationId: BlockScoutWeb.API.Legacy.EthController.eth_get_storage_at
+      parameters:
+        - description: API key for rate limiting or for sensitive endpoints
+          in: query
+          name: apikey
+          required: false
+          schema:
+            type: string
+            x-struct:
+            x-validate:
+        - description: Secret key for getting access to restricted resources
+          in: query
+          name: key
+          required: false
+          schema:
+            type: string
+            x-struct:
+            x-validate:
+      requestBody:
+        content:
+          application/json:
+            schema:
+              example:
+                id: 4
+                jsonrpc: '2.0'
+                method: eth_getStorageAt
+                params:
+                  - '0x1643E812aE58766192Cf7D2Cf9567dF2C37e9B7F'
+                  - '0x0'
+                  - latest
+              properties:
+                id:
+                  anyOf:
+                    - type: integer
+                      x-struct:
+                      x-validate:
+                    - type: string
+                      x-struct:
+                      x-validate:
+                  description: JSON-RPC request id. Echoed back in the response.
+                  nullable: true
+                  x-struct:
+                  x-validate:
+                jsonrpc:
+                  description: JSON-RPC protocol version, always `2.0`.
+                  enum:
+                    - '2.0'
+                  type: string
+                  x-struct:
+                  x-validate:
+                method:
+                  description: JSON-RPC method name. Must be `eth_getStorageAt` for this endpoint.
+                  enum:
+                    - eth_getStorageAt
+                  type: string
+                  x-struct:
+                  x-validate:
+                params:
+                  description: 'Three-element array `[<address>, <storage position (hex)>, <block tag>]`: the address is the contract to query; the storage position is a hex-encoded slot index; the block tag selects the chain state to read from.'
+                  items:
+                    anyOf:
+                      - $ref: '#/components/schemas/AddressHash'
+                      - $ref: '#/components/schemas/HexQuantity'
+                      - $ref: '#/components/schemas/BlockTag'
+                    x-struct:
+                    x-validate:
+                  maxItems: 3
+                  minItems: 3
+                  type: array
+                  x-struct:
+                  x-validate:
+              required:
+                - jsonrpc
+                - method
+                - params
+                - id
+              type: object
+              x-struct:
+              x-validate:
+        description: JSON-RPC 2.0 request body. `method` must be `eth_getStorageAt`.
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                description: JSON-RPC 2.0 response envelope — `result` on success, `error` on failure.
+                oneOf:
+                  - additionalProperties: false
+                    properties:
+                      id:
+                        anyOf:
+                          - type: integer
+                            x-struct:
+                            x-validate:
+                          - type: string
+                            x-struct:
+                            x-validate:
+                        description: 'Echoes the request id as an integer or string. If the client sent `id: null`, the echo is coerced to an empty string. When the client omits `id` entirely, the response is always the error variant of this envelope with integer `0`.'
+                        x-struct:
+                        x-validate:
+                      jsonrpc:
+                        description: JSON-RPC protocol version, always `2.0`.
+                        enum:
+                          - '2.0'
+                        type: string
+                        x-struct:
+                        x-validate:
+                      result:
+                        $ref: '#/components/schemas/EthGetStorageAtResult'
+                    required:
+                      - jsonrpc
+                      - result
+                      - id
+                    type: object
+                    x-struct:
+                    x-validate:
+                  - additionalProperties: false
+                    properties:
+                      error:
+                        anyOf:
+                          - type: string
+                            x-struct:
+                            x-validate:
+                          - additionalProperties: false
+                            properties:
+                              code:
+                                description: JSON-RPC error code.
+                                type: integer
+                                x-struct:
+                                x-validate:
+                              message:
+                                description: Human-readable error description.
+                                type: string
+                                x-struct:
+                                x-validate:
+                            required:
+                              - code
+                              - message
+                            type: object
+                            x-struct:
+                            x-validate:
+                        description: Error description — a human-readable string or a JSON-RPC error object.
+                        x-struct:
+                        x-validate:
+                      id:
+                        anyOf:
+                          - type: integer
+                            x-struct:
+                            x-validate:
+                          - type: string
+                            x-struct:
+                            x-validate:
+                        description: 'Echoes the request id as an integer or string. If the client sent `id: null`, the echo is coerced to an empty string. When the client omits `id` entirely, the response is always the error variant of this envelope with integer `0`.'
+                        x-struct:
+                        x-validate:
+                      jsonrpc:
+                        description: JSON-RPC protocol version, always `2.0`.
+                        enum:
+                          - '2.0'
+                        type: string
+                        x-struct:
+                        x-validate:
+                    required:
+                      - jsonrpc
+                      - error
+                      - id
+                    type: object
+                    x-struct:
+                    x-validate:
+                x-struct:
+                x-validate:
+          description: JSON-RPC 2.0 envelope (success or error; HTTP 200 regardless).
+      summary: Read contract storage (eth_getStorageAt)
+      tags:
+        - legacy
   /api/v2/search:
     get:
       callbacks: {}
