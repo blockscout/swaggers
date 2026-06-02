@@ -2661,6 +2661,7 @@ components:
         - eip7702
         - resolved_delegate_proxy
         - erc7760
+        - minimal_proxy
       nullable: true
       title: ProxyType
       type: string
