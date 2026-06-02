@@ -8839,6 +8839,27 @@ paths:
                     type: array
                     x-struct: null
                     x-validate: null
+                  meta:
+                    nullable: false
+                    properties:
+                      message:
+                        nullable: true
+                        type: string
+                        x-struct: null
+                        x-validate: null
+                      status:
+                        enum:
+                          - 1
+                          - 2
+                        type: integer
+                        x-struct: null
+                        x-validate: null
+                    required:
+                      - status
+                      - message
+                    type: object
+                    x-struct: null
+                    x-validate: null
                   next_page_params:
                     example:
                       index: 8
@@ -8850,6 +8871,7 @@ paths:
                 required:
                   - items
                   - next_page_params
+                  - meta
                 type: object
                 x-struct: null
                 x-validate: null
@@ -15313,6 +15335,27 @@ paths:
                     type: array
                     x-struct: null
                     x-validate: null
+                  meta:
+                    nullable: false
+                    properties:
+                      message:
+                        nullable: true
+                        type: string
+                        x-struct: null
+                        x-validate: null
+                      status:
+                        enum:
+                          - 1
+                          - 2
+                        type: integer
+                        x-struct: null
+                        x-validate: null
+                    required:
+                      - status
+                      - message
+                    type: object
+                    x-struct: null
+                    x-validate: null
                   next_page_params:
                     example:
                       block_number: 22530770
@@ -15325,6 +15368,7 @@ paths:
                 required:
                   - items
                   - next_page_params
+                  - meta
                 type: object
                 x-struct: null
                 x-validate: null
@@ -17784,6 +17828,27 @@ paths:
                     type: array
                     x-struct: null
                     x-validate: null
+                  meta:
+                    nullable: false
+                    properties:
+                      message:
+                        nullable: true
+                        type: string
+                        x-struct: null
+                        x-validate: null
+                      status:
+                        enum:
+                          - 1
+                          - 2
+                        type: integer
+                        x-struct: null
+                        x-validate: null
+                    required:
+                      - status
+                      - message
+                    type: object
+                    x-struct: null
+                    x-validate: null
                   next_page_params:
                     example:
                       block_number: 22133247
@@ -17796,6 +17861,7 @@ paths:
                 required:
                   - items
                   - next_page_params
+                  - meta
                 type: object
                 x-struct: null
                 x-validate: null
@@ -18421,6 +18487,27 @@ paths:
                     type: array
                     x-struct: null
                     x-validate: null
+                  meta:
+                    nullable: false
+                    properties:
+                      message:
+                        nullable: true
+                        type: string
+                        x-struct: null
+                        x-validate: null
+                      status:
+                        enum:
+                          - 1
+                          - 2
+                        type: integer
+                        x-struct: null
+                        x-validate: null
+                    required:
+                      - status
+                      - message
+                    type: object
+                    x-struct: null
+                    x-validate: null
                   next_page_params:
                     example:
                       block_number: 22133247
@@ -18433,6 +18520,7 @@ paths:
                 required:
                   - items
                   - next_page_params
+                  - meta
                 type: object
                 x-struct: null
                 x-validate: null

@@ -7379,6 +7379,27 @@ paths:
                     type: array
                     x-struct:
                     x-validate:
+                  meta:
+                    nullable: false
+                    properties:
+                      message:
+                        nullable: true
+                        type: string
+                        x-struct:
+                        x-validate:
+                      status:
+                        enum:
+                          - 1
+                          - 2
+                        type: integer
+                        x-struct:
+                        x-validate:
+                    required:
+                      - status
+                      - message
+                    type: object
+                    x-struct:
+                    x-validate:
                   next_page_params:
                     example:
                       index: 8
@@ -7390,6 +7411,7 @@ paths:
                 required:
                   - items
                   - next_page_params
+                  - meta
                 type: object
                 x-struct:
                 x-validate:
@@ -13853,6 +13875,27 @@ paths:
                     type: array
                     x-struct:
                     x-validate:
+                  meta:
+                    nullable: false
+                    properties:
+                      message:
+                        nullable: true
+                        type: string
+                        x-struct:
+                        x-validate:
+                      status:
+                        enum:
+                          - 1
+                          - 2
+                        type: integer
+                        x-struct:
+                        x-validate:
+                    required:
+                      - status
+                      - message
+                    type: object
+                    x-struct:
+                    x-validate:
                   next_page_params:
                     example:
                       block_number: 22530770
@@ -13865,6 +13908,7 @@ paths:
                 required:
                   - items
                   - next_page_params
+                  - meta
                 type: object
                 x-struct:
                 x-validate:
@@ -16324,6 +16368,27 @@ paths:
                     type: array
                     x-struct:
                     x-validate:
+                  meta:
+                    nullable: false
+                    properties:
+                      message:
+                        nullable: true
+                        type: string
+                        x-struct:
+                        x-validate:
+                      status:
+                        enum:
+                          - 1
+                          - 2
+                        type: integer
+                        x-struct:
+                        x-validate:
+                    required:
+                      - status
+                      - message
+                    type: object
+                    x-struct:
+                    x-validate:
                   next_page_params:
                     example:
                       block_number: 22133247
@@ -16336,6 +16401,7 @@ paths:
                 required:
                   - items
                   - next_page_params
+                  - meta
                 type: object
                 x-struct:
                 x-validate:
@@ -16961,6 +17027,27 @@ paths:
                     type: array
                     x-struct:
                     x-validate:
+                  meta:
+                    nullable: false
+                    properties:
+                      message:
+                        nullable: true
+                        type: string
+                        x-struct:
+                        x-validate:
+                      status:
+                        enum:
+                          - 1
+                          - 2
+                        type: integer
+                        x-struct:
+                        x-validate:
+                    required:
+                      - status
+                      - message
+                    type: object
+                    x-struct:
+                    x-validate:
                   next_page_params:
                     example:
                       block_number: 22133247
@@ -16973,6 +17060,7 @@ paths:
                 required:
                   - items
                   - next_page_params
+                  - meta
                 type: object
                 x-struct:
                 x-validate:
