@@ -10984,6 +10984,26 @@
                       },
                       "type": "array"
                     },
+                    "meta": {
+                      "properties": {
+                        "message": {
+                          "nullable": true,
+                          "type": "string"
+                        },
+                        "status": {
+                          "enum": [
+                            1,
+                            2
+                          ],
+                          "type": "integer"
+                        }
+                      },
+                      "required": [
+                        "status",
+                        "message"
+                      ],
+                      "type": "object"
+                    },
                     "next_page_params": {
                       "example": {
                         "block_number": 22530770,
@@ -10996,7 +11016,8 @@
                   },
                   "required": [
                     "items",
-                    "next_page_params"
+                    "next_page_params",
+                    "meta"
                   ],
                   "type": "object"
                 }
@@ -15756,6 +15777,26 @@
                       },
                       "type": "array"
                     },
+                    "meta": {
+                      "properties": {
+                        "message": {
+                          "nullable": true,
+                          "type": "string"
+                        },
+                        "status": {
+                          "enum": [
+                            1,
+                            2
+                          ],
+                          "type": "integer"
+                        }
+                      },
+                      "required": [
+                        "status",
+                        "message"
+                      ],
+                      "type": "object"
+                    },
                     "next_page_params": {
                       "example": {
                         "index": 8,
@@ -15767,7 +15808,8 @@
                   },
                   "required": [
                     "items",
-                    "next_page_params"
+                    "next_page_params",
+                    "meta"
                   ],
                   "type": "object"
                 }
@@ -16703,6 +16745,26 @@
                       },
                       "type": "array"
                     },
+                    "meta": {
+                      "properties": {
+                        "message": {
+                          "nullable": true,
+                          "type": "string"
+                        },
+                        "status": {
+                          "enum": [
+                            1,
+                            2
+                          ],
+                          "type": "integer"
+                        }
+                      },
+                      "required": [
+                        "status",
+                        "message"
+                      ],
+                      "type": "object"
+                    },
                     "next_page_params": {
                       "example": {
                         "block_number": 22133247,
@@ -16715,7 +16777,8 @@
                   },
                   "required": [
                     "items",
-                    "next_page_params"
+                    "next_page_params",
+                    "meta"
                   ],
                   "type": "object"
                 }
@@ -26821,6 +26884,26 @@
                       },
                       "type": "array"
                     },
+                    "meta": {
+                      "properties": {
+                        "message": {
+                          "nullable": true,
+                          "type": "string"
+                        },
+                        "status": {
+                          "enum": [
+                            1,
+                            2
+                          ],
+                          "type": "integer"
+                        }
+                      },
+                      "required": [
+                        "status",
+                        "message"
+                      ],
+                      "type": "object"
+                    },
                     "next_page_params": {
                       "example": {
                         "block_number": 22133247,
@@ -26833,7 +26916,8 @@
                   },
                   "required": [
                     "items",
-                    "next_page_params"
+                    "next_page_params",
+                    "meta"
                   ],
                   "type": "object"
                 }
