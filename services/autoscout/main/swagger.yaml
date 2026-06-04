@@ -2079,10 +2079,15 @@ definitions:
       - NULL_VALUE
     default: NULL_VALUE
     description: |-
-      `NullValue` is a singleton enumeration to represent the null value for the
-      `Value` type union.
+      Represents a JSON `null`.
 
-      The JSON representation for `NullValue` is JSON `null`.
+      `NullValue` is a sentinel, using an enum with only one value to represent
+      the null value for the `Value` type union.
+
+      A field of type `NullValue` with any value other than `0` is considered
+      invalid. Most ProtoJSON serializers will emit a Value with a `null_value` set
+      as a JSON `null` regardless of the integer value, and so will round trip to
+      a `0` value.
 
        - NULL_VALUE: Null value.
   rpcStatus:
@@ -2118,6 +2123,7 @@ definitions:
       - UNSPECIFIED_AD_BANNER_PROVIDER
       - SLISE
       - BANNER_NONE
+      - BANNER_SEVIO
     default: UNSPECIFIED_AD_BANNER_PROVIDER
   v1AdTextProvider:
     type: string
@@ -2573,7 +2579,6 @@ definitions:
       - UNSPECIFIED_CHAIN_TYPE
       - ARBITRUM
       - OPTIMISM
-      - POLYGON_ZKEVM
       - ZKSYNC
     default: UNSPECIFIED_CHAIN_TYPE
   v1ColorTheme:
@@ -2887,8 +2892,6 @@ definitions:
         $ref: '#/definitions/v1OptimismConfig'
       arbitrum:
         $ref: '#/definitions/v1ArbitrumConfig'
-      polygon_zkevm:
-        $ref: '#/definitions/v1PolygonZkEvmConfig'
       zksync:
         $ref: '#/definitions/v1ZksyncConfig'
       ads:
@@ -3886,60 +3889,6 @@ definitions:
       - PLUGIN_VARIANT_ADMIN_SERVICE
       - PLUGIN_VARIANT_NAME_SERVICE
     default: UNSPECIFIED_PLUGIN_VARIANT
-  v1PolygonZkEvmConfig:
-    type: object
-    properties:
-      l1_rpc:
-        type: string
-        title: INDEXER_POLYGON_ZKEVM_L1_RPC
-      l1_bridge_start_block:
-        type: string
-        format: int64
-        title: INDEXER_POLYGON_ZKEVM_L1_BRIDGE_START_BLOCK
-      l1_bridge_contract:
-        type: string
-        title: INDEXER_POLYGON_ZKEVM_L1_BRIDGE_CONTRACT
-      l1_blockscout_url:
-        type: string
-        title: 'Deprecated: use parent_chain.base_url instead'
-      batches_chunk_size:
-        type: string
-        format: int64
-        title: INDEXER_POLYGON_ZKEVM_BATCHES_CHUNK_SIZE
-      batches_recheck_interval:
-        type: string
-        format: int64
-        title: INDEXER_POLYGON_ZKEVM_BATCHES_RECHECK_INTERVAL
-      l1_bridge_network_id:
-        type: string
-        format: int64
-        title: INDEXER_POLYGON_ZKEVM_L1_BRIDGE_NETWORK_ID
-      l1_bridge_rollup_index:
-        type: string
-        format: int64
-        title: INDEXER_POLYGON_ZKEVM_L1_BRIDGE_ROLLUP_INDEX
-      l1_bridge_native_symbol:
-        type: string
-        title: INDEXER_POLYGON_ZKEVM_L1_BRIDGE_NATIVE_SYMBOL
-      l1_bridge_native_decimals:
-        type: string
-        format: int64
-        title: INDEXER_POLYGON_ZKEVM_L1_BRIDGE_NATIVE_DECIMALS
-      l2_bridge_start_block:
-        type: string
-        format: int64
-        title: INDEXER_POLYGON_ZKEVM_L2_BRIDGE_START_BLOCK
-      l2_bridge_contract:
-        type: string
-        title: INDEXER_POLYGON_ZKEVM_L2_BRIDGE_CONTRACT
-      l2_bridge_network_id:
-        type: string
-        format: int64
-        title: INDEXER_POLYGON_ZKEVM_L2_BRIDGE_NETWORK_ID
-      l2_bridge_rollup_index:
-        type: string
-        format: int64
-        title: INDEXER_POLYGON_ZKEVM_L2_BRIDGE_ROLLUP_INDEX
   v1PreviewDepositRequest:
     type: object
     properties:
