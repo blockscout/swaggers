@@ -498,6 +498,81 @@ components:
       type: object
       x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.TokenTransfer.TotalERC721
       x-validate:
+    ListItem:
+      additionalProperties: false
+      description: Smart contract list item
+      properties:
+        address:
+          $ref: '#/components/schemas/Address'
+        certified:
+          type: boolean
+          x-struct:
+          x-validate:
+        coin_balance:
+          nullable: true
+          type: string
+          x-struct:
+          x-validate:
+        compiler_version:
+          nullable: true
+          type: string
+          x-struct:
+          x-validate:
+        has_constructor_args:
+          nullable: true
+          type: boolean
+          x-struct:
+          x-validate:
+        language:
+          nullable: true
+          type: string
+          x-struct:
+          x-validate:
+        license_type:
+          nullable: true
+          type: string
+          x-struct:
+          x-validate:
+        market_cap:
+          nullable: true
+          type: string
+          x-struct:
+          x-validate:
+        optimization_enabled:
+          nullable: true
+          type: boolean
+          x-struct:
+          x-validate:
+        reputation:
+          nullable: true
+          type: string
+          x-struct:
+          x-validate:
+        transactions_count:
+          nullable: true
+          type: integer
+          x-struct:
+          x-validate:
+        verified_at:
+          format: date-time
+          nullable: true
+          type: string
+          x-struct:
+          x-validate:
+      required:
+        - address
+        - compiler_version
+        - optimization_enabled
+        - language
+        - verified_at
+        - has_constructor_args
+        - license_type
+        - certified
+        - reputation
+      title: ListItem
+      type: object
+      x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.SmartContract.ListItem
+      x-validate:
     TotalERC1155:
       additionalProperties: false
       properties:
@@ -3919,6 +3994,13 @@ components:
           type: boolean
           x-struct:
           x-validate:
+      required:
+        - proxy_type
+        - implementations
+        - conflicting_implementations
+        - deployed_bytecode
+        - creation_bytecode
+        - creation_status
       title: SmartContract
       type: object
       x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.SmartContract
@@ -10161,7 +10243,7 @@ paths:
                 properties:
                   items:
                     items:
-                      $ref: '#/components/schemas/SmartContract'
+                      $ref: '#/components/schemas/ListItem'
                     nullable: false
                     type: array
                     x-struct:
