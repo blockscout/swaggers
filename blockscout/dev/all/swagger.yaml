@@ -739,6 +739,91 @@ components:
       type: object
       x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.TokenTransfer.TotalERC721
       x-validate: null
+    ListItem:
+      additionalProperties: false
+      description: Smart contract list item
+      properties:
+        address:
+          $ref: '#/components/schemas/Address'
+        certified:
+          type: boolean
+          x-struct: null
+          x-validate: null
+        coin_balance:
+          nullable: true
+          type: string
+          x-struct: null
+          x-validate: null
+        compiler_version:
+          nullable: true
+          type: string
+          x-struct: null
+          x-validate: null
+        github_repository_metadata:
+          nullable: true
+          type: object
+          x-struct: null
+          x-validate: null
+        has_constructor_args:
+          nullable: true
+          type: boolean
+          x-struct: null
+          x-validate: null
+        language:
+          nullable: true
+          type: string
+          x-struct: null
+          x-validate: null
+        license_type:
+          nullable: true
+          type: string
+          x-struct: null
+          x-validate: null
+        market_cap:
+          nullable: true
+          type: string
+          x-struct: null
+          x-validate: null
+        optimization_enabled:
+          nullable: true
+          type: boolean
+          x-struct: null
+          x-validate: null
+        package_name:
+          nullable: true
+          type: string
+          x-struct: null
+          x-validate: null
+        reputation:
+          nullable: true
+          type: string
+          x-struct: null
+          x-validate: null
+        transactions_count:
+          nullable: true
+          type: integer
+          x-struct: null
+          x-validate: null
+        verified_at:
+          format: date-time
+          nullable: true
+          type: string
+          x-struct: null
+          x-validate: null
+      required:
+        - address
+        - compiler_version
+        - optimization_enabled
+        - language
+        - verified_at
+        - has_constructor_args
+        - license_type
+        - certified
+        - reputation
+      title: ListItem
+      type: object
+      x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.SmartContract.ListItem
+      x-validate: null
     TotalERC1155:
       additionalProperties: false
       properties:
@@ -4786,6 +4871,13 @@ components:
           type: boolean
           x-struct: null
           x-validate: null
+      required:
+        - proxy_type
+        - implementations
+        - conflicting_implementations
+        - deployed_bytecode
+        - creation_bytecode
+        - creation_status
       title: SmartContract
       type: object
       x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.SmartContract
@@ -8384,7 +8476,7 @@ paths:
                 properties:
                   items:
                     items:
-                      $ref: '#/components/schemas/SmartContract'
+                      $ref: '#/components/schemas/ListItem'
                     nullable: false
                     type: array
                     x-struct: null
@@ -8797,6 +8889,15 @@ paths:
               - staticcall
               - invalid
             type: string
+            x-struct: null
+            x-validate: null
+        - description: If `false`, zero-value call-type internal transactions are excluded from results.
+          in: query
+          name: include_zero_value
+          required: false
+          schema:
+            default: true
+            type: boolean
             x-struct: null
             x-validate: null
         - description: Number of items per page
@@ -15286,6 +15387,15 @@ paths:
             type: string
             x-struct: null
             x-validate: null
+        - description: If `false`, zero-value call-type internal transactions are excluded from results.
+          in: query
+          name: include_zero_value
+          required: false
+          schema:
+            default: true
+            type: boolean
+            x-struct: null
+            x-validate: null
         - description: Number of items per page
           in: query
           name: items_count
@@ -17779,6 +17889,15 @@ paths:
             type: string
             x-struct: null
             x-validate: null
+        - description: If `false`, zero-value call-type internal transactions are excluded from results.
+          in: query
+          name: include_zero_value
+          required: false
+          schema:
+            default: true
+            type: boolean
+            x-struct: null
+            x-validate: null
         - description: Number of items per page
           in: query
           name: items_count
@@ -18436,6 +18555,15 @@ paths:
           schema:
             nullable: true
             type: integer
+            x-struct: null
+            x-validate: null
+        - description: If `false`, zero-value call-type internal transactions are excluded from results.
+          in: query
+          name: include_zero_value
+          required: false
+          schema:
+            default: true
+            type: boolean
             x-struct: null
             x-validate: null
         - description: Number of items per page
