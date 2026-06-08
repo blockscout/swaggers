@@ -518,7 +518,7 @@ components:
           x-struct:
           x-validate:
         status:
-          $ref: '#/components/schemas/Status'
+          $ref: '#/components/schemas/Beacon.Deposit.Status'
         transaction_hash:
           $ref: '#/components/schemas/FullHash'
         withdrawal_address:
@@ -915,6 +915,17 @@ components:
       title: HexDataNullable
       type: string
       x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.General.HexDataNullable
+      x-validate:
+    Beacon.Deposit.Status:
+      description: Beacon deposit lifecycle status.
+      enum:
+        - invalid
+        - pending
+        - completed
+      nullable: false
+      title: Beacon.Deposit.Status
+      type: string
+      x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.Beacon.Deposit.Status
       x-validate:
     BadRequestResponse:
       description: Response returned when the request is invalid
@@ -4931,7 +4942,7 @@ components:
           x-struct:
           x-validate:
         status:
-          $ref: '#/components/schemas/Status'
+          $ref: '#/components/schemas/Beacon.Deposit.Status'
         transaction_hash:
           $ref: '#/components/schemas/FullHash'
         withdrawal_address:
