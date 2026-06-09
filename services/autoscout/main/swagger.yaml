@@ -3630,10 +3630,21 @@ definitions:
       protocols:
         type: array
         items:
-          type: string
+          $ref: '#/definitions/v1NameServiceProtocol'
         description: |-
-          Domain name protocol ids the chain resolves against, e.g. ["ens"].
+          Domain name protocols the chain resolves against, e.g. ["ens"].
           Validated against the supported set; passed to the frontend verbatim.
+  v1NameServiceProtocol:
+    type: string
+    enum:
+      - UNSPECIFIED_NAME_SERVICE_PROTOCOL
+      - ENS
+    default: UNSPECIFIED_NAME_SERVICE_PROTOCOL
+    description: |-
+      Domain name protocols the name service plugin can resolve against. The
+      supported set is also enforced at runtime via the
+      `supported_name_service_protocols` admin setting (kept in sync with the
+      shared BENS `/api/v1/protocols` resource).
   v1NavigationLayout:
     type: string
     enum:
@@ -4088,6 +4099,8 @@ definitions:
       stats_cost_per_hour:
         type: string
       admin_service_cost_per_hour:
+        type: string
+      name_service_cost_per_hour:
         type: string
   v1StatsPluginConfig:
     type: object
