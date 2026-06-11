@@ -2497,6 +2497,114 @@ components:
       type: string
       x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.General.MethodNameNullable
       x-validate:
+    TokenInstanceInTokenInstancesList:
+      additionalProperties: false
+      nullable: false
+      properties:
+        animation_media_type:
+          description: Media type category of the token instance animation URL
+          enum:
+            - image
+            - video
+            - html
+          nullable: true
+          type: string
+          x-struct:
+          x-validate:
+        animation_url:
+          $ref: '#/components/schemas/URLNullable'
+        external_app_url:
+          $ref: '#/components/schemas/URLNullable'
+        id:
+          $ref: '#/components/schemas/IntegerString'
+        image_media_type:
+          description: Media type category of the token instance image URL
+          enum:
+            - image
+            - video
+            - html
+          nullable: true
+          type: string
+          x-struct:
+          x-validate:
+        image_url:
+          $ref: '#/components/schemas/URLNullable'
+        is_unique:
+          nullable: true
+          type: boolean
+          x-struct:
+          x-validate:
+        media_type:
+          description: Mime type of the media in media_url
+          example: image/png
+          nullable: true
+          type: string
+          x-struct:
+          x-validate:
+        media_url:
+          $ref: '#/components/schemas/URLNullable'
+        metadata:
+          example:
+            description: Test
+            image: https://example.com/image.png
+            name: Test
+          nullable: true
+          type: object
+          x-struct:
+          x-validate:
+        owner:
+          allOf:
+            - $ref: '#/components/schemas/Address'
+          nullable: true
+          x-struct:
+          x-validate:
+        thumbnails:
+          nullable: true
+          properties:
+            250x250:
+              format: uri
+              type: string
+              x-struct:
+              x-validate:
+            500x500:
+              format: uri
+              type: string
+              x-struct:
+              x-validate:
+            60x60:
+              format: uri
+              type: string
+              x-struct:
+              x-validate:
+            original:
+              format: uri
+              type: string
+              x-struct:
+              x-validate:
+          required:
+            - original
+          type: object
+          x-struct:
+          x-validate:
+        token_type:
+          $ref: '#/components/schemas/Type'
+        value:
+          $ref: '#/components/schemas/IntegerStringNullable'
+      required:
+        - id
+        - metadata
+        - owner
+        - external_app_url
+        - animation_url
+        - image_url
+        - is_unique
+        - thumbnails
+        - media_type
+        - media_url
+      title: TokenInstanceInTokenInstancesList
+      type: object
+      x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.TokenInstance
+      x-validate:
     Total:
       additionalProperties: false
       properties:
@@ -8843,7 +8951,7 @@ paths:
                 properties:
                   items:
                     items:
-                      $ref: '#/components/schemas/TokenInstance'
+                      $ref: '#/components/schemas/TokenInstanceInTokenInstancesList'
                     nullable: false
                     type: array
                     x-struct:
