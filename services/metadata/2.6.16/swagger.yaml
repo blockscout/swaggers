@@ -157,7 +157,7 @@ paths:
           required: false
           type: string
           format: int64
-        - name: tagTypes
+        - name: tag_types
           description: Comma separated list of tag types
           in: query
           required: false
