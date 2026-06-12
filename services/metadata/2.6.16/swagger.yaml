@@ -152,7 +152,7 @@ paths:
           schema:
             $ref: '#/definitions/rpcStatus'
       parameters:
-        - name: chainId
+        - name: chain_id
           in: query
           required: false
           type: string
@@ -166,16 +166,16 @@ paths:
           in: query
           required: false
           type: string
-        - name: pageSize
+        - name: page_size
           in: query
           required: false
           type: integer
           format: int64
-        - name: pageToken
+        - name: page_token
           in: query
           required: false
           type: string
-        - name: addressLimit
+        - name: address_limit
           in: query
           required: false
           type: integer
