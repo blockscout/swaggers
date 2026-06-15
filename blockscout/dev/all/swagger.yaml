@@ -1785,6 +1785,11 @@ components:
       additionalProperties: false
       nullable: false
       properties:
+        abi:
+          nullable: true
+          type: object
+          x-struct: null
+          x-validate: null
         method_call:
           nullable: true
           type: string
