@@ -304,18 +304,6 @@ components:
       type: string
       x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.General.EmptyString
       x-validate:
-    Type:
-      enum:
-        - ERC-20
-        - ERC-721
-        - ERC-1155
-        - ERC-404
-        - ERC-7984
-        - ZRC-2
-      title: Type
-      type: string
-      x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.Token.Type
-      x-validate:
     AddressNullable:
       additionalProperties: false
       description: AddressNullable
@@ -484,6 +472,47 @@ components:
       type: object
       x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.Proxy.Metadata
       x-validate:
+    AccountAbstractionStatus:
+      additionalProperties:
+        additionalProperties: false
+        properties:
+          enabled:
+            nullable: false
+            type: boolean
+            x-struct:
+            x-validate:
+          live:
+            nullable: false
+            type: boolean
+            x-struct:
+            x-validate:
+          past_db_logs_indexing_finished:
+            nullable: false
+            type: boolean
+            x-struct:
+            x-validate:
+          past_rpc_logs_indexing_finished:
+            nullable: false
+            type: boolean
+            x-struct:
+            x-validate:
+        type: object
+        x-struct:
+        x-validate:
+      description: Status struct.
+      nullable: false
+      properties:
+        finished_past_indexing:
+          nullable: false
+          type: boolean
+          x-struct:
+          x-validate:
+      required:
+        - finished_past_indexing
+      title: AccountAbstractionStatus
+      type: object
+      x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.Proxy.AccountAbstraction.Status
+      x-validate:
     TotalERC721:
       additionalProperties: false
       properties:
@@ -501,81 +530,6 @@ components:
       title: TotalERC721
       type: object
       x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.TokenTransfer.TotalERC721
-      x-validate:
-    ListItem:
-      additionalProperties: false
-      description: Smart contract list item
-      properties:
-        address:
-          $ref: '#/components/schemas/Address'
-        certified:
-          type: boolean
-          x-struct:
-          x-validate:
-        coin_balance:
-          nullable: true
-          type: string
-          x-struct:
-          x-validate:
-        compiler_version:
-          nullable: true
-          type: string
-          x-struct:
-          x-validate:
-        has_constructor_args:
-          nullable: true
-          type: boolean
-          x-struct:
-          x-validate:
-        language:
-          nullable: true
-          type: string
-          x-struct:
-          x-validate:
-        license_type:
-          nullable: true
-          type: string
-          x-struct:
-          x-validate:
-        market_cap:
-          nullable: true
-          type: string
-          x-struct:
-          x-validate:
-        optimization_enabled:
-          nullable: true
-          type: boolean
-          x-struct:
-          x-validate:
-        reputation:
-          nullable: true
-          type: string
-          x-struct:
-          x-validate:
-        transactions_count:
-          nullable: true
-          type: integer
-          x-struct:
-          x-validate:
-        verified_at:
-          format: date-time
-          nullable: true
-          type: string
-          x-struct:
-          x-validate:
-      required:
-        - address
-        - compiler_version
-        - optimization_enabled
-        - language
-        - verified_at
-        - has_constructor_args
-        - license_type
-        - certified
-        - reputation
-      title: ListItem
-      type: object
-      x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.SmartContract.ListItem
       x-validate:
     TotalERC1155:
       additionalProperties: false
@@ -734,6 +688,7 @@ components:
           x-struct:
           x-validate:
         next_page_params:
+          additionalProperties: true
           example:
             block_number: 23532302
             internal_transaction_index:
@@ -899,6 +854,113 @@ components:
       title: Withdrawal
       type: object
       x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.Withdrawal
+      x-validate:
+    TopAddress:
+      additionalProperties: false
+      description: Address holding native coin, with its balance and transactions count
+      properties:
+        coin_balance:
+          $ref: '#/components/schemas/IntegerStringNullable'
+        ens_domain_name:
+          description: ENS domain name associated with the address
+          nullable: true
+          type: string
+          x-struct:
+          x-validate:
+        hash:
+          $ref: '#/components/schemas/AddressHash'
+        implementations:
+          description: Implementations linked with the contract
+          items:
+            $ref: '#/components/schemas/Implementation'
+          type: array
+          x-struct:
+          x-validate:
+        is_contract:
+          description: Has address contract code?
+          nullable: true
+          type: boolean
+          x-struct:
+          x-validate:
+        is_scam:
+          description: Has address scam badge?
+          nullable: false
+          type: boolean
+          x-struct:
+          x-validate:
+        is_verified:
+          description: Has address associated source code?
+          nullable: true
+          type: boolean
+          x-struct:
+          x-validate:
+        metadata:
+          allOf:
+            - $ref: '#/components/schemas/Metadata'
+          nullable: true
+          x-struct:
+          x-validate:
+        name:
+          description: Name associated with the address
+          nullable: true
+          type: string
+          x-struct:
+          x-validate:
+        private_tags:
+          description: Private tags associated with the address
+          items:
+            $ref: '#/components/schemas/Tag'
+          type: array
+          x-struct:
+          x-validate:
+        proxy_type:
+          $ref: '#/components/schemas/ProxyType'
+        public_tags:
+          description: Public tags associated with the address
+          items:
+            $ref: '#/components/schemas/Tag'
+          type: array
+          x-struct:
+          x-validate:
+        reputation:
+          description: Reputation of the address
+          enum:
+            - ok
+            - scam
+          nullable: false
+          type: string
+          x-struct:
+          x-validate:
+        transactions_count:
+          anyOf:
+            - $ref: '#/components/schemas/IntegerString'
+            - $ref: '#/components/schemas/EmptyString'
+          nullable: true
+          x-struct:
+          x-validate:
+        watchlist_names:
+          description: Watchlist name associated with the address
+          items:
+            $ref: '#/components/schemas/WatchlistName'
+          type: array
+          x-struct:
+          x-validate:
+      required:
+        - hash
+        - is_contract
+        - name
+        - is_scam
+        - reputation
+        - proxy_type
+        - implementations
+        - is_verified
+        - ens_domain_name
+        - metadata
+        - coin_balance
+        - transactions_count
+      title: TopAddress
+      type: object
+      x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.Address
       x-validate:
     AddressTabsCounters:
       additionalProperties: false
@@ -1283,47 +1345,6 @@ components:
       title: AddressResponse
       type: object
       x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.Address
-      x-validate:
-    Status:
-      additionalProperties:
-        additionalProperties: false
-        properties:
-          enabled:
-            nullable: false
-            type: boolean
-            x-struct:
-            x-validate:
-          live:
-            nullable: false
-            type: boolean
-            x-struct:
-            x-validate:
-          past_db_logs_indexing_finished:
-            nullable: false
-            type: boolean
-            x-struct:
-            x-validate:
-          past_rpc_logs_indexing_finished:
-            nullable: false
-            type: boolean
-            x-struct:
-            x-validate:
-        type: object
-        x-struct:
-        x-validate:
-      description: Status struct.
-      nullable: false
-      properties:
-        finished_past_indexing:
-          nullable: false
-          type: boolean
-          x-struct:
-          x-validate:
-      required:
-        - finished_past_indexing
-      title: Status
-      type: object
-      x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.Proxy.AccountAbstraction.Status
       x-validate:
     RawTrace:
       items:
@@ -2294,6 +2315,7 @@ components:
         media_url:
           $ref: '#/components/schemas/URLNullable'
         metadata:
+          additionalProperties: true
           example:
             description: Test
             image: https://example.com/image.png
@@ -2344,7 +2366,7 @@ components:
           x-validate:
         token_type:
           allOf:
-            - $ref: '#/components/schemas/Type'
+            - $ref: '#/components/schemas/TokenType'
           nullable: true
           x-struct:
           x-validate:
@@ -2365,6 +2387,81 @@ components:
       title: TokenInstance
       type: object
       x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.TokenInstance
+      x-validate:
+    SmartContractListItem:
+      additionalProperties: false
+      description: Smart contract list item
+      properties:
+        address:
+          $ref: '#/components/schemas/Address'
+        certified:
+          type: boolean
+          x-struct:
+          x-validate:
+        coin_balance:
+          nullable: true
+          type: string
+          x-struct:
+          x-validate:
+        compiler_version:
+          nullable: true
+          type: string
+          x-struct:
+          x-validate:
+        has_constructor_args:
+          nullable: true
+          type: boolean
+          x-struct:
+          x-validate:
+        language:
+          nullable: true
+          type: string
+          x-struct:
+          x-validate:
+        license_type:
+          nullable: true
+          type: string
+          x-struct:
+          x-validate:
+        market_cap:
+          nullable: true
+          type: string
+          x-struct:
+          x-validate:
+        optimization_enabled:
+          nullable: true
+          type: boolean
+          x-struct:
+          x-validate:
+        reputation:
+          nullable: true
+          type: string
+          x-struct:
+          x-validate:
+        transactions_count:
+          nullable: true
+          type: integer
+          x-struct:
+          x-validate:
+        verified_at:
+          format: date-time
+          nullable: true
+          type: string
+          x-struct:
+          x-validate:
+      required:
+        - address
+        - compiler_version
+        - optimization_enabled
+        - language
+        - verified_at
+        - has_constructor_args
+        - license_type
+        - certified
+        - reputation
+      title: SmartContractListItem
+      type: object
+      x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.SmartContract.ListItem
       x-validate:
     CoinBalanceByDay:
       additionalProperties: false
@@ -2482,6 +2579,7 @@ components:
         media_url:
           $ref: '#/components/schemas/URLNullable'
         metadata:
+          additionalProperties: true
           example:
             description: Test
             image: https://example.com/image.png
@@ -2525,7 +2623,7 @@ components:
           x-struct:
           x-validate:
         token_type:
-          $ref: '#/components/schemas/Type'
+          $ref: '#/components/schemas/TokenType'
         value:
           $ref: '#/components/schemas/IntegerStringNullable'
       required:
@@ -2862,6 +2960,7 @@ components:
           x-struct:
           x-validate:
         next_page_params:
+          additionalProperties: true
           nullable: true
           type: object
           x-struct:
@@ -3228,21 +3327,22 @@ components:
       description: Smart contract audit report item
       properties:
         audit_company_name:
-          nullable: true
           type: string
           x-struct:
           x-validate:
         audit_publish_date:
           format: date
-          nullable: true
           type: string
           x-struct:
           x-validate:
         audit_report_url:
-          nullable: true
           type: string
           x-struct:
           x-validate:
+      required:
+        - audit_company_name
+        - audit_publish_date
+        - audit_report_url
       title: AuditReport
       type: object
       x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.SmartContract.AuditReport
@@ -3310,7 +3410,8 @@ components:
       description: Metadata tag struct
       properties:
         meta:
-          nullable: false
+          additionalProperties: true
+          nullable: true
           type: object
           x-struct:
           x-validate:
@@ -3330,6 +3431,13 @@ components:
           x-struct:
           x-validate:
         tagType:
+          enum:
+            - name
+            - generic
+            - classifier
+            - information
+            - note
+            - protocol
           nullable: false
           type: string
           x-struct:
@@ -3398,6 +3506,7 @@ components:
         media_url:
           $ref: '#/components/schemas/URLNullable'
         metadata:
+          additionalProperties: true
           example:
             description: Test
             image: https://example.com/image.png
@@ -3447,7 +3556,7 @@ components:
           x-struct:
           x-validate:
         token_type:
-          $ref: '#/components/schemas/Type'
+          $ref: '#/components/schemas/TokenType'
         value:
           $ref: '#/components/schemas/IntegerStringNullable'
       required:
@@ -3548,6 +3657,18 @@ components:
       type: string
       x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.General.HexQuantity
       x-validate:
+    TokenType:
+      enum:
+        - ERC-20
+        - ERC-721
+        - ERC-1155
+        - ERC-404
+        - ERC-7984
+        - ZRC-2
+      title: TokenType
+      type: string
+      x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.Token.Type
+      x-validate:
     AddressHashNullable:
       nullable: true
       pattern: ^0x([A-Fa-f0-9]{40})$
@@ -3612,7 +3733,11 @@ components:
         timestamp:
           $ref: '#/components/schemas/Timestamp'
         to:
-          $ref: '#/components/schemas/Address'
+          allOf:
+            - $ref: '#/components/schemas/Address'
+          nullable: true
+          x-struct:
+          x-validate:
         transaction_hash:
           $ref: '#/components/schemas/FullHash'
         transaction_index:
@@ -3749,12 +3874,23 @@ components:
           $ref: '#/components/schemas/IntegerStringNullable'
         type:
           allOf:
-            - $ref: '#/components/schemas/Type'
+            - $ref: '#/components/schemas/TokenType'
           nullable: true
           x-struct:
           x-validate:
         volume_24h:
           $ref: '#/components/schemas/FloatStringNullable'
+        zilliqa:
+          additionalProperties: false
+          nullable: false
+          properties:
+            zrc2_address_hash:
+              $ref: '#/components/schemas/AddressHashNullable'
+          required:
+            - zrc2_address_hash
+          type: object
+          x-struct:
+          x-validate:
       required:
         - address_hash
         - symbol
@@ -4171,7 +4307,7 @@ components:
         token:
           $ref: '#/components/schemas/Token'
         token_type:
-          $ref: '#/components/schemas/Type'
+          $ref: '#/components/schemas/TokenType'
         total:
           anyOf:
             - $ref: '#/components/schemas/TotalERC721'
@@ -4312,12 +4448,17 @@ components:
           x-struct:
           x-validate:
         language:
+          enum:
+            - solidity
+            - vyper
+            - yul
+            - scilla
+            - stylus_rust
+            - geas
           nullable: true
           type: string
           x-struct:
           x-validate:
-        address:
-          $ref: '#/components/schemas/Address'
         is_verified_via_eth_bytecode_db:
           nullable: true
           type: boolean
@@ -4670,12 +4811,23 @@ components:
           $ref: '#/components/schemas/IntegerStringNullable'
         type:
           allOf:
-            - $ref: '#/components/schemas/Type'
+            - $ref: '#/components/schemas/TokenType'
           nullable: true
           x-struct:
           x-validate:
         volume_24h:
           $ref: '#/components/schemas/FloatStringNullable'
+        zilliqa:
+          additionalProperties: false
+          nullable: false
+          properties:
+            zrc2_address_hash:
+              $ref: '#/components/schemas/AddressHashNullable'
+          required:
+            - zrc2_address_hash
+          type: object
+          x-struct:
+          x-validate:
       required:
         - address_hash
         - symbol
@@ -5718,6 +5870,7 @@ paths:
                     x-struct:
                     x-validate:
                   next_page_params:
+                    additionalProperties: true
                     example:
                       block_number: 5000000
                     nullable: true
@@ -5873,6 +6026,7 @@ paths:
                     x-struct:
                     x-validate:
                   next_page_params:
+                    additionalProperties: true
                     example:
                       index: 88192653
                     nullable: true
@@ -5956,6 +6110,7 @@ paths:
                     x-struct:
                     x-validate:
                   next_page_params:
+                    additionalProperties: true
                     example:
                       index: 50
                     nullable: true
@@ -6274,12 +6429,13 @@ paths:
                 properties:
                   items:
                     items:
-                      $ref: '#/components/schemas/ListItem'
+                      $ref: '#/components/schemas/SmartContractListItem'
                     nullable: false
                     type: array
                     x-struct:
                     x-validate:
                   next_page_params:
+                    additionalProperties: true
                     example:
                       smart_contract_id: 1947801
                     nullable: true
@@ -6542,6 +6698,7 @@ paths:
                     x-struct:
                     x-validate:
                   next_page_params:
+                    additionalProperties: true
                     example:
                       index: 88192653
                     nullable: true
@@ -6597,7 +6754,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Status'
+                $ref: '#/components/schemas/AccountAbstractionStatus'
           description: Status
         '501':
           content:
@@ -6758,6 +6915,7 @@ paths:
                     x-struct:
                     x-validate:
                   next_page_params:
+                    additionalProperties: true
                     example:
                       index: 8
                       transaction_index: 3
@@ -6943,6 +7101,7 @@ paths:
                     x-struct:
                     x-validate:
                   next_page_params:
+                    additionalProperties: true
                     example:
                       fiat_value:
                       id: 12519063346
@@ -7040,7 +7199,7 @@ paths:
           name: token_type
           required: false
           schema:
-            $ref: '#/components/schemas/Type'
+            $ref: '#/components/schemas/TokenType'
       responses:
         '200':
           content:
@@ -7057,6 +7216,7 @@ paths:
                     x-struct:
                     x-validate:
                   next_page_params:
+                    additionalProperties: true
                     example:
                       token_contract_address_hash: '0x1ffe11b9fb7f6ff1b153ab8608cf403ecaf9d44a'
                       token_type: ERC-721
@@ -7151,6 +7311,7 @@ paths:
                     x-struct:
                     x-validate:
                   next_page_params:
+                    additionalProperties: true
                     example:
                       page_size: 50
                       page_token: 19,0xB98Cb1dA4F9BD640879F0bBCb30A541c84163406
@@ -7604,6 +7765,7 @@ paths:
                     x-struct:
                     x-validate:
                   next_page_params:
+                    additionalProperties: true
                     example:
                       index: 55
                     nullable: true
@@ -7942,6 +8104,7 @@ paths:
                     x-struct:
                     x-validate:
                   next_page_params:
+                    additionalProperties: true
                     example:
                       page_size: 50
                       page_token: 3,0xC23957e7Fea98eBD017abe15a4e7770797ff6D8d
@@ -8285,6 +8448,7 @@ paths:
                     x-struct:
                     x-validate:
                   next_page_params:
+                    additionalProperties: true
                     example:
                       block_number: 22546398
                     nullable: true
@@ -8484,6 +8648,7 @@ paths:
                     x-struct:
                     x-validate:
                   next_page_params:
+                    additionalProperties: true
                     example:
                       block_number: 23617990
                       index: 128
@@ -8735,7 +8900,7 @@ paths:
           name: token_type
           required: false
           schema:
-            $ref: '#/components/schemas/Type'
+            $ref: '#/components/schemas/TokenType'
       responses:
         '200':
           content:
@@ -8752,6 +8917,7 @@ paths:
                     x-struct:
                     x-validate:
                   next_page_params:
+                    additionalProperties: true
                     example:
                       token_contract_address_hash: '0x1ffe11b9fb7f6ff1b153ab8608cf403ecaf9d44a'
                       token_id: '24950'
@@ -8847,6 +9013,7 @@ paths:
                     x-struct:
                     x-validate:
                   next_page_params:
+                    additionalProperties: true
                     example:
                       unique_token: 782098
                     nullable: true
@@ -8992,6 +9159,7 @@ paths:
                     x-struct:
                     x-validate:
                   next_page_params:
+                    additionalProperties: true
                     example:
                       contract_address_hash: '0x01a2A10583675E0e5dF52DE1b62734109201477a'
                       total_gas_used: '100'
@@ -9153,6 +9321,7 @@ paths:
                     x-struct:
                     x-validate:
                   next_page_params:
+                    additionalProperties: true
                     example:
                       page_size: 50
                       page_token: 3949699,0x275f7110df7d73e530f3381daa9d422dea80f036b514e56427d2d7e492c8a81f,0
@@ -9288,6 +9457,7 @@ paths:
                     x-struct:
                     x-validate:
                   next_page_params:
+                    additionalProperties: true
                     example:
                       address_hash: '0x0000000000000000000000000000000000000805'
                       blocks_validated: 100
@@ -9879,6 +10049,7 @@ paths:
                     x-struct:
                     x-validate:
                   next_page_params:
+                    additionalProperties: true
                     example:
                       block_number: 21307214
                       index: 442
@@ -10022,6 +10193,7 @@ paths:
                     x-struct:
                     x-validate:
                   next_page_params:
+                    additionalProperties: true
                     example:
                       block_number: 22133247
                       index: 50
@@ -10236,6 +10408,7 @@ paths:
                     x-struct:
                     x-validate:
                   next_page_params:
+                    additionalProperties: true
                     example:
                       block_number: 12345678
                       index: 0
@@ -10533,6 +10706,7 @@ paths:
                     x-struct:
                     x-validate:
                   next_page_params:
+                    additionalProperties: true
                     example:
                       contract_address_hash: '0xbe9895146f7af43049ca1c1ae358b0541ea49704'
                       fiat_value: '4724.32'
@@ -10786,6 +10960,7 @@ paths:
                     x-struct:
                     x-validate:
                   next_page_params:
+                    additionalProperties: true
                     example:
                       state_changes_count: 50
                     nullable: true
@@ -10967,6 +11142,7 @@ paths:
                     x-struct:
                     x-validate:
                   next_page_params:
+                    additionalProperties: true
                     example:
                       block_number: 23532302
                       index: 375
@@ -11102,6 +11278,7 @@ paths:
                     x-struct:
                     x-validate:
                   next_page_params:
+                    additionalProperties: true
                     example:
                       block_number: 22546398
                     nullable: true
@@ -11339,6 +11516,7 @@ paths:
                     x-struct:
                     x-validate:
                   next_page_params:
+                    additionalProperties: true
                     example:
                       block_number: 22566361
                       fee: '19206937428000'
@@ -11448,6 +11626,7 @@ paths:
                     x-struct:
                     x-validate:
                   next_page_params:
+                    additionalProperties: true
                     example:
                       block_number: 22546398
                       index: 268
@@ -11825,6 +12004,7 @@ paths:
                     x-struct:
                     x-validate:
                   next_page_params:
+                    additionalProperties: true
                     example:
                       page_size: 50
                       page_token: '0x29cB129476609bBa26372b23427Af3b87cB23aF6'
@@ -12059,117 +12239,13 @@ paths:
                     $ref: '#/components/schemas/FloatStringNullable'
                   items:
                     items:
-                      additionalProperties: false
-                      description: Address
-                      properties:
-                        coin_balance:
-                          $ref: '#/components/schemas/IntegerStringNullable'
-                        ens_domain_name:
-                          description: ENS domain name associated with the address
-                          nullable: true
-                          type: string
-                          x-struct:
-                          x-validate:
-                        hash:
-                          $ref: '#/components/schemas/AddressHash'
-                        implementations:
-                          description: Implementations linked with the contract
-                          items:
-                            $ref: '#/components/schemas/Implementation'
-                          type: array
-                          x-struct:
-                          x-validate:
-                        is_contract:
-                          description: Has address contract code?
-                          nullable: true
-                          type: boolean
-                          x-struct:
-                          x-validate:
-                        is_scam:
-                          description: Has address scam badge?
-                          nullable: false
-                          type: boolean
-                          x-struct:
-                          x-validate:
-                        is_verified:
-                          description: Has address associated source code?
-                          nullable: true
-                          type: boolean
-                          x-struct:
-                          x-validate:
-                        metadata:
-                          allOf:
-                            - $ref: '#/components/schemas/Metadata'
-                          nullable: true
-                          x-struct:
-                          x-validate:
-                        name:
-                          description: Name associated with the address
-                          nullable: true
-                          type: string
-                          x-struct:
-                          x-validate:
-                        private_tags:
-                          description: Private tags associated with the address
-                          items:
-                            $ref: '#/components/schemas/Tag'
-                          type: array
-                          x-struct:
-                          x-validate:
-                        proxy_type:
-                          $ref: '#/components/schemas/ProxyType'
-                        public_tags:
-                          description: Public tags associated with the address
-                          items:
-                            $ref: '#/components/schemas/Tag'
-                          type: array
-                          x-struct:
-                          x-validate:
-                        reputation:
-                          description: Reputation of the address
-                          enum:
-                            - ok
-                            - scam
-                          nullable: false
-                          type: string
-                          x-struct:
-                          x-validate:
-                        transactions_count:
-                          anyOf:
-                            - $ref: '#/components/schemas/IntegerString'
-                            - $ref: '#/components/schemas/EmptyString'
-                          nullable: true
-                          x-struct:
-                          x-validate:
-                        watchlist_names:
-                          description: Watchlist name associated with the address
-                          items:
-                            $ref: '#/components/schemas/WatchlistName'
-                          type: array
-                          x-struct:
-                          x-validate:
-                      required:
-                        - hash
-                        - is_contract
-                        - name
-                        - is_scam
-                        - reputation
-                        - proxy_type
-                        - implementations
-                        - is_verified
-                        - ens_domain_name
-                        - metadata
-                        - coin_balance
-                        - transactions_count
-                      title: Address
-                      type: object
-                      x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.Address
-                      x-validate:
+                      $ref: '#/components/schemas/TopAddress'
                     nullable: false
                     type: array
                     x-struct:
                     x-validate:
                   next_page_params:
+                    additionalProperties: true
                     example:
                       fetched_coin_balance: '124355417998347240251800'
                       hash: '0x59708733fbbf64378d9293ec56b977c011a08fd2'
@@ -12507,6 +12583,7 @@ paths:
                     x-struct:
                     x-validate:
                   next_page_params:
+                    additionalProperties: true
                     example:
                       page_size: 50
                       page_token: 5,0x9B67A24A474e9EC7372c23B023f36ab28831e4C4
@@ -12955,6 +13032,7 @@ paths:
                     x-struct:
                     x-validate:
                   next_page_params:
+                    additionalProperties: true
                     example:
                       block_number: 22530770
                       index: 8
@@ -13472,6 +13550,7 @@ paths:
                     x-struct:
                     x-validate:
                   next_page_params:
+                    additionalProperties: true
                     nullable: true
                     type: object
                     x-struct:
@@ -13668,6 +13747,7 @@ paths:
                     x-struct:
                     x-validate:
                   next_page_params:
+                    additionalProperties: true
                     example:
                       address_hash: '0x48bb9b14483e43c7726df702b271d410e7460656'
                       value: '200000000000000'
@@ -13981,6 +14061,7 @@ paths:
                     x-struct:
                     x-validate:
                   next_page_params:
+                    additionalProperties: true
                     example:
                       address_hash: '0x1d2c163fbda9486c3a384b6fa5e34c96fe948e9a'
                       token_id: '0'
@@ -14069,6 +14150,7 @@ paths:
                     x-struct:
                     x-validate:
                   next_page_params:
+                    additionalProperties: true
                     example:
                       block_number: 17500000
                     nullable: true
@@ -14175,6 +14257,7 @@ paths:
                     x-struct:
                     x-validate:
                   next_page_params:
+                    additionalProperties: true
                     example:
                       block_number: 22566361
                     nullable: true
@@ -14383,6 +14466,7 @@ paths:
                     x-struct:
                     x-validate:
                   next_page_params:
+                    additionalProperties: true
                     example:
                       batch_block_hash: '0x789'
                       batch_log_index: 3
@@ -14756,6 +14840,7 @@ paths:
                     x-struct:
                     x-validate:
                   next_page_params:
+                    additionalProperties: true
                     example:
                       block_number: 23489243
                       index: 920
@@ -14951,6 +15036,7 @@ paths:
                     x-struct:
                     x-validate:
                   next_page_params:
+                    additionalProperties: true
                     example:
                       block_number: 22133247
                       index: 50
@@ -15052,6 +15138,7 @@ paths:
                     x-struct:
                     x-validate:
                   next_page_params:
+                    additionalProperties: true
                     example:
                       block_number: 21925703
                       index: 124
@@ -15223,7 +15310,7 @@ paths:
             application/json:
               schema:
                 items:
-                  $ref: '#/components/schemas/BlockResponse'
+                  $ref: '#/components/schemas/Block'
                 nullable: false
                 type: array
                 x-struct:
@@ -15567,6 +15654,7 @@ paths:
                     x-struct:
                     x-validate:
                   next_page_params:
+                    additionalProperties: true
                     example:
                       block_number: 22133247
                       index: 50
@@ -15690,6 +15778,7 @@ paths:
                     x-struct:
                     x-validate:
                   next_page_params:
+                    additionalProperties: true
                     example:
                       block_number: 12345678
                       index: 103
@@ -15838,6 +15927,7 @@ paths:
                     x-struct:
                     x-validate:
                   next_page_params:
+                    additionalProperties: true
                     example:
                       page_size: 50
                       page_token: 3937439,0xbb680271614883525ac8056c388489e80b3518ec12ec46e1b910c7238c46b565
