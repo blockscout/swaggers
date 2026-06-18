@@ -6626,65 +6626,17 @@ components:
       type: object
       x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.Beacon.Deposit
       x-validate: null
-    TableWithSchema:
-      additionalProperties: false
-      description: MUD Table with TableSchema struct.
+    CeloElectionRewardType:
+      enum:
+        - voter
+        - validator
+        - group
+        - delegated_payment
+        - delegated-payment
       nullable: false
-      properties:
-        record:
-          $ref: '#/components/schemas/Record'
-        schema:
-          $ref: '#/components/schemas/TableSchema'
-        table:
-          $ref: '#/components/schemas/Table'
-      required:
-        - table
-        - schema
-        - record
-      title: TableWithSchema
-      type: object
-      x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.MUD.TableWithSchema
-      x-validate: null
-    Table:
-      additionalProperties: false
-      description: MUD Table struct.
-      nullable: false
-      properties:
-        table_full_name:
-          nullable: false
-          type: string
-          x-struct: null
-          x-validate: null
-        table_id:
-          $ref: '#/components/schemas/FullHash'
-        table_name:
-          nullable: false
-          type: string
-          x-struct: null
-          x-validate: null
-        table_namespace:
-          nullable: false
-          type: string
-          x-struct: null
-          x-validate: null
-        table_type:
-          enum:
-            - offchain
-            - onchain
-            - unknown
-          nullable: false
-          type: string
-          x-struct: null
-          x-validate: null
-      required:
-        - table_id
-        - table_full_name
-        - table_type
-        - table_namespace
-        - table_name
-      title: Table
-      type: object
-      x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.MUD.Table
+      title: CeloElectionRewardType
+      type: string
+      x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.Celo.ElectionReward.Type
       x-validate: null
     MainPage:
       additionalProperties: false
@@ -6793,443 +6745,6 @@ components:
       title: OutputRoot
       type: object
       x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.Optimism.OutputRoot
-      x-validate: null
-    System:
-      additionalProperties: false
-      description: MUD System struct.
-      nullable: false
-      properties:
-        address_hash:
-          $ref: '#/components/schemas/AddressHash'
-        name:
-          nullable: false
-          type: string
-          x-struct: null
-          x-validate: null
-      required:
-        - name
-        - address_hash
-      title: System
-      type: object
-      x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.MUD.System
-      x-validate: null
-    World:
-      additionalProperties: false
-      description: MUD World struct.
-      nullable: false
-      properties:
-        address:
-          additionalProperties: false
-          description: Address
-          properties:
-            ens_domain_name:
-              description: ENS domain name associated with the address
-              nullable: true
-              type: string
-              x-struct: null
-              x-validate: null
-            hash:
-              $ref: '#/components/schemas/AddressHash'
-            implementations:
-              description: Implementations linked with the contract
-              items:
-                $ref: '#/components/schemas/Implementation'
-              type: array
-              x-struct: null
-              x-validate: null
-            is_contract:
-              description: Has address contract code?
-              nullable: true
-              type: boolean
-              x-struct: null
-              x-validate: null
-            is_scam:
-              description: Has address scam badge?
-              nullable: false
-              type: boolean
-              x-struct: null
-              x-validate: null
-            is_verified:
-              description: Has address associated source code?
-              nullable: true
-              type: boolean
-              x-struct: null
-              x-validate: null
-            metadata:
-              allOf:
-                - $ref: '#/components/schemas/Metadata'
-              nullable: true
-              x-struct: null
-              x-validate: null
-            name:
-              description: Name associated with the address
-              nullable: true
-              type: string
-              x-struct: null
-              x-validate: null
-            private_tags:
-              description: Private tags associated with the address
-              items:
-                $ref: '#/components/schemas/Tag'
-              type: array
-              x-struct: null
-              x-validate: null
-            proxy_type:
-              $ref: '#/components/schemas/ProxyType'
-            public_tags:
-              description: Public tags associated with the address
-              items:
-                $ref: '#/components/schemas/Tag'
-              type: array
-              x-struct: null
-              x-validate: null
-            reputation:
-              description: Reputation of the address
-              enum:
-                - ok
-                - scam
-              nullable: false
-              type: string
-              x-struct: null
-              x-validate: null
-            watchlist_names:
-              description: Watchlist name associated with the address
-              items:
-                $ref: '#/components/schemas/WatchlistName'
-              type: array
-              x-struct: null
-              x-validate: null
-          required:
-            - hash
-            - is_contract
-            - name
-            - is_scam
-            - reputation
-            - proxy_type
-            - implementations
-            - is_verified
-            - ens_domain_name
-            - metadata
-          title: Address
-          type: object
-          x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.Address
-          x-validate: null
-        coin_balance:
-          $ref: '#/components/schemas/IntegerStringNullable'
-        transactions_count:
-          nullable: true
-          type: integer
-          x-struct: null
-          x-validate: null
-      required:
-        - address
-        - coin_balance
-        - transactions_count
-      title: World
-      type: object
-      x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.MUD.World
-      x-validate: null
-    TableSchema:
-      additionalProperties: false
-      description: MUD TableSchema struct.
-      nullable: false
-      properties:
-        key_names:
-          items:
-            nullable: false
-            type: string
-            x-struct: null
-            x-validate: null
-          nullable: false
-          type: array
-          x-struct: null
-          x-validate: null
-        key_types:
-          items:
-            nullable: false
-            type: string
-            x-struct: null
-            x-validate: null
-          nullable: false
-          type: array
-          x-struct: null
-          x-validate: null
-        value_names:
-          items:
-            nullable: false
-            type: string
-            x-struct: null
-            x-validate: null
-          nullable: false
-          type: array
-          x-struct: null
-          x-validate: null
-        value_types:
-          items:
-            nullable: false
-            type: string
-            x-struct: null
-            x-validate: null
-          nullable: false
-          type: array
-          x-struct: null
-          x-validate: null
-      required:
-        - key_names
-        - key_types
-        - value_names
-        - value_types
-      title: TableSchema
-      type: object
-      x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.MUD.TableSchema
-      x-validate: null
-    Record:
-      additionalProperties: false
-      description: MUD Record struct.
-      nullable: false
-      properties:
-        decoded:
-          nullable: true
-          type: object
-          x-struct: null
-          x-validate: null
-        id:
-          $ref: '#/components/schemas/HexData'
-        is_deleted:
-          nullable: false
-          type: boolean
-          x-struct: null
-          x-validate: null
-        raw:
-          nullable: false
-          properties:
-            block_number:
-              $ref: '#/components/schemas/IntegerString'
-            dynamic_data:
-              $ref: '#/components/schemas/HexData'
-            encoded_lengths:
-              $ref: '#/components/schemas/FullHash'
-            key0:
-              $ref: '#/components/schemas/FullHash'
-            key1:
-              $ref: '#/components/schemas/FullHash'
-            key_bytes:
-              $ref: '#/components/schemas/HexData'
-            log_index:
-              $ref: '#/components/schemas/IntegerString'
-            static_data:
-              $ref: '#/components/schemas/HexData'
-          type: object
-          x-struct: null
-          x-validate: null
-        timestamp:
-          $ref: '#/components/schemas/Timestamp'
-      required:
-        - id
-        - raw
-        - timestamp
-        - decoded
-        - is_deleted
-      title: Record
-      type: object
-      x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.MUD.Record
-      x-validate: null
-    SystemDetails:
-      additionalProperties: false
-      description: MUD SystemDetails struct.
-      nullable: false
-      properties:
-        abi:
-          items:
-            type: object
-            x-struct: null
-            x-validate: null
-          nullable: false
-          type: array
-          x-struct: null
-          x-validate: null
-        name:
-          nullable: false
-          type: string
-          x-struct: null
-          x-validate: null
-      required:
-        - name
-        - abi
-      title: SystemDetails
-      type: object
-      x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.MUD.SystemDetails
-      x-validate: null
-    Optimism.Batch.Detailed:
-      additionalProperties: false
-      description: Optimism Batch struct.
-      nullable: true
-      properties:
-        batch_data_container:
-          enum:
-            - in_blob4844
-            - in_celestia
-            - in_eigenda
-            - in_alt_da
-            - in_calldata
-          nullable: true
-          type: string
-          x-struct: null
-          x-validate: null
-        blobs:
-          items:
-            additionalProperties: false
-            description: Blob struct bound with Optimism batch.
-            properties:
-              cert:
-                description: EigenDA cert raw bytes.
-                nullable: false
-                pattern: ^0x([A-Fa-f0-9]*)$
-                type: string
-                x-struct: null
-                x-validate: null
-              commitment:
-                description: Celestia or Alt-DA blob commitment.
-                nullable: false
-                pattern: ^0x([A-Fa-f0-9]*)$
-                type: string
-                x-struct: null
-                x-validate: null
-              hash:
-                description: EIP-4844 blob hash.
-                nullable: false
-                pattern: ^0x([A-Fa-f0-9]*)$
-                type: string
-                x-struct: null
-                x-validate: null
-              height:
-                description: Celestia block height.
-                nullable: false
-                type: integer
-                x-struct: null
-                x-validate: null
-              l1_timestamp:
-                description: L1 transaction timestamp bound with the blob.
-                format: date-time
-                nullable: false
-                type: string
-                x-struct: null
-                x-validate: null
-              l1_transaction_hash:
-                description: L1 transaction hash bound with the blob.
-                nullable: false
-                pattern: ^0x([A-Fa-f0-9]{64})$
-                type: string
-                x-struct: null
-                x-validate: null
-              namespace:
-                description: Celestia blob namespace.
-                nullable: false
-                pattern: ^0x([A-Fa-f0-9]*)$
-                type: string
-                x-struct: null
-                x-validate: null
-            required:
-              - l1_transaction_hash
-              - l1_timestamp
-            type: object
-            x-struct: null
-            x-validate: null
-          nullable: false
-          type: array
-          x-struct: null
-          x-validate: null
-        l1_timestamp:
-          $ref: '#/components/schemas/Timestamp'
-        l1_transaction_hashes:
-          items:
-            $ref: '#/components/schemas/FullHash'
-          nullable: false
-          type: array
-          x-struct: null
-          x-validate: null
-        l2_end_block_number:
-          type: integer
-          x-struct: null
-          x-validate: null
-        l2_start_block_number:
-          type: integer
-          x-struct: null
-          x-validate: null
-        number:
-          type: integer
-          x-struct: null
-          x-validate: null
-        transactions_count:
-          type: integer
-          x-struct: null
-          x-validate: null
-      required:
-        - number
-        - transactions_count
-        - l1_timestamp
-        - l1_transaction_hashes
-        - batch_data_container
-        - l2_end_block_number
-        - l2_start_block_number
-      title: Optimism.Batch.Detailed
-      type: object
-      x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.Optimism.Batch
-      x-validate: null
-    Game:
-      additionalProperties: false
-      description: Optimism Dispute Game struct.
-      properties:
-        contract_address_hash:
-          $ref: '#/components/schemas/AddressHash'
-        created_at:
-          $ref: '#/components/schemas/Timestamp'
-        game_type:
-          type: integer
-          x-struct: null
-          x-validate: null
-        index:
-          type: integer
-          x-struct: null
-          x-validate: null
-        l2_block_number:
-          type: integer
-          x-struct: null
-          x-validate: null
-        resolved_at:
-          $ref: '#/components/schemas/TimestampNullable'
-        status:
-          enum:
-            - In progress
-            - Challenger wins
-            - Defender wins
-          nullable: false
-          type: string
-          x-struct: null
-          x-validate: null
-      required:
-        - contract_address_hash
-        - created_at
-        - game_type
-        - index
-        - l2_block_number
-        - resolved_at
-        - status
-      title: Game
-      type: object
-      x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.Optimism.Game
-      x-validate: null
-    CeloElectionRewardType:
-      enum:
-        - voter
-        - validator
-        - group
-        - delegated_payment
-        - delegated-payment
-      nullable: false
-      title: CeloElectionRewardType
-      type: string
-      x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.Celo.ElectionReward.Type
       x-validate: null
     CeloEpochDetailed:
       additionalProperties: false
@@ -7427,6 +6942,165 @@ components:
       title: Epoch
       type: object
       x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.Celo.Epoch
+      x-validate: null
+    Optimism.Batch.Detailed:
+      additionalProperties: false
+      description: Optimism Batch struct.
+      nullable: true
+      properties:
+        batch_data_container:
+          enum:
+            - in_blob4844
+            - in_celestia
+            - in_eigenda
+            - in_alt_da
+            - in_calldata
+          nullable: true
+          type: string
+          x-struct: null
+          x-validate: null
+        blobs:
+          items:
+            additionalProperties: false
+            description: Blob struct bound with Optimism batch.
+            properties:
+              cert:
+                description: EigenDA cert raw bytes.
+                nullable: false
+                pattern: ^0x([A-Fa-f0-9]*)$
+                type: string
+                x-struct: null
+                x-validate: null
+              commitment:
+                description: Celestia or Alt-DA blob commitment.
+                nullable: false
+                pattern: ^0x([A-Fa-f0-9]*)$
+                type: string
+                x-struct: null
+                x-validate: null
+              hash:
+                description: EIP-4844 blob hash.
+                nullable: false
+                pattern: ^0x([A-Fa-f0-9]*)$
+                type: string
+                x-struct: null
+                x-validate: null
+              height:
+                description: Celestia block height.
+                nullable: false
+                type: integer
+                x-struct: null
+                x-validate: null
+              l1_timestamp:
+                description: L1 transaction timestamp bound with the blob.
+                format: date-time
+                nullable: false
+                type: string
+                x-struct: null
+                x-validate: null
+              l1_transaction_hash:
+                description: L1 transaction hash bound with the blob.
+                nullable: false
+                pattern: ^0x([A-Fa-f0-9]{64})$
+                type: string
+                x-struct: null
+                x-validate: null
+              namespace:
+                description: Celestia blob namespace.
+                nullable: false
+                pattern: ^0x([A-Fa-f0-9]*)$
+                type: string
+                x-struct: null
+                x-validate: null
+            required:
+              - l1_transaction_hash
+              - l1_timestamp
+            type: object
+            x-struct: null
+            x-validate: null
+          nullable: false
+          type: array
+          x-struct: null
+          x-validate: null
+        l1_timestamp:
+          $ref: '#/components/schemas/Timestamp'
+        l1_transaction_hashes:
+          items:
+            $ref: '#/components/schemas/FullHash'
+          nullable: false
+          type: array
+          x-struct: null
+          x-validate: null
+        l2_end_block_number:
+          type: integer
+          x-struct: null
+          x-validate: null
+        l2_start_block_number:
+          type: integer
+          x-struct: null
+          x-validate: null
+        number:
+          type: integer
+          x-struct: null
+          x-validate: null
+        transactions_count:
+          type: integer
+          x-struct: null
+          x-validate: null
+      required:
+        - number
+        - transactions_count
+        - l1_timestamp
+        - l1_transaction_hashes
+        - batch_data_container
+        - l2_end_block_number
+        - l2_start_block_number
+      title: Optimism.Batch.Detailed
+      type: object
+      x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.Optimism.Batch
+      x-validate: null
+    Game:
+      additionalProperties: false
+      description: Optimism Dispute Game struct.
+      properties:
+        contract_address_hash:
+          $ref: '#/components/schemas/AddressHash'
+        created_at:
+          $ref: '#/components/schemas/Timestamp'
+        game_type:
+          type: integer
+          x-struct: null
+          x-validate: null
+        index:
+          type: integer
+          x-struct: null
+          x-validate: null
+        l2_block_number:
+          type: integer
+          x-struct: null
+          x-validate: null
+        resolved_at:
+          $ref: '#/components/schemas/TimestampNullable'
+        status:
+          enum:
+            - In progress
+            - Challenger wins
+            - Defender wins
+          nullable: false
+          type: string
+          x-struct: null
+          x-validate: null
+      required:
+        - contract_address_hash
+        - created_at
+        - game_type
+        - index
+        - l2_block_number
+        - resolved_at
+        - status
+      title: Game
+      type: object
+      x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.Optimism.Game
       x-validate: null
     Bridge:
       additionalProperties: false
@@ -20090,6 +19764,56 @@ paths:
       summary: List games.
       tags:
         - optimism
+  /api/v2/celo/epochs/{number}:
+    get:
+      callbacks: {}
+      description: Retrieves detailed information about a Celo epoch.
+      operationId: BlockScoutWeb.API.V2.CeloController.epoch
+      parameters:
+        - description: Epoch number in the path.
+          in: path
+          name: number
+          required: true
+          schema:
+            $ref: '#/components/schemas/IntegerString'
+        - description: API key for rate limiting or for sensitive endpoints
+          in: query
+          name: apikey
+          required: false
+          schema:
+            type: string
+            x-struct: null
+            x-validate: null
+        - description: Secret key for getting access to restricted resources
+          in: query
+          name: key
+          required: false
+          schema:
+            type: string
+            x-struct: null
+            x-validate: null
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CeloEpochDetailed'
+          description: Celo epoch details.
+        '404':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFoundResponse'
+          description: Not Found
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JsonErrorResponse'
+          description: Unprocessable Entity
+      summary: Get Celo epoch details.
+      tags:
+        - celo
   /api/v2/optimism/output-roots/count:
     get:
       callbacks: {}
@@ -20131,88 +19855,6 @@ paths:
       summary: Number of output roots in the list.
       tags:
         - optimism
-  /api/v2/mud/worlds/{world}/systems:
-    get:
-      callbacks: {}
-      description: Retrieves a list of MUD systems registered in the specific MUD world.
-      operationId: BlockScoutWeb.API.V2.MudController.world_systems
-      parameters:
-        - description: MUD world address hash in the path
-          in: path
-          name: world
-          required: true
-          schema:
-            $ref: '#/components/schemas/AddressHash'
-        - description: API key for rate limiting or for sensitive endpoints
-          in: query
-          name: apikey
-          required: false
-          schema:
-            type: string
-            x-struct: null
-            x-validate: null
-        - description: Secret key for getting access to restricted resources
-          in: query
-          name: key
-          required: false
-          schema:
-            type: string
-            x-struct: null
-            x-validate: null
-      responses:
-        '200':
-          content:
-            application/json:
-              schema:
-                items:
-                  $ref: '#/components/schemas/System'
-                type: array
-                x-struct: null
-                x-validate: null
-          description: List of MUD systems.
-        '422':
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/JsonErrorResponse'
-          description: Unprocessable Entity
-      summary: List of MUD world systems.
-      tags:
-        - mud
-  /api/v2/mud/worlds/count:
-    get:
-      callbacks: {}
-      description: Retrieves the total number of known MUD worlds.
-      operationId: BlockScoutWeb.API.V2.MudController.worlds_count
-      parameters:
-        - description: API key for rate limiting or for sensitive endpoints
-          in: query
-          name: apikey
-          required: false
-          schema:
-            type: string
-            x-struct: null
-            x-validate: null
-        - description: Secret key for getting access to restricted resources
-          in: query
-          name: key
-          required: false
-          schema:
-            type: string
-            x-struct: null
-            x-validate: null
-      responses:
-        '200':
-          content:
-            application/json:
-              schema:
-                type: integer
-                x-struct: null
-                x-validate: null
-          description: Number of known MUD worlds.
-      summary: Number of known MUD worlds.
-      tags:
-        - mud
   /api/v2/main-page/optimism-deposits:
     get:
       callbacks: {}
@@ -20297,11 +19939,11 @@ paths:
       summary: Number of batches in the list.
       tags:
         - optimism
-  /api/v2/mud/worlds/{world}/tables/count:
+  /api/v2/addresses/{address_hash_param}/celo/election-rewards:
     get:
       callbacks: {}
-      description: Retrieves the total number of known MUD tables in the specific MUD world.
-      operationId: BlockScoutWeb.API.V2.MudController.world_tables_count
+      description: Retrieves Celo election rewards for a specific address.
+      operationId: BlockScoutWeb.API.V2.AddressController.celo_election_rewards
       parameters:
         - description: API key for rate limiting or for sensitive endpoints
           in: query
@@ -20319,92 +19961,12 @@ paths:
             type: string
             x-struct: null
             x-validate: null
-        - description: MUD world address hash in the path
+        - description: Address hash in the path
           in: path
-          name: world
+          name: address_hash_param
           required: true
           schema:
             $ref: '#/components/schemas/AddressHash'
-        - description: Search query filter
-          in: query
-          name: q
-          required: false
-          schema:
-            nullable: true
-            type: string
-            x-struct: null
-            x-validate: null
-        - description: Filter by namespace
-          in: query
-          name: filter_namespace
-          required: false
-          schema:
-            type: string
-            x-struct: null
-            x-validate: null
-      responses:
-        '200':
-          content:
-            application/json:
-              schema:
-                type: integer
-                x-struct: null
-                x-validate: null
-          description: Number of known MUD world tables.
-        '422':
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/JsonErrorResponse'
-          description: Unprocessable Entity
-      summary: Number of known MUD world tables.
-      tags:
-        - mud
-  /api/v2/mud/worlds/{world}/tables:
-    get:
-      callbacks: {}
-      description: Retrieves a paginated list of MUD tables in the specific MUD world.
-      operationId: BlockScoutWeb.API.V2.MudController.world_tables
-      parameters:
-        - description: API key for rate limiting or for sensitive endpoints
-          in: query
-          name: apikey
-          required: false
-          schema:
-            type: string
-            x-struct: null
-            x-validate: null
-        - description: Secret key for getting access to restricted resources
-          in: query
-          name: key
-          required: false
-          schema:
-            type: string
-            x-struct: null
-            x-validate: null
-        - description: MUD world address hash in the path
-          in: path
-          name: world
-          required: true
-          schema:
-            $ref: '#/components/schemas/AddressHash'
-        - description: Search query filter
-          in: query
-          name: q
-          required: false
-          schema:
-            nullable: true
-            type: string
-            x-struct: null
-            x-validate: null
-        - description: Filter by namespace
-          in: query
-          name: filter_namespace
-          required: false
-          schema:
-            type: string
-            x-struct: null
-            x-validate: null
         - description: Number of items per page
           in: query
           name: items_count
@@ -20414,12 +19976,40 @@ paths:
             type: integer
             x-struct: null
             x-validate: null
-        - description: MUD table ID for paging
+        - description: Epoch number for paging
           in: query
-          name: table_id
+          name: epoch_number
           required: false
           schema:
-            $ref: '#/components/schemas/FullHash'
+            $ref: '#/components/schemas/IntegerString'
+        - description: Amount for paging
+          in: query
+          name: amount
+          required: false
+          schema:
+            $ref: '#/components/schemas/IntegerStringNullable'
+        - description: Associated account address hash for paging
+          in: query
+          name: associated_account_address_hash
+          required: false
+          schema:
+            $ref: '#/components/schemas/AddressHash'
+        - description: Type for paging
+          in: query
+          name: type
+          required: false
+          schema:
+            enum:
+              - voter
+              - validator
+              - group
+              - delegated_payment
+              - delegated-payment
+            nullable: false
+            title: CeloElectionRewardType
+            type: string
+            x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.Celo.ElectionReward.Type
+            x-validate: null
       responses:
         '200':
           content:
@@ -20430,7 +20020,7 @@ paths:
                 properties:
                   items:
                     items:
-                      $ref: '#/components/schemas/TableWithSchema'
+                      $ref: '#/components/schemas/ElectionReward'
                     nullable: false
                     type: array
                     x-struct: null
@@ -20438,7 +20028,10 @@ paths:
                   next_page_params:
                     additionalProperties: true
                     example:
-                      table_id: '0x746243484553545f5641554c5400000043686573744163636573730000000000'
+                      amount: '1000000000000000000'
+                      associated_account_address_hash: '0x1234567890123456789012345678901234567890'
+                      epoch_number: 100
+                      type: validator
                     nullable: true
                     type: object
                     x-struct: null
@@ -20449,21 +20042,27 @@ paths:
                 type: object
                 x-struct: null
                 x-validate: null
-          description: List of MUD tables.
+          description: Celo election rewards for the specified address.
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ForbiddenResponse'
+          description: Forbidden
         '422':
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/JsonErrorResponse'
           description: Unprocessable Entity
-      summary: List of MUD world tables.
+      summary: List Celo election rewards for a specific address
       tags:
-        - mud
-  /api/v2/mud/worlds/{world}/tables/{table_id}/records/{record_id}:
+        - addresses
+  /api/v2/addresses/{address_hash_param}/celo/election-rewards/csv:
     get:
       callbacks: {}
-      description: Retrieves a single record in the specific MUD world table.
-      operationId: BlockScoutWeb.API.V2.MudController.world_table_record
+      description: Exports Celo election rewards for a specific address as a CSV file.
+      operationId: BlockScoutWeb.API.V2.CsvExportController.celo_election_rewards_csv
       parameters:
         - description: API key for rate limiting or for sensitive endpoints
           in: query
@@ -20481,57 +20080,91 @@ paths:
             type: string
             x-struct: null
             x-validate: null
-        - description: MUD world address hash in the path
+        - description: Address hash in the path
           in: path
-          name: world
+          name: address_hash_param
           required: true
           schema:
             $ref: '#/components/schemas/AddressHash'
-        - description: MUD table ID in the path
-          in: path
-          name: table_id
-          required: true
+        - description: Start of the time period (ISO 8601 format) in CSV export
+          in: query
+          name: from_period
+          required: false
           schema:
-            $ref: '#/components/schemas/FullHash'
-        - description: MUD record ID in the path
-          in: path
-          name: record_id
-          required: true
+            anyOf:
+              - nullable: false
+                pattern: ^\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01])(?:T(?:[01]\d|2[0-3])(?:(?::|%3A)[0-5]\d(?:(?::|%3A)[0-5]\d(?:\.\d{1,9})?)?)?(?:Z|(?:\+|%2B|-)(?:[01]\d|2[0-3])(?:(?::|%3A)[0-5]\d)?)?)?$
+                type: string
+                x-struct: null
+                x-validate: null
+              - $ref: '#/components/schemas/NullString'
+            x-struct: null
+            x-validate: null
+        - description: End of the time period (ISO 8601 format) In CSV export
+          in: query
+          name: to_period
+          required: false
           schema:
-            $ref: '#/components/schemas/HexData'
+            anyOf:
+              - nullable: false
+                pattern: ^\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01])(?:T(?:[01]\d|2[0-3])(?:(?::|%3A)[0-5]\d(?:(?::|%3A)[0-5]\d(?:\.\d{1,9})?)?)?(?:Z|(?:\+|%2B|-)(?:[01]\d|2[0-3])(?:(?::|%3A)[0-5]\d)?)?)?$
+                type: string
+                x-struct: null
+                x-validate: null
+              - $ref: '#/components/schemas/NullString'
+            x-struct: null
+            x-validate: null
+        - description: Filter type in CSV export
+          in: query
+          name: filter_type
+          required: false
+          schema:
+            anyOf:
+              - enum:
+                  - address
+                nullable: true
+                type: string
+                x-struct: null
+                x-validate: null
+              - $ref: '#/components/schemas/NullString'
+            x-struct: null
+            x-validate: null
+        - description: Filter value in CSV export
+          in: query
+          name: filter_value
+          required: false
+          schema:
+            anyOf:
+              - enum:
+                  - to
+                  - from
+                nullable: true
+                type: string
+                x-struct: null
+                x-validate: null
+              - $ref: '#/components/schemas/NullString'
+            x-struct: null
+            x-validate: null
       responses:
         '200':
           content:
+            application/csv: {}
+          description: CSV file of Celo election rewards.
+        '404':
+          content:
             application/json:
               schema:
-                additionalProperties: false
-                description: MUD Table with TableSchema struct.
-                nullable: false
-                properties:
-                  record:
-                    $ref: '#/components/schemas/Record'
-                  schema:
-                    $ref: '#/components/schemas/TableSchema'
-                  table:
-                    $ref: '#/components/schemas/Table'
-                required:
-                  - table
-                  - schema
-                  - record
-                title: TableWithSchema
-                type: object
-                x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.MUD.TableWithSchema
-                x-validate: null
-          description: Single MUD world table record.
+                $ref: '#/components/schemas/NotFoundResponse'
+          description: Not Found
         '422':
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/JsonErrorResponse'
           description: Unprocessable Entity
-      summary: Single MUD world table record.
+      summary: Export Celo election rewards as CSV
       tags:
-        - mud
+        - addresses
   /api/v2/optimism/output-roots:
     get:
       callbacks: {}
@@ -20774,299 +20407,6 @@ paths:
       summary: List withdrawals.
       tags:
         - optimism
-  /api/v2/mud/worlds/{world}/tables/{table_id}/records:
-    get:
-      callbacks: {}
-      description: Retrieves a paginated list of records in the specific MUD world table.
-      operationId: BlockScoutWeb.API.V2.MudController.world_table_records
-      parameters:
-        - description: API key for rate limiting or for sensitive endpoints
-          in: query
-          name: apikey
-          required: false
-          schema:
-            type: string
-            x-struct: null
-            x-validate: null
-        - description: Secret key for getting access to restricted resources
-          in: query
-          name: key
-          required: false
-          schema:
-            type: string
-            x-struct: null
-            x-validate: null
-        - description: MUD world address hash in the path
-          in: path
-          name: world
-          required: true
-          schema:
-            $ref: '#/components/schemas/AddressHash'
-        - description: MUD table ID in the path
-          in: path
-          name: table_id
-          required: true
-          schema:
-            $ref: '#/components/schemas/FullHash'
-        - description: Filter by key0
-          in: query
-          name: filter_key0
-          required: false
-          schema:
-            type: string
-            x-struct: null
-            x-validate: null
-        - description: Filter by key1
-          in: query
-          name: filter_key1
-          required: false
-          schema:
-            type: string
-            x-struct: null
-            x-validate: null
-        - description: |
-            Sort results by:
-            * key_bytes - Sort by MUD record key_bytes
-            * key0 - Sort by MUD record key0
-            * key1 - Sort by MUD record key1
-            Should be used together with `order` parameter.
-          in: query
-          name: sort
-          required: false
-          schema:
-            enum:
-              - key_bytes
-              - key0
-              - key1
-            type: string
-            x-struct: null
-            x-validate: null
-        - description: |
-            Sort order:
-            * asc - Ascending order
-            * desc - Descending order
-            Should be used together with `sort` parameter.
-          in: query
-          name: order
-          required: false
-          schema:
-            enum:
-              - asc
-              - desc
-            type: string
-            x-struct: null
-            x-validate: null
-        - description: Number of items per page
-          in: query
-          name: items_count
-          required: false
-          schema:
-            minimum: 1
-            type: integer
-            x-struct: null
-            x-validate: null
-        - description: MUD record key_bytes for paging
-          in: query
-          name: key_bytes
-          required: false
-          schema:
-            $ref: '#/components/schemas/HexData'
-        - description: MUD record key0 for paging
-          in: query
-          name: key0
-          required: false
-          schema:
-            $ref: '#/components/schemas/FullHash'
-        - description: MUD record key1 for paging
-          in: query
-          name: key1
-          required: false
-          schema:
-            $ref: '#/components/schemas/FullHash'
-      responses:
-        '200':
-          content:
-            application/json:
-              schema:
-                additionalProperties: false
-                nullable: false
-                properties:
-                  items:
-                    items:
-                      $ref: '#/components/schemas/Record'
-                    nullable: false
-                    type: array
-                    x-struct: null
-                    x-validate: null
-                  next_page_params:
-                    additionalProperties: true
-                    example:
-                      key0: '0x73796269746c7900000000000000000043686573743332000000000000000000'
-                      key_bytes: '0x73796269746c7900000000000000000043686573743332000000000000000000'
-                    nullable: true
-                    type: object
-                    x-struct: null
-                    x-validate: null
-                  schema:
-                    $ref: '#/components/schemas/TableSchema'
-                  table:
-                    $ref: '#/components/schemas/Table'
-                required:
-                  - items
-                  - next_page_params
-                  - table
-                  - schema
-                type: object
-                x-struct: null
-                x-validate: null
-          description: List of MUD world table records.
-        '422':
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/JsonErrorResponse'
-          description: Unprocessable Entity
-      summary: List of MUD world table records.
-      tags:
-        - mud
-  /api/v2/mud/worlds:
-    get:
-      callbacks: {}
-      description: Retrieves a paginated list of MUD worlds with basic stats.
-      operationId: BlockScoutWeb.API.V2.MudController.worlds
-      parameters:
-        - description: API key for rate limiting or for sensitive endpoints
-          in: query
-          name: apikey
-          required: false
-          schema:
-            type: string
-            x-struct: null
-            x-validate: null
-        - description: Secret key for getting access to restricted resources
-          in: query
-          name: key
-          required: false
-          schema:
-            type: string
-            x-struct: null
-            x-validate: null
-        - description: Number of items per page
-          in: query
-          name: items_count
-          required: false
-          schema:
-            minimum: 1
-            type: integer
-            x-struct: null
-            x-validate: null
-        - description: MUD world address hash for paging
-          in: query
-          name: world
-          required: false
-          schema:
-            $ref: '#/components/schemas/AddressHash'
-      responses:
-        '200':
-          content:
-            application/json:
-              schema:
-                additionalProperties: false
-                nullable: false
-                properties:
-                  items:
-                    items:
-                      $ref: '#/components/schemas/World'
-                    nullable: false
-                    type: array
-                    x-struct: null
-                    x-validate: null
-                  next_page_params:
-                    additionalProperties: true
-                    example:
-                      world: '0x82cb040ff4463bff3395d52b558fd77c61583b27'
-                    nullable: true
-                    type: object
-                    x-struct: null
-                    x-validate: null
-                required:
-                  - items
-                  - next_page_params
-                type: object
-                x-struct: null
-                x-validate: null
-          description: List of MUD worlds.
-      summary: List of MUD worlds.
-      tags:
-        - mud
-  /api/v2/mud/worlds/{world}/tables/{table_id}/records/count:
-    get:
-      callbacks: {}
-      description: Retrieves the total number of records in the specific MUD world table.
-      operationId: BlockScoutWeb.API.V2.MudController.world_table_records_count
-      parameters:
-        - description: API key for rate limiting or for sensitive endpoints
-          in: query
-          name: apikey
-          required: false
-          schema:
-            type: string
-            x-struct: null
-            x-validate: null
-        - description: Secret key for getting access to restricted resources
-          in: query
-          name: key
-          required: false
-          schema:
-            type: string
-            x-struct: null
-            x-validate: null
-        - description: MUD world address hash in the path
-          in: path
-          name: world
-          required: true
-          schema:
-            $ref: '#/components/schemas/AddressHash'
-        - description: MUD table ID in the path
-          in: path
-          name: table_id
-          required: true
-          schema:
-            $ref: '#/components/schemas/FullHash'
-        - description: Filter by key0
-          in: query
-          name: filter_key0
-          required: false
-          schema:
-            type: string
-            x-struct: null
-            x-validate: null
-        - description: Filter by key1
-          in: query
-          name: filter_key1
-          required: false
-          schema:
-            type: string
-            x-struct: null
-            x-validate: null
-      responses:
-        '200':
-          content:
-            application/json:
-              schema:
-                type: integer
-                x-struct: null
-                x-validate: null
-          description: Number of known MUD world table records.
-        '422':
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/JsonErrorResponse'
-          description: Unprocessable Entity
-      summary: Number of known MUD world table records.
-      tags:
-        - mud
   /api/v2/optimism/games/count:
     get:
       callbacks: {}
@@ -21108,6 +20448,84 @@ paths:
       summary: Number of games in the list.
       tags:
         - optimism
+  /api/v2/celo/epochs:
+    get:
+      callbacks: {}
+      description: Retrieves a paginated list of Celo epochs.
+      operationId: BlockScoutWeb.API.V2.CeloController.epochs
+      parameters:
+        - description: API key for rate limiting or for sensitive endpoints
+          in: query
+          name: apikey
+          required: false
+          schema:
+            type: string
+            x-struct: null
+            x-validate: null
+        - description: Secret key for getting access to restricted resources
+          in: query
+          name: key
+          required: false
+          schema:
+            type: string
+            x-struct: null
+            x-validate: null
+        - description: Number of items per page
+          in: query
+          name: items_count
+          required: false
+          schema:
+            minimum: 1
+            type: integer
+            x-struct: null
+            x-validate: null
+        - description: Number for paging
+          in: query
+          name: number
+          required: false
+          schema:
+            type: integer
+            x-struct: null
+            x-validate: null
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                additionalProperties: false
+                nullable: false
+                properties:
+                  items:
+                    items:
+                      $ref: '#/components/schemas/Epoch'
+                    nullable: false
+                    type: array
+                    x-struct: null
+                    x-validate: null
+                  next_page_params:
+                    additionalProperties: true
+                    example:
+                      number: 100
+                    nullable: true
+                    type: object
+                    x-struct: null
+                    x-validate: null
+                required:
+                  - items
+                  - next_page_params
+                type: object
+                x-struct: null
+                x-validate: null
+          description: List of Celo epochs.
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JsonErrorResponse'
+          description: Unprocessable Entity
+      summary: List Celo epochs.
+      tags:
+        - celo
   /api/v2/optimism/deposits/count:
     get:
       callbacks: {}
@@ -21205,6 +20623,52 @@ paths:
       summary: Batch by celestia blob.
       tags:
         - optimism
+  /api/v2/config/celo:
+    get:
+      callbacks: {}
+      description: Returns Celo-specific configuration (l2 migration block).
+      operationId: BlockScoutWeb.API.V2.ConfigController.celo
+      parameters:
+        - description: API key for rate limiting or for sensitive endpoints
+          in: query
+          name: apikey
+          required: false
+          schema:
+            type: string
+            x-struct: null
+            x-validate: null
+        - description: Secret key for getting access to restricted resources
+          in: query
+          name: key
+          required: false
+          schema:
+            type: string
+            x-struct: null
+            x-validate: null
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                properties:
+                  l2_migration_block:
+                    nullable: true
+                    type: integer
+                    x-struct: null
+                    x-validate: null
+                type: object
+                x-struct: null
+                x-validate: null
+          description: Celo config.
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JsonErrorResponse'
+          description: Unprocessable Entity
+      summary: Celo chain configuration
+      tags:
+        - config
   /api/v2/optimism/withdrawals/count:
     get:
       callbacks: {}
@@ -21429,534 +20893,6 @@ paths:
       summary: List L2 transactions in an Optimism batch
       tags:
         - transactions
-  /api/v2/optimism/batches:
-    get:
-      callbacks: {}
-      description: Retrieves a paginated list of batches.
-      operationId: BlockScoutWeb.API.V2.OptimismController.batches
-      parameters:
-        - description: API key for rate limiting or for sensitive endpoints
-          in: query
-          name: apikey
-          required: false
-          schema:
-            type: string
-            x-struct: null
-            x-validate: null
-        - description: Secret key for getting access to restricted resources
-          in: query
-          name: key
-          required: false
-          schema:
-            type: string
-            x-struct: null
-            x-validate: null
-        - description: Number of items per page
-          in: query
-          name: items_count
-          required: false
-          schema:
-            minimum: 1
-            type: integer
-            x-struct: null
-            x-validate: null
-        - description: ID for paging
-          in: query
-          name: id
-          required: false
-          schema:
-            type: integer
-            x-struct: null
-            x-validate: null
-      responses:
-        '200':
-          content:
-            application/json:
-              schema:
-                additionalProperties: false
-                nullable: false
-                properties:
-                  items:
-                    items:
-                      $ref: '#/components/schemas/Optimism.Batch'
-                    nullable: false
-                    type: array
-                    x-struct: null
-                    x-validate: null
-                  next_page_params:
-                    additionalProperties: true
-                    example:
-                      id: 394591
-                    nullable: true
-                    type: object
-                    x-struct: null
-                    x-validate: null
-                required:
-                  - items
-                  - next_page_params
-                type: object
-                x-struct: null
-                x-validate: null
-          description: List of batches.
-        '422':
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/JsonErrorResponse'
-          description: Unprocessable Entity
-      summary: List batches.
-      tags:
-        - optimism
-  /api/v2/mud/worlds/{world}/systems/{system}:
-    get:
-      callbacks: {}
-      description: Retrieves a list of MUD system ABI methods registered in the specific MUD world.
-      operationId: BlockScoutWeb.API.V2.MudController.world_system
-      parameters:
-        - description: API key for rate limiting or for sensitive endpoints
-          in: query
-          name: apikey
-          required: false
-          schema:
-            type: string
-            x-struct: null
-            x-validate: null
-        - description: Secret key for getting access to restricted resources
-          in: query
-          name: key
-          required: false
-          schema:
-            type: string
-            x-struct: null
-            x-validate: null
-        - description: MUD world address hash in the path
-          in: path
-          name: world
-          required: true
-          schema:
-            $ref: '#/components/schemas/AddressHash'
-        - description: MUD system address hash in the path
-          in: path
-          name: system
-          required: true
-          schema:
-            $ref: '#/components/schemas/AddressHash'
-      responses:
-        '200':
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/SystemDetails'
-          description: List of MUD world system ABI methods.
-        '422':
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/JsonErrorResponse'
-          description: Unprocessable Entity
-      summary: List of MUD world system ABI methods.
-      tags:
-        - mud
-  /api/v2/celo/epochs/{number}:
-    get:
-      callbacks: {}
-      description: Retrieves detailed information about a Celo epoch.
-      operationId: BlockScoutWeb.API.V2.CeloController.epoch
-      parameters:
-        - description: Epoch number in the path.
-          in: path
-          name: number
-          required: true
-          schema:
-            $ref: '#/components/schemas/IntegerString'
-        - description: API key for rate limiting or for sensitive endpoints
-          in: query
-          name: apikey
-          required: false
-          schema:
-            type: string
-            x-struct: null
-            x-validate: null
-        - description: Secret key for getting access to restricted resources
-          in: query
-          name: key
-          required: false
-          schema:
-            type: string
-            x-struct: null
-            x-validate: null
-      responses:
-        '200':
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/CeloEpochDetailed'
-          description: Celo epoch details.
-        '404':
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/NotFoundResponse'
-          description: Not Found
-        '422':
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/JsonErrorResponse'
-          description: Unprocessable Entity
-      summary: Get Celo epoch details.
-      tags:
-        - celo
-  /api/v2/addresses/{address_hash_param}/celo/election-rewards:
-    get:
-      callbacks: {}
-      description: Retrieves Celo election rewards for a specific address.
-      operationId: BlockScoutWeb.API.V2.AddressController.celo_election_rewards
-      parameters:
-        - description: API key for rate limiting or for sensitive endpoints
-          in: query
-          name: apikey
-          required: false
-          schema:
-            type: string
-            x-struct: null
-            x-validate: null
-        - description: Secret key for getting access to restricted resources
-          in: query
-          name: key
-          required: false
-          schema:
-            type: string
-            x-struct: null
-            x-validate: null
-        - description: Address hash in the path
-          in: path
-          name: address_hash_param
-          required: true
-          schema:
-            $ref: '#/components/schemas/AddressHash'
-        - description: Number of items per page
-          in: query
-          name: items_count
-          required: false
-          schema:
-            minimum: 1
-            type: integer
-            x-struct: null
-            x-validate: null
-        - description: Epoch number for paging
-          in: query
-          name: epoch_number
-          required: false
-          schema:
-            $ref: '#/components/schemas/IntegerString'
-        - description: Amount for paging
-          in: query
-          name: amount
-          required: false
-          schema:
-            $ref: '#/components/schemas/IntegerStringNullable'
-        - description: Associated account address hash for paging
-          in: query
-          name: associated_account_address_hash
-          required: false
-          schema:
-            $ref: '#/components/schemas/AddressHash'
-        - description: Type for paging
-          in: query
-          name: type
-          required: false
-          schema:
-            enum:
-              - voter
-              - validator
-              - group
-              - delegated_payment
-              - delegated-payment
-            nullable: false
-            title: CeloElectionRewardType
-            type: string
-            x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.Celo.ElectionReward.Type
-            x-validate: null
-      responses:
-        '200':
-          content:
-            application/json:
-              schema:
-                additionalProperties: false
-                nullable: false
-                properties:
-                  items:
-                    items:
-                      $ref: '#/components/schemas/ElectionReward'
-                    nullable: false
-                    type: array
-                    x-struct: null
-                    x-validate: null
-                  next_page_params:
-                    additionalProperties: true
-                    example:
-                      amount: '1000000000000000000'
-                      associated_account_address_hash: '0x1234567890123456789012345678901234567890'
-                      epoch_number: 100
-                      type: validator
-                    nullable: true
-                    type: object
-                    x-struct: null
-                    x-validate: null
-                required:
-                  - items
-                  - next_page_params
-                type: object
-                x-struct: null
-                x-validate: null
-          description: Celo election rewards for the specified address.
-        '403':
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ForbiddenResponse'
-          description: Forbidden
-        '422':
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/JsonErrorResponse'
-          description: Unprocessable Entity
-      summary: List Celo election rewards for a specific address
-      tags:
-        - addresses
-  /api/v2/addresses/{address_hash_param}/celo/election-rewards/csv:
-    get:
-      callbacks: {}
-      description: Exports Celo election rewards for a specific address as a CSV file.
-      operationId: BlockScoutWeb.API.V2.CsvExportController.celo_election_rewards_csv
-      parameters:
-        - description: API key for rate limiting or for sensitive endpoints
-          in: query
-          name: apikey
-          required: false
-          schema:
-            type: string
-            x-struct: null
-            x-validate: null
-        - description: Secret key for getting access to restricted resources
-          in: query
-          name: key
-          required: false
-          schema:
-            type: string
-            x-struct: null
-            x-validate: null
-        - description: Address hash in the path
-          in: path
-          name: address_hash_param
-          required: true
-          schema:
-            $ref: '#/components/schemas/AddressHash'
-        - description: Start of the time period (ISO 8601 format) in CSV export
-          in: query
-          name: from_period
-          required: false
-          schema:
-            anyOf:
-              - nullable: false
-                pattern: ^\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01])(?:T(?:[01]\d|2[0-3])(?:(?::|%3A)[0-5]\d(?:(?::|%3A)[0-5]\d(?:\.\d{1,9})?)?)?(?:Z|(?:\+|%2B|-)(?:[01]\d|2[0-3])(?:(?::|%3A)[0-5]\d)?)?)?$
-                type: string
-                x-struct: null
-                x-validate: null
-              - $ref: '#/components/schemas/NullString'
-            x-struct: null
-            x-validate: null
-        - description: End of the time period (ISO 8601 format) In CSV export
-          in: query
-          name: to_period
-          required: false
-          schema:
-            anyOf:
-              - nullable: false
-                pattern: ^\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01])(?:T(?:[01]\d|2[0-3])(?:(?::|%3A)[0-5]\d(?:(?::|%3A)[0-5]\d(?:\.\d{1,9})?)?)?(?:Z|(?:\+|%2B|-)(?:[01]\d|2[0-3])(?:(?::|%3A)[0-5]\d)?)?)?$
-                type: string
-                x-struct: null
-                x-validate: null
-              - $ref: '#/components/schemas/NullString'
-            x-struct: null
-            x-validate: null
-        - description: Filter type in CSV export
-          in: query
-          name: filter_type
-          required: false
-          schema:
-            anyOf:
-              - enum:
-                  - address
-                nullable: true
-                type: string
-                x-struct: null
-                x-validate: null
-              - $ref: '#/components/schemas/NullString'
-            x-struct: null
-            x-validate: null
-        - description: Filter value in CSV export
-          in: query
-          name: filter_value
-          required: false
-          schema:
-            anyOf:
-              - enum:
-                  - to
-                  - from
-                nullable: true
-                type: string
-                x-struct: null
-                x-validate: null
-              - $ref: '#/components/schemas/NullString'
-            x-struct: null
-            x-validate: null
-      responses:
-        '200':
-          content:
-            application/csv: {}
-          description: CSV file of Celo election rewards.
-        '404':
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/NotFoundResponse'
-          description: Not Found
-        '422':
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/JsonErrorResponse'
-          description: Unprocessable Entity
-      summary: Export Celo election rewards as CSV
-      tags:
-        - addresses
-  /api/v2/celo/epochs:
-    get:
-      callbacks: {}
-      description: Retrieves a paginated list of Celo epochs.
-      operationId: BlockScoutWeb.API.V2.CeloController.epochs
-      parameters:
-        - description: API key for rate limiting or for sensitive endpoints
-          in: query
-          name: apikey
-          required: false
-          schema:
-            type: string
-            x-struct: null
-            x-validate: null
-        - description: Secret key for getting access to restricted resources
-          in: query
-          name: key
-          required: false
-          schema:
-            type: string
-            x-struct: null
-            x-validate: null
-        - description: Number of items per page
-          in: query
-          name: items_count
-          required: false
-          schema:
-            minimum: 1
-            type: integer
-            x-struct: null
-            x-validate: null
-        - description: Number for paging
-          in: query
-          name: number
-          required: false
-          schema:
-            type: integer
-            x-struct: null
-            x-validate: null
-      responses:
-        '200':
-          content:
-            application/json:
-              schema:
-                additionalProperties: false
-                nullable: false
-                properties:
-                  items:
-                    items:
-                      $ref: '#/components/schemas/Epoch'
-                    nullable: false
-                    type: array
-                    x-struct: null
-                    x-validate: null
-                  next_page_params:
-                    additionalProperties: true
-                    example:
-                      number: 100
-                    nullable: true
-                    type: object
-                    x-struct: null
-                    x-validate: null
-                required:
-                  - items
-                  - next_page_params
-                type: object
-                x-struct: null
-                x-validate: null
-          description: List of Celo epochs.
-        '422':
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/JsonErrorResponse'
-          description: Unprocessable Entity
-      summary: List Celo epochs.
-      tags:
-        - celo
-  /api/v2/config/celo:
-    get:
-      callbacks: {}
-      description: Returns Celo-specific configuration (l2 migration block).
-      operationId: BlockScoutWeb.API.V2.ConfigController.celo
-      parameters:
-        - description: API key for rate limiting or for sensitive endpoints
-          in: query
-          name: apikey
-          required: false
-          schema:
-            type: string
-            x-struct: null
-            x-validate: null
-        - description: Secret key for getting access to restricted resources
-          in: query
-          name: key
-          required: false
-          schema:
-            type: string
-            x-struct: null
-            x-validate: null
-      responses:
-        '200':
-          content:
-            application/json:
-              schema:
-                properties:
-                  l2_migration_block:
-                    nullable: true
-                    type: integer
-                    x-struct: null
-                    x-validate: null
-                type: object
-                x-struct: null
-                x-validate: null
-          description: Celo config.
-        '422':
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/JsonErrorResponse'
-          description: Unprocessable Entity
-      summary: Celo chain configuration
-      tags:
-        - config
   /api/v2/celo/epochs/{number}/election-rewards/{type}:
     get:
       callbacks: {}
@@ -22059,6 +20995,84 @@ paths:
       summary: List Celo epoch election rewards.
       tags:
         - celo
+  /api/v2/optimism/batches:
+    get:
+      callbacks: {}
+      description: Retrieves a paginated list of batches.
+      operationId: BlockScoutWeb.API.V2.OptimismController.batches
+      parameters:
+        - description: API key for rate limiting or for sensitive endpoints
+          in: query
+          name: apikey
+          required: false
+          schema:
+            type: string
+            x-struct: null
+            x-validate: null
+        - description: Secret key for getting access to restricted resources
+          in: query
+          name: key
+          required: false
+          schema:
+            type: string
+            x-struct: null
+            x-validate: null
+        - description: Number of items per page
+          in: query
+          name: items_count
+          required: false
+          schema:
+            minimum: 1
+            type: integer
+            x-struct: null
+            x-validate: null
+        - description: ID for paging
+          in: query
+          name: id
+          required: false
+          schema:
+            type: integer
+            x-struct: null
+            x-validate: null
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                additionalProperties: false
+                nullable: false
+                properties:
+                  items:
+                    items:
+                      $ref: '#/components/schemas/Optimism.Batch'
+                    nullable: false
+                    type: array
+                    x-struct: null
+                    x-validate: null
+                  next_page_params:
+                    additionalProperties: true
+                    example:
+                      id: 394591
+                    nullable: true
+                    type: object
+                    x-struct: null
+                    x-validate: null
+                required:
+                  - items
+                  - next_page_params
+                type: object
+                x-struct: null
+                x-validate: null
+          description: List of batches.
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JsonErrorResponse'
+          description: Unprocessable Entity
+      summary: List batches.
+      tags:
+        - optimism
   /api/v2/scroll/deposits:
     get:
       callbacks: {}
@@ -23294,7 +22308,6 @@ tags:
   - name: arbitrum
   - name: legacy
   - name: optimism
-  - name: mud
   - name: celo
   - name: scroll
   - name: shibarium
