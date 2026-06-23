@@ -2128,7 +2128,8 @@ components:
                     type: object
                     x-struct:
                     x-validate:
-                  - nullable: false
+                  - additionalProperties: false
+                    nullable: false
                     properties:
                       commitment:
                         nullable: true
@@ -3561,7 +3562,8 @@ components:
                     type: object
                     x-struct:
                     x-validate:
-                  - nullable: false
+                  - additionalProperties: false
+                    nullable: false
                     properties:
                       commitment:
                         nullable: true
