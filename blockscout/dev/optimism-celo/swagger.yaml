@@ -2131,6 +2131,25 @@ components:
                   - additionalProperties: false
                     nullable: false
                     properties:
+                      cert:
+                        nullable: true
+                        type: string
+                        x-struct:
+                        x-validate:
+                      l1_timestamp:
+                        $ref: '#/components/schemas/TimestampNullable'
+                      l1_transaction_hash:
+                        $ref: '#/components/schemas/FullHashNullable'
+                    required:
+                      - cert
+                      - l1_transaction_hash
+                      - l1_timestamp
+                    type: object
+                    x-struct:
+                    x-validate:
+                  - additionalProperties: false
+                    nullable: false
+                    properties:
                       commitment:
                         nullable: true
                         type: string
@@ -3557,6 +3576,25 @@ components:
                       - height
                       - namespace
                       - commitment
+                      - l1_transaction_hash
+                      - l1_timestamp
+                    type: object
+                    x-struct:
+                    x-validate:
+                  - additionalProperties: false
+                    nullable: false
+                    properties:
+                      cert:
+                        nullable: true
+                        type: string
+                        x-struct:
+                        x-validate:
+                      l1_timestamp:
+                        $ref: '#/components/schemas/TimestampNullable'
+                      l1_transaction_hash:
+                        $ref: '#/components/schemas/FullHashNullable'
+                    required:
+                      - cert
                       - l1_transaction_hash
                       - l1_timestamp
                     type: object
