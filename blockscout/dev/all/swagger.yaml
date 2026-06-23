@@ -9993,7 +9993,7 @@ paths:
             x-struct: null
             x-validate: null
         - description: Inclusive lower bound on `timestamp` (ISO 8601).
-          example: '2024-01-01T00:00:00.000Z'
+          example: '2024-01-01T00:00:00Z'
           in: query
           name: age_from
           required: false
@@ -10003,7 +10003,7 @@ paths:
             x-struct: null
             x-validate: null
         - description: Inclusive upper bound on `timestamp` (ISO 8601).
-          example: '2024-12-31T23:59:59.000Z'
+          example: '2024-12-31T23:59:59Z'
           in: query
           name: age_to
           required: false
@@ -13721,7 +13721,7 @@ paths:
                       fee: '19206937428000'
                       hash: '0xe38d616dade747097354b0731b5560f581536dacf22121feb4bb4a0b776018aa'
                       index: 103
-                      inserted_at: '2025-05-26T10:26:51.474Z'
+                      inserted_at: '2025-05-26T10:26:51.474448Z'
                       value: '24741049597737'
                     nullable: true
                     type: object
@@ -15752,7 +15752,7 @@ paths:
             x-struct: null
             x-validate: null
         - description: Inclusive lower bound on `timestamp` (ISO 8601).
-          example: '2024-01-01T00:00:00.000Z'
+          example: '2024-01-01T00:00:00Z'
           in: query
           name: age_from
           required: false
@@ -15762,7 +15762,7 @@ paths:
             x-struct: null
             x-validate: null
         - description: Inclusive upper bound on `timestamp` (ISO 8601).
-          example: '2024-12-31T23:59:59.000Z'
+          example: '2024-12-31T23:59:59Z'
           in: query
           name: age_to
           required: false
