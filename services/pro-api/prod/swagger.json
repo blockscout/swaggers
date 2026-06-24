@@ -36,6 +36,37 @@
         "title": "Account",
         "type": "object"
       },
+      "AccountAbstractionStatus": {
+        "additionalProperties": {
+          "additionalProperties": false,
+          "properties": {
+            "enabled": {
+              "type": "boolean"
+            },
+            "live": {
+              "type": "boolean"
+            },
+            "past_db_logs_indexing_finished": {
+              "type": "boolean"
+            },
+            "past_rpc_logs_indexing_finished": {
+              "type": "boolean"
+            }
+          },
+          "type": "object"
+        },
+        "description": "Status struct.",
+        "properties": {
+          "finished_past_indexing": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "finished_past_indexing"
+        ],
+        "title": "AccountAbstractionStatus",
+        "type": "object"
+      },
       "Address": {
         "additionalProperties": false,
         "description": "Address",
@@ -663,6 +694,7 @@
             "type": "array"
           },
           "next_page_params": {
+            "additionalProperties": true,
             "example": {
               "block_number": 23532302,
               "internal_transaction_index": null,
@@ -1207,19 +1239,21 @@
         "description": "Smart contract audit report item",
         "properties": {
           "audit_company_name": {
-            "nullable": true,
             "type": "string"
           },
           "audit_publish_date": {
             "format": "date",
-            "nullable": true,
             "type": "string"
           },
           "audit_report_url": {
-            "nullable": true,
             "type": "string"
           }
         },
+        "required": [
+          "audit_company_name",
+          "audit_publish_date",
+          "audit_report_url"
+        ],
         "title": "AuditReport",
         "type": "object"
       },
@@ -1304,6 +1338,16 @@
         "title": "BatchForList",
         "type": "object"
       },
+      "Beacon.Deposit.Status": {
+        "description": "Beacon deposit lifecycle status.",
+        "enum": [
+          "invalid",
+          "pending",
+          "completed"
+        ],
+        "title": "Beacon.Deposit.Status",
+        "type": "string"
+      },
       "BeaconDepositResponse": {
         "additionalProperties": false,
         "description": "BeaconDeposit response",
@@ -1335,7 +1379,7 @@
             "type": "string"
           },
           "status": {
-            "$ref": "#/components/schemas/Status"
+            "$ref": "#/components/schemas/Beacon.Deposit.Status"
           },
           "transaction_hash": {
             "$ref": "#/components/schemas/FullHash"
@@ -2453,6 +2497,10 @@
       "DecodedLogInput": {
         "additionalProperties": false,
         "properties": {
+          "abi": {
+            "nullable": true,
+            "type": "object"
+          },
           "method_call": {
             "nullable": true,
             "type": "string"
@@ -2553,7 +2601,7 @@
             "type": "string"
           },
           "status": {
-            "$ref": "#/components/schemas/Status"
+            "$ref": "#/components/schemas/Beacon.Deposit.Status"
           },
           "transaction_hash": {
             "$ref": "#/components/schemas/FullHash"
@@ -3222,7 +3270,12 @@
             "$ref": "#/components/schemas/Timestamp"
           },
           "to": {
-            "$ref": "#/components/schemas/Address"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/Address"
+              }
+            ],
+            "nullable": true
           },
           "transaction_hash": {
             "$ref": "#/components/schemas/FullHash"
@@ -3421,6 +3474,8 @@
         "description": "Metadata tag struct",
         "properties": {
           "meta": {
+            "additionalProperties": true,
+            "nullable": true,
             "type": "object"
           },
           "name": {
@@ -3433,6 +3488,14 @@
             "type": "string"
           },
           "tagType": {
+            "enum": [
+              "name",
+              "generic",
+              "classifier",
+              "information",
+              "note",
+              "protocol"
+            ],
             "type": "string"
           }
         },
@@ -3859,63 +3922,6 @@
         "title": "RawTrace",
         "type": "array"
       },
-      "Record": {
-        "additionalProperties": false,
-        "description": "MUD Record struct.",
-        "properties": {
-          "decoded": {
-            "nullable": true,
-            "type": "object"
-          },
-          "id": {
-            "$ref": "#/components/schemas/HexData"
-          },
-          "is_deleted": {
-            "type": "boolean"
-          },
-          "raw": {
-            "properties": {
-              "block_number": {
-                "$ref": "#/components/schemas/IntegerString"
-              },
-              "dynamic_data": {
-                "$ref": "#/components/schemas/HexData"
-              },
-              "encoded_lengths": {
-                "$ref": "#/components/schemas/FullHash"
-              },
-              "key0": {
-                "$ref": "#/components/schemas/FullHash"
-              },
-              "key1": {
-                "$ref": "#/components/schemas/FullHash"
-              },
-              "key_bytes": {
-                "$ref": "#/components/schemas/HexData"
-              },
-              "log_index": {
-                "$ref": "#/components/schemas/IntegerString"
-              },
-              "static_data": {
-                "$ref": "#/components/schemas/HexData"
-              }
-            },
-            "type": "object"
-          },
-          "timestamp": {
-            "$ref": "#/components/schemas/Timestamp"
-          }
-        },
-        "required": [
-          "id",
-          "raw",
-          "timestamp",
-          "decoded",
-          "is_deleted"
-        ],
-        "title": "Record",
-        "type": "object"
-      },
       "Response": {
         "properties": {
           "expires_at": {
@@ -4038,6 +4044,7 @@
             "type": "array"
           },
           "next_page_params": {
+            "additionalProperties": true,
             "nullable": true,
             "type": "object"
           }
@@ -4211,9 +4218,6 @@
             "nullable": true,
             "type": "array"
           },
-          "address": {
-            "$ref": "#/components/schemas/Address"
-          },
           "can_be_visualized_via_sol2uml": {
             "nullable": true,
             "type": "boolean"
@@ -4354,6 +4358,14 @@
             "type": "boolean"
           },
           "language": {
+            "enum": [
+              "solidity",
+              "vyper",
+              "yul",
+              "scilla",
+              "stylus_rust",
+              "geas"
+            ],
             "nullable": true,
             "type": "string"
           },
@@ -4415,7 +4427,89 @@
             "type": "string"
           }
         },
+        "required": [
+          "proxy_type",
+          "implementations",
+          "conflicting_implementations",
+          "deployed_bytecode",
+          "creation_bytecode",
+          "creation_status"
+        ],
         "title": "SmartContract",
+        "type": "object"
+      },
+      "SmartContractListItem": {
+        "additionalProperties": false,
+        "description": "Smart contract list item",
+        "properties": {
+          "address": {
+            "$ref": "#/components/schemas/Address"
+          },
+          "certified": {
+            "type": "boolean"
+          },
+          "coin_balance": {
+            "nullable": true,
+            "type": "string"
+          },
+          "compiler_version": {
+            "nullable": true,
+            "type": "string"
+          },
+          "github_repository_metadata": {
+            "nullable": true,
+            "type": "object"
+          },
+          "has_constructor_args": {
+            "nullable": true,
+            "type": "boolean"
+          },
+          "language": {
+            "nullable": true,
+            "type": "string"
+          },
+          "license_type": {
+            "nullable": true,
+            "type": "string"
+          },
+          "market_cap": {
+            "nullable": true,
+            "type": "string"
+          },
+          "optimization_enabled": {
+            "nullable": true,
+            "type": "boolean"
+          },
+          "package_name": {
+            "nullable": true,
+            "type": "string"
+          },
+          "reputation": {
+            "nullable": true,
+            "type": "string"
+          },
+          "transactions_count": {
+            "nullable": true,
+            "type": "integer"
+          },
+          "verified_at": {
+            "format": "date-time",
+            "nullable": true,
+            "type": "string"
+          }
+        },
+        "required": [
+          "address",
+          "compiler_version",
+          "optimization_enabled",
+          "language",
+          "verified_at",
+          "has_constructor_args",
+          "license_type",
+          "certified",
+          "reputation"
+        ],
+        "title": "SmartContractListItem",
         "type": "object"
       },
       "StabilityValidator": {
@@ -4688,37 +4782,6 @@
         "title": "StatsResponse",
         "type": "object"
       },
-      "Status": {
-        "additionalProperties": {
-          "additionalProperties": false,
-          "properties": {
-            "enabled": {
-              "type": "boolean"
-            },
-            "live": {
-              "type": "boolean"
-            },
-            "past_db_logs_indexing_finished": {
-              "type": "boolean"
-            },
-            "past_rpc_logs_indexing_finished": {
-              "type": "boolean"
-            }
-          },
-          "type": "object"
-        },
-        "description": "Status struct.",
-        "properties": {
-          "finished_past_indexing": {
-            "type": "boolean"
-          }
-        },
-        "required": [
-          "finished_past_indexing"
-        ],
-        "title": "Status",
-        "type": "object"
-      },
       "Summary": {
         "additionalProperties": false,
         "properties": {
@@ -4909,140 +4972,6 @@
         "title": "SummaryJustRequestBody",
         "type": "object"
       },
-      "System": {
-        "additionalProperties": false,
-        "description": "MUD System struct.",
-        "properties": {
-          "address_hash": {
-            "$ref": "#/components/schemas/AddressHash"
-          },
-          "name": {
-            "type": "string"
-          }
-        },
-        "required": [
-          "name",
-          "address_hash"
-        ],
-        "title": "System",
-        "type": "object"
-      },
-      "SystemDetails": {
-        "additionalProperties": false,
-        "description": "MUD SystemDetails struct.",
-        "properties": {
-          "abi": {
-            "items": {
-              "type": "object"
-            },
-            "type": "array"
-          },
-          "name": {
-            "type": "string"
-          }
-        },
-        "required": [
-          "name",
-          "abi"
-        ],
-        "title": "SystemDetails",
-        "type": "object"
-      },
-      "Table": {
-        "additionalProperties": false,
-        "description": "MUD Table struct.",
-        "properties": {
-          "table_full_name": {
-            "type": "string"
-          },
-          "table_id": {
-            "$ref": "#/components/schemas/FullHash"
-          },
-          "table_name": {
-            "type": "string"
-          },
-          "table_namespace": {
-            "type": "string"
-          },
-          "table_type": {
-            "enum": [
-              "offchain",
-              "onchain",
-              "unknown"
-            ],
-            "type": "string"
-          }
-        },
-        "required": [
-          "table_id",
-          "table_full_name",
-          "table_type",
-          "table_namespace",
-          "table_name"
-        ],
-        "title": "Table",
-        "type": "object"
-      },
-      "TableSchema": {
-        "additionalProperties": false,
-        "description": "MUD TableSchema struct.",
-        "properties": {
-          "key_names": {
-            "items": {
-              "type": "string"
-            },
-            "type": "array"
-          },
-          "key_types": {
-            "items": {
-              "type": "string"
-            },
-            "type": "array"
-          },
-          "value_names": {
-            "items": {
-              "type": "string"
-            },
-            "type": "array"
-          },
-          "value_types": {
-            "items": {
-              "type": "string"
-            },
-            "type": "array"
-          }
-        },
-        "required": [
-          "key_names",
-          "key_types",
-          "value_names",
-          "value_types"
-        ],
-        "title": "TableSchema",
-        "type": "object"
-      },
-      "TableWithSchema": {
-        "additionalProperties": false,
-        "description": "MUD Table with TableSchema struct.",
-        "properties": {
-          "record": {
-            "$ref": "#/components/schemas/Record"
-          },
-          "schema": {
-            "$ref": "#/components/schemas/TableSchema"
-          },
-          "table": {
-            "$ref": "#/components/schemas/Table"
-          }
-        },
-        "required": [
-          "table",
-          "schema",
-          "record"
-        ],
-        "title": "TableWithSchema",
-        "type": "object"
-      },
       "Tag": {
         "additionalProperties": false,
         "description": "Address tag struct",
@@ -5141,7 +5070,7 @@
           "type": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/Type"
+                "$ref": "#/components/schemas/TokenType"
               }
             ],
             "nullable": true
@@ -5449,6 +5378,7 @@
             "$ref": "#/components/schemas/URLNullable"
           },
           "metadata": {
+            "additionalProperties": true,
             "example": {
               "description": "Test",
               "image": "https://example.com/image.png",
@@ -5501,7 +5431,7 @@
           "token_type": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/Type"
+                "$ref": "#/components/schemas/TokenType"
               }
             ],
             "nullable": true
@@ -5575,6 +5505,7 @@
             "$ref": "#/components/schemas/URLNullable"
           },
           "metadata": {
+            "additionalProperties": true,
             "example": {
               "description": "Test",
               "image": "https://example.com/image.png",
@@ -5625,7 +5556,7 @@
             "nullable": true
           },
           "token_type": {
-            "$ref": "#/components/schemas/Type"
+            "$ref": "#/components/schemas/TokenType"
           },
           "value": {
             "$ref": "#/components/schemas/IntegerStringNullable"
@@ -5647,6 +5578,119 @@
           "value"
         ],
         "title": "TokenInstanceInList",
+        "type": "object"
+      },
+      "TokenInstanceInTokenInstancesList": {
+        "additionalProperties": false,
+        "properties": {
+          "animation_media_type": {
+            "description": "Media type category of the token instance animation URL",
+            "enum": [
+              "image",
+              "video",
+              "html"
+            ],
+            "nullable": true,
+            "type": "string"
+          },
+          "animation_url": {
+            "$ref": "#/components/schemas/URLNullable"
+          },
+          "external_app_url": {
+            "$ref": "#/components/schemas/URLNullable"
+          },
+          "id": {
+            "$ref": "#/components/schemas/IntegerString"
+          },
+          "image_media_type": {
+            "description": "Media type category of the token instance image URL",
+            "enum": [
+              "image",
+              "video",
+              "html"
+            ],
+            "nullable": true,
+            "type": "string"
+          },
+          "image_url": {
+            "$ref": "#/components/schemas/URLNullable"
+          },
+          "is_unique": {
+            "nullable": true,
+            "type": "boolean"
+          },
+          "media_type": {
+            "description": "Mime type of the media in media_url",
+            "example": "image/png",
+            "nullable": true,
+            "type": "string"
+          },
+          "media_url": {
+            "$ref": "#/components/schemas/URLNullable"
+          },
+          "metadata": {
+            "additionalProperties": true,
+            "example": {
+              "description": "Test",
+              "image": "https://example.com/image.png",
+              "name": "Test"
+            },
+            "nullable": true,
+            "type": "object"
+          },
+          "owner": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/Address"
+              }
+            ],
+            "nullable": true
+          },
+          "thumbnails": {
+            "nullable": true,
+            "properties": {
+              "250x250": {
+                "format": "uri",
+                "type": "string"
+              },
+              "500x500": {
+                "format": "uri",
+                "type": "string"
+              },
+              "60x60": {
+                "format": "uri",
+                "type": "string"
+              },
+              "original": {
+                "format": "uri",
+                "type": "string"
+              }
+            },
+            "required": [
+              "original"
+            ],
+            "type": "object"
+          },
+          "token_type": {
+            "$ref": "#/components/schemas/TokenType"
+          },
+          "value": {
+            "$ref": "#/components/schemas/IntegerStringNullable"
+          }
+        },
+        "required": [
+          "id",
+          "metadata",
+          "owner",
+          "external_app_url",
+          "animation_url",
+          "image_url",
+          "is_unique",
+          "thumbnails",
+          "media_type",
+          "media_url"
+        ],
+        "title": "TokenInstanceInTokenInstancesList",
         "type": "object"
       },
       "TokenResponse": {
@@ -5714,7 +5758,7 @@
           "type": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/Type"
+                "$ref": "#/components/schemas/TokenType"
               }
             ],
             "nullable": true
@@ -5769,7 +5813,7 @@
             "$ref": "#/components/schemas/Token"
           },
           "token_type": {
-            "$ref": "#/components/schemas/Type"
+            "$ref": "#/components/schemas/TokenType"
           },
           "total": {
             "anyOf": [
@@ -5816,6 +5860,127 @@
           "token_type"
         ],
         "title": "TokenTransfer",
+        "type": "object"
+      },
+      "TokenType": {
+        "enum": [
+          "ERC-20",
+          "ERC-721",
+          "ERC-1155",
+          "ERC-404",
+          "ERC-7984"
+        ],
+        "title": "TokenType",
+        "type": "string"
+      },
+      "TopAddress": {
+        "additionalProperties": false,
+        "description": "Address holding native coin, with its balance and transactions count",
+        "properties": {
+          "coin_balance": {
+            "$ref": "#/components/schemas/IntegerStringNullable"
+          },
+          "ens_domain_name": {
+            "description": "ENS domain name associated with the address",
+            "nullable": true,
+            "type": "string"
+          },
+          "hash": {
+            "$ref": "#/components/schemas/AddressHash"
+          },
+          "implementations": {
+            "description": "Implementations linked with the contract",
+            "items": {
+              "$ref": "#/components/schemas/Implementation"
+            },
+            "type": "array"
+          },
+          "is_contract": {
+            "description": "Has address contract code?",
+            "nullable": true,
+            "type": "boolean"
+          },
+          "is_scam": {
+            "description": "Has address scam badge?",
+            "type": "boolean"
+          },
+          "is_verified": {
+            "description": "Has address associated source code?",
+            "nullable": true,
+            "type": "boolean"
+          },
+          "metadata": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/Metadata"
+              }
+            ],
+            "nullable": true
+          },
+          "name": {
+            "description": "Name associated with the address",
+            "nullable": true,
+            "type": "string"
+          },
+          "private_tags": {
+            "description": "Private tags associated with the address",
+            "items": {
+              "$ref": "#/components/schemas/Tag"
+            },
+            "type": "array"
+          },
+          "proxy_type": {
+            "$ref": "#/components/schemas/ProxyType"
+          },
+          "public_tags": {
+            "description": "Public tags associated with the address",
+            "items": {
+              "$ref": "#/components/schemas/Tag"
+            },
+            "type": "array"
+          },
+          "reputation": {
+            "description": "Reputation of the address",
+            "enum": [
+              "ok",
+              "scam"
+            ],
+            "type": "string"
+          },
+          "transactions_count": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/IntegerString"
+              },
+              {
+                "$ref": "#/components/schemas/EmptyString"
+              }
+            ],
+            "nullable": true
+          },
+          "watchlist_names": {
+            "description": "Watchlist name associated with the address",
+            "items": {
+              "$ref": "#/components/schemas/WatchlistName"
+            },
+            "type": "array"
+          }
+        },
+        "required": [
+          "hash",
+          "is_contract",
+          "name",
+          "is_scam",
+          "reputation",
+          "proxy_type",
+          "implementations",
+          "is_verified",
+          "ens_domain_name",
+          "metadata",
+          "coin_balance",
+          "transactions_count"
+        ],
+        "title": "TopAddress",
         "type": "object"
       },
       "Total": {
@@ -6663,17 +6828,6 @@
         "title": "TransactionResponse",
         "type": "object"
       },
-      "Type": {
-        "enum": [
-          "ERC-20",
-          "ERC-721",
-          "ERC-1155",
-          "ERC-404",
-          "ERC-7984"
-        ],
-        "title": "Type",
-        "type": "string"
-      },
       "URLNullable": {
         "example": "https://example.com",
         "format": "uri",
@@ -7064,120 +7218,6 @@
           "amount"
         ],
         "title": "Withdrawal",
-        "type": "object"
-      },
-      "World": {
-        "additionalProperties": false,
-        "description": "MUD World struct.",
-        "properties": {
-          "address": {
-            "additionalProperties": false,
-            "description": "Address",
-            "properties": {
-              "ens_domain_name": {
-                "description": "ENS domain name associated with the address",
-                "nullable": true,
-                "type": "string"
-              },
-              "hash": {
-                "$ref": "#/components/schemas/AddressHash"
-              },
-              "implementations": {
-                "description": "Implementations linked with the contract",
-                "items": {
-                  "$ref": "#/components/schemas/Implementation"
-                },
-                "type": "array"
-              },
-              "is_contract": {
-                "description": "Has address contract code?",
-                "nullable": true,
-                "type": "boolean"
-              },
-              "is_scam": {
-                "description": "Has address scam badge?",
-                "type": "boolean"
-              },
-              "is_verified": {
-                "description": "Has address associated source code?",
-                "nullable": true,
-                "type": "boolean"
-              },
-              "metadata": {
-                "allOf": [
-                  {
-                    "$ref": "#/components/schemas/Metadata"
-                  }
-                ],
-                "nullable": true
-              },
-              "name": {
-                "description": "Name associated with the address",
-                "nullable": true,
-                "type": "string"
-              },
-              "private_tags": {
-                "description": "Private tags associated with the address",
-                "items": {
-                  "$ref": "#/components/schemas/Tag"
-                },
-                "type": "array"
-              },
-              "proxy_type": {
-                "$ref": "#/components/schemas/ProxyType"
-              },
-              "public_tags": {
-                "description": "Public tags associated with the address",
-                "items": {
-                  "$ref": "#/components/schemas/Tag"
-                },
-                "type": "array"
-              },
-              "reputation": {
-                "description": "Reputation of the address",
-                "enum": [
-                  "ok",
-                  "scam"
-                ],
-                "type": "string"
-              },
-              "watchlist_names": {
-                "description": "Watchlist name associated with the address",
-                "items": {
-                  "$ref": "#/components/schemas/WatchlistName"
-                },
-                "type": "array"
-              }
-            },
-            "required": [
-              "hash",
-              "is_contract",
-              "name",
-              "is_scam",
-              "reputation",
-              "proxy_type",
-              "implementations",
-              "is_verified",
-              "ens_domain_name",
-              "metadata"
-            ],
-            "title": "Address",
-            "type": "object"
-          },
-          "coin_balance": {
-            "$ref": "#/components/schemas/IntegerStringNullable"
-          },
-          "transactions_count": {
-            "nullable": true,
-            "type": "integer"
-          }
-        },
-        "required": [
-          "address",
-          "coin_balance",
-          "transactions_count"
-        ],
-        "title": "World",
         "type": "object"
       },
       "ZkSync.Batch": {
@@ -7611,6 +7651,17 @@
         },
         "type": "object"
       },
+      "v1BatchGetReputationResponse": {
+        "properties": {
+          "addresses": {
+            "additionalProperties": {
+              "$ref": "#/components/schemas/v1Reputation"
+            },
+            "type": "object"
+          }
+        },
+        "type": "object"
+      },
       "v1BatchResolveAddressNamesResponse": {
         "properties": {
           "names": {
@@ -7984,6 +8035,39 @@
         },
         "type": "object"
       },
+      "v1GetPublicTagAddressesResponse": {
+        "properties": {
+          "addresses": {
+            "items": {
+              "type": "string"
+            },
+            "title": "TODO: remove this field",
+            "type": "array"
+          },
+          "items": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          },
+          "nextPageParams": {
+            "$ref": "#/components/schemas/v1Pagination"
+          }
+        },
+        "type": "object"
+      },
+      "v1GetPublicTagTypesResponse": {
+        "properties": {
+          "tagTypes": {
+            "items": {
+              "$ref": "#/components/schemas/v1PublicTagType",
+              "type": "object"
+            },
+            "type": "array"
+          }
+        },
+        "type": "object"
+      },
       "v1Hash": {
         "properties": {
           "chain_id": {
@@ -8216,11 +8300,11 @@
       },
       "v1Pagination": {
         "properties": {
-          "page_size": {
+          "pageSize": {
             "format": "int64",
             "type": "integer"
           },
-          "page_token": {
+          "pageToken": {
             "type": "string"
           }
         },
@@ -8275,6 +8359,20 @@
               "type": "string"
             },
             "type": "array"
+          }
+        },
+        "type": "object"
+      },
+      "v1PublicTagType": {
+        "properties": {
+          "description": {
+            "type": "string"
+          },
+          "id": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string"
           }
         },
         "type": "object"
@@ -8336,6 +8434,15 @@
               "type": "object"
             },
             "type": "array"
+          }
+        },
+        "type": "object"
+      },
+      "v1Reputation": {
+        "properties": {
+          "score": {
+            "format": "int32",
+            "type": "integer"
           }
         },
         "type": "object"
@@ -8415,6 +8522,35 @@
         },
         "type": "object"
       },
+      "v1SearchPublicTagsResponse": {
+        "properties": {
+          "items": {
+            "items": {
+              "$ref": "#/components/schemas/v1TagAddresses",
+              "type": "object"
+            },
+            "type": "array"
+          },
+          "nextPageParams": {
+            "$ref": "#/components/schemas/v1Pagination"
+          }
+        },
+        "type": "object"
+      },
+      "v1SubmitAddressesToExtractorsRequest": {
+        "properties": {
+          "addresses": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          }
+        },
+        "type": "object"
+      },
+      "v1SubmitAddressesToExtractorsResponse": {
+        "type": "object"
+      },
       "v1Tag": {
         "properties": {
           "meta": {
@@ -8432,6 +8568,20 @@
           },
           "tagType": {
             "type": "string"
+          }
+        },
+        "type": "object"
+      },
+      "v1TagAddresses": {
+        "properties": {
+          "addresses": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          },
+          "tag": {
+            "$ref": "#/components/schemas/v1Tag"
           }
         },
         "type": "object"
@@ -9915,6 +10065,142 @@
         ]
       }
     },
+    "/services/metadata/api/v1/addresses": {
+      "get": {
+        "operationId": "Metadata_GetPublicTagAddresses",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "slug",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "tagType",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "description": "If not provided, only multichain tags will be returned",
+            "in": "query",
+            "name": "chainId",
+            "schema": {
+              "format": "int64",
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "pageSize",
+            "schema": {
+              "format": "int64",
+              "type": "integer"
+            }
+          },
+          {
+            "in": "query",
+            "name": "pageToken",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/v1GetPublicTagAddressesResponse"
+                }
+              }
+            },
+            "description": "A successful response.",
+            "headers": {
+              "x-credits-remaining": {
+                "description": "Number of credits remaining in your plan. Resets daily on the free plan, monthly otherwise.",
+                "schema": {
+                  "type": "integer"
+                }
+              },
+              "x-ratelimit-limit": {
+                "description": "Available requests per second with your plan. Returns -1 on internal error.",
+                "schema": {
+                  "type": "integer"
+                }
+              },
+              "x-ratelimit-remaining": {
+                "description": "Remaining rate limit based on your queries. Returns -1 on internal error.",
+                "schema": {
+                  "type": "integer"
+                }
+              },
+              "x-ratelimit-reset": {
+                "description": "Time in milliseconds until the rate limit resets. Returns -1 on internal error.",
+                "schema": {
+                  "type": "integer"
+                }
+              }
+            }
+          },
+          "default": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/googlerpcStatus"
+                }
+              }
+            },
+            "description": "An unexpected error response."
+          }
+        },
+        "tags": [
+          "Metadata"
+        ]
+      }
+    },
+    "/services/metadata/api/v1/addresses:submit": {
+      "post": {
+        "operationId": "Metadata_SubmitAddressesToExtractors",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/v1SubmitAddressesToExtractorsRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/v1SubmitAddressesToExtractorsResponse"
+                }
+              }
+            },
+            "description": "A successful response."
+          },
+          "default": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/googlerpcStatus"
+                }
+              }
+            },
+            "description": "An unexpected error response."
+          }
+        },
+        "tags": [
+          "Metadata"
+        ]
+      }
+    },
     "/services/metadata/api/v1/metadata": {
       "get": {
         "operationId": "Metadata_BatchGetMetadata",
@@ -9960,6 +10246,232 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/v1BatchGetMetadataResponse"
+                }
+              }
+            },
+            "description": "A successful response.",
+            "headers": {
+              "x-credits-remaining": {
+                "description": "Number of credits remaining in your plan. Resets daily on the free plan, monthly otherwise.",
+                "schema": {
+                  "type": "integer"
+                }
+              },
+              "x-ratelimit-limit": {
+                "description": "Available requests per second with your plan. Returns -1 on internal error.",
+                "schema": {
+                  "type": "integer"
+                }
+              },
+              "x-ratelimit-remaining": {
+                "description": "Remaining rate limit based on your queries. Returns -1 on internal error.",
+                "schema": {
+                  "type": "integer"
+                }
+              },
+              "x-ratelimit-reset": {
+                "description": "Time in milliseconds until the rate limit resets. Returns -1 on internal error.",
+                "schema": {
+                  "type": "integer"
+                }
+              }
+            }
+          },
+          "default": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/googlerpcStatus"
+                }
+              }
+            },
+            "description": "An unexpected error response."
+          }
+        },
+        "tags": [
+          "Metadata"
+        ]
+      }
+    },
+    "/services/metadata/api/v1/public-tag-types": {
+      "get": {
+        "operationId": "Metadata_GetPublicTagTypes",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/v1GetPublicTagTypesResponse"
+                }
+              }
+            },
+            "description": "A successful response.",
+            "headers": {
+              "x-credits-remaining": {
+                "description": "Number of credits remaining in your plan. Resets daily on the free plan, monthly otherwise.",
+                "schema": {
+                  "type": "integer"
+                }
+              },
+              "x-ratelimit-limit": {
+                "description": "Available requests per second with your plan. Returns -1 on internal error.",
+                "schema": {
+                  "type": "integer"
+                }
+              },
+              "x-ratelimit-remaining": {
+                "description": "Remaining rate limit based on your queries. Returns -1 on internal error.",
+                "schema": {
+                  "type": "integer"
+                }
+              },
+              "x-ratelimit-reset": {
+                "description": "Time in milliseconds until the rate limit resets. Returns -1 on internal error.",
+                "schema": {
+                  "type": "integer"
+                }
+              }
+            }
+          },
+          "default": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/googlerpcStatus"
+                }
+              }
+            },
+            "description": "An unexpected error response."
+          }
+        },
+        "tags": [
+          "Metadata"
+        ]
+      }
+    },
+    "/services/metadata/api/v1/reputation": {
+      "get": {
+        "operationId": "Metadata_BatchGetReputation",
+        "parameters": [
+          {
+            "description": "Comma separated list of addresses",
+            "in": "query",
+            "name": "addresses",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/v1BatchGetReputationResponse"
+                }
+              }
+            },
+            "description": "A successful response.",
+            "headers": {
+              "x-credits-remaining": {
+                "description": "Number of credits remaining in your plan. Resets daily on the free plan, monthly otherwise.",
+                "schema": {
+                  "type": "integer"
+                }
+              },
+              "x-ratelimit-limit": {
+                "description": "Available requests per second with your plan. Returns -1 on internal error.",
+                "schema": {
+                  "type": "integer"
+                }
+              },
+              "x-ratelimit-remaining": {
+                "description": "Remaining rate limit based on your queries. Returns -1 on internal error.",
+                "schema": {
+                  "type": "integer"
+                }
+              },
+              "x-ratelimit-reset": {
+                "description": "Time in milliseconds until the rate limit resets. Returns -1 on internal error.",
+                "schema": {
+                  "type": "integer"
+                }
+              }
+            }
+          },
+          "default": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/googlerpcStatus"
+                }
+              }
+            },
+            "description": "An unexpected error response."
+          }
+        },
+        "tags": [
+          "Metadata"
+        ]
+      }
+    },
+    "/services/metadata/api/v1/tags:search": {
+      "get": {
+        "operationId": "Metadata_SearchPublicTags",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "chain_id",
+            "schema": {
+              "format": "int64",
+              "type": "string"
+            }
+          },
+          {
+            "description": "Comma separated list of tag types",
+            "in": "query",
+            "name": "tag_types",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "name",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "page_size",
+            "schema": {
+              "format": "int64",
+              "type": "integer"
+            }
+          },
+          {
+            "in": "query",
+            "name": "page_token",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "address_limit",
+            "schema": {
+              "format": "int64",
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/v1SearchPublicTagsResponse"
                 }
               }
             },
@@ -11313,118 +11825,12 @@
                     },
                     "items": {
                       "items": {
-                        "additionalProperties": false,
-                        "description": "Address",
-                        "properties": {
-                          "coin_balance": {
-                            "$ref": "#/components/schemas/IntegerStringNullable"
-                          },
-                          "ens_domain_name": {
-                            "description": "ENS domain name associated with the address",
-                            "nullable": true,
-                            "type": "string"
-                          },
-                          "hash": {
-                            "$ref": "#/components/schemas/AddressHash"
-                          },
-                          "implementations": {
-                            "description": "Implementations linked with the contract",
-                            "items": {
-                              "$ref": "#/components/schemas/Implementation"
-                            },
-                            "type": "array"
-                          },
-                          "is_contract": {
-                            "description": "Has address contract code?",
-                            "nullable": true,
-                            "type": "boolean"
-                          },
-                          "is_scam": {
-                            "description": "Has address scam badge?",
-                            "type": "boolean"
-                          },
-                          "is_verified": {
-                            "description": "Has address associated source code?",
-                            "nullable": true,
-                            "type": "boolean"
-                          },
-                          "metadata": {
-                            "allOf": [
-                              {
-                                "$ref": "#/components/schemas/Metadata"
-                              }
-                            ],
-                            "nullable": true
-                          },
-                          "name": {
-                            "description": "Name associated with the address",
-                            "nullable": true,
-                            "type": "string"
-                          },
-                          "private_tags": {
-                            "description": "Private tags associated with the address",
-                            "items": {
-                              "$ref": "#/components/schemas/Tag"
-                            },
-                            "type": "array"
-                          },
-                          "proxy_type": {
-                            "$ref": "#/components/schemas/ProxyType"
-                          },
-                          "public_tags": {
-                            "description": "Public tags associated with the address",
-                            "items": {
-                              "$ref": "#/components/schemas/Tag"
-                            },
-                            "type": "array"
-                          },
-                          "reputation": {
-                            "description": "Reputation of the address",
-                            "enum": [
-                              "ok",
-                              "scam"
-                            ],
-                            "type": "string"
-                          },
-                          "transactions_count": {
-                            "anyOf": [
-                              {
-                                "$ref": "#/components/schemas/IntegerString"
-                              },
-                              {
-                                "$ref": "#/components/schemas/EmptyString"
-                              }
-                            ],
-                            "nullable": true
-                          },
-                          "watchlist_names": {
-                            "description": "Watchlist name associated with the address",
-                            "items": {
-                              "$ref": "#/components/schemas/WatchlistName"
-                            },
-                            "type": "array"
-                          }
-                        },
-                        "required": [
-                          "hash",
-                          "is_contract",
-                          "name",
-                          "is_scam",
-                          "reputation",
-                          "proxy_type",
-                          "implementations",
-                          "is_verified",
-                          "ens_domain_name",
-                          "metadata",
-                          "coin_balance",
-                          "transactions_count"
-                        ],
-                        "title": "Address",
-                        "type": "object"
+                        "$ref": "#/components/schemas/TopAddress"
                       },
                       "type": "array"
                     },
                     "next_page_params": {
+                      "additionalProperties": true,
                       "example": {
                         "fetched_coin_balance": "124355417998347240251800",
                         "hash": "0x59708733fbbf64378d9293ec56b977c011a08fd2",
@@ -11637,6 +12043,7 @@
                       "type": "array"
                     },
                     "next_page_params": {
+                      "additionalProperties": true,
                       "example": {
                         "index": 123
                       },
@@ -11763,6 +12170,7 @@
                       "type": "array"
                     },
                     "next_page_params": {
+                      "additionalProperties": true,
                       "example": {
                         "block_number": 22546398
                       },
@@ -11920,6 +12328,7 @@
                       "type": "array"
                     },
                     "next_page_params": {
+                      "additionalProperties": true,
                       "example": {
                         "amount": "1000000000000000000",
                         "associated_account_address_hash": "0x1234567890123456789012345678901234567890",
@@ -12011,7 +12420,6 @@
             "description": "Start of the time period (ISO 8601 format) in CSV export",
             "in": "query",
             "name": "from_period",
-            "required": true,
             "schema": {
               "anyOf": [
                 {
@@ -12028,7 +12436,6 @@
             "description": "End of the time period (ISO 8601 format) In CSV export",
             "in": "query",
             "name": "to_period",
-            "required": true,
             "schema": {
               "anyOf": [
                 {
@@ -12206,6 +12613,7 @@
                       "type": "array"
                     },
                     "next_page_params": {
+                      "additionalProperties": true,
                       "example": {
                         "block_number": 22546398
                       },
@@ -12491,6 +12899,15 @@
             }
           },
           {
+            "description": "If `false`, zero-value call-type internal transactions are excluded from results.",
+            "in": "query",
+            "name": "include_zero_value",
+            "schema": {
+              "default": true,
+              "type": "boolean"
+            }
+          },
+          {
             "description": "Number of items per page",
             "in": "query",
             "name": "items_count",
@@ -12568,6 +12985,7 @@
                       "type": "object"
                     },
                     "next_page_params": {
+                      "additionalProperties": true,
                       "example": {
                         "block_number": 22530770,
                         "index": 8,
@@ -12659,7 +13077,6 @@
             "description": "Start of the time period (ISO 8601 format) in CSV export",
             "in": "query",
             "name": "from_period",
-            "required": true,
             "schema": {
               "anyOf": [
                 {
@@ -12676,7 +13093,6 @@
             "description": "End of the time period (ISO 8601 format) In CSV export",
             "in": "query",
             "name": "to_period",
-            "required": true,
             "schema": {
               "anyOf": [
                 {
@@ -12870,6 +13286,7 @@
                       "type": "array"
                     },
                     "next_page_params": {
+                      "additionalProperties": true,
                       "example": {
                         "block_number": 22546398,
                         "index": 268
@@ -12959,7 +13376,6 @@
             "description": "Start of the time period (ISO 8601 format) in CSV export",
             "in": "query",
             "name": "from_period",
-            "required": true,
             "schema": {
               "anyOf": [
                 {
@@ -12976,7 +13392,6 @@
             "description": "End of the time period (ISO 8601 format) In CSV export",
             "in": "query",
             "name": "to_period",
-            "required": true,
             "schema": {
               "anyOf": [
                 {
@@ -13158,7 +13573,7 @@
             "in": "query",
             "name": "token_type",
             "schema": {
-              "$ref": "#/components/schemas/Type"
+              "$ref": "#/components/schemas/TokenType"
             }
           },
           {
@@ -13185,6 +13600,7 @@
                       "type": "array"
                     },
                     "next_page_params": {
+                      "additionalProperties": true,
                       "example": {
                         "token_contract_address_hash": "0x1ffe11b9fb7f6ff1b153ab8608cf403ecaf9d44a",
                         "token_id": "24950",
@@ -13309,7 +13725,7 @@
             "in": "query",
             "name": "token_type",
             "schema": {
-              "$ref": "#/components/schemas/Type"
+              "$ref": "#/components/schemas/TokenType"
             }
           },
           {
@@ -13336,6 +13752,7 @@
                       "type": "array"
                     },
                     "next_page_params": {
+                      "additionalProperties": true,
                       "example": {
                         "token_contract_address_hash": "0x1ffe11b9fb7f6ff1b153ab8608cf403ecaf9d44a",
                         "token_type": "ERC-721"
@@ -13718,6 +14135,7 @@
                       "type": "array"
                     },
                     "next_page_params": {
+                      "additionalProperties": true,
                       "example": {
                         "block_number": 12345678,
                         "index": 0
@@ -13807,7 +14225,6 @@
             "description": "Start of the time period (ISO 8601 format) in CSV export",
             "in": "query",
             "name": "from_period",
-            "required": true,
             "schema": {
               "anyOf": [
                 {
@@ -13824,7 +14241,6 @@
             "description": "End of the time period (ISO 8601 format) In CSV export",
             "in": "query",
             "name": "to_period",
-            "required": true,
             "schema": {
               "anyOf": [
                 {
@@ -14053,6 +14469,7 @@
                       "type": "array"
                     },
                     "next_page_params": {
+                      "additionalProperties": true,
                       "example": {
                         "fiat_value": null,
                         "id": 12519063346,
@@ -14288,12 +14705,13 @@
                       "type": "array"
                     },
                     "next_page_params": {
+                      "additionalProperties": true,
                       "example": {
                         "block_number": 22566361,
                         "fee": "19206937428000",
                         "hash": "0xe38d616dade747097354b0731b5560f581536dacf22121feb4bb4a0b776018aa",
                         "index": 103,
-                        "inserted_at": "2025-05-26T10:26:51.474Z",
+                        "inserted_at": "2025-05-26T10:26:51.474448Z",
                         "value": "24741049597737"
                       },
                       "nullable": true,
@@ -14381,7 +14799,6 @@
             "description": "Start of the time period (ISO 8601 format) in CSV export",
             "in": "query",
             "name": "from_period",
-            "required": true,
             "schema": {
               "anyOf": [
                 {
@@ -14398,7 +14815,6 @@
             "description": "End of the time period (ISO 8601 format) In CSV export",
             "in": "query",
             "name": "to_period",
-            "required": true,
             "schema": {
               "anyOf": [
                 {
@@ -14575,6 +14991,7 @@
                       "type": "array"
                     },
                     "next_page_params": {
+                      "additionalProperties": true,
                       "example": {
                         "index": 88192653
                       },
@@ -14672,7 +15089,7 @@
           },
           {
             "description": "Inclusive lower bound on `timestamp` (ISO 8601).",
-            "example": "2024-01-01T00:00:00.000Z",
+            "example": "2024-01-01T00:00:00Z",
             "in": "query",
             "name": "age_from",
             "schema": {
@@ -14682,7 +15099,7 @@
           },
           {
             "description": "Inclusive upper bound on `timestamp` (ISO 8601).",
-            "example": "2024-12-31T23:59:59.000Z",
+            "example": "2024-12-31T23:59:59Z",
             "in": "query",
             "name": "age_to",
             "schema": {
@@ -14945,7 +15362,7 @@
           },
           {
             "description": "Inclusive lower bound on `timestamp` (ISO 8601).",
-            "example": "2024-01-01T00:00:00.000Z",
+            "example": "2024-01-01T00:00:00Z",
             "in": "query",
             "name": "age_from",
             "schema": {
@@ -14955,7 +15372,7 @@
           },
           {
             "description": "Inclusive upper bound on `timestamp` (ISO 8601).",
-            "example": "2024-12-31T23:59:59.000Z",
+            "example": "2024-12-31T23:59:59Z",
             "in": "query",
             "name": "age_to",
             "schema": {
@@ -15357,6 +15774,7 @@
                       "type": "array"
                     },
                     "next_page_params": {
+                      "additionalProperties": true,
                       "example": {
                         "number": 123
                       },
@@ -15558,6 +15976,7 @@
                           "type": "array"
                         },
                         "next_page_params": {
+                          "additionalProperties": true,
                           "example": {
                             "number": 123
                           },
@@ -15799,6 +16218,7 @@
                           "type": "array"
                         },
                         "next_page_params": {
+                          "additionalProperties": true,
                           "example": {
                             "number": 123
                           },
@@ -16208,6 +16628,7 @@
                       "type": "array"
                     },
                     "next_page_params": {
+                      "additionalProperties": true,
                       "example": {
                         "id": 123
                       },
@@ -16399,6 +16820,7 @@
                       "type": "array"
                     },
                     "next_page_params": {
+                      "additionalProperties": true,
                       "example": {
                         "index": 123
                       },
@@ -16598,6 +17020,7 @@
                       "type": "array"
                     },
                     "next_page_params": {
+                      "additionalProperties": true,
                       "example": {
                         "block_number": 22566361
                       },
@@ -16715,6 +17138,7 @@
                       "type": "array"
                     },
                     "next_page_params": {
+                      "additionalProperties": true,
                       "example": {
                         "block_number": 22566361
                       },
@@ -16832,6 +17256,7 @@
                       "type": "array"
                     },
                     "next_page_params": {
+                      "additionalProperties": true,
                       "example": {
                         "block_number": 22566361
                       },
@@ -16949,6 +17374,7 @@
                       "type": "array"
                     },
                     "next_page_params": {
+                      "additionalProperties": true,
                       "example": {
                         "block_number": 22566361
                       },
@@ -17168,6 +17594,7 @@
                       "type": "array"
                     },
                     "next_page_params": {
+                      "additionalProperties": true,
                       "example": {
                         "index": 123
                       },
@@ -17293,6 +17720,15 @@
             }
           },
           {
+            "description": "If `false`, zero-value call-type internal transactions are excluded from results.",
+            "in": "query",
+            "name": "include_zero_value",
+            "schema": {
+              "default": true,
+              "type": "boolean"
+            }
+          },
+          {
             "description": "Number of items per page",
             "in": "query",
             "name": "items_count",
@@ -17361,6 +17797,7 @@
                       "type": "object"
                     },
                     "next_page_params": {
+                      "additionalProperties": true,
                       "example": {
                         "index": 8,
                         "transaction_index": 3
@@ -17520,6 +17957,7 @@
                       "type": "array"
                     },
                     "next_page_params": {
+                      "additionalProperties": true,
                       "example": {
                         "block_number": 12345678,
                         "index": 103
@@ -17654,6 +18092,7 @@
                       "type": "array"
                     },
                     "next_page_params": {
+                      "additionalProperties": true,
                       "example": {
                         "index": 88192653
                       },
@@ -17859,6 +18298,7 @@
                       "type": "array"
                     },
                     "next_page_params": {
+                      "additionalProperties": true,
                       "example": {
                         "number": 100
                       },
@@ -18087,6 +18527,7 @@
                       "type": "array"
                     },
                     "next_page_params": {
+                      "additionalProperties": true,
                       "example": {
                         "account_address_hash": "0x1234567890123456789012345678901234567890",
                         "amount": "1000000000000000000",
@@ -18252,6 +18693,15 @@
             }
           },
           {
+            "description": "If `false`, zero-value call-type internal transactions are excluded from results.",
+            "in": "query",
+            "name": "include_zero_value",
+            "schema": {
+              "default": true,
+              "type": "boolean"
+            }
+          },
+          {
             "description": "Number of items per page",
             "in": "query",
             "name": "items_count",
@@ -18329,6 +18779,7 @@
                       "type": "object"
                     },
                     "next_page_params": {
+                      "additionalProperties": true,
                       "example": {
                         "block_number": 22133247,
                         "index": 50,
@@ -18648,7 +19099,7 @@
               "application/json": {
                 "schema": {
                   "items": {
-                    "$ref": "#/components/schemas/BlockResponse"
+                    "$ref": "#/components/schemas/Block"
                   },
                   "type": "array"
                 }
@@ -19134,964 +19585,6 @@
         ]
       }
     },
-    "/{chain_id}/api/v2/mud/worlds": {
-      "get": {
-        "description": "Retrieves a paginated list of MUD worlds with basic stats.",
-        "operationId": "BlockScoutWeb.API.V2.MudController.worlds",
-        "parameters": [
-          {
-            "description": "Number of items per page",
-            "in": "query",
-            "name": "items_count",
-            "schema": {
-              "minimum": 1,
-              "type": "integer"
-            }
-          },
-          {
-            "description": "MUD world address hash for paging",
-            "in": "query",
-            "name": "world",
-            "schema": {
-              "$ref": "#/components/schemas/AddressHash"
-            }
-          },
-          {
-            "description": "The ID of the blockchain",
-            "in": "path",
-            "name": "chain_id",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "additionalProperties": false,
-                  "properties": {
-                    "items": {
-                      "items": {
-                        "$ref": "#/components/schemas/World"
-                      },
-                      "type": "array"
-                    },
-                    "next_page_params": {
-                      "example": {
-                        "world": "0x82cb040ff4463bff3395d52b558fd77c61583b27"
-                      },
-                      "nullable": true,
-                      "type": "object"
-                    }
-                  },
-                  "required": [
-                    "items",
-                    "next_page_params"
-                  ],
-                  "type": "object"
-                }
-              }
-            },
-            "description": "List of MUD worlds.",
-            "headers": {
-              "x-credits-remaining": {
-                "description": "Number of credits remaining in your plan. Resets daily on the free plan, monthly otherwise.",
-                "schema": {
-                  "type": "integer"
-                }
-              },
-              "x-ratelimit-limit": {
-                "description": "Available requests per second with your plan. Returns -1 on internal error.",
-                "schema": {
-                  "type": "integer"
-                }
-              },
-              "x-ratelimit-remaining": {
-                "description": "Remaining rate limit based on your queries. Returns -1 on internal error.",
-                "schema": {
-                  "type": "integer"
-                }
-              },
-              "x-ratelimit-reset": {
-                "description": "Time in milliseconds until the rate limit resets. Returns -1 on internal error.",
-                "schema": {
-                  "type": "integer"
-                }
-              }
-            }
-          }
-        },
-        "summary": "List of MUD worlds.",
-        "tags": [
-          "mud"
-        ]
-      }
-    },
-    "/{chain_id}/api/v2/mud/worlds/count": {
-      "get": {
-        "description": "Retrieves the total number of known MUD worlds.",
-        "operationId": "BlockScoutWeb.API.V2.MudController.worlds_count",
-        "parameters": [
-          {
-            "description": "The ID of the blockchain",
-            "in": "path",
-            "name": "chain_id",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "integer"
-                }
-              }
-            },
-            "description": "Number of known MUD worlds.",
-            "headers": {
-              "x-credits-remaining": {
-                "description": "Number of credits remaining in your plan. Resets daily on the free plan, monthly otherwise.",
-                "schema": {
-                  "type": "integer"
-                }
-              },
-              "x-ratelimit-limit": {
-                "description": "Available requests per second with your plan. Returns -1 on internal error.",
-                "schema": {
-                  "type": "integer"
-                }
-              },
-              "x-ratelimit-remaining": {
-                "description": "Remaining rate limit based on your queries. Returns -1 on internal error.",
-                "schema": {
-                  "type": "integer"
-                }
-              },
-              "x-ratelimit-reset": {
-                "description": "Time in milliseconds until the rate limit resets. Returns -1 on internal error.",
-                "schema": {
-                  "type": "integer"
-                }
-              }
-            }
-          }
-        },
-        "summary": "Number of known MUD worlds.",
-        "tags": [
-          "mud"
-        ]
-      }
-    },
-    "/{chain_id}/api/v2/mud/worlds/{world}/systems": {
-      "get": {
-        "description": "Retrieves a list of MUD systems registered in the specific MUD world.",
-        "operationId": "BlockScoutWeb.API.V2.MudController.world_systems",
-        "parameters": [
-          {
-            "description": "MUD world address hash in the path",
-            "in": "path",
-            "name": "world",
-            "required": true,
-            "schema": {
-              "$ref": "#/components/schemas/AddressHash"
-            }
-          },
-          {
-            "description": "The ID of the blockchain",
-            "in": "path",
-            "name": "chain_id",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "items": {
-                    "$ref": "#/components/schemas/System"
-                  },
-                  "type": "array"
-                }
-              }
-            },
-            "description": "List of MUD systems.",
-            "headers": {
-              "x-credits-remaining": {
-                "description": "Number of credits remaining in your plan. Resets daily on the free plan, monthly otherwise.",
-                "schema": {
-                  "type": "integer"
-                }
-              },
-              "x-ratelimit-limit": {
-                "description": "Available requests per second with your plan. Returns -1 on internal error.",
-                "schema": {
-                  "type": "integer"
-                }
-              },
-              "x-ratelimit-remaining": {
-                "description": "Remaining rate limit based on your queries. Returns -1 on internal error.",
-                "schema": {
-                  "type": "integer"
-                }
-              },
-              "x-ratelimit-reset": {
-                "description": "Time in milliseconds until the rate limit resets. Returns -1 on internal error.",
-                "schema": {
-                  "type": "integer"
-                }
-              }
-            }
-          },
-          "422": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/JsonErrorResponse"
-                }
-              }
-            },
-            "description": "Unprocessable Entity"
-          }
-        },
-        "summary": "List of MUD world systems.",
-        "tags": [
-          "mud"
-        ]
-      }
-    },
-    "/{chain_id}/api/v2/mud/worlds/{world}/systems/{system}": {
-      "get": {
-        "description": "Retrieves a list of MUD system ABI methods registered in the specific MUD world.",
-        "operationId": "BlockScoutWeb.API.V2.MudController.world_system",
-        "parameters": [
-          {
-            "description": "MUD world address hash in the path",
-            "in": "path",
-            "name": "world",
-            "required": true,
-            "schema": {
-              "$ref": "#/components/schemas/AddressHash"
-            }
-          },
-          {
-            "description": "MUD system address hash in the path",
-            "in": "path",
-            "name": "system",
-            "required": true,
-            "schema": {
-              "$ref": "#/components/schemas/AddressHash"
-            }
-          },
-          {
-            "description": "The ID of the blockchain",
-            "in": "path",
-            "name": "chain_id",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/SystemDetails"
-                }
-              }
-            },
-            "description": "List of MUD world system ABI methods.",
-            "headers": {
-              "x-credits-remaining": {
-                "description": "Number of credits remaining in your plan. Resets daily on the free plan, monthly otherwise.",
-                "schema": {
-                  "type": "integer"
-                }
-              },
-              "x-ratelimit-limit": {
-                "description": "Available requests per second with your plan. Returns -1 on internal error.",
-                "schema": {
-                  "type": "integer"
-                }
-              },
-              "x-ratelimit-remaining": {
-                "description": "Remaining rate limit based on your queries. Returns -1 on internal error.",
-                "schema": {
-                  "type": "integer"
-                }
-              },
-              "x-ratelimit-reset": {
-                "description": "Time in milliseconds until the rate limit resets. Returns -1 on internal error.",
-                "schema": {
-                  "type": "integer"
-                }
-              }
-            }
-          },
-          "422": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/JsonErrorResponse"
-                }
-              }
-            },
-            "description": "Unprocessable Entity"
-          }
-        },
-        "summary": "List of MUD world system ABI methods.",
-        "tags": [
-          "mud"
-        ]
-      }
-    },
-    "/{chain_id}/api/v2/mud/worlds/{world}/tables": {
-      "get": {
-        "description": "Retrieves a paginated list of MUD tables in the specific MUD world.",
-        "operationId": "BlockScoutWeb.API.V2.MudController.world_tables",
-        "parameters": [
-          {
-            "description": "MUD world address hash in the path",
-            "in": "path",
-            "name": "world",
-            "required": true,
-            "schema": {
-              "$ref": "#/components/schemas/AddressHash"
-            }
-          },
-          {
-            "description": "Search query filter",
-            "in": "query",
-            "name": "q",
-            "schema": {
-              "nullable": true,
-              "type": "string"
-            }
-          },
-          {
-            "description": "Filter by namespace",
-            "in": "query",
-            "name": "filter_namespace",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "description": "Number of items per page",
-            "in": "query",
-            "name": "items_count",
-            "schema": {
-              "minimum": 1,
-              "type": "integer"
-            }
-          },
-          {
-            "description": "MUD table ID for paging",
-            "in": "query",
-            "name": "table_id",
-            "schema": {
-              "$ref": "#/components/schemas/FullHash"
-            }
-          },
-          {
-            "description": "The ID of the blockchain",
-            "in": "path",
-            "name": "chain_id",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "additionalProperties": false,
-                  "properties": {
-                    "items": {
-                      "items": {
-                        "$ref": "#/components/schemas/TableWithSchema"
-                      },
-                      "type": "array"
-                    },
-                    "next_page_params": {
-                      "example": {
-                        "table_id": "0x746243484553545f5641554c5400000043686573744163636573730000000000"
-                      },
-                      "nullable": true,
-                      "type": "object"
-                    }
-                  },
-                  "required": [
-                    "items",
-                    "next_page_params"
-                  ],
-                  "type": "object"
-                }
-              }
-            },
-            "description": "List of MUD tables.",
-            "headers": {
-              "x-credits-remaining": {
-                "description": "Number of credits remaining in your plan. Resets daily on the free plan, monthly otherwise.",
-                "schema": {
-                  "type": "integer"
-                }
-              },
-              "x-ratelimit-limit": {
-                "description": "Available requests per second with your plan. Returns -1 on internal error.",
-                "schema": {
-                  "type": "integer"
-                }
-              },
-              "x-ratelimit-remaining": {
-                "description": "Remaining rate limit based on your queries. Returns -1 on internal error.",
-                "schema": {
-                  "type": "integer"
-                }
-              },
-              "x-ratelimit-reset": {
-                "description": "Time in milliseconds until the rate limit resets. Returns -1 on internal error.",
-                "schema": {
-                  "type": "integer"
-                }
-              }
-            }
-          },
-          "422": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/JsonErrorResponse"
-                }
-              }
-            },
-            "description": "Unprocessable Entity"
-          }
-        },
-        "summary": "List of MUD world tables.",
-        "tags": [
-          "mud"
-        ]
-      }
-    },
-    "/{chain_id}/api/v2/mud/worlds/{world}/tables/count": {
-      "get": {
-        "description": "Retrieves the total number of known MUD tables in the specific MUD world.",
-        "operationId": "BlockScoutWeb.API.V2.MudController.world_tables_count",
-        "parameters": [
-          {
-            "description": "MUD world address hash in the path",
-            "in": "path",
-            "name": "world",
-            "required": true,
-            "schema": {
-              "$ref": "#/components/schemas/AddressHash"
-            }
-          },
-          {
-            "description": "Search query filter",
-            "in": "query",
-            "name": "q",
-            "schema": {
-              "nullable": true,
-              "type": "string"
-            }
-          },
-          {
-            "description": "Filter by namespace",
-            "in": "query",
-            "name": "filter_namespace",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "description": "The ID of the blockchain",
-            "in": "path",
-            "name": "chain_id",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "integer"
-                }
-              }
-            },
-            "description": "Number of known MUD world tables.",
-            "headers": {
-              "x-credits-remaining": {
-                "description": "Number of credits remaining in your plan. Resets daily on the free plan, monthly otherwise.",
-                "schema": {
-                  "type": "integer"
-                }
-              },
-              "x-ratelimit-limit": {
-                "description": "Available requests per second with your plan. Returns -1 on internal error.",
-                "schema": {
-                  "type": "integer"
-                }
-              },
-              "x-ratelimit-remaining": {
-                "description": "Remaining rate limit based on your queries. Returns -1 on internal error.",
-                "schema": {
-                  "type": "integer"
-                }
-              },
-              "x-ratelimit-reset": {
-                "description": "Time in milliseconds until the rate limit resets. Returns -1 on internal error.",
-                "schema": {
-                  "type": "integer"
-                }
-              }
-            }
-          },
-          "422": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/JsonErrorResponse"
-                }
-              }
-            },
-            "description": "Unprocessable Entity"
-          }
-        },
-        "summary": "Number of known MUD world tables.",
-        "tags": [
-          "mud"
-        ]
-      }
-    },
-    "/{chain_id}/api/v2/mud/worlds/{world}/tables/{table_id}/records": {
-      "get": {
-        "description": "Retrieves a paginated list of records in the specific MUD world table.",
-        "operationId": "BlockScoutWeb.API.V2.MudController.world_table_records",
-        "parameters": [
-          {
-            "description": "MUD world address hash in the path",
-            "in": "path",
-            "name": "world",
-            "required": true,
-            "schema": {
-              "$ref": "#/components/schemas/AddressHash"
-            }
-          },
-          {
-            "description": "MUD table ID in the path",
-            "in": "path",
-            "name": "table_id",
-            "required": true,
-            "schema": {
-              "$ref": "#/components/schemas/FullHash"
-            }
-          },
-          {
-            "description": "Filter by key0",
-            "in": "query",
-            "name": "filter_key0",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "description": "Filter by key1",
-            "in": "query",
-            "name": "filter_key1",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "description": "Sort results by:\n* key_bytes - Sort by MUD record key_bytes\n* key0 - Sort by MUD record key0\n* key1 - Sort by MUD record key1\nShould be used together with `order` parameter.\n",
-            "in": "query",
-            "name": "sort",
-            "schema": {
-              "enum": [
-                "key_bytes",
-                "key0",
-                "key1"
-              ],
-              "type": "string"
-            }
-          },
-          {
-            "description": "Sort order:\n* asc - Ascending order\n* desc - Descending order\nShould be used together with `sort` parameter.\n",
-            "in": "query",
-            "name": "order",
-            "schema": {
-              "enum": [
-                "asc",
-                "desc"
-              ],
-              "type": "string"
-            }
-          },
-          {
-            "description": "Number of items per page",
-            "in": "query",
-            "name": "items_count",
-            "schema": {
-              "minimum": 1,
-              "type": "integer"
-            }
-          },
-          {
-            "description": "MUD record key_bytes for paging",
-            "in": "query",
-            "name": "key_bytes",
-            "schema": {
-              "$ref": "#/components/schemas/HexData"
-            }
-          },
-          {
-            "description": "MUD record key0 for paging",
-            "in": "query",
-            "name": "key0",
-            "schema": {
-              "$ref": "#/components/schemas/FullHash"
-            }
-          },
-          {
-            "description": "MUD record key1 for paging",
-            "in": "query",
-            "name": "key1",
-            "schema": {
-              "$ref": "#/components/schemas/FullHash"
-            }
-          },
-          {
-            "description": "The ID of the blockchain",
-            "in": "path",
-            "name": "chain_id",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "additionalProperties": false,
-                  "properties": {
-                    "items": {
-                      "items": {
-                        "$ref": "#/components/schemas/Record"
-                      },
-                      "type": "array"
-                    },
-                    "next_page_params": {
-                      "example": {
-                        "key0": "0x73796269746c7900000000000000000043686573743332000000000000000000",
-                        "key_bytes": "0x73796269746c7900000000000000000043686573743332000000000000000000"
-                      },
-                      "nullable": true,
-                      "type": "object"
-                    },
-                    "schema": {
-                      "$ref": "#/components/schemas/TableSchema"
-                    },
-                    "table": {
-                      "$ref": "#/components/schemas/Table"
-                    }
-                  },
-                  "required": [
-                    "items",
-                    "next_page_params",
-                    "table",
-                    "schema"
-                  ],
-                  "type": "object"
-                }
-              }
-            },
-            "description": "List of MUD world table records.",
-            "headers": {
-              "x-credits-remaining": {
-                "description": "Number of credits remaining in your plan. Resets daily on the free plan, monthly otherwise.",
-                "schema": {
-                  "type": "integer"
-                }
-              },
-              "x-ratelimit-limit": {
-                "description": "Available requests per second with your plan. Returns -1 on internal error.",
-                "schema": {
-                  "type": "integer"
-                }
-              },
-              "x-ratelimit-remaining": {
-                "description": "Remaining rate limit based on your queries. Returns -1 on internal error.",
-                "schema": {
-                  "type": "integer"
-                }
-              },
-              "x-ratelimit-reset": {
-                "description": "Time in milliseconds until the rate limit resets. Returns -1 on internal error.",
-                "schema": {
-                  "type": "integer"
-                }
-              }
-            }
-          },
-          "422": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/JsonErrorResponse"
-                }
-              }
-            },
-            "description": "Unprocessable Entity"
-          }
-        },
-        "summary": "List of MUD world table records.",
-        "tags": [
-          "mud"
-        ]
-      }
-    },
-    "/{chain_id}/api/v2/mud/worlds/{world}/tables/{table_id}/records/count": {
-      "get": {
-        "description": "Retrieves the total number of records in the specific MUD world table.",
-        "operationId": "BlockScoutWeb.API.V2.MudController.world_table_records_count",
-        "parameters": [
-          {
-            "description": "MUD world address hash in the path",
-            "in": "path",
-            "name": "world",
-            "required": true,
-            "schema": {
-              "$ref": "#/components/schemas/AddressHash"
-            }
-          },
-          {
-            "description": "MUD table ID in the path",
-            "in": "path",
-            "name": "table_id",
-            "required": true,
-            "schema": {
-              "$ref": "#/components/schemas/FullHash"
-            }
-          },
-          {
-            "description": "Filter by key0",
-            "in": "query",
-            "name": "filter_key0",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "description": "Filter by key1",
-            "in": "query",
-            "name": "filter_key1",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "description": "The ID of the blockchain",
-            "in": "path",
-            "name": "chain_id",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "integer"
-                }
-              }
-            },
-            "description": "Number of known MUD world table records.",
-            "headers": {
-              "x-credits-remaining": {
-                "description": "Number of credits remaining in your plan. Resets daily on the free plan, monthly otherwise.",
-                "schema": {
-                  "type": "integer"
-                }
-              },
-              "x-ratelimit-limit": {
-                "description": "Available requests per second with your plan. Returns -1 on internal error.",
-                "schema": {
-                  "type": "integer"
-                }
-              },
-              "x-ratelimit-remaining": {
-                "description": "Remaining rate limit based on your queries. Returns -1 on internal error.",
-                "schema": {
-                  "type": "integer"
-                }
-              },
-              "x-ratelimit-reset": {
-                "description": "Time in milliseconds until the rate limit resets. Returns -1 on internal error.",
-                "schema": {
-                  "type": "integer"
-                }
-              }
-            }
-          },
-          "422": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/JsonErrorResponse"
-                }
-              }
-            },
-            "description": "Unprocessable Entity"
-          }
-        },
-        "summary": "Number of known MUD world table records.",
-        "tags": [
-          "mud"
-        ]
-      }
-    },
-    "/{chain_id}/api/v2/mud/worlds/{world}/tables/{table_id}/records/{record_id}": {
-      "get": {
-        "description": "Retrieves a single record in the specific MUD world table.",
-        "operationId": "BlockScoutWeb.API.V2.MudController.world_table_record",
-        "parameters": [
-          {
-            "description": "MUD world address hash in the path",
-            "in": "path",
-            "name": "world",
-            "required": true,
-            "schema": {
-              "$ref": "#/components/schemas/AddressHash"
-            }
-          },
-          {
-            "description": "MUD table ID in the path",
-            "in": "path",
-            "name": "table_id",
-            "required": true,
-            "schema": {
-              "$ref": "#/components/schemas/FullHash"
-            }
-          },
-          {
-            "description": "MUD record ID in the path",
-            "in": "path",
-            "name": "record_id",
-            "required": true,
-            "schema": {
-              "$ref": "#/components/schemas/HexData"
-            }
-          },
-          {
-            "description": "The ID of the blockchain",
-            "in": "path",
-            "name": "chain_id",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "additionalProperties": false,
-                  "description": "MUD Table with TableSchema struct.",
-                  "properties": {
-                    "record": {
-                      "$ref": "#/components/schemas/Record"
-                    },
-                    "schema": {
-                      "$ref": "#/components/schemas/TableSchema"
-                    },
-                    "table": {
-                      "$ref": "#/components/schemas/Table"
-                    }
-                  },
-                  "required": [
-                    "table",
-                    "schema",
-                    "record"
-                  ],
-                  "title": "TableWithSchema",
-                  "type": "object"
-                }
-              }
-            },
-            "description": "Single MUD world table record.",
-            "headers": {
-              "x-credits-remaining": {
-                "description": "Number of credits remaining in your plan. Resets daily on the free plan, monthly otherwise.",
-                "schema": {
-                  "type": "integer"
-                }
-              },
-              "x-ratelimit-limit": {
-                "description": "Available requests per second with your plan. Returns -1 on internal error.",
-                "schema": {
-                  "type": "integer"
-                }
-              },
-              "x-ratelimit-remaining": {
-                "description": "Remaining rate limit based on your queries. Returns -1 on internal error.",
-                "schema": {
-                  "type": "integer"
-                }
-              },
-              "x-ratelimit-reset": {
-                "description": "Time in milliseconds until the rate limit resets. Returns -1 on internal error.",
-                "schema": {
-                  "type": "integer"
-                }
-              }
-            }
-          },
-          "422": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/JsonErrorResponse"
-                }
-              }
-            },
-            "description": "Unprocessable Entity"
-          }
-        },
-        "summary": "Single MUD world table record.",
-        "tags": [
-          "mud"
-        ]
-      }
-    },
     "/{chain_id}/api/v2/optimism/batches": {
       "get": {
         "description": "Retrieves a paginated list of batches.",
@@ -20138,6 +19631,7 @@
                       "type": "array"
                     },
                     "next_page_params": {
+                      "additionalProperties": true,
                       "example": {
                         "id": 394591
                       },
@@ -20507,6 +20001,7 @@
                       "type": "array"
                     },
                     "next_page_params": {
+                      "additionalProperties": true,
                       "example": {
                         "l1_block_number": 23937283,
                         "transaction_hash": "0x5dc155c382d95353c5876e735d675d284e3b29b1379e5859dc35cfd4a1dd5188"
@@ -20683,6 +20178,7 @@
                       "type": "array"
                     },
                     "next_page_params": {
+                      "additionalProperties": true,
                       "example": {
                         "index": 12967
                       },
@@ -20858,6 +20354,7 @@
                       "type": "array"
                     },
                     "next_page_params": {
+                      "additionalProperties": true,
                       "example": {
                         "index": 8829
                       },
@@ -21033,6 +20530,7 @@
                       "type": "array"
                     },
                     "next_page_params": {
+                      "additionalProperties": true,
                       "example": {
                         "nonce": "1766847064778384329583297500742918515827483896875618958121606201292650102"
                       },
@@ -21226,6 +20724,7 @@
                       "type": "array"
                     },
                     "next_page_params": {
+                      "additionalProperties": true,
                       "example": {
                         "page_size": 50,
                         "page_token": "0x29cB129476609bBa26372b23427Af3b87cB23aF6"
@@ -21451,6 +20950,7 @@
                       "type": "array"
                     },
                     "next_page_params": {
+                      "additionalProperties": true,
                       "example": {
                         "page_size": 50,
                         "page_token": "5,0x9B67A24A474e9EC7372c23B023f36ab28831e4C4"
@@ -21692,6 +21192,7 @@
                       "type": "array"
                     },
                     "next_page_params": {
+                      "additionalProperties": true,
                       "example": {
                         "page_size": 50,
                         "page_token": "3949699,0x275f7110df7d73e530f3381daa9d422dea80f036b514e56427d2d7e492c8a81f,0"
@@ -21819,6 +21320,7 @@
                       "type": "array"
                     },
                     "next_page_params": {
+                      "additionalProperties": true,
                       "example": {
                         "page_size": 50,
                         "page_token": "3,0xC23957e7Fea98eBD017abe15a4e7770797ff6D8d"
@@ -22110,6 +21612,7 @@
                       "type": "array"
                     },
                     "next_page_params": {
+                      "additionalProperties": true,
                       "example": {
                         "page_size": 50,
                         "page_token": "3937439,0xbb680271614883525ac8056c388489e80b3518ec12ec46e1b910c7238c46b565"
@@ -22448,6 +21951,7 @@
                       "type": "array"
                     },
                     "next_page_params": {
+                      "additionalProperties": true,
                       "example": {
                         "page_size": 50,
                         "page_token": "19,0xB98Cb1dA4F9BD640879F0bBCb30A541c84163406"
@@ -22637,7 +22141,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Status"
+                  "$ref": "#/components/schemas/AccountAbstractionStatus"
                 }
               }
             },
@@ -22732,6 +22236,7 @@
                       "type": "array"
                     },
                     "next_page_params": {
+                      "additionalProperties": true,
                       "example": {
                         "number": 502655
                       },
@@ -22995,6 +22500,7 @@
                       "type": "array"
                     },
                     "next_page_params": {
+                      "additionalProperties": true,
                       "example": {
                         "id": 986043
                       },
@@ -23171,6 +22677,7 @@
                       "type": "array"
                     },
                     "next_page_params": {
+                      "additionalProperties": true,
                       "example": {
                         "id": 220243
                       },
@@ -23695,6 +23202,7 @@
                       "type": "array"
                     },
                     "next_page_params": {
+                      "additionalProperties": true,
                       "example": {
                         "block_number": 17500000
                       },
@@ -23872,6 +23380,7 @@
                       "type": "array"
                     },
                     "next_page_params": {
+                      "additionalProperties": true,
                       "example": {
                         "block_number": 5000000
                       },
@@ -24128,11 +23637,12 @@
                   "properties": {
                     "items": {
                       "items": {
-                        "$ref": "#/components/schemas/SmartContract"
+                        "$ref": "#/components/schemas/SmartContractListItem"
                       },
                       "type": "array"
                     },
                     "next_page_params": {
+                      "additionalProperties": true,
                       "example": {
                         "smart_contract_id": 1947801
                       },
@@ -24369,6 +23879,7 @@
                       "type": "array"
                     },
                     "next_page_params": {
+                      "additionalProperties": true,
                       "nullable": true,
                       "type": "object"
                     }
@@ -24841,6 +24352,7 @@
                       "type": "array"
                     },
                     "next_page_params": {
+                      "additionalProperties": true,
                       "example": {
                         "contract_address_hash": "0x01a2A10583675E0e5dF52DE1b62734109201477a",
                         "total_gas_used": "100",
@@ -25016,6 +24528,7 @@
                       "type": "array"
                     },
                     "next_page_params": {
+                      "additionalProperties": true,
                       "example": {
                         "block_number": 22133247,
                         "index": 50
@@ -25252,6 +24765,7 @@
                       "type": "array"
                     },
                     "next_page_params": {
+                      "additionalProperties": true,
                       "example": {
                         "contract_address_hash": "0xbe9895146f7af43049ca1c1ae358b0541ea49704",
                         "fiat_value": "4724.32",
@@ -25566,6 +25080,7 @@
                       "type": "array"
                     },
                     "next_page_params": {
+                      "additionalProperties": true,
                       "example": {
                         "address_hash": "0x48bb9b14483e43c7726df702b271d410e7460656",
                         "value": "200000000000000"
@@ -25850,11 +25365,12 @@
                   "properties": {
                     "items": {
                       "items": {
-                        "$ref": "#/components/schemas/TokenInstance"
+                        "$ref": "#/components/schemas/TokenInstanceInTokenInstancesList"
                       },
                       "type": "array"
                     },
                     "next_page_params": {
+                      "additionalProperties": true,
                       "example": {
                         "unique_token": 782098
                       },
@@ -26113,6 +25629,7 @@
                       "type": "array"
                     },
                     "next_page_params": {
+                      "additionalProperties": true,
                       "example": {
                         "address_hash": "0x1d2c163fbda9486c3a384b6fa5e34c96fe948e9a",
                         "token_id": "0",
@@ -26384,6 +25901,7 @@
                       "type": "array"
                     },
                     "next_page_params": {
+                      "additionalProperties": true,
                       "example": {
                         "block_number": 23489243,
                         "index": 920,
@@ -26654,6 +26172,7 @@
                       "type": "array"
                     },
                     "next_page_params": {
+                      "additionalProperties": true,
                       "example": {
                         "batch_block_hash": "0x789",
                         "batch_log_index": 3,
@@ -26981,6 +26500,7 @@
                       "type": "array"
                     },
                     "next_page_params": {
+                      "additionalProperties": true,
                       "example": {
                         "block_number": 23532302,
                         "index": 375
@@ -27107,6 +26627,7 @@
                       "type": "array"
                     },
                     "next_page_params": {
+                      "additionalProperties": true,
                       "example": {
                         "block_number": 391483842,
                         "index": 0
@@ -27232,6 +26753,7 @@
                       "type": "array"
                     },
                     "next_page_params": {
+                      "additionalProperties": true,
                       "example": {
                         "block_number": 14127868,
                         "index": 0
@@ -27358,6 +26880,7 @@
                       "type": "array"
                     },
                     "next_page_params": {
+                      "additionalProperties": true,
                       "example": {
                         "block_number": 142678440,
                         "index": 5
@@ -27484,6 +27007,7 @@
                       "type": "array"
                     },
                     "next_page_params": {
+                      "additionalProperties": true,
                       "example": {
                         "block_number": 14127868,
                         "index": 0
@@ -27690,6 +27214,7 @@
                       "type": "array"
                     },
                     "next_page_params": {
+                      "additionalProperties": true,
                       "example": {
                         "block_number": 23617990,
                         "index": 128
@@ -27826,6 +27351,7 @@
                       "type": "array"
                     },
                     "next_page_params": {
+                      "additionalProperties": true,
                       "example": {
                         "block_number": 65361291,
                         "index": 1
@@ -28030,6 +27556,7 @@
                       "type": "array"
                     },
                     "next_page_params": {
+                      "additionalProperties": true,
                       "example": {
                         "index": 2287943
                       },
@@ -28391,6 +27918,15 @@
             }
           },
           {
+            "description": "If `false`, zero-value call-type internal transactions are excluded from results.",
+            "in": "query",
+            "name": "include_zero_value",
+            "schema": {
+              "default": true,
+              "type": "boolean"
+            }
+          },
+          {
             "description": "Number of items per page",
             "in": "query",
             "name": "items_count",
@@ -28468,6 +28004,7 @@
                       "type": "object"
                     },
                     "next_page_params": {
+                      "additionalProperties": true,
                       "example": {
                         "block_number": 22133247,
                         "index": 50,
@@ -28605,6 +28142,7 @@
                       "type": "array"
                     },
                     "next_page_params": {
+                      "additionalProperties": true,
                       "example": {
                         "block_number": 21925703,
                         "index": 124
@@ -28820,6 +28358,7 @@
                       "type": "array"
                     },
                     "next_page_params": {
+                      "additionalProperties": true,
                       "example": {
                         "state_changes_count": 50
                       },
@@ -29105,6 +28644,7 @@
                       "type": "array"
                     },
                     "next_page_params": {
+                      "additionalProperties": true,
                       "example": {
                         "block_number": 21307214,
                         "index": 442
@@ -29269,6 +28809,7 @@
                       "type": "array"
                     },
                     "next_page_params": {
+                      "additionalProperties": true,
                       "example": {
                         "address_hash": "0x0000000000000000000000000000000000000805",
                         "blocks_validated": 100,
@@ -29469,6 +29010,7 @@
                       "type": "array"
                     },
                     "next_page_params": {
+                      "additionalProperties": true,
                       "example": {
                         "index": 55
                       },
@@ -29674,6 +29216,7 @@
                       "type": "array"
                     },
                     "next_page_params": {
+                      "additionalProperties": true,
                       "example": {
                         "index": 50
                       },
@@ -29849,6 +29392,7 @@
                       "type": "array"
                     },
                     "next_page_params": {
+                      "additionalProperties": true,
                       "example": {
                         "number": 502655
                       },
