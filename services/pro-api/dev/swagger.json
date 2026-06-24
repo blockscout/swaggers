@@ -7651,17 +7651,6 @@
         },
         "type": "object"
       },
-      "v1BatchGetReputationResponse": {
-        "properties": {
-          "addresses": {
-            "additionalProperties": {
-              "$ref": "#/components/schemas/v1Reputation"
-            },
-            "type": "object"
-          }
-        },
-        "type": "object"
-      },
       "v1BatchResolveAddressNamesResponse": {
         "properties": {
           "names": {
@@ -8035,39 +8024,6 @@
         },
         "type": "object"
       },
-      "v1GetPublicTagAddressesResponse": {
-        "properties": {
-          "addresses": {
-            "items": {
-              "type": "string"
-            },
-            "title": "TODO: remove this field",
-            "type": "array"
-          },
-          "items": {
-            "items": {
-              "type": "string"
-            },
-            "type": "array"
-          },
-          "nextPageParams": {
-            "$ref": "#/components/schemas/v1Pagination"
-          }
-        },
-        "type": "object"
-      },
-      "v1GetPublicTagTypesResponse": {
-        "properties": {
-          "tagTypes": {
-            "items": {
-              "$ref": "#/components/schemas/v1PublicTagType",
-              "type": "object"
-            },
-            "type": "array"
-          }
-        },
-        "type": "object"
-      },
       "v1Hash": {
         "properties": {
           "chain_id": {
@@ -8300,11 +8256,11 @@
       },
       "v1Pagination": {
         "properties": {
-          "pageSize": {
+          "page_size": {
             "format": "int64",
             "type": "integer"
           },
-          "pageToken": {
+          "page_token": {
             "type": "string"
           }
         },
@@ -8359,20 +8315,6 @@
               "type": "string"
             },
             "type": "array"
-          }
-        },
-        "type": "object"
-      },
-      "v1PublicTagType": {
-        "properties": {
-          "description": {
-            "type": "string"
-          },
-          "id": {
-            "type": "string"
-          },
-          "type": {
-            "type": "string"
           }
         },
         "type": "object"
@@ -8434,15 +8376,6 @@
               "type": "object"
             },
             "type": "array"
-          }
-        },
-        "type": "object"
-      },
-      "v1Reputation": {
-        "properties": {
-          "score": {
-            "format": "int32",
-            "type": "integer"
           }
         },
         "type": "object"
@@ -8522,35 +8455,6 @@
         },
         "type": "object"
       },
-      "v1SearchPublicTagsResponse": {
-        "properties": {
-          "items": {
-            "items": {
-              "$ref": "#/components/schemas/v1TagAddresses",
-              "type": "object"
-            },
-            "type": "array"
-          },
-          "nextPageParams": {
-            "$ref": "#/components/schemas/v1Pagination"
-          }
-        },
-        "type": "object"
-      },
-      "v1SubmitAddressesToExtractorsRequest": {
-        "properties": {
-          "addresses": {
-            "items": {
-              "type": "string"
-            },
-            "type": "array"
-          }
-        },
-        "type": "object"
-      },
-      "v1SubmitAddressesToExtractorsResponse": {
-        "type": "object"
-      },
       "v1Tag": {
         "properties": {
           "meta": {
@@ -8568,20 +8472,6 @@
           },
           "tagType": {
             "type": "string"
-          }
-        },
-        "type": "object"
-      },
-      "v1TagAddresses": {
-        "properties": {
-          "addresses": {
-            "items": {
-              "type": "string"
-            },
-            "type": "array"
-          },
-          "tag": {
-            "$ref": "#/components/schemas/v1Tag"
           }
         },
         "type": "object"
@@ -10065,142 +9955,6 @@
         ]
       }
     },
-    "/services/metadata/api/v1/addresses": {
-      "get": {
-        "operationId": "Metadata_GetPublicTagAddresses",
-        "parameters": [
-          {
-            "in": "query",
-            "name": "slug",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "in": "query",
-            "name": "tagType",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "description": "If not provided, only multichain tags will be returned",
-            "in": "query",
-            "name": "chainId",
-            "schema": {
-              "format": "int64",
-              "type": "string"
-            }
-          },
-          {
-            "in": "query",
-            "name": "pageSize",
-            "schema": {
-              "format": "int64",
-              "type": "integer"
-            }
-          },
-          {
-            "in": "query",
-            "name": "pageToken",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/v1GetPublicTagAddressesResponse"
-                }
-              }
-            },
-            "description": "A successful response.",
-            "headers": {
-              "x-credits-remaining": {
-                "description": "Number of credits remaining in your plan. Resets daily on the free plan, monthly otherwise.",
-                "schema": {
-                  "type": "integer"
-                }
-              },
-              "x-ratelimit-limit": {
-                "description": "Available requests per second with your plan. Returns -1 on internal error.",
-                "schema": {
-                  "type": "integer"
-                }
-              },
-              "x-ratelimit-remaining": {
-                "description": "Remaining rate limit based on your queries. Returns -1 on internal error.",
-                "schema": {
-                  "type": "integer"
-                }
-              },
-              "x-ratelimit-reset": {
-                "description": "Time in milliseconds until the rate limit resets. Returns -1 on internal error.",
-                "schema": {
-                  "type": "integer"
-                }
-              }
-            }
-          },
-          "default": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/googlerpcStatus"
-                }
-              }
-            },
-            "description": "An unexpected error response."
-          }
-        },
-        "tags": [
-          "Metadata"
-        ]
-      }
-    },
-    "/services/metadata/api/v1/addresses:submit": {
-      "post": {
-        "operationId": "Metadata_SubmitAddressesToExtractors",
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/v1SubmitAddressesToExtractorsRequest"
-              }
-            }
-          },
-          "required": true
-        },
-        "responses": {
-          "200": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/v1SubmitAddressesToExtractorsResponse"
-                }
-              }
-            },
-            "description": "A successful response."
-          },
-          "default": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/googlerpcStatus"
-                }
-              }
-            },
-            "description": "An unexpected error response."
-          }
-        },
-        "tags": [
-          "Metadata"
-        ]
-      }
-    },
     "/services/metadata/api/v1/metadata": {
       "get": {
         "operationId": "Metadata_BatchGetMetadata",
@@ -10246,232 +10000,6 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/v1BatchGetMetadataResponse"
-                }
-              }
-            },
-            "description": "A successful response.",
-            "headers": {
-              "x-credits-remaining": {
-                "description": "Number of credits remaining in your plan. Resets daily on the free plan, monthly otherwise.",
-                "schema": {
-                  "type": "integer"
-                }
-              },
-              "x-ratelimit-limit": {
-                "description": "Available requests per second with your plan. Returns -1 on internal error.",
-                "schema": {
-                  "type": "integer"
-                }
-              },
-              "x-ratelimit-remaining": {
-                "description": "Remaining rate limit based on your queries. Returns -1 on internal error.",
-                "schema": {
-                  "type": "integer"
-                }
-              },
-              "x-ratelimit-reset": {
-                "description": "Time in milliseconds until the rate limit resets. Returns -1 on internal error.",
-                "schema": {
-                  "type": "integer"
-                }
-              }
-            }
-          },
-          "default": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/googlerpcStatus"
-                }
-              }
-            },
-            "description": "An unexpected error response."
-          }
-        },
-        "tags": [
-          "Metadata"
-        ]
-      }
-    },
-    "/services/metadata/api/v1/public-tag-types": {
-      "get": {
-        "operationId": "Metadata_GetPublicTagTypes",
-        "responses": {
-          "200": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/v1GetPublicTagTypesResponse"
-                }
-              }
-            },
-            "description": "A successful response.",
-            "headers": {
-              "x-credits-remaining": {
-                "description": "Number of credits remaining in your plan. Resets daily on the free plan, monthly otherwise.",
-                "schema": {
-                  "type": "integer"
-                }
-              },
-              "x-ratelimit-limit": {
-                "description": "Available requests per second with your plan. Returns -1 on internal error.",
-                "schema": {
-                  "type": "integer"
-                }
-              },
-              "x-ratelimit-remaining": {
-                "description": "Remaining rate limit based on your queries. Returns -1 on internal error.",
-                "schema": {
-                  "type": "integer"
-                }
-              },
-              "x-ratelimit-reset": {
-                "description": "Time in milliseconds until the rate limit resets. Returns -1 on internal error.",
-                "schema": {
-                  "type": "integer"
-                }
-              }
-            }
-          },
-          "default": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/googlerpcStatus"
-                }
-              }
-            },
-            "description": "An unexpected error response."
-          }
-        },
-        "tags": [
-          "Metadata"
-        ]
-      }
-    },
-    "/services/metadata/api/v1/reputation": {
-      "get": {
-        "operationId": "Metadata_BatchGetReputation",
-        "parameters": [
-          {
-            "description": "Comma separated list of addresses",
-            "in": "query",
-            "name": "addresses",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/v1BatchGetReputationResponse"
-                }
-              }
-            },
-            "description": "A successful response.",
-            "headers": {
-              "x-credits-remaining": {
-                "description": "Number of credits remaining in your plan. Resets daily on the free plan, monthly otherwise.",
-                "schema": {
-                  "type": "integer"
-                }
-              },
-              "x-ratelimit-limit": {
-                "description": "Available requests per second with your plan. Returns -1 on internal error.",
-                "schema": {
-                  "type": "integer"
-                }
-              },
-              "x-ratelimit-remaining": {
-                "description": "Remaining rate limit based on your queries. Returns -1 on internal error.",
-                "schema": {
-                  "type": "integer"
-                }
-              },
-              "x-ratelimit-reset": {
-                "description": "Time in milliseconds until the rate limit resets. Returns -1 on internal error.",
-                "schema": {
-                  "type": "integer"
-                }
-              }
-            }
-          },
-          "default": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/googlerpcStatus"
-                }
-              }
-            },
-            "description": "An unexpected error response."
-          }
-        },
-        "tags": [
-          "Metadata"
-        ]
-      }
-    },
-    "/services/metadata/api/v1/tags:search": {
-      "get": {
-        "operationId": "Metadata_SearchPublicTags",
-        "parameters": [
-          {
-            "in": "query",
-            "name": "chain_id",
-            "schema": {
-              "format": "int64",
-              "type": "string"
-            }
-          },
-          {
-            "description": "Comma separated list of tag types",
-            "in": "query",
-            "name": "tag_types",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "in": "query",
-            "name": "name",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "in": "query",
-            "name": "page_size",
-            "schema": {
-              "format": "int64",
-              "type": "integer"
-            }
-          },
-          {
-            "in": "query",
-            "name": "page_token",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "in": "query",
-            "name": "address_limit",
-            "schema": {
-              "format": "int64",
-              "type": "integer"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/v1SearchPublicTagsResponse"
                 }
               }
             },
