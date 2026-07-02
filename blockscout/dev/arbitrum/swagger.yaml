@@ -15,6 +15,39 @@ components:
       type: object
       x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.ErrorResponses.NotImplementedResponse
       x-validate:
+    ArbitrumCommitmentTransaction:
+      additionalProperties: false
+      description: Parent chain transaction that committed the batch.
+      properties:
+        block_number:
+          description: Parent chain block number containing this transaction.
+          minimum: 0
+          nullable: true
+          type: integer
+          x-struct:
+          x-validate:
+        hash:
+          $ref: '#/components/schemas/FullHashNullable'
+        status:
+          description: Finalization status of the Parent chain transaction.
+          enum:
+            - unfinalized
+            - finalized
+          nullable: true
+          type: string
+          x-struct:
+          x-validate:
+        timestamp:
+          $ref: '#/components/schemas/TimestampNullable'
+      required:
+        - hash
+        - block_number
+        - timestamp
+        - status
+      title: ArbitrumCommitmentTransaction
+      type: object
+      x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.Arbitrum.CommitmentTransaction
+      x-validate:
     Address:
       additionalProperties: false
       description: Address
@@ -119,6 +152,91 @@ components:
       type: string
       x-struct: Elixir.BlockScoutWeb.Schemas.API.Legacy.EthBlockNumberResult
       x-validate:
+    StatsSecondaryCoinMarketChartDataPoint:
+      additionalProperties: false
+      properties:
+        closing_price:
+          $ref: '#/components/schemas/FloatStringNullable'
+        date:
+          description: Day the data point refers to.
+          format: date
+          nullable: false
+          type: string
+          x-struct:
+          x-validate:
+      required:
+        - date
+        - closing_price
+      title: StatsSecondaryCoinMarketChartDataPoint
+      type: object
+      x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.Stats.SecondaryCoinMarketChartDataPoint
+      x-validate:
+    ArbitrumBatch:
+      additionalProperties: false
+      description: Detailed Arbitrum batch info.
+      properties:
+        after_acc_hash:
+          description: Accumulator hash of the sequencer inbox after this batch was appended. Must equal `before_acc_hash` of the next batch.
+          nullable: false
+          pattern: ^0x([A-Fa-f0-9]{64})$
+          type: string
+          x-struct:
+          x-validate:
+        before_acc_hash:
+          description: 'Accumulator hash of the sequencer inbox before this batch was appended. Forms a hash chain: must equal `after_acc_hash` of the previous batch.'
+          nullable: false
+          pattern: ^0x([A-Fa-f0-9]{64})$
+          type: string
+          x-struct:
+          x-validate:
+        commitment_transaction:
+          $ref: '#/components/schemas/ArbitrumCommitmentTransaction'
+        data_availability:
+          description: Data availability information. Structure varies by `batch_data_container` type.
+          oneOf:
+            - $ref: '#/components/schemas/ArbitrumDataAvailabilityBase'
+            - $ref: '#/components/schemas/ArbitrumDataAvailabilityAnytrust'
+            - $ref: '#/components/schemas/ArbitrumDataAvailabilityCelestia'
+            - $ref: '#/components/schemas/ArbitrumDataAvailabilityEigenda'
+          x-struct:
+          x-validate:
+        end_block_number:
+          description: Last Rollup block included in the batch.
+          minimum: 0
+          type: integer
+          x-struct:
+          x-validate:
+        number:
+          description: Sequential identifier assigned to this batch by the sequencer.
+          minimum: 0
+          type: integer
+          x-struct:
+          x-validate:
+        start_block_number:
+          description: First Rollup block included in the batch.
+          minimum: 0
+          type: integer
+          x-struct:
+          x-validate:
+        transactions_count:
+          description: Number of transactions in the batch.
+          minimum: 0
+          type: integer
+          x-struct:
+          x-validate:
+      required:
+        - number
+        - transactions_count
+        - start_block_number
+        - end_block_number
+        - before_acc_hash
+        - after_acc_hash
+        - commitment_transaction
+        - data_availability
+      title: ArbitrumBatch
+      type: object
+      x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.Arbitrum.Batch
+      x-validate:
     EthGetLogsResult:
       properties:
         address:
@@ -176,6 +294,53 @@ components:
       title: EthGetLogsResult
       type: object
       x-struct: Elixir.BlockScoutWeb.Schemas.API.Legacy.EthRpc.EthGetLogsResult
+      x-validate:
+    SearchResultBlock:
+      additionalProperties: false
+      properties:
+        block_hash:
+          $ref: '#/components/schemas/FullHash'
+        block_number:
+          minimum: 0
+          nullable: false
+          type: integer
+          x-struct:
+          x-validate:
+        block_type:
+          nullable: false
+          type: string
+          x-struct:
+          x-validate:
+        priority:
+          nullable: false
+          type: integer
+          x-struct:
+          x-validate:
+        timestamp:
+          $ref: '#/components/schemas/Timestamp'
+        type:
+          enum:
+            - block
+          nullable: false
+          type: string
+          x-struct:
+          x-validate:
+        url:
+          nullable: false
+          type: string
+          x-struct:
+          x-validate:
+      required:
+        - type
+        - block_number
+        - block_hash
+        - url
+        - timestamp
+        - block_type
+        - priority
+      title: SearchResultBlock
+      type: object
+      x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.Search.Result.Block
       x-validate:
     NFTCollection:
       additionalProperties: false
@@ -269,6 +434,42 @@ components:
       type: object
       x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.Log
       x-validate:
+    ArbitrumMinimalMessage:
+      additionalProperties: false
+      description: Minimal Arbitrum cross-chain message with origination and completion fields.
+      properties:
+        completion_transaction_hash:
+          description: Hash of the transaction on the destination chain that executed this message.
+          nullable: true
+          pattern: ^0x([A-Fa-f0-9]{64})$
+          type: string
+          x-struct:
+          x-validate:
+        origination_timestamp:
+          $ref: '#/components/schemas/TimestampNullable'
+        origination_transaction_block_number:
+          description: Block number on the originating chain containing the initiation transaction.
+          minimum: 0
+          nullable: true
+          type: integer
+          x-struct:
+          x-validate:
+        origination_transaction_hash:
+          description: Hash of the transaction on the originating chain that initiated this message.
+          nullable: true
+          pattern: ^0x([A-Fa-f0-9]{64})$
+          type: string
+          x-struct:
+          x-validate:
+      required:
+        - origination_transaction_hash
+        - origination_timestamp
+        - origination_transaction_block_number
+        - completion_transaction_hash
+      title: ArbitrumMinimalMessage
+      type: object
+      x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.Arbitrum.MinimalMessage
+      x-validate:
     WatchlistName:
       additionalProperties: false
       description: Watchlist name struct
@@ -297,6 +498,40 @@ components:
       type: string
       x-struct: Elixir.BlockScoutWeb.Schemas.API.Legacy.EthRpc.EthGetStorageAtResult
       x-validate:
+    SearchResultTransaction:
+      additionalProperties: false
+      properties:
+        priority:
+          nullable: false
+          type: integer
+          x-struct:
+          x-validate:
+        timestamp:
+          $ref: '#/components/schemas/TimestampNullable'
+        transaction_hash:
+          $ref: '#/components/schemas/FullHash'
+        type:
+          enum:
+            - transaction
+          nullable: false
+          type: string
+          x-struct:
+          x-validate:
+        url:
+          nullable: false
+          type: string
+          x-struct:
+          x-validate:
+      required:
+        - type
+        - transaction_hash
+        - url
+        - timestamp
+        - priority
+      title: SearchResultTransaction
+      type: object
+      x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.Search.Result.Transaction
+      x-validate:
     EmptyString:
       maxLength: 0
       minLength: 0
@@ -304,208 +539,106 @@ components:
       type: string
       x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.General.EmptyString
       x-validate:
-    Arbitrum.Withdrawal:
+    StatsGasPricesDetailed:
       additionalProperties: false
-      description: Arbitrum Rollup withdrawal message.
+      description: Gas prices per tier as detailed objects.
       properties:
-        arb_block_number:
-          description: Rollup block number.
-          minimum: 0
-          type: integer
-          x-struct:
-          x-validate:
-        caller_address_hash:
-          description: Address of the account that initiated the withdrawal on the Rollup.
-          nullable: false
-          pattern: ^0x([A-Fa-f0-9]{40})$
-          type: string
-          x-struct:
-          x-validate:
-        callvalue:
-          description: Native coin amount in wei attached to the withdrawal message.
-          nullable: false
-          pattern: ^-?([1-9][0-9]*|0)$
-          type: string
-          x-struct:
-          x-validate:
-        completion_transaction_hash:
-          $ref: '#/components/schemas/FullHashNullable'
-        data:
-          description: ABI-encoded calldata passed to the destination address when the withdrawal is executed on the Parent chain. Empty (`0x`) for plain native coin transfers.
-          pattern: ^0x([A-Fa-f0-9]*)$
-          type: string
-          x-struct:
-          x-validate:
-        destination_address_hash:
-          description: Recipient address on the Parent chain that will receive funds when the withdrawal is executed.
-          nullable: false
-          pattern: ^0x([A-Fa-f0-9]{40})$
-          type: string
-          x-struct:
-          x-validate:
-        eth_block_number:
-          description: Parent chain block number.
-          minimum: 0
-          type: integer
-          x-struct:
-          x-validate:
-        id:
-          description: Withdrawal message ID.
-          minimum: 0
-          type: integer
-          x-struct:
-          x-validate:
-        l2_timestamp:
-          description: Unix timestamp of the originating transaction.
-          minimum: 0
-          type: integer
-          x-struct:
-          x-validate:
-        status:
-          description: Withdrawal lifecycle status. Progresses from `initiated` (L2ToL1Tx event emitted) through `sent` (included in an RBlock) and `confirmed` (RBlock confirmed on Parent chain) to `relayed` (executed on Parent chain). `unknown` indicates the status could not be determined, e.g. when the Parent chain RPC is unavailable.
-          enum:
-            - unknown
-            - initiated
-            - sent
-            - confirmed
-            - relayed
-          type: string
-          x-struct:
-          x-validate:
-        token:
-          additionalProperties: false
-          description: Token withdrawal details. Present when the withdrawal is for a bridged token, null for native coin.
+        average:
+          allOf:
+            - $ref: '#/components/schemas/StatsGasPriceInfo'
           nullable: true
-          properties:
-            address_hash:
-              description: Token contract address on the Parent chain.
-              nullable: true
-              pattern: ^0x([A-Fa-f0-9]{40})$
-              type: string
-              x-struct:
-              x-validate:
-            amount:
-              description: Token amount in the token's smallest unit.
-              nullable: false
-              pattern: ^-?([1-9][0-9]*|0)$
-              type: string
-              x-struct:
-              x-validate:
-            decimals:
-              minimum: 0
-              nullable: true
-              type: integer
-              x-struct:
-              x-validate:
-            destination_address_hash:
-              description: Token recipient address on the Parent chain.
-              nullable: true
-              pattern: ^0x([A-Fa-f0-9]{40})$
-              type: string
-              x-struct:
-              x-validate:
-            name:
-              nullable: true
-              type: string
-              x-struct:
-              x-validate:
-            symbol:
-              nullable: true
-              type: string
-              x-struct:
-              x-validate:
-          required:
-            - address_hash
-            - destination_address_hash
-            - amount
-            - decimals
-            - name
-            - symbol
-          type: object
+          x-struct:
+          x-validate:
+        fast:
+          allOf:
+            - $ref: '#/components/schemas/StatsGasPriceInfo'
+          nullable: true
+          x-struct:
+          x-validate:
+        slow:
+          allOf:
+            - $ref: '#/components/schemas/StatsGasPriceInfo'
+          nullable: true
           x-struct:
           x-validate:
       required:
-        - id
-        - status
-        - caller_address_hash
-        - destination_address_hash
-        - arb_block_number
-        - eth_block_number
-        - l2_timestamp
-        - callvalue
-        - data
-        - token
-        - completion_transaction_hash
-      title: Arbitrum.Withdrawal
+        - slow
+        - average
+        - fast
+      title: StatsGasPricesDetailed
       type: object
-      x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.Arbitrum.Withdrawal
+      x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.Stats.GasPrices.Detailed
       x-validate:
-    Anytrust:
+    SearchResultLabel:
       additionalProperties: false
-      description: AnyTrust data availability certificate.
       properties:
-        batch_data_container:
+        address_hash:
+          $ref: '#/components/schemas/AddressHash'
+        certified:
+          nullable: false
+          type: boolean
+          x-struct:
+          x-validate:
+        ens_info:
+          allOf:
+            - $ref: '#/components/schemas/SearchResultEnsInfo'
+          nullable: true
+          x-struct:
+          x-validate:
+        is_smart_contract_address:
+          nullable: true
+          type: boolean
+          x-struct:
+          x-validate:
+        is_smart_contract_verified:
+          nullable: true
+          type: boolean
+          x-struct:
+          x-validate:
+        name:
+          nullable: false
+          type: string
+          x-struct:
+          x-validate:
+        priority:
+          nullable: false
+          type: integer
+          x-struct:
+          x-validate:
+        reputation:
           enum:
-            - in_anytrust
+            - ok
+            - scam
+          nullable: false
           type: string
           x-struct:
           x-validate:
-        bls_signature:
-          description: Aggregated BLS signature of committee members.
-          nullable: true
+        type:
+          enum:
+            - label
+          nullable: false
           type: string
           x-struct:
           x-validate:
-        data_hash:
-          description: AnyTrust data hash.
-          nullable: true
-          type: string
-          x-struct:
-          x-validate:
-        signers:
-          description: Committee members who guaranteed data availability.
-          items:
-            additionalProperties: false
-            properties:
-              key:
-                description: BLS public key.
-                type: string
-                x-struct:
-                x-validate:
-              proof:
-                description: Proof of possession (absent for trusted members).
-                type: string
-                x-struct:
-                x-validate:
-              trusted:
-                description: Whether the signer is a trusted member.
-                type: boolean
-                x-struct:
-                x-validate:
-            required:
-              - trusted
-              - key
-            type: object
-            x-struct:
-            x-validate:
-          type: array
-          x-struct:
-          x-validate:
-        timeout:
-          description: Data availability timeout (ISO 8601).
-          nullable: true
+        url:
+          nullable: false
           type: string
           x-struct:
           x-validate:
       required:
-        - batch_data_container
-        - data_hash
-        - timeout
-        - bls_signature
-        - signers
-      title: Anytrust
+        - type
+        - name
+        - address_hash
+        - url
+        - is_smart_contract_verified
+        - ens_info
+        - certified
+        - priority
+        - reputation
+        - is_smart_contract_address
+      title: SearchResultLabel
       type: object
-      x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.Arbitrum.DataAvailability.Anytrust
+      x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.Search.Result.Label
       x-validate:
     AddressNullable:
       additionalProperties: false
@@ -652,42 +785,6 @@ components:
       type: object
       x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.Stability.Counters
       x-validate:
-    MinimalMessage:
-      additionalProperties: false
-      description: Minimal Arbitrum cross-chain message with origination and completion fields.
-      properties:
-        completion_transaction_hash:
-          description: Hash of the transaction on the destination chain that executed this message.
-          nullable: true
-          pattern: ^0x([A-Fa-f0-9]{64})$
-          type: string
-          x-struct:
-          x-validate:
-        origination_timestamp:
-          $ref: '#/components/schemas/TimestampNullable'
-        origination_transaction_block_number:
-          description: Block number on the originating chain containing the initiation transaction.
-          minimum: 0
-          nullable: true
-          type: integer
-          x-struct:
-          x-validate:
-        origination_transaction_hash:
-          description: Hash of the transaction on the originating chain that initiated this message.
-          nullable: true
-          pattern: ^0x([A-Fa-f0-9]{64})$
-          type: string
-          x-struct:
-          x-validate:
-      required:
-        - origination_transaction_hash
-        - origination_timestamp
-        - origination_transaction_block_number
-        - completion_transaction_hash
-      title: MinimalMessage
-      type: object
-      x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.Arbitrum.MinimalMessage
-      x-validate:
     NullString:
       pattern: ^null$
       title: NullString
@@ -752,6 +849,36 @@ components:
       type: object
       x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.Proxy.AccountAbstraction.Status
       x-validate:
+    StatsGasPricesSimple:
+      additionalProperties: false
+      description: Gas prices per tier as plain Gwei values.
+      properties:
+        average:
+          format: float
+          nullable: true
+          type: number
+          x-struct:
+          x-validate:
+        fast:
+          format: float
+          nullable: true
+          type: number
+          x-struct:
+          x-validate:
+        slow:
+          format: float
+          nullable: true
+          type: number
+          x-struct:
+          x-validate:
+      required:
+        - slow
+        - average
+        - fast
+      title: StatsGasPricesSimple
+      type: object
+      x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.Stats.GasPrices.Simple
+      x-validate:
     TotalERC721:
       additionalProperties: false
       properties:
@@ -769,6 +896,65 @@ components:
       title: TotalERC721
       type: object
       x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.TokenTransfer.TotalERC721
+      x-validate:
+    SearchResultUserOperation:
+      additionalProperties: false
+      properties:
+        priority:
+          nullable: false
+          type: integer
+          x-struct:
+          x-validate:
+        timestamp:
+          $ref: '#/components/schemas/TimestampNullable'
+        type:
+          enum:
+            - user_operation
+          nullable: false
+          type: string
+          x-struct:
+          x-validate:
+        user_operation_hash:
+          $ref: '#/components/schemas/FullHash'
+      required:
+        - type
+        - user_operation_hash
+        - timestamp
+        - priority
+      title: SearchResultUserOperation
+      type: object
+      x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.Search.Result.UserOperation
+      x-validate:
+    CSVExportResponse:
+      additionalProperties: false
+      properties:
+        expires_at:
+          format: date-time
+          nullable: true
+          type: string
+          x-struct:
+          x-validate:
+        file_id:
+          nullable: true
+          type: string
+          x-struct:
+          x-validate:
+        status:
+          enum:
+            - pending
+            - completed
+            - failed
+          nullable: false
+          type: string
+          x-struct:
+          x-validate:
+      required:
+        - status
+        - file_id
+        - expires_at
+      title: CSVExportResponse
+      type: object
+      x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.CSVExport.Response
       x-validate:
     TotalERC1155:
       additionalProperties: false
@@ -793,36 +979,6 @@ components:
       title: TotalERC1155
       type: object
       x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.TokenTransfer.TotalERC1155
-      x-validate:
-    Celestia:
-      additionalProperties: false
-      description: Celestia data availability blob reference.
-      properties:
-        batch_data_container:
-          enum:
-            - in_celestia
-          type: string
-          x-struct:
-          x-validate:
-        height:
-          description: Celestia block height.
-          nullable: true
-          type: integer
-          x-struct:
-          x-validate:
-        transaction_commitment:
-          description: Celestia transaction commitment hash.
-          nullable: true
-          type: string
-          x-struct:
-          x-validate:
-      required:
-        - batch_data_container
-        - height
-        - transaction_commitment
-      title: Celestia
-      type: object
-      x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.Arbitrum.DataAvailability.Celestia
       x-validate:
     SummaryJustRequestBody:
       additionalProperties: false
@@ -945,19 +1101,6 @@ components:
       title: SummaryJustRequestBody
       type: object
       x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.Transaction.SummaryJustRequestBody
-      x-validate:
-    BatchDataContainer:
-      description: Data availability container type.
-      enum:
-        - in_blob4844
-        - in_calldata
-        - in_celestia
-        - in_anytrust
-        - in_eigenda
-      nullable: true
-      title: BatchDataContainer
-      type: string
-      x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.Arbitrum.BatchDataContainer
       x-validate:
     AdvancedFilterResponse:
       additionalProperties: false
@@ -1092,6 +1235,38 @@ components:
       type: string
       x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.General.HexDataNullable
       x-validate:
+    AccountAbstractionAccount:
+      additionalProperties: false
+      description: Account struct.
+      nullable: false
+      properties:
+        address:
+          $ref: '#/components/schemas/Address'
+        creation_op_hash:
+          $ref: '#/components/schemas/FullHashNullable'
+        creation_timestamp:
+          $ref: '#/components/schemas/TimestampNullable'
+        creation_transaction_hash:
+          $ref: '#/components/schemas/FullHashNullable'
+        factory:
+          $ref: '#/components/schemas/AddressNullable'
+        total_ops:
+          minimum: 0
+          nullable: false
+          type: integer
+          x-struct:
+          x-validate:
+      required:
+        - address
+        - creation_op_hash
+        - creation_transaction_hash
+        - creation_timestamp
+        - factory
+        - total_ops
+      title: AccountAbstractionAccount
+      type: object
+      x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.Proxy.AccountAbstraction.Account
+      x-validate:
     BadRequestResponse:
       description: Response returned when the request is invalid
       properties:
@@ -1105,70 +1280,158 @@ components:
       type: object
       x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.ErrorResponses.BadRequestResponse
       x-validate:
-    CommitmentTransaction:
+    ArbitrumBatchByCelestia:
       additionalProperties: false
-      description: Parent chain transaction that committed the batch.
+      description: Arbitrum batch with Celestia data availability.
       properties:
-        block_number:
-          description: Parent chain block number containing this transaction.
+        after_acc_hash:
+          description: Accumulator hash of the sequencer inbox after this batch was appended. Must equal `before_acc_hash` of the next batch.
+          nullable: false
+          pattern: ^0x([A-Fa-f0-9]{64})$
+          type: string
+          x-struct:
+          x-validate:
+        before_acc_hash:
+          description: 'Accumulator hash of the sequencer inbox before this batch was appended. Forms a hash chain: must equal `after_acc_hash` of the previous batch.'
+          nullable: false
+          pattern: ^0x([A-Fa-f0-9]{64})$
+          type: string
+          x-struct:
+          x-validate:
+        commitment_transaction:
+          $ref: '#/components/schemas/ArbitrumCommitmentTransaction'
+        data_availability:
+          $ref: '#/components/schemas/ArbitrumDataAvailabilityCelestia'
+        end_block_number:
+          description: Last Rollup block included in the batch.
           minimum: 0
-          nullable: true
           type: integer
           x-struct:
           x-validate:
-        hash:
-          $ref: '#/components/schemas/FullHashNullable'
-        status:
-          description: Finalization status of the Parent chain transaction.
-          enum:
-            - unfinalized
-            - finalized
-          nullable: true
-          type: string
+        number:
+          description: Sequential identifier assigned to this batch by the sequencer.
+          minimum: 0
+          type: integer
+          x-struct:
+          x-validate:
+        start_block_number:
+          description: First Rollup block included in the batch.
+          minimum: 0
+          type: integer
+          x-struct:
+          x-validate:
+        transactions_count:
+          description: Number of transactions in the batch.
+          minimum: 0
+          type: integer
+          x-struct:
+          x-validate:
+      required:
+        - number
+        - transactions_count
+        - start_block_number
+        - end_block_number
+        - before_acc_hash
+        - after_acc_hash
+        - commitment_transaction
+        - data_availability
+      title: ArbitrumBatchByCelestia
+      type: object
+      x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.Arbitrum.Batch
+      x-validate:
+    SearchResultBlob:
+      additionalProperties: false
+      properties:
+        blob_hash:
+          $ref: '#/components/schemas/FullHash'
+        priority:
+          nullable: false
+          type: integer
           x-struct:
           x-validate:
         timestamp:
           $ref: '#/components/schemas/TimestampNullable'
+        type:
+          enum:
+            - blob
+          nullable: false
+          type: string
+          x-struct:
+          x-validate:
       required:
-        - hash
-        - block_number
+        - type
+        - blob_hash
         - timestamp
-        - status
-      title: CommitmentTransaction
+        - priority
+      title: SearchResultBlob
       type: object
-      x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.Arbitrum.CommitmentTransaction
+      x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.Search.Result.Blob
       x-validate:
-    Withdrawal:
+    ArbitrumDataAvailabilityCelestia:
       additionalProperties: false
+      description: Celestia data availability blob reference.
       properties:
-        amount:
-          $ref: '#/components/schemas/IntegerString'
+        batch_data_container:
+          enum:
+            - in_celestia
+          type: string
+          x-struct:
+          x-validate:
+        height:
+          description: Celestia block height.
+          nullable: true
+          type: integer
+          x-struct:
+          x-validate:
+        transaction_commitment:
+          description: Celestia transaction commitment hash.
+          nullable: true
+          type: string
+          x-struct:
+          x-validate:
+      required:
+        - batch_data_container
+        - height
+        - transaction_commitment
+      title: ArbitrumDataAvailabilityCelestia
+      type: object
+      x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.Arbitrum.DataAvailability.Celestia
+      x-validate:
+    AccountAbstractionBundle:
+      additionalProperties: false
+      description: Bundle struct.
+      nullable: false
+      properties:
         block_number:
+          $ref: '#/components/schemas/IntegerString'
+        bundle_index:
+          minimum: 0
           nullable: false
           type: integer
           x-struct:
           x-validate:
-        index:
-          nullable: false
-          type: integer
-          x-struct:
-          x-validate:
-        receiver:
+        bundler:
           $ref: '#/components/schemas/Address'
         timestamp:
           $ref: '#/components/schemas/Timestamp'
-        validator_index:
+        total_ops:
+          minimum: 0
           nullable: false
           type: integer
           x-struct:
           x-validate:
+        transaction_hash:
+          $ref: '#/components/schemas/FullHash'
       required:
-        - index
-        - validator_index
-        - amount
-      title: Withdrawal
+        - transaction_hash
+        - bundler
+        - block_number
+        - bundle_index
+        - timestamp
+        - total_ops
+      title: AccountAbstractionBundle
       type: object
-      x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.Withdrawal
+      x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.Proxy.AccountAbstraction.Bundle
       x-validate:
     TopAddress:
       additionalProperties: false
@@ -1478,6 +1741,36 @@ components:
       type: object
       x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.Token.Holder
       x-validate:
+    SearchResultItem:
+      discriminator:
+        mapping:
+          address: '#/components/schemas/SearchResultAddressOrContract'
+          blob: '#/components/schemas/SearchResultBlob'
+          block: '#/components/schemas/SearchResultBlock'
+          contract: '#/components/schemas/SearchResultAddressOrContract'
+          ens_domain: '#/components/schemas/SearchResultEnsDomain'
+          label: '#/components/schemas/SearchResultLabel'
+          metadata_tag: '#/components/schemas/SearchResultMetadataTag'
+          tac_operation: '#/components/schemas/SearchResultTacOperation'
+          token: '#/components/schemas/SearchResultToken'
+          transaction: '#/components/schemas/SearchResultTransaction'
+          user_operation: '#/components/schemas/SearchResultUserOperation'
+        propertyName: type
+      oneOf:
+        - $ref: '#/components/schemas/SearchResultToken'
+        - $ref: '#/components/schemas/SearchResultAddressOrContract'
+        - $ref: '#/components/schemas/SearchResultLabel'
+        - $ref: '#/components/schemas/SearchResultEnsDomain'
+        - $ref: '#/components/schemas/SearchResultMetadataTag'
+        - $ref: '#/components/schemas/SearchResultBlock'
+        - $ref: '#/components/schemas/SearchResultTransaction'
+        - $ref: '#/components/schemas/SearchResultUserOperation'
+        - $ref: '#/components/schemas/SearchResultBlob'
+        - $ref: '#/components/schemas/SearchResultTacOperation'
+      title: SearchResultItem
+      type: object
+      x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.Search.Result.Item
+      x-validate:
     AddressResponse:
       additionalProperties: false
       description: Address response
@@ -1647,64 +1940,24 @@ components:
       type: object
       x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.Address
       x-validate:
-    Arbitrum.BatchByCelestia:
+    ArbitrumDataAvailabilityBase:
       additionalProperties: false
-      description: Arbitrum batch with Celestia data availability.
+      description: Data availability info for batches posted via EIP-4844 blobs, calldata, or with no DA.
       properties:
-        after_acc_hash:
-          description: Accumulator hash of the sequencer inbox after this batch was appended. Must equal `before_acc_hash` of the next batch.
-          nullable: false
-          pattern: ^0x([A-Fa-f0-9]{64})$
+        batch_data_container:
+          description: Data availability container type.
+          enum:
+            - in_blob4844
+            - in_calldata
+          nullable: true
           type: string
-          x-struct:
-          x-validate:
-        before_acc_hash:
-          description: 'Accumulator hash of the sequencer inbox before this batch was appended. Forms a hash chain: must equal `after_acc_hash` of the previous batch.'
-          nullable: false
-          pattern: ^0x([A-Fa-f0-9]{64})$
-          type: string
-          x-struct:
-          x-validate:
-        commitment_transaction:
-          $ref: '#/components/schemas/CommitmentTransaction'
-        data_availability:
-          $ref: '#/components/schemas/Celestia'
-        end_block_number:
-          description: Last Rollup block included in the batch.
-          minimum: 0
-          type: integer
-          x-struct:
-          x-validate:
-        number:
-          description: Sequential identifier assigned to this batch by the sequencer.
-          minimum: 0
-          type: integer
-          x-struct:
-          x-validate:
-        start_block_number:
-          description: First Rollup block included in the batch.
-          minimum: 0
-          type: integer
-          x-struct:
-          x-validate:
-        transactions_count:
-          description: Number of transactions in the batch.
-          minimum: 0
-          type: integer
           x-struct:
           x-validate:
       required:
-        - number
-        - transactions_count
-        - start_block_number
-        - end_block_number
-        - before_acc_hash
-        - after_acc_hash
-        - commitment_transaction
-        - data_availability
-      title: Arbitrum.BatchByCelestia
+        - batch_data_container
+      title: ArbitrumDataAvailabilityBase
       type: object
-      x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.Arbitrum.Batch
+      x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.Arbitrum.DataAvailability.Base
       x-validate:
     RawTrace:
       items:
@@ -1901,37 +2154,54 @@ components:
       title: BlockTag
       x-struct: Elixir.BlockScoutWeb.Schemas.API.Legacy.EthRpc.BlockTag
       x-validate:
-    Account:
+    StatsGasPriceInfo:
       additionalProperties: false
-      description: Account struct.
-      nullable: false
       properties:
-        address:
-          $ref: '#/components/schemas/Address'
-        creation_op_hash:
-          $ref: '#/components/schemas/FullHashNullable'
-        creation_timestamp:
-          $ref: '#/components/schemas/TimestampNullable'
-        creation_transaction_hash:
-          $ref: '#/components/schemas/FullHashNullable'
-        factory:
-          $ref: '#/components/schemas/AddressNullable'
-        total_ops:
-          minimum: 0
-          nullable: false
-          type: integer
+        base_fee:
+          description: Base fee, in Gwei.
+          format: float
+          nullable: true
+          type: number
           x-struct:
           x-validate:
+        fiat_price:
+          $ref: '#/components/schemas/FloatStringNullable'
+        price:
+          description: Estimated gas price, in Gwei.
+          format: float
+          nullable: true
+          type: number
+          x-struct:
+          x-validate:
+        priority_fee:
+          description: Priority fee including base fee, in Gwei.
+          format: float
+          nullable: true
+          type: number
+          x-struct:
+          x-validate:
+        priority_fee_wei:
+          $ref: '#/components/schemas/IntegerStringNullable'
+        time:
+          description: Estimated time until inclusion, in ms.
+          format: float
+          nullable: true
+          type: number
+          x-struct:
+          x-validate:
+        wei:
+          $ref: '#/components/schemas/IntegerStringNullable'
       required:
-        - address
-        - creation_op_hash
-        - creation_transaction_hash
-        - creation_timestamp
-        - factory
-        - total_ops
-      title: Account
+        - price
+        - time
+        - base_fee
+        - priority_fee
+        - fiat_price
+        - priority_fee_wei
+        - wei
+      title: StatsGasPriceInfo
       type: object
-      x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.Proxy.AccountAbstraction.Account
+      x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.Stats.GasPriceInfo
       x-validate:
     Language:
       enum:
@@ -1991,20 +2261,32 @@ components:
       type: object
       x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.FheOperationsResponse
       x-validate:
-    Counters:
-      description: Smart contracts counters
+    AccountAbstractionBundler:
+      additionalProperties: false
+      description: Bundler struct.
+      nullable: false
       properties:
-        new_smart_contracts_24h:
-          $ref: '#/components/schemas/IntegerString'
-        new_verified_smart_contracts_24h:
-          $ref: '#/components/schemas/IntegerString'
-        smart_contracts:
-          $ref: '#/components/schemas/IntegerString'
-        verified_smart_contracts:
-          $ref: '#/components/schemas/IntegerString'
-      title: Counters
+        address:
+          $ref: '#/components/schemas/Address'
+        total_bundles:
+          minimum: 0
+          nullable: false
+          type: integer
+          x-struct:
+          x-validate:
+        total_ops:
+          minimum: 0
+          nullable: false
+          type: integer
+          x-struct:
+          x-validate:
+      required:
+        - address
+        - total_bundles
+        - total_ops
+      title: AccountAbstractionBundler
       type: object
-      x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.SmartContract.Counters
+      x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.Proxy.AccountAbstraction.Bundler
       x-validate:
     CoinBalance:
       additionalProperties: false
@@ -2038,6 +2320,139 @@ components:
       title: FloatStringNullable
       type: string
       x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.General.FloatStringNullable
+      x-validate:
+    SearchResultMetadataTag:
+      additionalProperties: false
+      properties:
+        address_hash:
+          $ref: '#/components/schemas/AddressHash'
+        certified:
+          nullable: false
+          type: boolean
+          x-struct:
+          x-validate:
+        ens_info:
+          allOf:
+            - $ref: '#/components/schemas/SearchResultEnsInfo'
+          nullable: true
+          x-struct:
+          x-validate:
+        is_smart_contract_address:
+          nullable: true
+          type: boolean
+          x-struct:
+          x-validate:
+        is_smart_contract_verified:
+          nullable: true
+          type: boolean
+          x-struct:
+          x-validate:
+        metadata:
+          $ref: '#/components/schemas/MetadataTag'
+        name:
+          nullable: true
+          type: string
+          x-struct:
+          x-validate:
+        priority:
+          nullable: false
+          type: integer
+          x-struct:
+          x-validate:
+        reputation:
+          enum:
+            - ok
+            - scam
+          nullable: false
+          type: string
+          x-struct:
+          x-validate:
+        type:
+          enum:
+            - metadata_tag
+          nullable: false
+          type: string
+          x-struct:
+          x-validate:
+        url:
+          nullable: false
+          type: string
+          x-struct:
+          x-validate:
+      required:
+        - type
+        - name
+        - address_hash
+        - url
+        - is_smart_contract_verified
+        - ens_info
+        - certified
+        - priority
+        - metadata
+        - reputation
+        - is_smart_contract_address
+      title: SearchResultMetadataTag
+      type: object
+      x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.Search.Result.MetadataTag
+      x-validate:
+    ArbitrumBatchByAnytrust:
+      additionalProperties: false
+      description: Arbitrum batch with AnyTrust data availability.
+      properties:
+        after_acc_hash:
+          description: Accumulator hash of the sequencer inbox after this batch was appended. Must equal `before_acc_hash` of the next batch.
+          nullable: false
+          pattern: ^0x([A-Fa-f0-9]{64})$
+          type: string
+          x-struct:
+          x-validate:
+        before_acc_hash:
+          description: 'Accumulator hash of the sequencer inbox before this batch was appended. Forms a hash chain: must equal `after_acc_hash` of the previous batch.'
+          nullable: false
+          pattern: ^0x([A-Fa-f0-9]{64})$
+          type: string
+          x-struct:
+          x-validate:
+        commitment_transaction:
+          $ref: '#/components/schemas/ArbitrumCommitmentTransaction'
+        data_availability:
+          $ref: '#/components/schemas/ArbitrumDataAvailabilityAnytrust'
+        end_block_number:
+          description: Last Rollup block included in the batch.
+          minimum: 0
+          type: integer
+          x-struct:
+          x-validate:
+        number:
+          description: Sequential identifier assigned to this batch by the sequencer.
+          minimum: 0
+          type: integer
+          x-struct:
+          x-validate:
+        start_block_number:
+          description: First Rollup block included in the batch.
+          minimum: 0
+          type: integer
+          x-struct:
+          x-validate:
+        transactions_count:
+          description: Number of transactions in the batch.
+          minimum: 0
+          type: integer
+          x-struct:
+          x-validate:
+      required:
+        - number
+        - transactions_count
+        - start_block_number
+        - end_block_number
+        - before_acc_hash
+        - after_acc_hash
+        - commitment_transaction
+        - data_availability
+      title: ArbitrumBatchByAnytrust
+      type: object
+      x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.Arbitrum.Batch
       x-validate:
     Summary:
       additionalProperties: false
@@ -2108,20 +2523,6 @@ components:
       type: object
       x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.Transaction.Summary
       x-validate:
-    TotalERC7984:
-      additionalProperties: false
-      properties:
-        decimals:
-          $ref: '#/components/schemas/IntegerStringNullable'
-        value:
-          $ref: '#/components/schemas/IntegerStringNullable'
-      required:
-        - value
-        - decimals
-      title: TotalERC7984
-      type: object
-      x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.TokenTransfer.TotalERC7984
-      x-validate:
     URLNullable:
       example: https://example.com
       format: uri
@@ -2166,6 +2567,20 @@ components:
       title: AdvancedFilterMethod
       type: object
       x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.AdvancedFilter.Method
+      x-validate:
+    BeaconWithdrawalCounter:
+      additionalProperties: false
+      properties:
+        withdrawals_count:
+          $ref: '#/components/schemas/IntegerString'
+        withdrawals_sum:
+          $ref: '#/components/schemas/IntegerString'
+      required:
+        - withdrawals_count
+        - withdrawals_sum
+      title: BeaconWithdrawalCounter
+      type: object
+      x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.Withdrawal.Counter
       x-validate:
     Block:
       additionalProperties: false
@@ -2491,7 +2906,6 @@ components:
           x-validate:
       required:
         - address_hash
-        - name
       title: Implementation
       type: object
       x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.General.Implementation
@@ -2503,75 +2917,41 @@ components:
       type: string
       x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.General.AddressHash
       x-validate:
+    SearchResultTacOperation:
+      additionalProperties: false
+      properties:
+        priority:
+          nullable: false
+          type: integer
+          x-struct:
+          x-validate:
+        tac_operation:
+          additionalProperties: true
+          nullable: true
+          type: object
+          x-struct:
+          x-validate:
+        type:
+          enum:
+            - tac_operation
+          nullable: false
+          type: string
+          x-struct:
+          x-validate:
+      required:
+        - type
+        - tac_operation
+        - priority
+      title: SearchResultTacOperation
+      type: object
+      x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.Search.Result.TacOperation
+      x-validate:
     IntegerString:
       nullable: false
       pattern: ^-?([1-9][0-9]*|0)$
       title: IntegerString
       type: string
       x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.General.IntegerString
-      x-validate:
-    Bundler:
-      additionalProperties: false
-      description: Bundler struct.
-      nullable: false
-      properties:
-        address:
-          $ref: '#/components/schemas/Address'
-        total_bundles:
-          minimum: 0
-          nullable: false
-          type: integer
-          x-struct:
-          x-validate:
-        total_ops:
-          minimum: 0
-          nullable: false
-          type: integer
-          x-struct:
-          x-validate:
-      required:
-        - address
-        - total_bundles
-        - total_ops
-      title: Bundler
-      type: object
-      x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.Proxy.AccountAbstraction.Bundler
-      x-validate:
-    Bundle:
-      additionalProperties: false
-      description: Bundle struct.
-      nullable: false
-      properties:
-        block_number:
-          $ref: '#/components/schemas/IntegerString'
-        bundle_index:
-          minimum: 0
-          nullable: false
-          type: integer
-          x-struct:
-          x-validate:
-        bundler:
-          $ref: '#/components/schemas/Address'
-        timestamp:
-          $ref: '#/components/schemas/Timestamp'
-        total_ops:
-          minimum: 0
-          nullable: false
-          type: integer
-          x-struct:
-          x-validate:
-        transaction_hash:
-          $ref: '#/components/schemas/FullHash'
-      required:
-        - transaction_hash
-        - bundler
-        - block_number
-        - bundle_index
-        - timestamp
-        - total_ops
-      title: Bundle
-      type: object
-      x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.Proxy.AccountAbstraction.Bundle
       x-validate:
     TokenInstance:
       additionalProperties: false
@@ -2714,6 +3094,7 @@ components:
           x-struct:
           x-validate:
         github_repository_metadata:
+          additionalProperties: true
           nullable: true
           type: object
           x-struct:
@@ -2729,6 +3110,21 @@ components:
           x-struct:
           x-validate:
         license_type:
+          enum:
+            - none
+            - unlicense
+            - mit
+            - gnu_gpl_v2
+            - gnu_gpl_v3
+            - gnu_lgpl_v2_1
+            - gnu_lgpl_v3
+            - bsd_2_clause
+            - bsd_3_clause
+            - mpl_2_0
+            - osl_3_0
+            - apache_2_0
+            - gnu_agpl_v3
+            - bsl_1_1
           nullable: true
           type: string
           x-struct:
@@ -2796,26 +3192,71 @@ components:
       type: object
       x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.CoinBalanceByDay
       x-validate:
-    Counter:
-      additionalProperties: false
-      properties:
-        withdrawals_count:
-          $ref: '#/components/schemas/IntegerString'
-        withdrawals_sum:
-          $ref: '#/components/schemas/IntegerString'
-      required:
-        - withdrawals_count
-        - withdrawals_sum
-      title: Counter
-      type: object
-      x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.Withdrawal.Counter
-      x-validate:
     IntegerStringNullable:
       nullable: true
       pattern: ^-?([1-9][0-9]*|0)$
       title: IntegerStringNullable
       type: string
       x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.General.IntegerStringNullable
+      x-validate:
+    ArbitrumBatchByEigenda:
+      additionalProperties: false
+      description: Arbitrum batch with EigenDA data availability.
+      properties:
+        after_acc_hash:
+          description: Accumulator hash of the sequencer inbox after this batch was appended. Must equal `before_acc_hash` of the next batch.
+          nullable: false
+          pattern: ^0x([A-Fa-f0-9]{64})$
+          type: string
+          x-struct:
+          x-validate:
+        before_acc_hash:
+          description: 'Accumulator hash of the sequencer inbox before this batch was appended. Forms a hash chain: must equal `after_acc_hash` of the previous batch.'
+          nullable: false
+          pattern: ^0x([A-Fa-f0-9]{64})$
+          type: string
+          x-struct:
+          x-validate:
+        commitment_transaction:
+          $ref: '#/components/schemas/ArbitrumCommitmentTransaction'
+        data_availability:
+          $ref: '#/components/schemas/ArbitrumDataAvailabilityEigenda'
+        end_block_number:
+          description: Last Rollup block included in the batch.
+          minimum: 0
+          type: integer
+          x-struct:
+          x-validate:
+        number:
+          description: Sequential identifier assigned to this batch by the sequencer.
+          minimum: 0
+          type: integer
+          x-struct:
+          x-validate:
+        start_block_number:
+          description: First Rollup block included in the batch.
+          minimum: 0
+          type: integer
+          x-struct:
+          x-validate:
+        transactions_count:
+          description: Number of transactions in the batch.
+          minimum: 0
+          type: integer
+          x-struct:
+          x-validate:
+      required:
+        - number
+        - transactions_count
+        - start_block_number
+        - end_block_number
+        - before_acc_hash
+        - after_acc_hash
+        - commitment_transaction
+        - data_availability
+      title: ArbitrumBatchByEigenda
+      type: object
+      x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.Arbitrum.Batch
       x-validate:
     ProxyType:
       enum:
@@ -2955,20 +3396,6 @@ components:
       title: TokenInstanceInTokenInstancesList
       type: object
       x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.TokenInstance
-      x-validate:
-    Total:
-      additionalProperties: false
-      properties:
-        decimals:
-          $ref: '#/components/schemas/IntegerStringNullable'
-        value:
-          $ref: '#/components/schemas/IntegerStringNullable'
-      required:
-        - value
-        - decimals
-      title: Total
-      type: object
-      x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.TokenTransfer.Total
       x-validate:
     UserOperationInList:
       additionalProperties: false
@@ -3139,82 +3566,8 @@ components:
           $ref: '#/components/schemas/IntegerString'
         raw:
           anyOf:
-            - additionalProperties: false
-              description: Raw user operation data v0.6.
-              nullable: false
-              properties:
-                call_data:
-                  $ref: '#/components/schemas/HexData'
-                call_gas_limit:
-                  $ref: '#/components/schemas/IntegerString'
-                init_code:
-                  $ref: '#/components/schemas/HexData'
-                max_fee_per_gas:
-                  $ref: '#/components/schemas/IntegerString'
-                max_priority_fee_per_gas:
-                  $ref: '#/components/schemas/IntegerString'
-                nonce:
-                  $ref: '#/components/schemas/IntegerString'
-                paymaster_and_data:
-                  $ref: '#/components/schemas/HexData'
-                pre_verification_gas:
-                  $ref: '#/components/schemas/IntegerString'
-                sender:
-                  $ref: '#/components/schemas/AddressHash'
-                signature:
-                  $ref: '#/components/schemas/HexData'
-                verification_gas_limit:
-                  $ref: '#/components/schemas/IntegerString'
-              required:
-                - sender
-                - nonce
-                - init_code
-                - call_data
-                - call_gas_limit
-                - verification_gas_limit
-                - pre_verification_gas
-                - max_fee_per_gas
-                - max_priority_fee_per_gas
-                - paymaster_and_data
-                - signature
-              type: object
-              x-struct:
-              x-validate:
-            - additionalProperties: false
-              description: Raw user operation data v0.7-v0.9.
-              nullable: false
-              properties:
-                account_gas_limits:
-                  $ref: '#/components/schemas/FullHash'
-                call_data:
-                  $ref: '#/components/schemas/HexData'
-                gas_fees:
-                  $ref: '#/components/schemas/FullHash'
-                init_code:
-                  $ref: '#/components/schemas/HexData'
-                nonce:
-                  $ref: '#/components/schemas/IntegerString'
-                paymaster_and_data:
-                  $ref: '#/components/schemas/HexData'
-                pre_verification_gas:
-                  $ref: '#/components/schemas/IntegerString'
-                sender:
-                  $ref: '#/components/schemas/AddressHash'
-                signature:
-                  $ref: '#/components/schemas/HexData'
-              required:
-                - sender
-                - nonce
-                - init_code
-                - call_data
-                - account_gas_limits
-                - pre_verification_gas
-                - gas_fees
-                - paymaster_and_data
-                - signature
-              type: object
-              x-struct:
-              x-validate:
+            - $ref: '#/components/schemas/UserOperationRawV06'
+            - $ref: '#/components/schemas/UserOperationRawV07ToV09'
           description: Raw user operation data.
           x-struct:
           x-validate:
@@ -3268,9 +3621,8 @@ components:
       properties:
         items:
           items:
-            type: object
-            x-struct:
-            x-validate:
+            $ref: '#/components/schemas/SearchResultItem'
+          nullable: false
           type: array
           x-struct:
           x-validate:
@@ -3280,68 +3632,74 @@ components:
           type: object
           x-struct:
           x-validate:
+      required:
+        - items
+        - next_page_params
       title: SearchResult
       type: object
       x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.Search.Results
       x-validate:
-    Arbitrum.BatchByAnytrust:
+    ArbitrumMessage:
       additionalProperties: false
-      description: Arbitrum batch with AnyTrust data availability.
+      description: Full Arbitrum cross-chain message.
       properties:
-        after_acc_hash:
-          description: Accumulator hash of the sequencer inbox after this batch was appended. Must equal `before_acc_hash` of the next batch.
-          nullable: false
+        completion_transaction_hash:
+          description: Hash of the transaction on the destination chain that executed this message.
+          nullable: true
           pattern: ^0x([A-Fa-f0-9]{64})$
           type: string
           x-struct:
           x-validate:
-        before_acc_hash:
-          description: 'Accumulator hash of the sequencer inbox before this batch was appended. Forms a hash chain: must equal `after_acc_hash` of the previous batch.'
-          nullable: false
+        id:
+          description: Unique cross-chain message identifier assigned by the protocol.
+          minimum: 0
+          type: integer
+          x-struct:
+          x-validate:
+        origination_address_hash:
+          description: Address that initiated the message on the originating chain.
+          nullable: true
+          pattern: ^0x([A-Fa-f0-9]{40})$
+          type: string
+          x-struct:
+          x-validate:
+        origination_timestamp:
+          $ref: '#/components/schemas/TimestampNullable'
+        origination_transaction_block_number:
+          description: Block number on the originating chain containing the initiation transaction.
+          minimum: 0
+          nullable: true
+          type: integer
+          x-struct:
+          x-validate:
+        origination_transaction_hash:
+          description: Hash of the transaction on the originating chain that initiated this message.
+          nullable: true
           pattern: ^0x([A-Fa-f0-9]{64})$
           type: string
           x-struct:
           x-validate:
-        commitment_transaction:
-          $ref: '#/components/schemas/CommitmentTransaction'
-        data_availability:
-          $ref: '#/components/schemas/Anytrust'
-        end_block_number:
-          description: Last Rollup block included in the batch.
-          minimum: 0
-          type: integer
-          x-struct:
-          x-validate:
-        number:
-          description: Sequential identifier assigned to this batch by the sequencer.
-          minimum: 0
-          type: integer
-          x-struct:
-          x-validate:
-        start_block_number:
-          description: First Rollup block included in the batch.
-          minimum: 0
-          type: integer
-          x-struct:
-          x-validate:
-        transactions_count:
-          description: Number of transactions in the batch.
-          minimum: 0
-          type: integer
+        status:
+          description: 'Cross-chain message lifecycle. For Rollup→Parent messages: `initiated` (L2ToL1Tx event emitted on Rollup) → `sent` (included in a batch committed to Parent chain) → `confirmed` (batch state root posted to the Outbox contract) → `relayed` (executed on Parent chain). For Parent→Rollup messages only `initiated` and `relayed` apply.'
+          enum:
+            - initiated
+            - sent
+            - confirmed
+            - relayed
+          type: string
           x-struct:
           x-validate:
       required:
-        - number
-        - transactions_count
-        - start_block_number
-        - end_block_number
-        - before_acc_hash
-        - after_acc_hash
-        - commitment_transaction
-        - data_availability
-      title: Arbitrum.BatchByAnytrust
+        - origination_transaction_hash
+        - origination_timestamp
+        - origination_transaction_block_number
+        - completion_transaction_hash
+        - id
+        - origination_address_hash
+        - status
+      title: ArbitrumMessage
       type: object
-      x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.Arbitrum.Batch
+      x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.Arbitrum.MinimalMessage
       x-validate:
     TokenCountersResponse:
       additionalProperties: false
@@ -3360,36 +3718,6 @@ components:
       title: TokenCountersResponse
       type: object
       x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.Token.Counters
-      x-validate:
-    Eigenda:
-      additionalProperties: false
-      description: EigenDA data availability blob reference.
-      properties:
-        batch_data_container:
-          enum:
-            - in_eigenda
-          type: string
-          x-struct:
-          x-validate:
-        blob_header:
-          description: ABI-encoded EigenDA blob header.
-          nullable: true
-          type: string
-          x-struct:
-          x-validate:
-        blob_verification_proof:
-          description: ABI-encoded EigenDA blob verification proof.
-          nullable: true
-          type: string
-          x-struct:
-          x-validate:
-      required:
-        - batch_data_container
-        - blob_header
-        - blob_verification_proof
-      title: Eigenda
-      type: object
-      x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.Arbitrum.DataAvailability.Eigenda
       x-validate:
     BlockResponse:
       additionalProperties: false
@@ -3799,6 +4127,78 @@ components:
       type: object
       x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.AdvancedFilter.CsvExportError
       x-validate:
+    SearchResultAddressOrContract:
+      additionalProperties: false
+      properties:
+        address_hash:
+          $ref: '#/components/schemas/AddressHash'
+        certified:
+          nullable: false
+          type: boolean
+          x-struct:
+          x-validate:
+        ens_info:
+          allOf:
+            - $ref: '#/components/schemas/SearchResultEnsInfo'
+          nullable: true
+          x-struct:
+          x-validate:
+        is_smart_contract_address:
+          nullable: true
+          type: boolean
+          x-struct:
+          x-validate:
+        is_smart_contract_verified:
+          nullable: true
+          type: boolean
+          x-struct:
+          x-validate:
+        name:
+          nullable: true
+          type: string
+          x-struct:
+          x-validate:
+        priority:
+          nullable: false
+          type: integer
+          x-struct:
+          x-validate:
+        reputation:
+          enum:
+            - ok
+            - scam
+          nullable: false
+          type: string
+          x-struct:
+          x-validate:
+        type:
+          enum:
+            - address
+            - contract
+          nullable: false
+          type: string
+          x-struct:
+          x-validate:
+        url:
+          nullable: false
+          type: string
+          x-struct:
+          x-validate:
+      required:
+        - type
+        - name
+        - address_hash
+        - url
+        - is_smart_contract_verified
+        - ens_info
+        - certified
+        - priority
+        - reputation
+        - is_smart_contract_address
+      title: SearchResultAddressOrContract
+      type: object
+      x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.Search.Result.AddressOrContract
+      x-validate:
     MetadataTag:
       additionalProperties: false
       description: Metadata tag struct
@@ -3971,6 +4371,96 @@ components:
       type: object
       x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.TokenInstance
       x-validate:
+    ArbitrumClaimMessage:
+      additionalProperties: false
+      description: Calldata and outbox contract address needed to execute a withdrawal on the Parent chain.
+      properties:
+        calldata:
+          description: ABI-encoded calldata for the executeTransaction call.
+          type: string
+          x-struct:
+          x-validate:
+        outbox_address_hash:
+          description: Address of the Arbitrum Outbox contract on the Parent chain through which the withdrawal is executed.
+          nullable: false
+          pattern: ^0x([A-Fa-f0-9]{40})$
+          type: string
+          x-struct:
+          x-validate:
+      required:
+        - calldata
+        - outbox_address_hash
+      title: ArbitrumClaimMessage
+      type: object
+      x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.Arbitrum.ClaimMessage
+      x-validate:
+    ArbitrumDataAvailabilityAnytrust:
+      additionalProperties: false
+      description: AnyTrust data availability certificate.
+      properties:
+        batch_data_container:
+          enum:
+            - in_anytrust
+          type: string
+          x-struct:
+          x-validate:
+        bls_signature:
+          description: Aggregated BLS signature of committee members.
+          nullable: true
+          type: string
+          x-struct:
+          x-validate:
+        data_hash:
+          description: AnyTrust data hash.
+          nullable: true
+          type: string
+          x-struct:
+          x-validate:
+        signers:
+          description: Committee members who guaranteed data availability.
+          items:
+            additionalProperties: false
+            properties:
+              key:
+                description: BLS public key.
+                type: string
+                x-struct:
+                x-validate:
+              proof:
+                description: Proof of possession (absent for trusted members).
+                type: string
+                x-struct:
+                x-validate:
+              trusted:
+                description: Whether the signer is a trusted member.
+                type: boolean
+                x-struct:
+                x-validate:
+            required:
+              - trusted
+              - key
+            type: object
+            x-struct:
+            x-validate:
+          type: array
+          x-struct:
+          x-validate:
+        timeout:
+          description: Data availability timeout (ISO 8601).
+          nullable: true
+          type: string
+          x-struct:
+          x-validate:
+      required:
+        - batch_data_container
+        - data_hash
+        - timeout
+        - bls_signature
+        - signers
+      title: ArbitrumDataAvailabilityAnytrust
+      type: object
+      x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.Arbitrum.DataAvailability.Anytrust
+      x-validate:
     DecodedInput:
       additionalProperties: false
       nullable: false
@@ -4045,11 +4535,67 @@ components:
       type: object
       x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.General.DecodedInput
       x-validate:
+    UserOperationRawV06:
+      additionalProperties: false
+      description: Raw user operation data v0.6.
+      nullable: false
+      properties:
+        call_data:
+          $ref: '#/components/schemas/HexData'
+        call_gas_limit:
+          $ref: '#/components/schemas/IntegerString'
+        init_code:
+          $ref: '#/components/schemas/HexData'
+        max_fee_per_gas:
+          $ref: '#/components/schemas/IntegerString'
+        max_priority_fee_per_gas:
+          $ref: '#/components/schemas/IntegerString'
+        nonce:
+          $ref: '#/components/schemas/IntegerString'
+        paymaster_and_data:
+          $ref: '#/components/schemas/HexData'
+        pre_verification_gas:
+          $ref: '#/components/schemas/IntegerString'
+        sender:
+          $ref: '#/components/schemas/AddressHash'
+        signature:
+          $ref: '#/components/schemas/HexData'
+        verification_gas_limit:
+          $ref: '#/components/schemas/IntegerString'
+      required:
+        - sender
+        - nonce
+        - init_code
+        - call_data
+        - call_gas_limit
+        - verification_gas_limit
+        - pre_verification_gas
+        - max_fee_per_gas
+        - max_priority_fee_per_gas
+        - paymaster_and_data
+        - signature
+      title: UserOperationRawV06
+      type: object
+      x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.Proxy.AccountAbstraction.UserOperation.RawV06
+      x-validate:
     HexQuantity:
       pattern: ^0x([A-Fa-f0-9]+)$
       title: HexQuantity
       type: string
       x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.General.HexQuantity
+      x-validate:
+    ArbitrumBatchDataContainer:
+      description: Data availability container type.
+      enum:
+        - in_blob4844
+        - in_calldata
+        - in_celestia
+        - in_anytrust
+        - in_eigenda
+      nullable: true
+      title: ArbitrumBatchDataContainer
+      type: string
+      x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.Arbitrum.BatchDataContainer
       x-validate:
     TokenType:
       enum:
@@ -4068,26 +4614,6 @@ components:
       title: AddressHashNullable
       type: string
       x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.General.AddressHashNullable
-      x-validate:
-    Factory:
-      additionalProperties: false
-      description: Factory struct.
-      nullable: false
-      properties:
-        address:
-          $ref: '#/components/schemas/Address'
-        total_accounts:
-          minimum: 0
-          nullable: false
-          type: integer
-          x-struct:
-          x-validate:
-      required:
-        - address
-        - total_accounts
-      title: Factory
-      type: object
-      x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.Proxy.AccountAbstraction.Factory
       x-validate:
     InternalTransaction:
       additionalProperties: false
@@ -4141,6 +4667,17 @@ components:
           x-validate:
         type:
           description: Type of the internal transaction (call, create, etc.)
+          enum:
+            - call
+            - callcode
+            - delegatecall
+            - staticcall
+            - create
+            - create2
+            - reward
+            - selfdestruct
+            - stop
+            - invalid
           nullable: false
           type: string
           x-struct:
@@ -4202,90 +4739,12 @@ components:
       type: object
       x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.ErrorResponses.NotFoundResponse
       x-validate:
-    Base:
-      additionalProperties: false
-      description: Data availability info for batches posted via EIP-4844 blobs, calldata, or with no DA.
-      properties:
-        batch_data_container:
-          description: Data availability container type.
-          enum:
-            - in_blob4844
-            - in_calldata
-          nullable: true
-          type: string
-          x-struct:
-          x-validate:
-      required:
-        - batch_data_container
-      title: Base
-      type: object
-      x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.Arbitrum.DataAvailability.Base
-      x-validate:
     TimestampNullable:
       format: date-time
       nullable: true
       title: TimestampNullable
       type: string
       x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.General.TimestampNullable
-      x-validate:
-    Arbitrum.BatchByEigenda:
-      additionalProperties: false
-      description: Arbitrum batch with EigenDA data availability.
-      properties:
-        after_acc_hash:
-          description: Accumulator hash of the sequencer inbox after this batch was appended. Must equal `before_acc_hash` of the next batch.
-          nullable: false
-          pattern: ^0x([A-Fa-f0-9]{64})$
-          type: string
-          x-struct:
-          x-validate:
-        before_acc_hash:
-          description: 'Accumulator hash of the sequencer inbox before this batch was appended. Forms a hash chain: must equal `after_acc_hash` of the previous batch.'
-          nullable: false
-          pattern: ^0x([A-Fa-f0-9]{64})$
-          type: string
-          x-struct:
-          x-validate:
-        commitment_transaction:
-          $ref: '#/components/schemas/CommitmentTransaction'
-        data_availability:
-          $ref: '#/components/schemas/Eigenda'
-        end_block_number:
-          description: Last Rollup block included in the batch.
-          minimum: 0
-          type: integer
-          x-struct:
-          x-validate:
-        number:
-          description: Sequential identifier assigned to this batch by the sequencer.
-          minimum: 0
-          type: integer
-          x-struct:
-          x-validate:
-        start_block_number:
-          description: First Rollup block included in the batch.
-          minimum: 0
-          type: integer
-          x-struct:
-          x-validate:
-        transactions_count:
-          description: Number of transactions in the batch.
-          minimum: 0
-          type: integer
-          x-struct:
-          x-validate:
-      required:
-        - number
-        - transactions_count
-        - start_block_number
-        - end_block_number
-        - before_acc_hash
-        - after_acc_hash
-        - commitment_transaction
-        - data_availability
-      title: Arbitrum.BatchByEigenda
-      type: object
-      x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.Arbitrum.Batch
       x-validate:
     TokenResponse:
       additionalProperties: false
@@ -4416,6 +4875,75 @@ components:
       type: object
       x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.Shibarium.Deposit
       x-validate:
+    StatsTransactionsChartDataPoint:
+      additionalProperties: false
+      properties:
+        date:
+          description: Day the data point refers to.
+          format: date
+          nullable: false
+          type: string
+          x-struct:
+          x-validate:
+        transactions_count:
+          description: Number of transactions on that day.
+          minimum: 0
+          nullable: true
+          type: integer
+          x-struct:
+          x-validate:
+      required:
+        - date
+        - transactions_count
+      title: StatsTransactionsChartDataPoint
+      type: object
+      x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.Stats.TransactionsChartDataPoint
+      x-validate:
+    AccountAbstractionFactory:
+      additionalProperties: false
+      description: Factory struct.
+      nullable: false
+      properties:
+        address:
+          $ref: '#/components/schemas/Address'
+        total_accounts:
+          minimum: 0
+          nullable: false
+          type: integer
+          x-struct:
+          x-validate:
+      required:
+        - address
+        - total_accounts
+      title: AccountAbstractionFactory
+      type: object
+      x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.Proxy.AccountAbstraction.Factory
+      x-validate:
+    StatsMarketChartDataPoint:
+      additionalProperties: false
+      properties:
+        closing_price:
+          $ref: '#/components/schemas/FloatStringNullable'
+        date:
+          description: Day the data point refers to.
+          format: date
+          nullable: false
+          type: string
+          x-struct:
+          x-validate:
+        market_cap:
+          $ref: '#/components/schemas/FloatStringNullable'
+        tvl:
+          $ref: '#/components/schemas/FloatStringNullable'
+      required:
+        - date
+        - closing_price
+        - market_cap
+        - tvl
+      title: StatsMarketChartDataPoint
+      type: object
+      x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.Stats.MarketChartDataPoint
+      x-validate:
     AdvancedFilterCsvExportAccepted:
       additionalProperties: false
       description: Body returned when an asynchronous CSV export job has been queued. Poll `/api/v2/csv-exports/{request_id}` with the returned `request_id` to check status.
@@ -4520,8 +5048,7 @@ components:
           anyOf:
             - $ref: '#/components/schemas/TotalERC721'
             - $ref: '#/components/schemas/TotalERC1155'
-            - $ref: '#/components/schemas/TotalERC7984'
-            - $ref: '#/components/schemas/Total'
+            - $ref: '#/components/schemas/TokenTransferTotalFungible'
           description: Token transfer amount (or token id for NFTs). Populated only for token-transfer items; `null` otherwise.
           nullable: true
           x-struct:
@@ -4577,6 +5104,109 @@ components:
       type: object
       x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.AdvancedFilter
       x-validate:
+    SearchResultToken:
+      additionalProperties: false
+      properties:
+        address_hash:
+          $ref: '#/components/schemas/AddressHash'
+        address_url:
+          nullable: false
+          type: string
+          x-struct:
+          x-validate:
+        certified:
+          nullable: false
+          type: boolean
+          x-struct:
+          x-validate:
+        circulating_market_cap:
+          $ref: '#/components/schemas/FloatStringNullable'
+        exchange_rate:
+          $ref: '#/components/schemas/FloatStringNullable'
+        icon_url:
+          nullable: true
+          type: string
+          x-struct:
+          x-validate:
+        is_smart_contract_address:
+          nullable: true
+          type: boolean
+          x-struct:
+          x-validate:
+        is_smart_contract_verified:
+          nullable: true
+          type: boolean
+          x-struct:
+          x-validate:
+        is_verified_via_admin_panel:
+          nullable: true
+          type: boolean
+          x-struct:
+          x-validate:
+        name:
+          nullable: true
+          type: string
+          x-struct:
+          x-validate:
+        priority:
+          nullable: false
+          type: integer
+          x-struct:
+          x-validate:
+        reputation:
+          enum:
+            - ok
+            - scam
+          nullable: false
+          type: string
+          x-struct:
+          x-validate:
+        symbol:
+          nullable: true
+          type: string
+          x-struct:
+          x-validate:
+        token_type:
+          nullable: true
+          type: string
+          x-struct:
+          x-validate:
+        token_url:
+          nullable: false
+          type: string
+          x-struct:
+          x-validate:
+        total_supply:
+          $ref: '#/components/schemas/IntegerStringNullable'
+        type:
+          enum:
+            - token
+          nullable: false
+          type: string
+          x-struct:
+          x-validate:
+      required:
+        - type
+        - name
+        - symbol
+        - address_hash
+        - token_url
+        - address_url
+        - icon_url
+        - token_type
+        - is_smart_contract_verified
+        - exchange_rate
+        - total_supply
+        - circulating_market_cap
+        - is_verified_via_admin_panel
+        - certified
+        - priority
+        - reputation
+        - is_smart_contract_address
+      title: SearchResultToken
+      type: object
+      x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.Search.Result.Token
+      x-validate:
     StateChange:
       additionalProperties: false
       properties:
@@ -4618,6 +5248,93 @@ components:
       title: StateChange
       type: object
       x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.Transaction.StateChange
+      x-validate:
+    AccountAbstractionPaymaster:
+      additionalProperties: false
+      description: Paymaster struct.
+      nullable: false
+      properties:
+        address:
+          $ref: '#/components/schemas/Address'
+        total_ops:
+          minimum: 0
+          nullable: false
+          type: integer
+          x-struct:
+          x-validate:
+      required:
+        - address
+        - total_ops
+      title: AccountAbstractionPaymaster
+      type: object
+      x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.Proxy.AccountAbstraction.Paymaster
+      x-validate:
+    SearchResultEnsDomain:
+      additionalProperties: false
+      properties:
+        address_hash:
+          $ref: '#/components/schemas/AddressHashNullable'
+        certified:
+          nullable: false
+          type: boolean
+          x-struct:
+          x-validate:
+        ens_info:
+          $ref: '#/components/schemas/SearchResultEnsInfo'
+        is_smart_contract_address:
+          nullable: true
+          type: boolean
+          x-struct:
+          x-validate:
+        is_smart_contract_verified:
+          nullable: true
+          type: boolean
+          x-struct:
+          x-validate:
+        name:
+          nullable: true
+          type: string
+          x-struct:
+          x-validate:
+        priority:
+          nullable: false
+          type: integer
+          x-struct:
+          x-validate:
+        reputation:
+          enum:
+            - ok
+            - scam
+          nullable: false
+          type: string
+          x-struct:
+          x-validate:
+        type:
+          enum:
+            - ens_domain
+          nullable: false
+          type: string
+          x-struct:
+          x-validate:
+        url:
+          nullable: true
+          type: string
+          x-struct:
+          x-validate:
+      required:
+        - type
+        - name
+        - address_hash
+        - url
+        - is_smart_contract_verified
+        - ens_info
+        - certified
+        - priority
+        - reputation
+        - is_smart_contract_address
+      title: SearchResultEnsDomain
+      type: object
+      x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.Search.Result.EnsDomain
       x-validate:
     AdvancedFilterSearchParams:
       additionalProperties: false
@@ -4692,6 +5409,42 @@ components:
       type: object
       x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.Block.Countdown
       x-validate:
+    ArbitrumBatchForList:
+      additionalProperties: false
+      description: Arbitrum batch summary for list endpoints.
+      properties:
+        batch_data_container:
+          $ref: '#/components/schemas/ArbitrumBatchDataContainer'
+        blocks_count:
+          description: Number of blocks included in the batch.
+          minimum: 0
+          type: integer
+          x-struct:
+          x-validate:
+        commitment_transaction:
+          $ref: '#/components/schemas/ArbitrumCommitmentTransaction'
+        number:
+          description: Sequential identifier assigned to this batch by the sequencer.
+          minimum: 0
+          type: integer
+          x-struct:
+          x-validate:
+        transactions_count:
+          description: Number of transactions in the batch.
+          minimum: 0
+          type: integer
+          x-struct:
+          x-validate:
+      required:
+        - number
+        - transactions_count
+        - blocks_count
+        - batch_data_container
+        - commitment_transaction
+      title: ArbitrumBatchForList
+      type: object
+      x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.Arbitrum.BatchForList
+      x-validate:
     EthGetBalanceResult:
       description: Hex-encoded account balance in wei. Always at least one digit (`0x0` for zero).
       pattern: ^0x([A-Fa-f0-9]+)$
@@ -4720,28 +5473,141 @@ components:
       type: object
       x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.Address.Counters
       x-validate:
-    Arbitrum.ClaimMessage:
+    ArbitrumWithdrawal:
       additionalProperties: false
-      description: Calldata and outbox contract address needed to execute a withdrawal on the Parent chain.
+      description: Arbitrum Rollup withdrawal message.
       properties:
-        calldata:
-          description: ABI-encoded calldata for the executeTransaction call.
-          type: string
+        arb_block_number:
+          description: Rollup block number.
+          minimum: 0
+          type: integer
           x-struct:
           x-validate:
-        outbox_address_hash:
-          description: Address of the Arbitrum Outbox contract on the Parent chain through which the withdrawal is executed.
+        caller_address_hash:
+          description: Address of the account that initiated the withdrawal on the Rollup.
           nullable: false
           pattern: ^0x([A-Fa-f0-9]{40})$
           type: string
           x-struct:
           x-validate:
+        callvalue:
+          description: Native coin amount in wei attached to the withdrawal message.
+          nullable: false
+          pattern: ^-?([1-9][0-9]*|0)$
+          type: string
+          x-struct:
+          x-validate:
+        completion_transaction_hash:
+          $ref: '#/components/schemas/FullHashNullable'
+        data:
+          description: ABI-encoded calldata passed to the destination address when the withdrawal is executed on the Parent chain. Empty (`0x`) for plain native coin transfers.
+          pattern: ^0x([A-Fa-f0-9]*)$
+          type: string
+          x-struct:
+          x-validate:
+        destination_address_hash:
+          description: Recipient address on the Parent chain that will receive funds when the withdrawal is executed.
+          nullable: false
+          pattern: ^0x([A-Fa-f0-9]{40})$
+          type: string
+          x-struct:
+          x-validate:
+        eth_block_number:
+          description: Parent chain block number.
+          minimum: 0
+          type: integer
+          x-struct:
+          x-validate:
+        id:
+          description: Withdrawal message ID.
+          minimum: 0
+          type: integer
+          x-struct:
+          x-validate:
+        l2_timestamp:
+          description: Unix timestamp of the originating transaction.
+          minimum: 0
+          type: integer
+          x-struct:
+          x-validate:
+        status:
+          description: Withdrawal lifecycle status. Progresses from `initiated` (L2ToL1Tx event emitted) through `sent` (included in an RBlock) and `confirmed` (RBlock confirmed on Parent chain) to `relayed` (executed on Parent chain). `unknown` indicates the status could not be determined, e.g. when the Parent chain RPC is unavailable.
+          enum:
+            - unknown
+            - initiated
+            - sent
+            - confirmed
+            - relayed
+          type: string
+          x-struct:
+          x-validate:
+        token:
+          additionalProperties: false
+          description: Token withdrawal details. Present when the withdrawal is for a bridged token, null for native coin.
+          nullable: true
+          properties:
+            address_hash:
+              description: Token contract address on the Parent chain.
+              nullable: true
+              pattern: ^0x([A-Fa-f0-9]{40})$
+              type: string
+              x-struct:
+              x-validate:
+            amount:
+              description: Token amount in the token's smallest unit.
+              nullable: false
+              pattern: ^-?([1-9][0-9]*|0)$
+              type: string
+              x-struct:
+              x-validate:
+            decimals:
+              minimum: 0
+              nullable: true
+              type: integer
+              x-struct:
+              x-validate:
+            destination_address_hash:
+              description: Token recipient address on the Parent chain.
+              nullable: true
+              pattern: ^0x([A-Fa-f0-9]{40})$
+              type: string
+              x-struct:
+              x-validate:
+            name:
+              nullable: true
+              type: string
+              x-struct:
+              x-validate:
+            symbol:
+              nullable: true
+              type: string
+              x-struct:
+              x-validate:
+          required:
+            - address_hash
+            - destination_address_hash
+            - amount
+            - decimals
+            - name
+            - symbol
+          type: object
+          x-struct:
+          x-validate:
       required:
-        - calldata
-        - outbox_address_hash
-      title: Arbitrum.ClaimMessage
+        - id
+        - status
+        - caller_address_hash
+        - destination_address_hash
+        - arb_block_number
+        - eth_block_number
+        - l2_timestamp
+        - callvalue
+        - data
+        - token
+        - completion_transaction_hash
+      title: ArbitrumWithdrawal
       type: object
-      x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.Arbitrum.ClaimMessage
+      x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.Arbitrum.Withdrawal
       x-validate:
     TokenTransfer:
       additionalProperties: false
@@ -4774,8 +5640,7 @@ components:
           anyOf:
             - $ref: '#/components/schemas/TotalERC721'
             - $ref: '#/components/schemas/TotalERC1155'
-            - $ref: '#/components/schemas/TotalERC7984'
-            - $ref: '#/components/schemas/Total'
+            - $ref: '#/components/schemas/TokenTransferTotalFungible'
           nullable: true
           x-struct:
           x-validate:
@@ -4870,6 +5735,20 @@ components:
           x-validate:
         conflicting_implementations:
           items:
+            additionalProperties: false
+            properties:
+              implementations:
+                items:
+                  $ref: '#/components/schemas/Implementation'
+                nullable: false
+                type: array
+                x-struct:
+                x-validate:
+              proxy_type:
+                $ref: '#/components/schemas/ProxyType'
+            required:
+              - proxy_type
+              - implementations
             type: object
             x-struct:
             x-validate:
@@ -4942,6 +5821,21 @@ components:
           x-struct:
           x-validate:
         license_type:
+          enum:
+            - none
+            - unlicense
+            - mit
+            - gnu_gpl_v2
+            - gnu_gpl_v3
+            - gnu_lgpl_v2_1
+            - gnu_lgpl_v3
+            - bsd_2_clause
+            - bsd_3_clause
+            - mpl_2_0
+            - osl_3_0
+            - apache_2_0
+            - gnu_agpl_v3
+            - bsl_1_1
           nullable: true
           type: string
           x-struct:
@@ -4963,6 +5857,7 @@ components:
           x-validate:
         external_libraries:
           items:
+            additionalProperties: false
             properties:
               address_hash:
                 $ref: '#/components/schemas/AddressHash'
@@ -4971,6 +5866,9 @@ components:
                 type: string
                 x-struct:
                 x-validate:
+            required:
+              - name
+              - address_hash
             type: object
             x-struct:
             x-validate:
@@ -5025,10 +5923,25 @@ components:
           items:
             items:
               anyOf:
-                - type: object
+                - type: string
                   x-struct:
                   x-validate:
-                - type: string
+                - type: array
+                  x-struct:
+                  x-validate:
+                - additionalProperties: true
+                  description: ABI input descriptor
+                  properties:
+                    name:
+                      nullable: true
+                      type: string
+                      x-struct:
+                      x-validate:
+                    type:
+                      type: string
+                      x-struct:
+                      x-validate:
+                  type: object
                   x-struct:
                   x-validate:
               x-struct:
@@ -5051,6 +5964,7 @@ components:
           x-struct:
           x-validate:
         compiler_settings:
+          additionalProperties: true
           nullable: true
           type: object
           x-struct:
@@ -5061,6 +5975,7 @@ components:
           x-struct:
           x-validate:
         github_repository_metadata:
+          additionalProperties: true
           nullable: true
           type: object
           x-struct:
@@ -5101,6 +6016,10 @@ components:
           x-struct:
           x-validate:
         creation_status:
+          enum:
+            - success
+            - failed
+            - selfdestructed
           nullable: true
           type: string
           x-struct:
@@ -5145,6 +6064,55 @@ components:
       type: object
       x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.Transaction.Fee
       x-validate:
+    SearchResultEnsInfo:
+      additionalProperties: false
+      properties:
+        address_hash:
+          $ref: '#/components/schemas/AddressHash'
+        expiry_date:
+          description: Domain expiry date.
+          nullable: true
+          type: string
+          x-struct:
+          x-validate:
+        name:
+          description: Resolved ENS domain name.
+          nullable: false
+          type: string
+          x-struct:
+          x-validate:
+        names_count:
+          minimum: 0
+          nullable: false
+          type: integer
+          x-struct:
+          x-validate:
+        protocol:
+          description: ENS protocol metadata.
+          nullable: true
+          x-struct:
+          x-validate:
+        protocol_dapp_logo:
+          nullable: true
+          type: string
+          x-struct:
+          x-validate:
+        protocol_dapp_url:
+          nullable: true
+          type: string
+          x-struct:
+          x-validate:
+      required:
+        - name
+        - expiry_date
+        - names_count
+        - address_hash
+        - protocol_dapp_url
+        - protocol_dapp_logo
+      title: SearchResultEnsInfo
+      type: object
+      x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.Search.Result.EnsInfo
+      x-validate:
     FullHash:
       nullable: false
       pattern: ^0x([A-Fa-f0-9]{64})$
@@ -5176,8 +6144,10 @@ components:
         gas_price_updated_at:
           $ref: '#/components/schemas/TimestampNullable'
         gas_prices:
+          anyOf:
+            - $ref: '#/components/schemas/StatsGasPricesSimple'
+            - $ref: '#/components/schemas/StatsGasPricesDetailed'
           nullable: true
-          type: object
           x-struct:
           x-validate:
         gas_prices_update_in:
@@ -5221,9 +6191,61 @@ components:
           $ref: '#/components/schemas/IntegerString'
         tvl:
           $ref: '#/components/schemas/IntegerStringNullable'
+      required:
+        - average_block_time
+        - coin_image
+        - coin_price
+        - coin_price_change_percentage
+        - gas_price_updated_at
+        - gas_prices
+        - gas_prices_update_in
+        - gas_used_today
+        - market_cap
+        - network_utilization_percentage
+        - secondary_coin_image
+        - secondary_coin_price
+        - static_gas_price
+        - total_addresses
+        - total_blocks
+        - total_gas_used
+        - total_transactions
+        - transactions_today
+        - tvl
       title: StatsResponse
       type: object
       x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.Stats.Response
+      x-validate:
+    BeaconWithdrawal:
+      additionalProperties: false
+      properties:
+        amount:
+          $ref: '#/components/schemas/IntegerString'
+        block_number:
+          nullable: false
+          type: integer
+          x-struct:
+          x-validate:
+        index:
+          nullable: false
+          type: integer
+          x-struct:
+          x-validate:
+        receiver:
+          $ref: '#/components/schemas/Address'
+        timestamp:
+          $ref: '#/components/schemas/Timestamp'
+        validator_index:
+          nullable: false
+          type: integer
+          x-struct:
+          x-validate:
+      required:
+        - index
+        - validator_index
+        - amount
+      title: BeaconWithdrawal
+      type: object
+      x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.Withdrawal
       x-validate:
     Token:
       additionalProperties: false
@@ -5650,7 +6672,11 @@ components:
           x-struct:
           x-validate:
         to:
-          $ref: '#/components/schemas/Address'
+          allOf:
+            - $ref: '#/components/schemas/Address'
+          nullable: true
+          x-struct:
+          x-validate:
         status:
           enum:
             - ok
@@ -5814,6 +6840,36 @@ components:
       type: object
       x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.Transaction
       x-validate:
+    ArbitrumDataAvailabilityEigenda:
+      additionalProperties: false
+      description: EigenDA data availability blob reference.
+      properties:
+        batch_data_container:
+          enum:
+            - in_eigenda
+          type: string
+          x-struct:
+          x-validate:
+        blob_header:
+          description: ABI-encoded EigenDA blob header.
+          nullable: true
+          type: string
+          x-struct:
+          x-validate:
+        blob_verification_proof:
+          description: ABI-encoded EigenDA blob verification proof.
+          nullable: true
+          type: string
+          x-struct:
+          x-validate:
+      required:
+        - batch_data_container
+        - blob_header
+        - blob_verification_proof
+      title: ArbitrumDataAvailabilityEigenda
+      type: object
+      x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.Arbitrum.DataAvailability.Eigenda
+      x-validate:
     SignedAuthorization:
       additionalProperties: false
       properties:
@@ -5860,41 +6916,20 @@ components:
       type: object
       x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.SignedAuthorization
       x-validate:
-    BatchForList:
-      additionalProperties: false
-      description: Arbitrum batch summary for list endpoints.
+    SmartContractCounters:
+      description: Smart contracts counters
       properties:
-        batch_data_container:
-          $ref: '#/components/schemas/BatchDataContainer'
-        blocks_count:
-          description: Number of blocks included in the batch.
-          minimum: 0
-          type: integer
-          x-struct:
-          x-validate:
-        commitment_transaction:
-          $ref: '#/components/schemas/CommitmentTransaction'
-        number:
-          description: Sequential identifier assigned to this batch by the sequencer.
-          minimum: 0
-          type: integer
-          x-struct:
-          x-validate:
-        transactions_count:
-          description: Number of transactions in the batch.
-          minimum: 0
-          type: integer
-          x-struct:
-          x-validate:
-      required:
-        - number
-        - transactions_count
-        - blocks_count
-        - batch_data_container
-        - commitment_transaction
-      title: BatchForList
+        new_smart_contracts_24h:
+          $ref: '#/components/schemas/IntegerString'
+        new_verified_smart_contracts_24h:
+          $ref: '#/components/schemas/IntegerString'
+        smart_contracts:
+          $ref: '#/components/schemas/IntegerString'
+        verified_smart_contracts:
+          $ref: '#/components/schemas/IntegerString'
+      title: SmartContractCounters
       type: object
-      x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.Arbitrum.BatchForList
+      x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.SmartContract.Counters
       x-validate:
     StabilityValidator:
       additionalProperties: false
@@ -5926,98 +6961,6 @@ components:
       title: StabilityValidator
       type: object
       x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.Stability.Validator
-      x-validate:
-    Arbitrum.Batch:
-      additionalProperties: false
-      description: Detailed Arbitrum batch info.
-      properties:
-        after_acc_hash:
-          description: Accumulator hash of the sequencer inbox after this batch was appended. Must equal `before_acc_hash` of the next batch.
-          nullable: false
-          pattern: ^0x([A-Fa-f0-9]{64})$
-          type: string
-          x-struct:
-          x-validate:
-        before_acc_hash:
-          description: 'Accumulator hash of the sequencer inbox before this batch was appended. Forms a hash chain: must equal `after_acc_hash` of the previous batch.'
-          nullable: false
-          pattern: ^0x([A-Fa-f0-9]{64})$
-          type: string
-          x-struct:
-          x-validate:
-        commitment_transaction:
-          $ref: '#/components/schemas/CommitmentTransaction'
-        data_availability:
-          description: Data availability information. Structure varies by `batch_data_container` type.
-          oneOf:
-            - $ref: '#/components/schemas/Base'
-            - $ref: '#/components/schemas/Anytrust'
-            - $ref: '#/components/schemas/Celestia'
-            - $ref: '#/components/schemas/Eigenda'
-          x-struct:
-          x-validate:
-        end_block_number:
-          description: Last Rollup block included in the batch.
-          minimum: 0
-          type: integer
-          x-struct:
-          x-validate:
-        number:
-          description: Sequential identifier assigned to this batch by the sequencer.
-          minimum: 0
-          type: integer
-          x-struct:
-          x-validate:
-        start_block_number:
-          description: First Rollup block included in the batch.
-          minimum: 0
-          type: integer
-          x-struct:
-          x-validate:
-        transactions_count:
-          description: Number of transactions in the batch.
-          minimum: 0
-          type: integer
-          x-struct:
-          x-validate:
-      required:
-        - number
-        - transactions_count
-        - start_block_number
-        - end_block_number
-        - before_acc_hash
-        - after_acc_hash
-        - commitment_transaction
-        - data_availability
-      title: Arbitrum.Batch
-      type: object
-      x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.Arbitrum.Batch
-      x-validate:
-    Response:
-      properties:
-        expires_at:
-          format: date-time
-          nullable: true
-          type: string
-          x-struct:
-          x-validate:
-        file_id:
-          nullable: true
-          type: string
-          x-struct:
-          x-validate:
-        status:
-          enum:
-            - pending
-            - completed
-            - failed
-          nullable: false
-          type: string
-          x-struct:
-          x-validate:
-      title: Response
-      type: object
-      x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.CSVExport.Response
       x-validate:
     TransactionResponse:
       additionalProperties: false
@@ -6219,7 +7162,11 @@ components:
           x-struct:
           x-validate:
         to:
-          $ref: '#/components/schemas/Address'
+          allOf:
+            - $ref: '#/components/schemas/Address'
+          nullable: true
+          x-struct:
+          x-validate:
         status:
           enum:
             - ok
@@ -6383,87 +7330,56 @@ components:
       type: object
       x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.Transaction
       x-validate:
-    Arbitrum.Message:
+    UserOperationRawV07ToV09:
       additionalProperties: false
-      description: Full Arbitrum cross-chain message.
-      properties:
-        completion_transaction_hash:
-          description: Hash of the transaction on the destination chain that executed this message.
-          nullable: true
-          pattern: ^0x([A-Fa-f0-9]{64})$
-          type: string
-          x-struct:
-          x-validate:
-        id:
-          description: Unique cross-chain message identifier assigned by the protocol.
-          minimum: 0
-          type: integer
-          x-struct:
-          x-validate:
-        origination_address_hash:
-          description: Address that initiated the message on the originating chain.
-          nullable: true
-          pattern: ^0x([A-Fa-f0-9]{40})$
-          type: string
-          x-struct:
-          x-validate:
-        origination_timestamp:
-          $ref: '#/components/schemas/TimestampNullable'
-        origination_transaction_block_number:
-          description: Block number on the originating chain containing the initiation transaction.
-          minimum: 0
-          nullable: true
-          type: integer
-          x-struct:
-          x-validate:
-        origination_transaction_hash:
-          description: Hash of the transaction on the originating chain that initiated this message.
-          nullable: true
-          pattern: ^0x([A-Fa-f0-9]{64})$
-          type: string
-          x-struct:
-          x-validate:
-        status:
-          description: 'Cross-chain message lifecycle. For Rollup→Parent messages: `initiated` (L2ToL1Tx event emitted on Rollup) → `sent` (included in a batch committed to Parent chain) → `confirmed` (batch state root posted to the Outbox contract) → `relayed` (executed on Parent chain). For Parent→Rollup messages only `initiated` and `relayed` apply.'
-          enum:
-            - initiated
-            - sent
-            - confirmed
-            - relayed
-          type: string
-          x-struct:
-          x-validate:
-      required:
-        - origination_transaction_hash
-        - origination_timestamp
-        - origination_transaction_block_number
-        - completion_transaction_hash
-        - id
-        - origination_address_hash
-        - status
-      title: Arbitrum.Message
-      type: object
-      x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.Arbitrum.MinimalMessage
-      x-validate:
-    Paymaster:
-      additionalProperties: false
-      description: Paymaster struct.
+      description: Raw user operation data v0.7-v0.9.
       nullable: false
       properties:
-        address:
-          $ref: '#/components/schemas/Address'
-        total_ops:
-          minimum: 0
-          nullable: false
-          type: integer
-          x-struct:
-          x-validate:
+        account_gas_limits:
+          $ref: '#/components/schemas/FullHash'
+        call_data:
+          $ref: '#/components/schemas/HexData'
+        gas_fees:
+          $ref: '#/components/schemas/FullHash'
+        init_code:
+          $ref: '#/components/schemas/HexData'
+        nonce:
+          $ref: '#/components/schemas/IntegerString'
+        paymaster_and_data:
+          $ref: '#/components/schemas/HexData'
+        pre_verification_gas:
+          $ref: '#/components/schemas/IntegerString'
+        sender:
+          $ref: '#/components/schemas/AddressHash'
+        signature:
+          $ref: '#/components/schemas/HexData'
       required:
-        - address
-        - total_ops
-      title: Paymaster
+        - sender
+        - nonce
+        - init_code
+        - call_data
+        - account_gas_limits
+        - pre_verification_gas
+        - gas_fees
+        - paymaster_and_data
+        - signature
+      title: UserOperationRawV07ToV09
       type: object
-      x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.Proxy.AccountAbstraction.Paymaster
+      x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.Proxy.AccountAbstraction.UserOperation.RawV07ToV09
+      x-validate:
+    TokenTransferTotalFungible:
+      additionalProperties: false
+      properties:
+        decimals:
+          $ref: '#/components/schemas/IntegerStringNullable'
+        value:
+          $ref: '#/components/schemas/IntegerStringNullable'
+      required:
+        - value
+        - decimals
+      title: TokenTransferTotalFungible
+      type: object
+      x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.TokenTransfer.Total
       x-validate:
     Timestamp:
       format: date-time
@@ -6853,7 +7769,7 @@ paths:
                 properties:
                   items:
                     items:
-                      $ref: '#/components/schemas/Withdrawal'
+                      $ref: '#/components/schemas/BeaconWithdrawal'
                     nullable: false
                     type: array
                     x-struct:
@@ -6937,7 +7853,7 @@ paths:
                 properties:
                   items:
                     items:
-                      $ref: '#/components/schemas/Withdrawal'
+                      $ref: '#/components/schemas/BeaconWithdrawal'
                     nullable: false
                     type: array
                     x-struct:
@@ -7525,7 +8441,7 @@ paths:
                 properties:
                   items:
                     items:
-                      $ref: '#/components/schemas/Withdrawal'
+                      $ref: '#/components/schemas/BeaconWithdrawal'
                     nullable: false
                     type: array
                     x-struct:
@@ -8139,7 +9055,7 @@ paths:
                 properties:
                   items:
                     items:
-                      $ref: '#/components/schemas/Paymaster'
+                      $ref: '#/components/schemas/AccountAbstractionPaymaster'
                     nullable: false
                     type: array
                     x-struct:
@@ -8505,7 +9421,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Response'
+                $ref: '#/components/schemas/CSVExportResponse'
           description: Status of CSV export.
         '404':
           content:
@@ -8546,12 +9462,13 @@ paths:
                 properties:
                   chart_data:
                     items:
-                      type: object
-                      x-struct:
-                      x-validate:
+                      $ref: '#/components/schemas/StatsSecondaryCoinMarketChartDataPoint'
+                    nullable: false
                     type: array
                     x-struct:
                     x-validate:
+                required:
+                  - chart_data
                 type: object
                 x-struct:
                 x-validate:
@@ -8592,7 +9509,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Counters'
+                $ref: '#/components/schemas/SmartContractCounters'
           description: Count statistics for smart contracts.
         '422':
           content:
@@ -8769,7 +9686,7 @@ paths:
                 properties:
                   items:
                     items:
-                      $ref: '#/components/schemas/Factory'
+                      $ref: '#/components/schemas/AccountAbstractionFactory'
                     nullable: false
                     type: array
                     x-struct:
@@ -9209,13 +10126,13 @@ paths:
             application/json:
               schema:
                 oneOf:
-                  - $ref: '#/components/schemas/Arbitrum.BatchByEigenda'
+                  - $ref: '#/components/schemas/ArbitrumBatchByEigenda'
                   - additionalProperties: false
                     nullable: false
                     properties:
                       items:
                         items:
-                          $ref: '#/components/schemas/BatchForList'
+                          $ref: '#/components/schemas/ArbitrumBatchForList'
                         nullable: false
                         type: array
                         x-struct:
@@ -9283,7 +10200,7 @@ paths:
                 properties:
                   items:
                     items:
-                      $ref: '#/components/schemas/MinimalMessage'
+                      $ref: '#/components/schemas/ArbitrumMinimalMessage'
                     nullable: false
                     type: array
                     x-struct:
@@ -9469,7 +10386,7 @@ paths:
                 properties:
                   items:
                     items:
-                      $ref: '#/components/schemas/TransactionResponse'
+                      $ref: '#/components/schemas/Transaction'
                     nullable: false
                     type: array
                     x-struct:
@@ -9533,7 +10450,7 @@ paths:
             application/json:
               schema:
                 items:
-                  $ref: '#/components/schemas/TransactionResponse'
+                  $ref: '#/components/schemas/Transaction'
                 nullable: false
                 type: array
                 x-struct:
@@ -9905,7 +10822,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Arbitrum.ClaimMessage'
+                $ref: '#/components/schemas/ArbitrumClaimMessage'
           description: Claim data for the withdrawal.
         '400':
           content:
@@ -10201,7 +11118,7 @@ paths:
                 properties:
                   items:
                     items:
-                      $ref: '#/components/schemas/Bundle'
+                      $ref: '#/components/schemas/AccountAbstractionBundle'
                     nullable: false
                     type: array
                     x-struct:
@@ -10640,7 +11557,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Factory'
+                $ref: '#/components/schemas/AccountAbstractionFactory'
           description: Factory
         '400':
           content:
@@ -11759,7 +12676,7 @@ paths:
                 properties:
                   items:
                     items:
-                      $ref: '#/components/schemas/Arbitrum.Message'
+                      $ref: '#/components/schemas/ArbitrumMessage'
                     nullable: false
                     type: array
                     x-struct:
@@ -11860,12 +12777,13 @@ paths:
                 properties:
                   chart_data:
                     items:
-                      type: object
-                      x-struct:
-                      x-validate:
+                      $ref: '#/components/schemas/StatsTransactionsChartDataPoint'
+                    nullable: false
                     type: array
                     x-struct:
                     x-validate:
+                required:
+                  - chart_data
                 type: object
                 x-struct:
                 x-validate:
@@ -12190,7 +13108,7 @@ paths:
                 properties:
                   items:
                     items:
-                      $ref: '#/components/schemas/TransactionResponse'
+                      $ref: '#/components/schemas/Transaction'
                     nullable: false
                     type: array
                     x-struct:
@@ -13052,7 +13970,7 @@ paths:
                 properties:
                   items:
                     items:
-                      $ref: '#/components/schemas/Account'
+                      $ref: '#/components/schemas/AccountAbstractionAccount'
                     nullable: false
                     type: array
                     x-struct:
@@ -13150,7 +14068,7 @@ paths:
                 properties:
                   items:
                     items:
-                      $ref: '#/components/schemas/BatchForList'
+                      $ref: '#/components/schemas/ArbitrumBatchForList'
                     nullable: false
                     type: array
                     x-struct:
@@ -13529,8 +14447,8 @@ paths:
   /api/v1/search:
     get:
       callbacks: {}
-      description: Performs a unified search across multiple blockchain entity types including tokens, addresses, contracts, blocks, transactions and other resources.
-      operationId: BlockScoutWeb.API.V2.SearchController.search
+      description: Backward-compatible alias of `GET /api/v2/search` served at `GET /api/v1/search`. Behaves identically; kept for legacy clients.
+      operationId: BlockScoutWeb.API.V2.SearchController.search_v1_compatibility
       parameters:
         - description: Search query filter
           in: query
@@ -13660,7 +14578,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/JsonErrorResponse'
           description: Unprocessable Entity
-      summary: Search for tokens, addresses, contracts, blocks, or transactions by identifier
+      summary: Search (legacy v1 alias)
       tags:
         - search
   /api/v2/proxy/account-abstraction/bundlers:
@@ -13722,7 +14640,7 @@ paths:
                 properties:
                   items:
                     items:
-                      $ref: '#/components/schemas/Bundler'
+                      $ref: '#/components/schemas/AccountAbstractionBundler'
                     nullable: false
                     type: array
                     x-struct:
@@ -13795,9 +14713,7 @@ paths:
             application/json:
               schema:
                 items:
-                  type: object
-                  x-struct:
-                  x-validate:
+                  $ref: '#/components/schemas/SearchResultItem'
                 nullable: false
                 type: array
                 x-struct:
@@ -14240,7 +15156,7 @@ paths:
                 properties:
                   items:
                     items:
-                      $ref: '#/components/schemas/BatchForList'
+                      $ref: '#/components/schemas/ArbitrumBatchForList'
                     nullable: false
                     type: array
                     x-struct:
@@ -14477,7 +15393,7 @@ paths:
                 properties:
                   items:
                     items:
-                      $ref: '#/components/schemas/TransactionResponse'
+                      $ref: '#/components/schemas/Transaction'
                     nullable: false
                     type: array
                     x-struct:
@@ -14842,7 +15758,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Arbitrum.BatchByCelestia'
+                $ref: '#/components/schemas/ArbitrumBatchByCelestia'
           description: Batch info.
         '404':
           content:
@@ -15205,7 +16121,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Arbitrum.Batch'
+                $ref: '#/components/schemas/ArbitrumBatch'
           description: Batch info.
         '404':
           content:
@@ -15362,7 +16278,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Paymaster'
+                $ref: '#/components/schemas/AccountAbstractionPaymaster'
           description: Paymaster
         '400':
           content:
@@ -15713,7 +16629,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Counter'
+                $ref: '#/components/schemas/BeaconWithdrawalCounter'
           description: Withdrawals counters.
         '422':
           content:
@@ -15761,7 +16677,7 @@ paths:
                 properties:
                   items:
                     items:
-                      $ref: '#/components/schemas/Arbitrum.Withdrawal'
+                      $ref: '#/components/schemas/ArbitrumWithdrawal'
                     type: array
                     x-struct:
                     x-validate:
@@ -15995,7 +16911,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Account'
+                $ref: '#/components/schemas/AccountAbstractionAccount'
           description: Account
         '400':
           content:
@@ -16068,11 +16984,11 @@ paths:
                   type:
                     enum:
                       - address
+                      - ens_domain
                       - block
                       - transaction
                       - user_operation
                       - blob
-                      - ens_domain
                     nullable: true
                     type: string
                     x-struct:
@@ -16213,13 +17129,13 @@ paths:
             application/json:
               schema:
                 oneOf:
-                  - $ref: '#/components/schemas/Arbitrum.BatchByAnytrust'
+                  - $ref: '#/components/schemas/ArbitrumBatchByAnytrust'
                   - additionalProperties: false
                     nullable: false
                     properties:
                       items:
                         items:
-                          $ref: '#/components/schemas/BatchForList'
+                          $ref: '#/components/schemas/ArbitrumBatchForList'
                         nullable: false
                         type: array
                         x-struct:
@@ -16563,12 +17479,14 @@ paths:
                     x-validate:
                   chart_data:
                     items:
-                      type: object
-                      x-struct:
-                      x-validate:
+                      $ref: '#/components/schemas/StatsMarketChartDataPoint'
+                    nullable: false
                     type: array
                     x-struct:
                     x-validate:
+                required:
+                  - chart_data
+                  - available_supply
                 type: object
                 x-struct:
                 x-validate:
@@ -17001,7 +17919,7 @@ paths:
             application/json:
               schema:
                 items:
-                  $ref: '#/components/schemas/TransactionResponse'
+                  $ref: '#/components/schemas/Transaction'
                 nullable: false
                 type: array
                 x-struct:
@@ -17849,7 +18767,7 @@ paths:
     get:
       callbacks: {}
       description: Performs a unified search across multiple blockchain entity types including tokens, addresses, contracts, blocks, transactions and other resources.
-      operationId: BlockScoutWeb.API.V2.SearchController.search (2)
+      operationId: BlockScoutWeb.API.V2.SearchController.search
       parameters:
         - description: Search query filter
           in: query
@@ -18015,7 +18933,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Bundler'
+                $ref: '#/components/schemas/AccountAbstractionBundler'
           description: Bundler
         '400':
           content:

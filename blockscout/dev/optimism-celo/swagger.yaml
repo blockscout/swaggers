@@ -119,6 +119,25 @@ components:
       type: string
       x-struct: Elixir.BlockScoutWeb.Schemas.API.Legacy.EthBlockNumberResult
       x-validate:
+    StatsSecondaryCoinMarketChartDataPoint:
+      additionalProperties: false
+      properties:
+        closing_price:
+          $ref: '#/components/schemas/FloatStringNullable'
+        date:
+          description: Day the data point refers to.
+          format: date
+          nullable: false
+          type: string
+          x-struct:
+          x-validate:
+      required:
+        - date
+        - closing_price
+      title: StatsSecondaryCoinMarketChartDataPoint
+      type: object
+      x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.Stats.SecondaryCoinMarketChartDataPoint
+      x-validate:
     EthGetLogsResult:
       properties:
         address:
@@ -177,6 +196,53 @@ components:
       type: object
       x-struct: Elixir.BlockScoutWeb.Schemas.API.Legacy.EthRpc.EthGetLogsResult
       x-validate:
+    SearchResultBlock:
+      additionalProperties: false
+      properties:
+        block_hash:
+          $ref: '#/components/schemas/FullHash'
+        block_number:
+          minimum: 0
+          nullable: false
+          type: integer
+          x-struct:
+          x-validate:
+        block_type:
+          nullable: false
+          type: string
+          x-struct:
+          x-validate:
+        priority:
+          nullable: false
+          type: integer
+          x-struct:
+          x-validate:
+        timestamp:
+          $ref: '#/components/schemas/Timestamp'
+        type:
+          enum:
+            - block
+          nullable: false
+          type: string
+          x-struct:
+          x-validate:
+        url:
+          nullable: false
+          type: string
+          x-struct:
+          x-validate:
+      required:
+        - type
+        - block_number
+        - block_hash
+        - url
+        - timestamp
+        - block_type
+        - priority
+      title: SearchResultBlock
+      type: object
+      x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.Search.Result.Block
+      x-validate:
     NFTCollection:
       additionalProperties: false
       properties:
@@ -211,6 +277,51 @@ components:
       title: ForbiddenResponse
       type: object
       x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.ErrorResponses.ForbiddenResponse
+      x-validate:
+    OptimismTransactionWithdrawal:
+      additionalProperties: false
+      description: L2->L1 withdrawal message initiated by an Optimism transaction
+      nullable: false
+      properties:
+        l1_transaction_hash:
+          $ref: '#/components/schemas/FullHashNullable'
+        msg_data:
+          $ref: '#/components/schemas/HexDataNullable'
+        msg_gas_limit:
+          $ref: '#/components/schemas/IntegerStringNullable'
+        msg_nonce_raw:
+          $ref: '#/components/schemas/IntegerString'
+        msg_sender_address_hash:
+          $ref: '#/components/schemas/FullHashNullable'
+        msg_target_address_hash:
+          $ref: '#/components/schemas/FullHashNullable'
+        msg_value:
+          $ref: '#/components/schemas/IntegerStringNullable'
+        nonce:
+          type: integer
+          x-struct:
+          x-validate:
+        portal_contract_address_hash:
+          $ref: '#/components/schemas/AddressHashNullable'
+        status:
+          nullable: false
+          type: string
+          x-struct:
+          x-validate:
+      required:
+        - nonce
+        - status
+        - l1_transaction_hash
+        - portal_contract_address_hash
+        - msg_nonce_raw
+        - msg_sender_address_hash
+        - msg_target_address_hash
+        - msg_value
+        - msg_gas_limit
+        - msg_data
+      title: OptimismTransactionWithdrawal
+      type: object
+      x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.Optimism.TransactionWithdrawal
       x-validate:
     Log:
       additionalProperties: false
@@ -297,12 +408,147 @@ components:
       type: string
       x-struct: Elixir.BlockScoutWeb.Schemas.API.Legacy.EthRpc.EthGetStorageAtResult
       x-validate:
+    SearchResultTransaction:
+      additionalProperties: false
+      properties:
+        priority:
+          nullable: false
+          type: integer
+          x-struct:
+          x-validate:
+        timestamp:
+          $ref: '#/components/schemas/TimestampNullable'
+        transaction_hash:
+          $ref: '#/components/schemas/FullHash'
+        type:
+          enum:
+            - transaction
+          nullable: false
+          type: string
+          x-struct:
+          x-validate:
+        url:
+          nullable: false
+          type: string
+          x-struct:
+          x-validate:
+      required:
+        - type
+        - transaction_hash
+        - url
+        - timestamp
+        - priority
+      title: SearchResultTransaction
+      type: object
+      x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.Search.Result.Transaction
+      x-validate:
     EmptyString:
       maxLength: 0
       minLength: 0
       title: EmptyString
       type: string
       x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.General.EmptyString
+      x-validate:
+    StatsGasPricesDetailed:
+      additionalProperties: false
+      description: Gas prices per tier as detailed objects.
+      properties:
+        average:
+          allOf:
+            - $ref: '#/components/schemas/StatsGasPriceInfo'
+          nullable: true
+          x-struct:
+          x-validate:
+        fast:
+          allOf:
+            - $ref: '#/components/schemas/StatsGasPriceInfo'
+          nullable: true
+          x-struct:
+          x-validate:
+        slow:
+          allOf:
+            - $ref: '#/components/schemas/StatsGasPriceInfo'
+          nullable: true
+          x-struct:
+          x-validate:
+      required:
+        - slow
+        - average
+        - fast
+      title: StatsGasPricesDetailed
+      type: object
+      x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.Stats.GasPrices.Detailed
+      x-validate:
+    SearchResultLabel:
+      additionalProperties: false
+      properties:
+        address_hash:
+          $ref: '#/components/schemas/AddressHash'
+        certified:
+          nullable: false
+          type: boolean
+          x-struct:
+          x-validate:
+        ens_info:
+          allOf:
+            - $ref: '#/components/schemas/SearchResultEnsInfo'
+          nullable: true
+          x-struct:
+          x-validate:
+        is_smart_contract_address:
+          nullable: true
+          type: boolean
+          x-struct:
+          x-validate:
+        is_smart_contract_verified:
+          nullable: true
+          type: boolean
+          x-struct:
+          x-validate:
+        name:
+          nullable: false
+          type: string
+          x-struct:
+          x-validate:
+        priority:
+          nullable: false
+          type: integer
+          x-struct:
+          x-validate:
+        reputation:
+          enum:
+            - ok
+            - scam
+          nullable: false
+          type: string
+          x-struct:
+          x-validate:
+        type:
+          enum:
+            - label
+          nullable: false
+          type: string
+          x-struct:
+          x-validate:
+        url:
+          nullable: false
+          type: string
+          x-struct:
+          x-validate:
+      required:
+        - type
+        - name
+        - address_hash
+        - url
+        - is_smart_contract_verified
+        - ens_info
+        - certified
+        - priority
+        - reputation
+        - is_smart_contract_address
+      title: SearchResultLabel
+      type: object
+      x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.Search.Result.Label
       x-validate:
     AddressNullable:
       additionalProperties: false
@@ -513,6 +759,36 @@ components:
       type: object
       x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.Proxy.AccountAbstraction.Status
       x-validate:
+    StatsGasPricesSimple:
+      additionalProperties: false
+      description: Gas prices per tier as plain Gwei values.
+      properties:
+        average:
+          format: float
+          nullable: true
+          type: number
+          x-struct:
+          x-validate:
+        fast:
+          format: float
+          nullable: true
+          type: number
+          x-struct:
+          x-validate:
+        slow:
+          format: float
+          nullable: true
+          type: number
+          x-struct:
+          x-validate:
+      required:
+        - slow
+        - average
+        - fast
+      title: StatsGasPricesSimple
+      type: object
+      x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.Stats.GasPrices.Simple
+      x-validate:
     TotalERC721:
       additionalProperties: false
       properties:
@@ -530,6 +806,65 @@ components:
       title: TotalERC721
       type: object
       x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.TokenTransfer.TotalERC721
+      x-validate:
+    SearchResultUserOperation:
+      additionalProperties: false
+      properties:
+        priority:
+          nullable: false
+          type: integer
+          x-struct:
+          x-validate:
+        timestamp:
+          $ref: '#/components/schemas/TimestampNullable'
+        type:
+          enum:
+            - user_operation
+          nullable: false
+          type: string
+          x-struct:
+          x-validate:
+        user_operation_hash:
+          $ref: '#/components/schemas/FullHash'
+      required:
+        - type
+        - user_operation_hash
+        - timestamp
+        - priority
+      title: SearchResultUserOperation
+      type: object
+      x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.Search.Result.UserOperation
+      x-validate:
+    CSVExportResponse:
+      additionalProperties: false
+      properties:
+        expires_at:
+          format: date-time
+          nullable: true
+          type: string
+          x-struct:
+          x-validate:
+        file_id:
+          nullable: true
+          type: string
+          x-struct:
+          x-validate:
+        status:
+          enum:
+            - pending
+            - completed
+            - failed
+          nullable: false
+          type: string
+          x-struct:
+          x-validate:
+      required:
+        - status
+        - file_id
+        - expires_at
+      title: CSVExportResponse
+      type: object
+      x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.CSVExport.Response
       x-validate:
     TotalERC1155:
       additionalProperties: false
@@ -554,6 +889,62 @@ components:
       title: TotalERC1155
       type: object
       x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.TokenTransfer.TotalERC1155
+      x-validate:
+    OptimismBatchInEigenda:
+      additionalProperties: false
+      description: Optimism Batch struct.
+      properties:
+        batch_data_container:
+          enum:
+            - in_eigenda
+          nullable: false
+          type: string
+          x-struct:
+          x-validate:
+        blobs:
+          items:
+            $ref: '#/components/schemas/OptimismBlobEigenda'
+          nullable: false
+          type: array
+          x-struct:
+          x-validate:
+        l1_timestamp:
+          $ref: '#/components/schemas/Timestamp'
+        l1_transaction_hashes:
+          items:
+            $ref: '#/components/schemas/FullHash'
+          nullable: false
+          type: array
+          x-struct:
+          x-validate:
+        l2_end_block_number:
+          type: integer
+          x-struct:
+          x-validate:
+        l2_start_block_number:
+          type: integer
+          x-struct:
+          x-validate:
+        number:
+          type: integer
+          x-struct:
+          x-validate:
+        transactions_count:
+          type: integer
+          x-struct:
+          x-validate:
+      required:
+        - number
+        - transactions_count
+        - l1_timestamp
+        - l1_transaction_hashes
+        - batch_data_container
+        - l2_end_block_number
+        - l2_start_block_number
+        - blobs
+      title: OptimismBatchInEigenda
+      type: object
+      x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.Optimism.Batch
       x-validate:
     SummaryJustRequestBody:
       additionalProperties: false
@@ -810,6 +1201,38 @@ components:
       type: string
       x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.General.HexDataNullable
       x-validate:
+    AccountAbstractionAccount:
+      additionalProperties: false
+      description: Account struct.
+      nullable: false
+      properties:
+        address:
+          $ref: '#/components/schemas/Address'
+        creation_op_hash:
+          $ref: '#/components/schemas/FullHashNullable'
+        creation_timestamp:
+          $ref: '#/components/schemas/TimestampNullable'
+        creation_transaction_hash:
+          $ref: '#/components/schemas/FullHashNullable'
+        factory:
+          $ref: '#/components/schemas/AddressNullable'
+        total_ops:
+          minimum: 0
+          nullable: false
+          type: integer
+          x-struct:
+          x-validate:
+      required:
+        - address
+        - creation_op_hash
+        - creation_transaction_hash
+        - creation_timestamp
+        - factory
+        - total_ops
+      title: AccountAbstractionAccount
+      type: object
+      x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.Proxy.AccountAbstraction.Account
+      x-validate:
     CeloElectionRewardType:
       enum:
         - voter
@@ -835,37 +1258,88 @@ components:
       type: object
       x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.ErrorResponses.BadRequestResponse
       x-validate:
-    Withdrawal:
+    OptimismBatchDetailed:
+      discriminator:
+        mapping:
+          in_alt_da: '#/components/schemas/OptimismBatchInAltDa'
+          in_blob4844: '#/components/schemas/OptimismBatchInBlob4844'
+          in_calldata: '#/components/schemas/OptimismBatchInCalldata'
+          in_celestia: '#/components/schemas/OptimismBatchInCelestia'
+          in_eigenda: '#/components/schemas/OptimismBatchInEigenda'
+        propertyName: batch_data_container
+      oneOf:
+        - $ref: '#/components/schemas/OptimismBatchInBlob4844'
+        - $ref: '#/components/schemas/OptimismBatchInCelestia'
+        - $ref: '#/components/schemas/OptimismBatchInEigenda'
+        - $ref: '#/components/schemas/OptimismBatchInAltDa'
+        - $ref: '#/components/schemas/OptimismBatchInCalldata'
+      title: OptimismBatchDetailed
+      type: object
+      x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.Optimism.Batch.Detailed
+      x-validate:
+    SearchResultBlob:
       additionalProperties: false
       properties:
-        amount:
-          $ref: '#/components/schemas/IntegerString'
-        block_number:
+        blob_hash:
+          $ref: '#/components/schemas/FullHash'
+        priority:
           nullable: false
           type: integer
           x-struct:
           x-validate:
-        index:
-          nullable: false
-          type: integer
-          x-struct:
-          x-validate:
-        receiver:
-          $ref: '#/components/schemas/Address'
         timestamp:
-          $ref: '#/components/schemas/Timestamp'
-        validator_index:
+          $ref: '#/components/schemas/TimestampNullable'
+        type:
+          enum:
+            - blob
           nullable: false
-          type: integer
+          type: string
           x-struct:
           x-validate:
       required:
-        - index
-        - validator_index
-        - amount
-      title: Withdrawal
+        - type
+        - blob_hash
+        - timestamp
+        - priority
+      title: SearchResultBlob
       type: object
-      x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.Withdrawal
+      x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.Search.Result.Blob
+      x-validate:
+    AccountAbstractionBundle:
+      additionalProperties: false
+      description: Bundle struct.
+      nullable: false
+      properties:
+        block_number:
+          $ref: '#/components/schemas/IntegerString'
+        bundle_index:
+          minimum: 0
+          nullable: false
+          type: integer
+          x-struct:
+          x-validate:
+        bundler:
+          $ref: '#/components/schemas/Address'
+        timestamp:
+          $ref: '#/components/schemas/Timestamp'
+        total_ops:
+          minimum: 0
+          nullable: false
+          type: integer
+          x-struct:
+          x-validate:
+        transaction_hash:
+          $ref: '#/components/schemas/FullHash'
+      required:
+        - transaction_hash
+        - bundler
+        - block_number
+        - bundle_index
+        - timestamp
+        - total_ops
+      title: AccountAbstractionBundle
+      type: object
+      x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.Proxy.AccountAbstraction.Bundle
       x-validate:
     TopAddress:
       additionalProperties: false
@@ -973,6 +1447,27 @@ components:
       title: TopAddress
       type: object
       x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.Address
+      x-validate:
+    CeloEpochAggregatedElectionReward:
+      additionalProperties: false
+      properties:
+        count:
+          minimum: 0
+          nullable: false
+          type: integer
+          x-struct:
+          x-validate:
+        token:
+          $ref: '#/components/schemas/Token'
+        total:
+          $ref: '#/components/schemas/IntegerString'
+      required:
+        - total
+        - count
+        - token
+      title: CeloEpochAggregatedElectionReward
+      type: object
+      x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.Celo.Epoch.AggregatedElectionReward
       x-validate:
     AddressTabsCounters:
       additionalProperties: false
@@ -1179,6 +1674,36 @@ components:
       title: TokenHolderResponse
       type: object
       x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.Token.Holder
+      x-validate:
+    SearchResultItem:
+      discriminator:
+        mapping:
+          address: '#/components/schemas/SearchResultAddressOrContract'
+          blob: '#/components/schemas/SearchResultBlob'
+          block: '#/components/schemas/SearchResultBlock'
+          contract: '#/components/schemas/SearchResultAddressOrContract'
+          ens_domain: '#/components/schemas/SearchResultEnsDomain'
+          label: '#/components/schemas/SearchResultLabel'
+          metadata_tag: '#/components/schemas/SearchResultMetadataTag'
+          tac_operation: '#/components/schemas/SearchResultTacOperation'
+          token: '#/components/schemas/SearchResultToken'
+          transaction: '#/components/schemas/SearchResultTransaction'
+          user_operation: '#/components/schemas/SearchResultUserOperation'
+        propertyName: type
+      oneOf:
+        - $ref: '#/components/schemas/SearchResultToken'
+        - $ref: '#/components/schemas/SearchResultAddressOrContract'
+        - $ref: '#/components/schemas/SearchResultLabel'
+        - $ref: '#/components/schemas/SearchResultEnsDomain'
+        - $ref: '#/components/schemas/SearchResultMetadataTag'
+        - $ref: '#/components/schemas/SearchResultBlock'
+        - $ref: '#/components/schemas/SearchResultTransaction'
+        - $ref: '#/components/schemas/SearchResultUserOperation'
+        - $ref: '#/components/schemas/SearchResultBlob'
+        - $ref: '#/components/schemas/SearchResultTacOperation'
+      title: SearchResultItem
+      type: object
+      x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.Search.Result.Item
       x-validate:
     AddressResponse:
       additionalProperties: false
@@ -1624,37 +2149,54 @@ components:
       title: BlockTag
       x-struct: Elixir.BlockScoutWeb.Schemas.API.Legacy.EthRpc.BlockTag
       x-validate:
-    Account:
+    StatsGasPriceInfo:
       additionalProperties: false
-      description: Account struct.
-      nullable: false
       properties:
-        address:
-          $ref: '#/components/schemas/Address'
-        creation_op_hash:
-          $ref: '#/components/schemas/FullHashNullable'
-        creation_timestamp:
-          $ref: '#/components/schemas/TimestampNullable'
-        creation_transaction_hash:
-          $ref: '#/components/schemas/FullHashNullable'
-        factory:
-          $ref: '#/components/schemas/AddressNullable'
-        total_ops:
-          minimum: 0
-          nullable: false
-          type: integer
+        base_fee:
+          description: Base fee, in Gwei.
+          format: float
+          nullable: true
+          type: number
           x-struct:
           x-validate:
+        fiat_price:
+          $ref: '#/components/schemas/FloatStringNullable'
+        price:
+          description: Estimated gas price, in Gwei.
+          format: float
+          nullable: true
+          type: number
+          x-struct:
+          x-validate:
+        priority_fee:
+          description: Priority fee including base fee, in Gwei.
+          format: float
+          nullable: true
+          type: number
+          x-struct:
+          x-validate:
+        priority_fee_wei:
+          $ref: '#/components/schemas/IntegerStringNullable'
+        time:
+          description: Estimated time until inclusion, in ms.
+          format: float
+          nullable: true
+          type: number
+          x-struct:
+          x-validate:
+        wei:
+          $ref: '#/components/schemas/IntegerStringNullable'
       required:
-        - address
-        - creation_op_hash
-        - creation_transaction_hash
-        - creation_timestamp
-        - factory
-        - total_ops
-      title: Account
+        - price
+        - time
+        - base_fee
+        - priority_fee
+        - fiat_price
+        - priority_fee_wei
+        - wei
+      title: StatsGasPriceInfo
       type: object
-      x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.Proxy.AccountAbstraction.Account
+      x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.Stats.GasPriceInfo
       x-validate:
     Language:
       enum:
@@ -1713,20 +2255,32 @@ components:
       type: object
       x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.FheOperationsResponse
       x-validate:
-    Counters:
-      description: Smart contracts counters
+    AccountAbstractionBundler:
+      additionalProperties: false
+      description: Bundler struct.
+      nullable: false
       properties:
-        new_smart_contracts_24h:
-          $ref: '#/components/schemas/IntegerString'
-        new_verified_smart_contracts_24h:
-          $ref: '#/components/schemas/IntegerString'
-        smart_contracts:
-          $ref: '#/components/schemas/IntegerString'
-        verified_smart_contracts:
-          $ref: '#/components/schemas/IntegerString'
-      title: Counters
+        address:
+          $ref: '#/components/schemas/Address'
+        total_bundles:
+          minimum: 0
+          nullable: false
+          type: integer
+          x-struct:
+          x-validate:
+        total_ops:
+          minimum: 0
+          nullable: false
+          type: integer
+          x-struct:
+          x-validate:
+      required:
+        - address
+        - total_bundles
+        - total_ops
+      title: AccountAbstractionBundler
       type: object
-      x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.SmartContract.Counters
+      x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.Proxy.AccountAbstraction.Bundler
       x-validate:
     CoinBalance:
       additionalProperties: false
@@ -1760,6 +2314,182 @@ components:
       title: FloatStringNullable
       type: string
       x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.General.FloatStringNullable
+      x-validate:
+    CeloEpoch:
+      additionalProperties: false
+      description: Celo epoch summary.
+      properties:
+        distribution:
+          allOf:
+            - $ref: '#/components/schemas/CeloEpochDistribution'
+          nullable: true
+          x-struct:
+          x-validate:
+        end_block_number:
+          minimum: 0
+          nullable: true
+          type: integer
+          x-struct:
+          x-validate:
+        is_finalized:
+          nullable: false
+          type: boolean
+          x-struct:
+          x-validate:
+        number:
+          minimum: 0
+          nullable: false
+          type: integer
+          x-struct:
+          x-validate:
+        start_block_number:
+          minimum: 0
+          nullable: true
+          type: integer
+          x-struct:
+          x-validate:
+        timestamp:
+          $ref: '#/components/schemas/TimestampNullable'
+        type:
+          enum:
+            - L1
+            - L2
+          nullable: false
+          type: string
+          x-struct:
+          x-validate:
+      required:
+        - number
+        - type
+        - start_block_number
+        - end_block_number
+        - timestamp
+        - is_finalized
+        - distribution
+      title: CeloEpoch
+      type: object
+      x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.Celo.Epoch
+      x-validate:
+    SearchResultMetadataTag:
+      additionalProperties: false
+      properties:
+        address_hash:
+          $ref: '#/components/schemas/AddressHash'
+        certified:
+          nullable: false
+          type: boolean
+          x-struct:
+          x-validate:
+        ens_info:
+          allOf:
+            - $ref: '#/components/schemas/SearchResultEnsInfo'
+          nullable: true
+          x-struct:
+          x-validate:
+        is_smart_contract_address:
+          nullable: true
+          type: boolean
+          x-struct:
+          x-validate:
+        is_smart_contract_verified:
+          nullable: true
+          type: boolean
+          x-struct:
+          x-validate:
+        metadata:
+          $ref: '#/components/schemas/MetadataTag'
+        name:
+          nullable: true
+          type: string
+          x-struct:
+          x-validate:
+        priority:
+          nullable: false
+          type: integer
+          x-struct:
+          x-validate:
+        reputation:
+          enum:
+            - ok
+            - scam
+          nullable: false
+          type: string
+          x-struct:
+          x-validate:
+        type:
+          enum:
+            - metadata_tag
+          nullable: false
+          type: string
+          x-struct:
+          x-validate:
+        url:
+          nullable: false
+          type: string
+          x-struct:
+          x-validate:
+      required:
+        - type
+        - name
+        - address_hash
+        - url
+        - is_smart_contract_verified
+        - ens_info
+        - certified
+        - priority
+        - metadata
+        - reputation
+        - is_smart_contract_address
+      title: SearchResultMetadataTag
+      type: object
+      x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.Search.Result.MetadataTag
+      x-validate:
+    CeloEpochDistribution:
+      additionalProperties: false
+      description: Epoch reward transfers and their aggregated total.
+      properties:
+        carbon_offsetting_transfer:
+          anyOf:
+            - $ref: '#/components/schemas/TotalERC721'
+            - $ref: '#/components/schemas/TotalERC1155'
+            - $ref: '#/components/schemas/TokenTransferTotalFungible'
+          description: Total amount (or token id) of the epoch reward transfer; `null` when the transfer is absent.
+          nullable: true
+          x-struct:
+          x-validate:
+        community_transfer:
+          anyOf:
+            - $ref: '#/components/schemas/TotalERC721'
+            - $ref: '#/components/schemas/TotalERC1155'
+            - $ref: '#/components/schemas/TokenTransferTotalFungible'
+          description: Total amount (or token id) of the epoch reward transfer; `null` when the transfer is absent.
+          nullable: true
+          x-struct:
+          x-validate:
+        reserve_bolster_transfer:
+          anyOf:
+            - $ref: '#/components/schemas/TotalERC721'
+            - $ref: '#/components/schemas/TotalERC1155'
+            - $ref: '#/components/schemas/TokenTransferTotalFungible'
+          description: Total amount (or token id) of the epoch reward transfer; `null` when the transfer is absent.
+          nullable: true
+          x-struct:
+          x-validate:
+        transfers_total:
+          allOf:
+            - $ref: '#/components/schemas/TokenTransferTotalFungible'
+          description: Aggregated total of all reward transfers; `null` when there are no transfers.
+          nullable: true
+          x-struct:
+          x-validate:
+      required:
+        - reserve_bolster_transfer
+        - community_transfer
+        - carbon_offsetting_transfer
+        - transfers_total
+      title: CeloEpochDistribution
+      type: object
+      x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.Celo.Epoch.Distribution
       x-validate:
     Summary:
       additionalProperties: false
@@ -1830,20 +2560,6 @@ components:
       type: object
       x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.Transaction.Summary
       x-validate:
-    TotalERC7984:
-      additionalProperties: false
-      properties:
-        decimals:
-          $ref: '#/components/schemas/IntegerStringNullable'
-        value:
-          $ref: '#/components/schemas/IntegerStringNullable'
-      required:
-        - value
-        - decimals
-      title: TotalERC7984
-      type: object
-      x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.TokenTransfer.TotalERC7984
-      x-validate:
     URLNullable:
       example: https://example.com
       format: uri
@@ -1858,14 +2574,7 @@ components:
       type: string
       x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.General.FloatString
       x-validate:
-    FullHashNullable:
-      nullable: true
-      pattern: ^0x([A-Fa-f0-9]{64})$
-      title: FullHashNullable
-      type: string
-      x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.General.FullHashNullable
-      x-validate:
-    MainPage:
+    OptimismDepositMainPage:
       additionalProperties: false
       description: Optimism Deposit struct for the main page.
       properties:
@@ -1884,9 +2593,16 @@ components:
         - l1_block_timestamp
         - l1_transaction_hash
         - l2_transaction_hash
-      title: MainPage
+      title: OptimismDepositMainPage
       type: object
       x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.Optimism.Deposit.MainPage
+      x-validate:
+    FullHashNullable:
+      nullable: true
+      pattern: ^0x([A-Fa-f0-9]{64})$
+      title: FullHashNullable
+      type: string
+      x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.General.FullHashNullable
       x-validate:
     AdvancedFilterMethod:
       additionalProperties: false
@@ -1911,6 +2627,20 @@ components:
       title: AdvancedFilterMethod
       type: object
       x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.AdvancedFilter.Method
+      x-validate:
+    BeaconWithdrawalCounter:
+      additionalProperties: false
+      properties:
+        withdrawals_count:
+          $ref: '#/components/schemas/IntegerString'
+        withdrawals_sum:
+          $ref: '#/components/schemas/IntegerString'
+      required:
+        - withdrawals_count
+        - withdrawals_sum
+      title: BeaconWithdrawalCounter
+      type: object
+      x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.Withdrawal.Counter
       x-validate:
     Block:
       additionalProperties: false
@@ -2336,10 +3066,38 @@ components:
           x-validate:
       required:
         - address_hash
-        - name
       title: Implementation
       type: object
       x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.General.Implementation
+      x-validate:
+    OptimismDeposit:
+      additionalProperties: false
+      description: Optimism Deposit struct.
+      properties:
+        l1_block_number:
+          type: integer
+          x-struct:
+          x-validate:
+        l1_block_timestamp:
+          $ref: '#/components/schemas/Timestamp'
+        l1_transaction_hash:
+          $ref: '#/components/schemas/FullHash'
+        l1_transaction_origin:
+          $ref: '#/components/schemas/AddressHash'
+        l2_transaction_gas_limit:
+          $ref: '#/components/schemas/IntegerString'
+        l2_transaction_hash:
+          $ref: '#/components/schemas/FullHash'
+      required:
+        - l1_block_number
+        - l1_block_timestamp
+        - l1_transaction_hash
+        - l1_transaction_origin
+        - l2_transaction_gas_limit
+        - l2_transaction_hash
+      title: OptimismDeposit
+      type: object
+      x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.Optimism.Deposit
       x-validate:
     AddressHash:
       nullable: false
@@ -2348,57 +3106,34 @@ components:
       type: string
       x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.General.AddressHash
       x-validate:
-    Optimism.Batch:
+    SearchResultTacOperation:
       additionalProperties: false
-      description: Optimism Batch struct.
       properties:
-        batch_data_container:
-          enum:
-            - in_blob4844
-            - in_celestia
-            - in_eigenda
-            - in_alt_da
-            - in_calldata
+        priority:
+          nullable: false
+          type: integer
+          x-struct:
+          x-validate:
+        tac_operation:
+          additionalProperties: true
           nullable: true
+          type: object
+          x-struct:
+          x-validate:
+        type:
+          enum:
+            - tac_operation
+          nullable: false
           type: string
           x-struct:
           x-validate:
-        l1_timestamp:
-          $ref: '#/components/schemas/Timestamp'
-        l1_transaction_hashes:
-          items:
-            $ref: '#/components/schemas/FullHash'
-          nullable: false
-          type: array
-          x-struct:
-          x-validate:
-        l2_end_block_number:
-          type: integer
-          x-struct:
-          x-validate:
-        l2_start_block_number:
-          type: integer
-          x-struct:
-          x-validate:
-        number:
-          type: integer
-          x-struct:
-          x-validate:
-        transactions_count:
-          type: integer
-          x-struct:
-          x-validate:
       required:
-        - number
-        - transactions_count
-        - l1_timestamp
-        - l1_transaction_hashes
-        - batch_data_container
-        - l2_end_block_number
-        - l2_start_block_number
-      title: Optimism.Batch
+        - type
+        - tac_operation
+        - priority
+      title: SearchResultTacOperation
       type: object
-      x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.Optimism.Batch
+      x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.Search.Result.TacOperation
       x-validate:
     IntegerString:
       nullable: false
@@ -2406,69 +3141,6 @@ components:
       title: IntegerString
       type: string
       x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.General.IntegerString
-      x-validate:
-    Bundler:
-      additionalProperties: false
-      description: Bundler struct.
-      nullable: false
-      properties:
-        address:
-          $ref: '#/components/schemas/Address'
-        total_bundles:
-          minimum: 0
-          nullable: false
-          type: integer
-          x-struct:
-          x-validate:
-        total_ops:
-          minimum: 0
-          nullable: false
-          type: integer
-          x-struct:
-          x-validate:
-      required:
-        - address
-        - total_bundles
-        - total_ops
-      title: Bundler
-      type: object
-      x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.Proxy.AccountAbstraction.Bundler
-      x-validate:
-    Bundle:
-      additionalProperties: false
-      description: Bundle struct.
-      nullable: false
-      properties:
-        block_number:
-          $ref: '#/components/schemas/IntegerString'
-        bundle_index:
-          minimum: 0
-          nullable: false
-          type: integer
-          x-struct:
-          x-validate:
-        bundler:
-          $ref: '#/components/schemas/Address'
-        timestamp:
-          $ref: '#/components/schemas/Timestamp'
-        total_ops:
-          minimum: 0
-          nullable: false
-          type: integer
-          x-struct:
-          x-validate:
-        transaction_hash:
-          $ref: '#/components/schemas/FullHash'
-      required:
-        - transaction_hash
-        - bundler
-        - block_number
-        - bundle_index
-        - timestamp
-        - total_ops
-      title: Bundle
-      type: object
-      x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.Proxy.AccountAbstraction.Bundle
       x-validate:
     TokenInstance:
       additionalProperties: false
@@ -2621,6 +3293,21 @@ components:
           x-struct:
           x-validate:
         license_type:
+          enum:
+            - none
+            - unlicense
+            - mit
+            - gnu_gpl_v2
+            - gnu_gpl_v3
+            - gnu_lgpl_v2_1
+            - gnu_lgpl_v3
+            - bsd_2_clause
+            - bsd_3_clause
+            - mpl_2_0
+            - osl_3_0
+            - apache_2_0
+            - gnu_agpl_v3
+            - bsl_1_1
           nullable: true
           type: string
           x-struct:
@@ -2683,53 +3370,6 @@ components:
       type: object
       x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.CoinBalanceByDay
       x-validate:
-    Counter:
-      additionalProperties: false
-      properties:
-        withdrawals_count:
-          $ref: '#/components/schemas/IntegerString'
-        withdrawals_sum:
-          $ref: '#/components/schemas/IntegerString'
-      required:
-        - withdrawals_count
-        - withdrawals_sum
-      title: Counter
-      type: object
-      x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.Withdrawal.Counter
-      x-validate:
-    OutputRoot:
-      additionalProperties: false
-      description: Optimism Output Root struct.
-      properties:
-        l1_block_number:
-          type: integer
-          x-struct:
-          x-validate:
-        l1_timestamp:
-          $ref: '#/components/schemas/Timestamp'
-        l1_transaction_hash:
-          $ref: '#/components/schemas/FullHash'
-        l2_block_number:
-          type: integer
-          x-struct:
-          x-validate:
-        l2_output_index:
-          type: integer
-          x-struct:
-          x-validate:
-        output_root:
-          $ref: '#/components/schemas/FullHash'
-      required:
-        - l1_block_number
-        - l1_timestamp
-        - l1_transaction_hash
-        - l2_block_number
-        - l2_output_index
-        - output_root
-      title: OutputRoot
-      type: object
-      x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.Optimism.OutputRoot
-      x-validate:
     IntegerStringNullable:
       nullable: true
       pattern: ^-?([1-9][0-9]*|0)$
@@ -2743,44 +3383,20 @@ components:
       nullable: false
       properties:
         aggregated_election_rewards:
-          additionalProperties:
-            additionalProperties: false
-            nullable: true
-            properties:
-              count:
-                minimum: 0
-                nullable: false
-                type: integer
-                x-struct:
-                x-validate:
-              token:
-                additionalProperties: true
-                nullable: true
-                type: object
-                x-struct:
-                x-validate:
-              total:
-                $ref: '#/components/schemas/IntegerString'
-            required:
-              - total
-              - count
-              - token
-            type: object
-            x-struct:
-            x-validate:
+          allOf:
+            - $ref: '#/components/schemas/CeloEpochAggregatedElectionRewards'
           nullable: true
-          type: object
           x-struct:
           x-validate:
         distribution:
-          additionalProperties: true
+          allOf:
+            - $ref: '#/components/schemas/CeloEpochDetailedDistribution'
           nullable: true
-          type: object
           x-struct:
           x-validate:
         end_block_number:
           minimum: 0
-          nullable: false
+          nullable: true
           type: integer
           x-struct:
           x-validate:
@@ -2805,7 +3421,7 @@ components:
           x-validate:
         start_block_number:
           minimum: 0
-          nullable: false
+          nullable: true
           type: integer
           x-struct:
           x-validate:
@@ -3018,20 +3634,6 @@ components:
       type: object
       x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.TokenInstance
       x-validate:
-    Total:
-      additionalProperties: false
-      properties:
-        decimals:
-          $ref: '#/components/schemas/IntegerStringNullable'
-        value:
-          $ref: '#/components/schemas/IntegerStringNullable'
-      required:
-        - value
-        - decimals
-      title: Total
-      type: object
-      x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.TokenTransfer.Total
-      x-validate:
     UserOperationInList:
       additionalProperties: false
       description: UserOperationInList struct.
@@ -3079,6 +3681,49 @@ components:
       title: UserOperationInList
       type: object
       x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.Proxy.AccountAbstraction.UserOperationInList
+      x-validate:
+    OptimismGame:
+      additionalProperties: false
+      description: Optimism Dispute Game struct.
+      properties:
+        contract_address_hash:
+          $ref: '#/components/schemas/AddressHash'
+        created_at:
+          $ref: '#/components/schemas/Timestamp'
+        game_type:
+          type: integer
+          x-struct:
+          x-validate:
+        index:
+          type: integer
+          x-struct:
+          x-validate:
+        l2_block_number:
+          type: integer
+          x-struct:
+          x-validate:
+        resolved_at:
+          $ref: '#/components/schemas/TimestampNullable'
+        status:
+          enum:
+            - In progress
+            - Challenger wins
+            - Defender wins
+          nullable: false
+          type: string
+          x-struct:
+          x-validate:
+      required:
+        - contract_address_hash
+        - created_at
+        - game_type
+        - index
+        - l2_block_number
+        - resolved_at
+        - status
+      title: OptimismGame
+      type: object
+      x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.Optimism.Game
       x-validate:
     UserOperation:
       additionalProperties: false
@@ -3201,82 +3846,8 @@ components:
           $ref: '#/components/schemas/IntegerString'
         raw:
           anyOf:
-            - additionalProperties: false
-              description: Raw user operation data v0.6.
-              nullable: false
-              properties:
-                call_data:
-                  $ref: '#/components/schemas/HexData'
-                call_gas_limit:
-                  $ref: '#/components/schemas/IntegerString'
-                init_code:
-                  $ref: '#/components/schemas/HexData'
-                max_fee_per_gas:
-                  $ref: '#/components/schemas/IntegerString'
-                max_priority_fee_per_gas:
-                  $ref: '#/components/schemas/IntegerString'
-                nonce:
-                  $ref: '#/components/schemas/IntegerString'
-                paymaster_and_data:
-                  $ref: '#/components/schemas/HexData'
-                pre_verification_gas:
-                  $ref: '#/components/schemas/IntegerString'
-                sender:
-                  $ref: '#/components/schemas/AddressHash'
-                signature:
-                  $ref: '#/components/schemas/HexData'
-                verification_gas_limit:
-                  $ref: '#/components/schemas/IntegerString'
-              required:
-                - sender
-                - nonce
-                - init_code
-                - call_data
-                - call_gas_limit
-                - verification_gas_limit
-                - pre_verification_gas
-                - max_fee_per_gas
-                - max_priority_fee_per_gas
-                - paymaster_and_data
-                - signature
-              type: object
-              x-struct:
-              x-validate:
-            - additionalProperties: false
-              description: Raw user operation data v0.7-v0.9.
-              nullable: false
-              properties:
-                account_gas_limits:
-                  $ref: '#/components/schemas/FullHash'
-                call_data:
-                  $ref: '#/components/schemas/HexData'
-                gas_fees:
-                  $ref: '#/components/schemas/FullHash'
-                init_code:
-                  $ref: '#/components/schemas/HexData'
-                nonce:
-                  $ref: '#/components/schemas/IntegerString'
-                paymaster_and_data:
-                  $ref: '#/components/schemas/HexData'
-                pre_verification_gas:
-                  $ref: '#/components/schemas/IntegerString'
-                sender:
-                  $ref: '#/components/schemas/AddressHash'
-                signature:
-                  $ref: '#/components/schemas/HexData'
-              required:
-                - sender
-                - nonce
-                - init_code
-                - call_data
-                - account_gas_limits
-                - pre_verification_gas
-                - gas_fees
-                - paymaster_and_data
-                - signature
-              type: object
-              x-struct:
-              x-validate:
+            - $ref: '#/components/schemas/UserOperationRawV06'
+            - $ref: '#/components/schemas/UserOperationRawV07ToV09'
           description: Raw user operation data.
           x-struct:
           x-validate:
@@ -3330,9 +3901,8 @@ components:
       properties:
         items:
           items:
-            type: object
-            x-struct:
-            x-validate:
+            $ref: '#/components/schemas/SearchResultItem'
+          nullable: false
           type: array
           x-struct:
           x-validate:
@@ -3342,9 +3912,146 @@ components:
           type: object
           x-struct:
           x-validate:
+      required:
+        - items
+        - next_page_params
       title: SearchResult
       type: object
       x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.Search.Results
+      x-validate:
+    OptimismBlobEigenda:
+      additionalProperties: false
+      properties:
+        cert:
+          description: EigenDA cert raw bytes.
+          nullable: false
+          pattern: ^0x([A-Fa-f0-9]*)$
+          type: string
+          x-struct:
+          x-validate:
+        l1_timestamp:
+          $ref: '#/components/schemas/Timestamp'
+        l1_transaction_hash:
+          $ref: '#/components/schemas/FullHash'
+      required:
+        - cert
+        - l1_transaction_hash
+        - l1_timestamp
+      title: OptimismBlobEigenda
+      type: object
+      x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.Optimism.Batch.Blob.Eigenda
+      x-validate:
+    OptimismBatchInAltDa:
+      additionalProperties: false
+      description: Optimism Batch struct.
+      properties:
+        batch_data_container:
+          enum:
+            - in_alt_da
+          nullable: false
+          type: string
+          x-struct:
+          x-validate:
+        blobs:
+          items:
+            $ref: '#/components/schemas/OptimismBlobAltDa'
+          nullable: false
+          type: array
+          x-struct:
+          x-validate:
+        l1_timestamp:
+          $ref: '#/components/schemas/Timestamp'
+        l1_transaction_hashes:
+          items:
+            $ref: '#/components/schemas/FullHash'
+          nullable: false
+          type: array
+          x-struct:
+          x-validate:
+        l2_end_block_number:
+          type: integer
+          x-struct:
+          x-validate:
+        l2_start_block_number:
+          type: integer
+          x-struct:
+          x-validate:
+        number:
+          type: integer
+          x-struct:
+          x-validate:
+        transactions_count:
+          type: integer
+          x-struct:
+          x-validate:
+      required:
+        - number
+        - transactions_count
+        - l1_timestamp
+        - l1_transaction_hashes
+        - batch_data_container
+        - l2_end_block_number
+        - l2_start_block_number
+        - blobs
+      title: OptimismBatchInAltDa
+      type: object
+      x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.Optimism.Batch
+      x-validate:
+    OptimismBatchInBlob4844:
+      additionalProperties: false
+      description: Optimism Batch struct.
+      properties:
+        batch_data_container:
+          enum:
+            - in_blob4844
+          nullable: false
+          type: string
+          x-struct:
+          x-validate:
+        blobs:
+          items:
+            $ref: '#/components/schemas/OptimismBlobEip4844'
+          nullable: false
+          type: array
+          x-struct:
+          x-validate:
+        l1_timestamp:
+          $ref: '#/components/schemas/Timestamp'
+        l1_transaction_hashes:
+          items:
+            $ref: '#/components/schemas/FullHash'
+          nullable: false
+          type: array
+          x-struct:
+          x-validate:
+        l2_end_block_number:
+          type: integer
+          x-struct:
+          x-validate:
+        l2_start_block_number:
+          type: integer
+          x-struct:
+          x-validate:
+        number:
+          type: integer
+          x-struct:
+          x-validate:
+        transactions_count:
+          type: integer
+          x-struct:
+          x-validate:
+      required:
+        - number
+        - transactions_count
+        - l1_timestamp
+        - l1_transaction_hashes
+        - batch_data_container
+        - l2_end_block_number
+        - l2_start_block_number
+        - blobs
+      title: OptimismBatchInBlob4844
+      type: object
+      x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.Optimism.Batch
       x-validate:
     TokenCountersResponse:
       additionalProperties: false
@@ -3363,6 +4070,43 @@ components:
       title: TokenCountersResponse
       type: object
       x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.Token.Counters
+      x-validate:
+    CeloEpochDetailedDistribution:
+      additionalProperties: false
+      description: Epoch reward token transfers and their aggregated total.
+      properties:
+        carbon_offsetting_transfer:
+          allOf:
+            - $ref: '#/components/schemas/TokenTransfer'
+          nullable: true
+          x-struct:
+          x-validate:
+        community_transfer:
+          allOf:
+            - $ref: '#/components/schemas/TokenTransfer'
+          nullable: true
+          x-struct:
+          x-validate:
+        reserve_bolster_transfer:
+          allOf:
+            - $ref: '#/components/schemas/TokenTransfer'
+          nullable: true
+          x-struct:
+          x-validate:
+        transfers_total:
+          allOf:
+            - $ref: '#/components/schemas/CeloEpochDetailedDistributionTotal'
+          nullable: true
+          x-struct:
+          x-validate:
+      required:
+        - reserve_bolster_transfer
+        - community_transfer
+        - carbon_offsetting_transfer
+        - transfers_total
+      title: CeloEpochDetailedDistribution
+      type: object
+      x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.Celo.Epoch.DetailedDistribution
       x-validate:
     BlockResponse:
       additionalProperties: false
@@ -3814,6 +4558,28 @@ components:
       type: object
       x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.SmartContract.AuditReport
       x-validate:
+    OptimismBlobEip4844:
+      additionalProperties: false
+      properties:
+        hash:
+          description: EIP-4844 blob hash.
+          nullable: false
+          pattern: ^0x([A-Fa-f0-9]*)$
+          type: string
+          x-struct:
+          x-validate:
+        l1_timestamp:
+          $ref: '#/components/schemas/Timestamp'
+        l1_transaction_hash:
+          $ref: '#/components/schemas/FullHash'
+      required:
+        - hash
+        - l1_transaction_hash
+        - l1_timestamp
+      title: OptimismBlobEip4844
+      type: object
+      x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.Optimism.Batch.Blob.Eip4844
+      x-validate:
     JsonErrorResponse:
       properties:
         errors:
@@ -3857,6 +4623,20 @@ components:
       type: object
       x-struct: Elixir.OpenApiSpex.JsonErrorResponse
       x-validate:
+    CeloEpochDetailedDistributionTotal:
+      additionalProperties: false
+      properties:
+        token:
+          $ref: '#/components/schemas/Token'
+        total:
+          $ref: '#/components/schemas/TokenTransferTotalFungible'
+      required:
+        - token
+        - total
+      title: CeloEpochDetailedDistributionTotal
+      type: object
+      x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.Celo.Epoch.DetailedDistributionTotal
+      x-validate:
     AdvancedFilterCsvExportError:
       additionalProperties: false
       properties:
@@ -3871,6 +4651,78 @@ components:
       title: AdvancedFilterCsvExportError
       type: object
       x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.AdvancedFilter.CsvExportError
+      x-validate:
+    SearchResultAddressOrContract:
+      additionalProperties: false
+      properties:
+        address_hash:
+          $ref: '#/components/schemas/AddressHash'
+        certified:
+          nullable: false
+          type: boolean
+          x-struct:
+          x-validate:
+        ens_info:
+          allOf:
+            - $ref: '#/components/schemas/SearchResultEnsInfo'
+          nullable: true
+          x-struct:
+          x-validate:
+        is_smart_contract_address:
+          nullable: true
+          type: boolean
+          x-struct:
+          x-validate:
+        is_smart_contract_verified:
+          nullable: true
+          type: boolean
+          x-struct:
+          x-validate:
+        name:
+          nullable: true
+          type: string
+          x-struct:
+          x-validate:
+        priority:
+          nullable: false
+          type: integer
+          x-struct:
+          x-validate:
+        reputation:
+          enum:
+            - ok
+            - scam
+          nullable: false
+          type: string
+          x-struct:
+          x-validate:
+        type:
+          enum:
+            - address
+            - contract
+          nullable: false
+          type: string
+          x-struct:
+          x-validate:
+        url:
+          nullable: false
+          type: string
+          x-struct:
+          x-validate:
+      required:
+        - type
+        - name
+        - address_hash
+        - url
+        - is_smart_contract_verified
+        - ens_info
+        - certified
+        - priority
+        - reputation
+        - is_smart_contract_address
+      title: SearchResultAddressOrContract
+      type: object
+      x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.Search.Result.AddressOrContract
       x-validate:
     MetadataTag:
       additionalProperties: false
@@ -3919,12 +4771,150 @@ components:
       type: object
       x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.Proxy.MetadataTag
       x-validate:
+    OptimismBatchInCelestia:
+      additionalProperties: false
+      description: Optimism Batch struct.
+      properties:
+        batch_data_container:
+          enum:
+            - in_celestia
+          nullable: false
+          type: string
+          x-struct:
+          x-validate:
+        blobs:
+          items:
+            $ref: '#/components/schemas/OptimismBlobCelestia'
+          nullable: false
+          type: array
+          x-struct:
+          x-validate:
+        l1_timestamp:
+          $ref: '#/components/schemas/Timestamp'
+        l1_transaction_hashes:
+          items:
+            $ref: '#/components/schemas/FullHash'
+          nullable: false
+          type: array
+          x-struct:
+          x-validate:
+        l2_end_block_number:
+          type: integer
+          x-struct:
+          x-validate:
+        l2_start_block_number:
+          type: integer
+          x-struct:
+          x-validate:
+        number:
+          type: integer
+          x-struct:
+          x-validate:
+        transactions_count:
+          type: integer
+          x-struct:
+          x-validate:
+      required:
+        - number
+        - transactions_count
+        - l1_timestamp
+        - l1_transaction_hashes
+        - batch_data_container
+        - l2_end_block_number
+        - l2_start_block_number
+        - blobs
+      title: OptimismBatchInCelestia
+      type: object
+      x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.Optimism.Batch
+      x-validate:
+    OptimismBatchDataContainer:
+      description: Designates where the batch data is stored.
+      enum:
+        - in_blob4844
+        - in_celestia
+        - in_eigenda
+        - in_alt_da
+        - in_calldata
+      nullable: false
+      title: OptimismBatchDataContainer
+      type: string
+      x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.Optimism.Batch.DataContainer
+      x-validate:
     EthCallResult:
       description: Hex-encoded return data from the executed call. May be `0x` if the call returned no data.
       pattern: ^0x([A-Fa-f0-9]*)$
       title: EthCallResult
       type: string
       x-struct: Elixir.BlockScoutWeb.Schemas.API.Legacy.EthRpc.EthCallResult
+      x-validate:
+    OptimismWithdrawal:
+      additionalProperties: false
+      description: Optimism Withdrawal struct.
+      properties:
+        challenge_period_end:
+          $ref: '#/components/schemas/TimestampNullable'
+        from:
+          $ref: '#/components/schemas/AddressNullable'
+        l1_transaction_hash:
+          $ref: '#/components/schemas/FullHashNullable'
+        l2_timestamp:
+          $ref: '#/components/schemas/TimestampNullable'
+        l2_transaction_hash:
+          $ref: '#/components/schemas/FullHash'
+        msg_data:
+          $ref: '#/components/schemas/HexDataNullable'
+        msg_gas_limit:
+          $ref: '#/components/schemas/IntegerStringNullable'
+        msg_nonce:
+          type: integer
+          x-struct:
+          x-validate:
+        msg_nonce_raw:
+          $ref: '#/components/schemas/IntegerString'
+        msg_nonce_version:
+          type: integer
+          x-struct:
+          x-validate:
+        msg_sender_address_hash:
+          $ref: '#/components/schemas/FullHashNullable'
+        msg_target_address_hash:
+          $ref: '#/components/schemas/FullHashNullable'
+        msg_value:
+          $ref: '#/components/schemas/IntegerStringNullable'
+        portal_contract_address_hash:
+          $ref: '#/components/schemas/AddressHashNullable'
+        status:
+          enum:
+            - Waiting for state root
+            - Ready to prove
+            - Waiting a game to resolve
+            - In challenge period
+            - Ready for relay
+            - Proven
+            - Relayed
+          nullable: false
+          type: string
+          x-struct:
+          x-validate:
+      required:
+        - challenge_period_end
+        - from
+        - l1_transaction_hash
+        - l2_timestamp
+        - l2_transaction_hash
+        - msg_data
+        - msg_gas_limit
+        - msg_nonce
+        - msg_nonce_raw
+        - msg_nonce_version
+        - msg_sender_address_hash
+        - msg_target_address_hash
+        - msg_value
+        - portal_contract_address_hash
+        - status
+      title: OptimismWithdrawal
+      type: object
+      x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.Optimism.Withdrawal
       x-validate:
     TokenInstanceInList:
       additionalProperties: false
@@ -4118,6 +5108,49 @@ components:
       type: object
       x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.General.DecodedInput
       x-validate:
+    UserOperationRawV06:
+      additionalProperties: false
+      description: Raw user operation data v0.6.
+      nullable: false
+      properties:
+        call_data:
+          $ref: '#/components/schemas/HexData'
+        call_gas_limit:
+          $ref: '#/components/schemas/IntegerString'
+        init_code:
+          $ref: '#/components/schemas/HexData'
+        max_fee_per_gas:
+          $ref: '#/components/schemas/IntegerString'
+        max_priority_fee_per_gas:
+          $ref: '#/components/schemas/IntegerString'
+        nonce:
+          $ref: '#/components/schemas/IntegerString'
+        paymaster_and_data:
+          $ref: '#/components/schemas/HexData'
+        pre_verification_gas:
+          $ref: '#/components/schemas/IntegerString'
+        sender:
+          $ref: '#/components/schemas/AddressHash'
+        signature:
+          $ref: '#/components/schemas/HexData'
+        verification_gas_limit:
+          $ref: '#/components/schemas/IntegerString'
+      required:
+        - sender
+        - nonce
+        - init_code
+        - call_data
+        - call_gas_limit
+        - verification_gas_limit
+        - pre_verification_gas
+        - max_fee_per_gas
+        - max_priority_fee_per_gas
+        - paymaster_and_data
+        - signature
+      title: UserOperationRawV06
+      type: object
+      x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.Proxy.AccountAbstraction.UserOperation.RawV06
+      x-validate:
     HexQuantity:
       pattern: ^0x([A-Fa-f0-9]+)$
       title: HexQuantity
@@ -4141,26 +5174,6 @@ components:
       title: AddressHashNullable
       type: string
       x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.General.AddressHashNullable
-      x-validate:
-    Factory:
-      additionalProperties: false
-      description: Factory struct.
-      nullable: false
-      properties:
-        address:
-          $ref: '#/components/schemas/Address'
-        total_accounts:
-          minimum: 0
-          nullable: false
-          type: integer
-          x-struct:
-          x-validate:
-      required:
-        - address
-        - total_accounts
-      title: Factory
-      type: object
-      x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.Proxy.AccountAbstraction.Factory
       x-validate:
     InternalTransaction:
       additionalProperties: false
@@ -4214,6 +5227,17 @@ components:
           x-validate:
         type:
           description: Type of the internal transaction (call, create, etc.)
+          enum:
+            - call
+            - callcode
+            - delegatecall
+            - staticcall
+            - create
+            - create2
+            - reward
+            - selfdestruct
+            - stop
+            - invalid
           nullable: false
           type: string
           x-struct:
@@ -4281,6 +5305,65 @@ components:
       title: TimestampNullable
       type: string
       x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.General.TimestampNullable
+      x-validate:
+    OptimismBlobCelestia:
+      additionalProperties: false
+      properties:
+        commitment:
+          description: Celestia blob commitment.
+          nullable: false
+          pattern: ^0x([A-Fa-f0-9]*)$
+          type: string
+          x-struct:
+          x-validate:
+        height:
+          description: Celestia block height.
+          nullable: false
+          type: integer
+          x-struct:
+          x-validate:
+        l1_timestamp:
+          $ref: '#/components/schemas/Timestamp'
+        l1_transaction_hash:
+          $ref: '#/components/schemas/FullHash'
+        namespace:
+          description: Celestia blob namespace.
+          nullable: false
+          pattern: ^0x([A-Fa-f0-9]*)$
+          type: string
+          x-struct:
+          x-validate:
+      required:
+        - height
+        - namespace
+        - commitment
+        - l1_transaction_hash
+        - l1_timestamp
+      title: OptimismBlobCelestia
+      type: object
+      x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.Optimism.Batch.Blob.Celestia
+      x-validate:
+    OptimismBlobAltDa:
+      additionalProperties: false
+      properties:
+        commitment:
+          description: Alt-DA blob commitment.
+          nullable: false
+          pattern: ^0x([A-Fa-f0-9]*)$
+          type: string
+          x-struct:
+          x-validate:
+        l1_timestamp:
+          $ref: '#/components/schemas/Timestamp'
+        l1_transaction_hash:
+          $ref: '#/components/schemas/FullHash'
+      required:
+        - commitment
+        - l1_transaction_hash
+        - l1_timestamp
+      title: OptimismBlobAltDa
+      type: object
+      x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.Optimism.Batch.Blob.AltDa
       x-validate:
     TokenResponse:
       additionalProperties: false
@@ -4411,6 +5494,111 @@ components:
       type: object
       x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.Shibarium.Deposit
       x-validate:
+    StatsTransactionsChartDataPoint:
+      additionalProperties: false
+      properties:
+        date:
+          description: Day the data point refers to.
+          format: date
+          nullable: false
+          type: string
+          x-struct:
+          x-validate:
+        transactions_count:
+          description: Number of transactions on that day.
+          minimum: 0
+          nullable: true
+          type: integer
+          x-struct:
+          x-validate:
+      required:
+        - date
+        - transactions_count
+      title: StatsTransactionsChartDataPoint
+      type: object
+      x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.Stats.TransactionsChartDataPoint
+      x-validate:
+    AccountAbstractionFactory:
+      additionalProperties: false
+      description: Factory struct.
+      nullable: false
+      properties:
+        address:
+          $ref: '#/components/schemas/Address'
+        total_accounts:
+          minimum: 0
+          nullable: false
+          type: integer
+          x-struct:
+          x-validate:
+      required:
+        - address
+        - total_accounts
+      title: AccountAbstractionFactory
+      type: object
+      x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.Proxy.AccountAbstraction.Factory
+      x-validate:
+    CeloEpochAggregatedElectionRewards:
+      additionalProperties: false
+      properties:
+        delegated_payment:
+          allOf:
+            - $ref: '#/components/schemas/CeloEpochAggregatedElectionReward'
+          nullable: true
+          x-struct:
+          x-validate:
+        group:
+          allOf:
+            - $ref: '#/components/schemas/CeloEpochAggregatedElectionReward'
+          nullable: true
+          x-struct:
+          x-validate:
+        validator:
+          allOf:
+            - $ref: '#/components/schemas/CeloEpochAggregatedElectionReward'
+          nullable: true
+          x-struct:
+          x-validate:
+        voter:
+          allOf:
+            - $ref: '#/components/schemas/CeloEpochAggregatedElectionReward'
+          nullable: true
+          x-struct:
+          x-validate:
+      required:
+        - voter
+        - validator
+        - group
+        - delegated_payment
+      title: CeloEpochAggregatedElectionRewards
+      type: object
+      x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.Celo.Epoch.AggregatedElectionRewards
+      x-validate:
+    StatsMarketChartDataPoint:
+      additionalProperties: false
+      properties:
+        closing_price:
+          $ref: '#/components/schemas/FloatStringNullable'
+        date:
+          description: Day the data point refers to.
+          format: date
+          nullable: false
+          type: string
+          x-struct:
+          x-validate:
+        market_cap:
+          $ref: '#/components/schemas/FloatStringNullable'
+        tvl:
+          $ref: '#/components/schemas/FloatStringNullable'
+      required:
+        - date
+        - closing_price
+        - market_cap
+        - tvl
+      title: StatsMarketChartDataPoint
+      type: object
+      x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.Stats.MarketChartDataPoint
+      x-validate:
     AdvancedFilterCsvExportAccepted:
       additionalProperties: false
       description: Body returned when an asynchronous CSV export job has been queued. Poll `/api/v2/csv-exports/{request_id}` with the returned `request_id` to check status.
@@ -4515,8 +5703,7 @@ components:
           anyOf:
             - $ref: '#/components/schemas/TotalERC721'
             - $ref: '#/components/schemas/TotalERC1155'
-            - $ref: '#/components/schemas/TotalERC7984'
-            - $ref: '#/components/schemas/Total'
+            - $ref: '#/components/schemas/TokenTransferTotalFungible'
           description: Token transfer amount (or token id for NFTs). Populated only for token-transfer items; `null` otherwise.
           nullable: true
           x-struct:
@@ -4572,6 +5759,109 @@ components:
       type: object
       x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.AdvancedFilter
       x-validate:
+    SearchResultToken:
+      additionalProperties: false
+      properties:
+        address_hash:
+          $ref: '#/components/schemas/AddressHash'
+        address_url:
+          nullable: false
+          type: string
+          x-struct:
+          x-validate:
+        certified:
+          nullable: false
+          type: boolean
+          x-struct:
+          x-validate:
+        circulating_market_cap:
+          $ref: '#/components/schemas/FloatStringNullable'
+        exchange_rate:
+          $ref: '#/components/schemas/FloatStringNullable'
+        icon_url:
+          nullable: true
+          type: string
+          x-struct:
+          x-validate:
+        is_smart_contract_address:
+          nullable: true
+          type: boolean
+          x-struct:
+          x-validate:
+        is_smart_contract_verified:
+          nullable: true
+          type: boolean
+          x-struct:
+          x-validate:
+        is_verified_via_admin_panel:
+          nullable: true
+          type: boolean
+          x-struct:
+          x-validate:
+        name:
+          nullable: true
+          type: string
+          x-struct:
+          x-validate:
+        priority:
+          nullable: false
+          type: integer
+          x-struct:
+          x-validate:
+        reputation:
+          enum:
+            - ok
+            - scam
+          nullable: false
+          type: string
+          x-struct:
+          x-validate:
+        symbol:
+          nullable: true
+          type: string
+          x-struct:
+          x-validate:
+        token_type:
+          nullable: true
+          type: string
+          x-struct:
+          x-validate:
+        token_url:
+          nullable: false
+          type: string
+          x-struct:
+          x-validate:
+        total_supply:
+          $ref: '#/components/schemas/IntegerStringNullable'
+        type:
+          enum:
+            - token
+          nullable: false
+          type: string
+          x-struct:
+          x-validate:
+      required:
+        - type
+        - name
+        - symbol
+        - address_hash
+        - token_url
+        - address_url
+        - icon_url
+        - token_type
+        - is_smart_contract_verified
+        - exchange_rate
+        - total_supply
+        - circulating_market_cap
+        - is_verified_via_admin_panel
+        - certified
+        - priority
+        - reputation
+        - is_smart_contract_address
+      title: SearchResultToken
+      type: object
+      x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.Search.Result.Token
+      x-validate:
     StateChange:
       additionalProperties: false
       properties:
@@ -4613,6 +5903,93 @@ components:
       title: StateChange
       type: object
       x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.Transaction.StateChange
+      x-validate:
+    AccountAbstractionPaymaster:
+      additionalProperties: false
+      description: Paymaster struct.
+      nullable: false
+      properties:
+        address:
+          $ref: '#/components/schemas/Address'
+        total_ops:
+          minimum: 0
+          nullable: false
+          type: integer
+          x-struct:
+          x-validate:
+      required:
+        - address
+        - total_ops
+      title: AccountAbstractionPaymaster
+      type: object
+      x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.Proxy.AccountAbstraction.Paymaster
+      x-validate:
+    SearchResultEnsDomain:
+      additionalProperties: false
+      properties:
+        address_hash:
+          $ref: '#/components/schemas/AddressHashNullable'
+        certified:
+          nullable: false
+          type: boolean
+          x-struct:
+          x-validate:
+        ens_info:
+          $ref: '#/components/schemas/SearchResultEnsInfo'
+        is_smart_contract_address:
+          nullable: true
+          type: boolean
+          x-struct:
+          x-validate:
+        is_smart_contract_verified:
+          nullable: true
+          type: boolean
+          x-struct:
+          x-validate:
+        name:
+          nullable: true
+          type: string
+          x-struct:
+          x-validate:
+        priority:
+          nullable: false
+          type: integer
+          x-struct:
+          x-validate:
+        reputation:
+          enum:
+            - ok
+            - scam
+          nullable: false
+          type: string
+          x-struct:
+          x-validate:
+        type:
+          enum:
+            - ens_domain
+          nullable: false
+          type: string
+          x-struct:
+          x-validate:
+        url:
+          nullable: true
+          type: string
+          x-struct:
+          x-validate:
+      required:
+        - type
+        - name
+        - address_hash
+        - url
+        - is_smart_contract_verified
+        - ens_info
+        - certified
+        - priority
+        - reputation
+        - is_smart_contract_address
+      title: SearchResultEnsDomain
+      type: object
+      x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.Search.Result.EnsDomain
       x-validate:
     AdvancedFilterSearchParams:
       additionalProperties: false
@@ -4746,8 +6123,7 @@ components:
           anyOf:
             - $ref: '#/components/schemas/TotalERC721'
             - $ref: '#/components/schemas/TotalERC1155'
-            - $ref: '#/components/schemas/TotalERC7984'
-            - $ref: '#/components/schemas/Total'
+            - $ref: '#/components/schemas/TokenTransferTotalFungible'
           nullable: true
           x-struct:
           x-validate:
@@ -4837,6 +6213,20 @@ components:
           x-validate:
         conflicting_implementations:
           items:
+            additionalProperties: false
+            properties:
+              implementations:
+                items:
+                  $ref: '#/components/schemas/Implementation'
+                nullable: false
+                type: array
+                x-struct:
+                x-validate:
+              proxy_type:
+                $ref: '#/components/schemas/ProxyType'
+            required:
+              - proxy_type
+              - implementations
             type: object
             x-struct:
             x-validate:
@@ -4909,6 +6299,21 @@ components:
           x-struct:
           x-validate:
         license_type:
+          enum:
+            - none
+            - unlicense
+            - mit
+            - gnu_gpl_v2
+            - gnu_gpl_v3
+            - gnu_lgpl_v2_1
+            - gnu_lgpl_v3
+            - bsd_2_clause
+            - bsd_3_clause
+            - mpl_2_0
+            - osl_3_0
+            - apache_2_0
+            - gnu_agpl_v3
+            - bsl_1_1
           nullable: true
           type: string
           x-struct:
@@ -4930,6 +6335,7 @@ components:
           x-validate:
         external_libraries:
           items:
+            additionalProperties: false
             properties:
               address_hash:
                 $ref: '#/components/schemas/AddressHash'
@@ -4938,6 +6344,9 @@ components:
                 type: string
                 x-struct:
                 x-validate:
+            required:
+              - name
+              - address_hash
             type: object
             x-struct:
             x-validate:
@@ -4992,10 +6401,25 @@ components:
           items:
             items:
               anyOf:
-                - type: object
+                - type: string
                   x-struct:
                   x-validate:
-                - type: string
+                - type: array
+                  x-struct:
+                  x-validate:
+                - additionalProperties: true
+                  description: ABI input descriptor
+                  properties:
+                    name:
+                      nullable: true
+                      type: string
+                      x-struct:
+                      x-validate:
+                    type:
+                      type: string
+                      x-struct:
+                      x-validate:
+                  type: object
                   x-struct:
                   x-validate:
               x-struct:
@@ -5018,6 +6442,7 @@ components:
           x-struct:
           x-validate:
         compiler_settings:
+          additionalProperties: true
           nullable: true
           type: object
           x-struct:
@@ -5063,6 +6488,10 @@ components:
           x-struct:
           x-validate:
         creation_status:
+          enum:
+            - success
+            - failed
+            - selfdestructed
           nullable: true
           type: string
           x-struct:
@@ -5107,6 +6536,55 @@ components:
       type: object
       x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.Transaction.Fee
       x-validate:
+    SearchResultEnsInfo:
+      additionalProperties: false
+      properties:
+        address_hash:
+          $ref: '#/components/schemas/AddressHash'
+        expiry_date:
+          description: Domain expiry date.
+          nullable: true
+          type: string
+          x-struct:
+          x-validate:
+        name:
+          description: Resolved ENS domain name.
+          nullable: false
+          type: string
+          x-struct:
+          x-validate:
+        names_count:
+          minimum: 0
+          nullable: false
+          type: integer
+          x-struct:
+          x-validate:
+        protocol:
+          description: ENS protocol metadata.
+          nullable: true
+          x-struct:
+          x-validate:
+        protocol_dapp_logo:
+          nullable: true
+          type: string
+          x-struct:
+          x-validate:
+        protocol_dapp_url:
+          nullable: true
+          type: string
+          x-struct:
+          x-validate:
+      required:
+        - name
+        - expiry_date
+        - names_count
+        - address_hash
+        - protocol_dapp_url
+        - protocol_dapp_logo
+      title: SearchResultEnsInfo
+      type: object
+      x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.Search.Result.EnsInfo
+      x-validate:
     FullHash:
       nullable: false
       pattern: ^0x([A-Fa-f0-9]{64})$
@@ -5149,8 +6627,10 @@ components:
         gas_price_updated_at:
           $ref: '#/components/schemas/TimestampNullable'
         gas_prices:
+          anyOf:
+            - $ref: '#/components/schemas/StatsGasPricesSimple'
+            - $ref: '#/components/schemas/StatsGasPricesDetailed'
           nullable: true
-          type: object
           x-struct:
           x-validate:
         gas_prices_update_in:
@@ -5200,9 +6680,61 @@ components:
           $ref: '#/components/schemas/IntegerString'
         tvl:
           $ref: '#/components/schemas/IntegerStringNullable'
+      required:
+        - average_block_time
+        - coin_image
+        - coin_price
+        - coin_price_change_percentage
+        - gas_price_updated_at
+        - gas_prices
+        - gas_prices_update_in
+        - gas_used_today
+        - market_cap
+        - network_utilization_percentage
+        - secondary_coin_image
+        - secondary_coin_price
+        - static_gas_price
+        - total_addresses
+        - total_blocks
+        - total_gas_used
+        - total_transactions
+        - transactions_today
+        - tvl
       title: StatsResponse
       type: object
       x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.Stats.Response
+      x-validate:
+    BeaconWithdrawal:
+      additionalProperties: false
+      properties:
+        amount:
+          $ref: '#/components/schemas/IntegerString'
+        block_number:
+          nullable: false
+          type: integer
+          x-struct:
+          x-validate:
+        index:
+          nullable: false
+          type: integer
+          x-struct:
+          x-validate:
+        receiver:
+          $ref: '#/components/schemas/Address'
+        timestamp:
+          $ref: '#/components/schemas/Timestamp'
+        validator_index:
+          nullable: false
+          type: integer
+          x-struct:
+          x-validate:
+      required:
+        - index
+        - validator_index
+        - amount
+      title: BeaconWithdrawal
+      type: object
+      x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.Withdrawal
       x-validate:
     Token:
       additionalProperties: false
@@ -5529,7 +7061,11 @@ components:
           x-struct:
           x-validate:
         to:
-          $ref: '#/components/schemas/Address'
+          allOf:
+            - $ref: '#/components/schemas/Address'
+          nullable: true
+          x-struct:
+          x-validate:
         status:
           enum:
             - ok
@@ -5648,27 +7184,7 @@ components:
           x-validate:
         op_withdrawals:
           items:
-            additionalProperties: false
-            nullable: false
-            properties:
-              l1_transaction_hash:
-                $ref: '#/components/schemas/FullHashNullable'
-              nonce:
-                type: integer
-                x-struct:
-                x-validate:
-              status:
-                nullable: false
-                type: string
-                x-struct:
-                x-validate:
-            required:
-              - nonce
-              - status
-              - l1_transaction_hash
-            type: object
-            x-struct:
-            x-validate:
+            $ref: '#/components/schemas/OptimismTransactionWithdrawal'
           nullable: false
           type: array
           x-struct:
@@ -5773,6 +7289,101 @@ components:
       type: object
       x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.Transaction
       x-validate:
+    OptimismInteropMessage:
+      additionalProperties: false
+      description: Interop message included in an Optimism transaction
+      example:
+        nonce: 0
+        payload: '0x30787849009c24f10a91a327a9f2ed94ebc49ee9'
+        relay_chain:
+        relay_transaction_hash: '0x0000000000000000000000000000000000000000000000000000000000000002'
+        sender_address_hash: '0x0000000000000000000000000000000000000003'
+        status: Relayed
+        target_address_hash: '0x0000000000000000000000000000000000000004'
+        unique_id: '0000000100000000'
+      nullable: false
+      properties:
+        init_chain:
+          additionalProperties: false
+          nullable: true
+          properties:
+            chain_id:
+              $ref: '#/components/schemas/IntegerString'
+            chain_logo:
+              nullable: true
+              type: string
+              x-struct:
+              x-validate:
+            chain_name:
+              nullable: true
+              type: string
+              x-struct:
+              x-validate:
+            instance_url:
+              nullable: true
+              type: string
+              x-struct:
+              x-validate:
+          type: object
+          x-struct:
+          x-validate:
+        init_transaction_hash:
+          $ref: '#/components/schemas/FullHash'
+        nonce:
+          minimum: 0
+          type: integer
+          x-struct:
+          x-validate:
+        payload:
+          $ref: '#/components/schemas/HexData'
+        relay_chain:
+          additionalProperties: false
+          nullable: true
+          properties:
+            chain_id:
+              $ref: '#/components/schemas/IntegerString'
+            chain_logo:
+              nullable: true
+              type: string
+              x-struct:
+              x-validate:
+            chain_name:
+              nullable: true
+              type: string
+              x-struct:
+              x-validate:
+            instance_url:
+              nullable: true
+              type: string
+              x-struct:
+              x-validate:
+          type: object
+          x-struct:
+          x-validate:
+        relay_transaction_hash:
+          $ref: '#/components/schemas/FullHash'
+        sender_address_hash:
+          $ref: '#/components/schemas/AddressHash'
+        status:
+          enum:
+            - Sent
+            - Relayed
+            - Failed
+          type: string
+          x-struct:
+          x-validate:
+        target_address_hash:
+          $ref: '#/components/schemas/AddressHash'
+        unique_id:
+          type: string
+          x-struct:
+          x-validate:
+      required:
+        - payload
+      title: OptimismInteropMessage
+      type: object
+      x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.Optimism.InteropMessage
+      x-validate:
     SignedAuthorization:
       additionalProperties: false
       properties:
@@ -5819,6 +7430,21 @@ components:
       type: object
       x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.SignedAuthorization
       x-validate:
+    SmartContractCounters:
+      description: Smart contracts counters
+      properties:
+        new_smart_contracts_24h:
+          $ref: '#/components/schemas/IntegerString'
+        new_verified_smart_contracts_24h:
+          $ref: '#/components/schemas/IntegerString'
+        smart_contracts:
+          $ref: '#/components/schemas/IntegerString'
+        verified_smart_contracts:
+          $ref: '#/components/schemas/IntegerString'
+      title: SmartContractCounters
+      type: object
+      x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.SmartContract.Counters
+      x-validate:
     StabilityValidator:
       additionalProperties: false
       description: Validator on the Stability chain. Stability validators are the addresses authorized to produce blocks; each entry tracks the validator's operational state and the number of blocks it has produced so far.
@@ -5849,116 +7475,6 @@ components:
       title: StabilityValidator
       type: object
       x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.Stability.Validator
-      x-validate:
-    Deposit:
-      additionalProperties: false
-      description: Optimism Deposit struct.
-      properties:
-        l1_block_number:
-          type: integer
-          x-struct:
-          x-validate:
-        l1_block_timestamp:
-          $ref: '#/components/schemas/Timestamp'
-        l1_transaction_hash:
-          $ref: '#/components/schemas/FullHash'
-        l1_transaction_origin:
-          $ref: '#/components/schemas/AddressHash'
-        l2_transaction_gas_limit:
-          $ref: '#/components/schemas/IntegerString'
-        l2_transaction_hash:
-          $ref: '#/components/schemas/FullHash'
-      required:
-        - l1_block_number
-        - l1_block_timestamp
-        - l1_transaction_hash
-        - l1_transaction_origin
-        - l2_transaction_gas_limit
-        - l2_transaction_hash
-      title: Deposit
-      type: object
-      x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.Optimism.Deposit
-      x-validate:
-    Response:
-      properties:
-        expires_at:
-          format: date-time
-          nullable: true
-          type: string
-          x-struct:
-          x-validate:
-        file_id:
-          nullable: true
-          type: string
-          x-struct:
-          x-validate:
-        status:
-          enum:
-            - pending
-            - completed
-            - failed
-          nullable: false
-          type: string
-          x-struct:
-          x-validate:
-      title: Response
-      type: object
-      x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.CSVExport.Response
-      x-validate:
-    Epoch:
-      additionalProperties: false
-      description: Celo epoch summary.
-      properties:
-        distribution:
-          additionalProperties: true
-          nullable: true
-          type: object
-          x-struct:
-          x-validate:
-        end_block_number:
-          minimum: 0
-          nullable: false
-          type: integer
-          x-struct:
-          x-validate:
-        is_finalized:
-          nullable: false
-          type: boolean
-          x-struct:
-          x-validate:
-        number:
-          minimum: 0
-          nullable: false
-          type: integer
-          x-struct:
-          x-validate:
-        start_block_number:
-          minimum: 0
-          nullable: false
-          type: integer
-          x-struct:
-          x-validate:
-        timestamp:
-          $ref: '#/components/schemas/TimestampNullable'
-        type:
-          enum:
-            - L1
-            - L2
-          nullable: false
-          type: string
-          x-struct:
-          x-validate:
-      required:
-        - number
-        - type
-        - start_block_number
-        - end_block_number
-        - timestamp
-        - is_finalized
-        - distribution
-      title: Epoch
-      type: object
-      x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.Celo.Epoch
       x-validate:
     TransactionResponse:
       additionalProperties: false
@@ -6060,7 +7576,11 @@ components:
           x-struct:
           x-validate:
         to:
-          $ref: '#/components/schemas/Address'
+          allOf:
+            - $ref: '#/components/schemas/Address'
+          nullable: true
+          x-struct:
+          x-validate:
         status:
           enum:
             - ok
@@ -6179,98 +7699,14 @@ components:
           x-validate:
         op_withdrawals:
           items:
-            additionalProperties: false
-            nullable: false
-            properties:
-              l1_transaction_hash:
-                $ref: '#/components/schemas/FullHashNullable'
-              nonce:
-                type: integer
-                x-struct:
-                x-validate:
-              status:
-                nullable: false
-                type: string
-                x-struct:
-                x-validate:
-            required:
-              - nonce
-              - status
-              - l1_transaction_hash
-            type: object
-            x-struct:
-            x-validate:
+            $ref: '#/components/schemas/OptimismTransactionWithdrawal'
           nullable: false
           type: array
           x-struct:
           x-validate:
         op_interop_messages:
           items:
-            description: Interop message included in an Optimism transaction
-            example:
-              nonce: 0
-              payload: '0x30787849009c24f10a91a327a9f2ed94ebc49ee9'
-              relay_chain:
-              relay_transaction_hash: '0x0000000000000000000000000000000000000000000000000000000000000002'
-              sender_address_hash: '0x0000000000000000000000000000000000000003'
-              status: Relayed
-              target_address_hash: '0x0000000000000000000000000000000000000004'
-              unique_id: '0000000100000000'
-            nullable: false
-            properties:
-              nonce:
-                minimum: 0
-                type: integer
-                x-struct:
-                x-validate:
-              payload:
-                $ref: '#/components/schemas/HexData'
-              relay_chain:
-                nullable: true
-                properties:
-                  chain_id:
-                    $ref: '#/components/schemas/IntegerString'
-                  chain_logo:
-                    nullable: true
-                    type: string
-                    x-struct:
-                    x-validate:
-                  chain_name:
-                    nullable: true
-                    type: string
-                    x-struct:
-                    x-validate:
-                  instance_url:
-                    nullable: true
-                    type: string
-                    x-struct:
-                    x-validate:
-                type: object
-                x-struct:
-                x-validate:
-              relay_transaction_hash:
-                $ref: '#/components/schemas/FullHash'
-              sender_address_hash:
-                $ref: '#/components/schemas/AddressHash'
-              status:
-                enum:
-                  - Sent
-                  - Relayed
-                  - Failed
-                type: string
-                x-struct:
-                x-validate:
-              target_address_hash:
-                $ref: '#/components/schemas/AddressHash'
-              unique_id:
-                type: string
-                x-struct:
-                x-validate:
-            required:
-              - payload
-            type: object
-            x-struct:
-            x-validate:
+            $ref: '#/components/schemas/OptimismInteropMessage'
           nullable: false
           type: array
           x-struct:
@@ -6329,83 +7765,52 @@ components:
       type: object
       x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.Transaction
       x-validate:
-    Optimism.Batch.Detailed:
+    UserOperationRawV07ToV09:
+      additionalProperties: false
+      description: Raw user operation data v0.7-v0.9.
+      nullable: false
+      properties:
+        account_gas_limits:
+          $ref: '#/components/schemas/FullHash'
+        call_data:
+          $ref: '#/components/schemas/HexData'
+        gas_fees:
+          $ref: '#/components/schemas/FullHash'
+        init_code:
+          $ref: '#/components/schemas/HexData'
+        nonce:
+          $ref: '#/components/schemas/IntegerString'
+        paymaster_and_data:
+          $ref: '#/components/schemas/HexData'
+        pre_verification_gas:
+          $ref: '#/components/schemas/IntegerString'
+        sender:
+          $ref: '#/components/schemas/AddressHash'
+        signature:
+          $ref: '#/components/schemas/HexData'
+      required:
+        - sender
+        - nonce
+        - init_code
+        - call_data
+        - account_gas_limits
+        - pre_verification_gas
+        - gas_fees
+        - paymaster_and_data
+        - signature
+      title: UserOperationRawV07ToV09
+      type: object
+      x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.Proxy.AccountAbstraction.UserOperation.RawV07ToV09
+      x-validate:
+    OptimismBatchInCalldata:
       additionalProperties: false
       description: Optimism Batch struct.
-      nullable: true
       properties:
         batch_data_container:
           enum:
-            - in_blob4844
-            - in_celestia
-            - in_eigenda
-            - in_alt_da
             - in_calldata
-          nullable: true
-          type: string
-          x-struct:
-          x-validate:
-        blobs:
-          items:
-            additionalProperties: false
-            description: Blob struct bound with Optimism batch.
-            properties:
-              cert:
-                description: EigenDA cert raw bytes.
-                nullable: false
-                pattern: ^0x([A-Fa-f0-9]*)$
-                type: string
-                x-struct:
-                x-validate:
-              commitment:
-                description: Celestia or Alt-DA blob commitment.
-                nullable: false
-                pattern: ^0x([A-Fa-f0-9]*)$
-                type: string
-                x-struct:
-                x-validate:
-              hash:
-                description: EIP-4844 blob hash.
-                nullable: false
-                pattern: ^0x([A-Fa-f0-9]*)$
-                type: string
-                x-struct:
-                x-validate:
-              height:
-                description: Celestia block height.
-                nullable: false
-                type: integer
-                x-struct:
-                x-validate:
-              l1_timestamp:
-                description: L1 transaction timestamp bound with the blob.
-                format: date-time
-                nullable: false
-                type: string
-                x-struct:
-                x-validate:
-              l1_transaction_hash:
-                description: L1 transaction hash bound with the blob.
-                nullable: false
-                pattern: ^0x([A-Fa-f0-9]{64})$
-                type: string
-                x-struct:
-                x-validate:
-              namespace:
-                description: Celestia blob namespace.
-                nullable: false
-                pattern: ^0x([A-Fa-f0-9]*)$
-                type: string
-                x-struct:
-                x-validate:
-            required:
-              - l1_transaction_hash
-              - l1_timestamp
-            type: object
-            x-struct:
-            x-validate:
           nullable: false
-          type: array
+          type: string
           x-struct:
           x-validate:
         l1_timestamp:
@@ -6441,72 +7846,103 @@ components:
         - batch_data_container
         - l2_end_block_number
         - l2_start_block_number
-      title: Optimism.Batch.Detailed
+      title: OptimismBatchInCalldata
       type: object
       x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.Optimism.Batch
       x-validate:
-    Paymaster:
+    TokenTransferTotalFungible:
       additionalProperties: false
-      description: Paymaster struct.
-      nullable: false
       properties:
-        address:
-          $ref: '#/components/schemas/Address'
-        total_ops:
-          minimum: 0
-          nullable: false
-          type: integer
-          x-struct:
-          x-validate:
+        decimals:
+          $ref: '#/components/schemas/IntegerStringNullable'
+        value:
+          $ref: '#/components/schemas/IntegerStringNullable'
       required:
-        - address
-        - total_ops
-      title: Paymaster
+        - value
+        - decimals
+      title: TokenTransferTotalFungible
       type: object
-      x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.Proxy.AccountAbstraction.Paymaster
+      x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.TokenTransfer.Total
       x-validate:
-    Game:
+    OptimismOutputRoot:
       additionalProperties: false
-      description: Optimism Dispute Game struct.
+      description: Optimism Output Root struct.
       properties:
-        contract_address_hash:
-          $ref: '#/components/schemas/AddressHash'
-        created_at:
+        l1_block_number:
+          type: integer
+          x-struct:
+          x-validate:
+        l1_timestamp:
           $ref: '#/components/schemas/Timestamp'
-        game_type:
-          type: integer
-          x-struct:
-          x-validate:
-        index:
-          type: integer
-          x-struct:
-          x-validate:
+        l1_transaction_hash:
+          $ref: '#/components/schemas/FullHash'
         l2_block_number:
           type: integer
           x-struct:
           x-validate:
-        resolved_at:
-          $ref: '#/components/schemas/TimestampNullable'
-        status:
-          enum:
-            - In progress
-            - Challenger wins
-            - Defender wins
+        l2_output_index:
+          type: integer
+          x-struct:
+          x-validate:
+        output_root:
+          $ref: '#/components/schemas/FullHash'
+      required:
+        - l1_block_number
+        - l1_timestamp
+        - l1_transaction_hash
+        - l2_block_number
+        - l2_output_index
+        - output_root
+      title: OptimismOutputRoot
+      type: object
+      x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.Optimism.OutputRoot
+      x-validate:
+    OptimismBatch:
+      additionalProperties: false
+      description: Optimism Batch struct.
+      properties:
+        batch_data_container:
+          allOf:
+            - $ref: '#/components/schemas/OptimismBatchDataContainer'
+          nullable: true
+          x-struct:
+          x-validate:
+        l1_timestamp:
+          $ref: '#/components/schemas/Timestamp'
+        l1_transaction_hashes:
+          items:
+            $ref: '#/components/schemas/FullHash'
           nullable: false
-          type: string
+          type: array
+          x-struct:
+          x-validate:
+        l2_end_block_number:
+          type: integer
+          x-struct:
+          x-validate:
+        l2_start_block_number:
+          type: integer
+          x-struct:
+          x-validate:
+        number:
+          type: integer
+          x-struct:
+          x-validate:
+        transactions_count:
+          type: integer
           x-struct:
           x-validate:
       required:
-        - contract_address_hash
-        - created_at
-        - game_type
-        - index
-        - l2_block_number
-        - resolved_at
-        - status
-      title: Game
+        - number
+        - transactions_count
+        - l1_timestamp
+        - l1_transaction_hashes
+        - batch_data_container
+        - l2_end_block_number
+        - l2_start_block_number
+      title: OptimismBatch
       type: object
-      x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.Optimism.Game
+      x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.Optimism.Batch
       x-validate:
     Timestamp:
       format: date-time
@@ -6621,7 +8057,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Optimism.Batch.Detailed'
+                $ref: '#/components/schemas/OptimismBatchDetailed'
           description: Batch detailed info.
         '404':
           content:
@@ -6946,7 +8382,7 @@ paths:
                 properties:
                   items:
                     items:
-                      $ref: '#/components/schemas/Withdrawal'
+                      $ref: '#/components/schemas/BeaconWithdrawal'
                     nullable: false
                     type: array
                     x-struct:
@@ -7030,7 +8466,7 @@ paths:
                 properties:
                   items:
                     items:
-                      $ref: '#/components/schemas/Withdrawal'
+                      $ref: '#/components/schemas/BeaconWithdrawal'
                     nullable: false
                     type: array
                     x-struct:
@@ -7612,7 +9048,7 @@ paths:
                 properties:
                   items:
                     items:
-                      $ref: '#/components/schemas/Game'
+                      $ref: '#/components/schemas/OptimismGame'
                     nullable: false
                     type: array
                     x-struct:
@@ -7787,7 +9223,7 @@ paths:
                 properties:
                   items:
                     items:
-                      $ref: '#/components/schemas/Withdrawal'
+                      $ref: '#/components/schemas/BeaconWithdrawal'
                     nullable: false
                     type: array
                     x-struct:
@@ -8399,7 +9835,7 @@ paths:
                 properties:
                   items:
                     items:
-                      $ref: '#/components/schemas/Paymaster'
+                      $ref: '#/components/schemas/AccountAbstractionPaymaster'
                     nullable: false
                     type: array
                     x-struct:
@@ -8765,7 +10201,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Response'
+                $ref: '#/components/schemas/CSVExportResponse'
           description: Status of CSV export.
         '404':
           content:
@@ -8806,12 +10242,13 @@ paths:
                 properties:
                   chart_data:
                     items:
-                      type: object
-                      x-struct:
-                      x-validate:
+                      $ref: '#/components/schemas/StatsSecondaryCoinMarketChartDataPoint'
+                    nullable: false
                     type: array
                     x-struct:
                     x-validate:
+                required:
+                  - chart_data
                 type: object
                 x-struct:
                 x-validate:
@@ -8852,7 +10289,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Counters'
+                $ref: '#/components/schemas/SmartContractCounters'
           description: Count statistics for smart contracts.
         '422':
           content:
@@ -9029,7 +10466,7 @@ paths:
                 properties:
                   items:
                     items:
-                      $ref: '#/components/schemas/Factory'
+                      $ref: '#/components/schemas/AccountAbstractionFactory'
                     nullable: false
                     type: array
                     x-struct:
@@ -9573,7 +11010,7 @@ paths:
                 properties:
                   items:
                     items:
-                      $ref: '#/components/schemas/TransactionResponse'
+                      $ref: '#/components/schemas/Transaction'
                     nullable: false
                     type: array
                     x-struct:
@@ -9637,7 +11074,7 @@ paths:
             application/json:
               schema:
                 items:
-                  $ref: '#/components/schemas/TransactionResponse'
+                  $ref: '#/components/schemas/Transaction'
                 nullable: false
                 type: array
                 x-struct:
@@ -10001,7 +11438,7 @@ paths:
             application/json:
               schema:
                 items:
-                  $ref: '#/components/schemas/MainPage'
+                  $ref: '#/components/schemas/OptimismDepositMainPage'
                 nullable: false
                 type: array
                 x-struct:
@@ -10330,7 +11767,7 @@ paths:
                 properties:
                   items:
                     items:
-                      $ref: '#/components/schemas/Bundle'
+                      $ref: '#/components/schemas/AccountAbstractionBundle'
                     nullable: false
                     type: array
                     x-struct:
@@ -10769,7 +12206,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Factory'
+                $ref: '#/components/schemas/AccountAbstractionFactory'
           description: Factory
         '400':
           content:
@@ -11936,12 +13373,13 @@ paths:
                 properties:
                   chart_data:
                     items:
-                      type: object
-                      x-struct:
-                      x-validate:
+                      $ref: '#/components/schemas/StatsTransactionsChartDataPoint'
+                    nullable: false
                     type: array
                     x-struct:
                     x-validate:
+                required:
+                  - chart_data
                 type: object
                 x-struct:
                 x-validate:
@@ -12266,7 +13704,7 @@ paths:
                 properties:
                   items:
                     items:
-                      $ref: '#/components/schemas/TransactionResponse'
+                      $ref: '#/components/schemas/Transaction'
                     nullable: false
                     type: array
                     x-struct:
@@ -13219,7 +14657,7 @@ paths:
                 properties:
                   items:
                     items:
-                      $ref: '#/components/schemas/OutputRoot'
+                      $ref: '#/components/schemas/OptimismOutputRoot'
                     nullable: false
                     type: array
                     x-struct:
@@ -13313,7 +14751,7 @@ paths:
                 properties:
                   items:
                     items:
-                      $ref: '#/components/schemas/Account'
+                      $ref: '#/components/schemas/AccountAbstractionAccount'
                     nullable: false
                     type: array
                     x-struct:
@@ -13484,7 +14922,7 @@ paths:
                 properties:
                   items:
                     items:
-                      $ref: '#/components/schemas/Withdrawal'
+                      $ref: '#/components/schemas/OptimismWithdrawal'
                     nullable: false
                     type: array
                     x-struct:
@@ -13863,8 +15301,8 @@ paths:
   /api/v1/search:
     get:
       callbacks: {}
-      description: Performs a unified search across multiple blockchain entity types including tokens, addresses, contracts, blocks, transactions and other resources.
-      operationId: BlockScoutWeb.API.V2.SearchController.search
+      description: Backward-compatible alias of `GET /api/v2/search` served at `GET /api/v1/search`. Behaves identically; kept for legacy clients.
+      operationId: BlockScoutWeb.API.V2.SearchController.search_v1_compatibility
       parameters:
         - description: Search query filter
           in: query
@@ -13994,7 +15432,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/JsonErrorResponse'
           description: Unprocessable Entity
-      summary: Search for tokens, addresses, contracts, blocks, or transactions by identifier
+      summary: Search (legacy v1 alias)
       tags:
         - search
   /api/v2/proxy/account-abstraction/bundlers:
@@ -14056,7 +15494,7 @@ paths:
                 properties:
                   items:
                     items:
-                      $ref: '#/components/schemas/Bundler'
+                      $ref: '#/components/schemas/AccountAbstractionBundler'
                     nullable: false
                     type: array
                     x-struct:
@@ -14170,9 +15608,7 @@ paths:
             application/json:
               schema:
                 items:
-                  type: object
-                  x-struct:
-                  x-validate:
+                  $ref: '#/components/schemas/SearchResultItem'
                 nullable: false
                 type: array
                 x-struct:
@@ -14633,7 +16069,7 @@ paths:
                 properties:
                   items:
                     items:
-                      $ref: '#/components/schemas/Epoch'
+                      $ref: '#/components/schemas/CeloEpoch'
                     nullable: false
                     type: array
                     x-struct:
@@ -15184,7 +16620,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Optimism.Batch.Detailed'
+                $ref: '#/components/schemas/OptimismBatchDetailed'
           description: Batch detailed info.
         '404':
           content:
@@ -15651,7 +17087,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Paymaster'
+                $ref: '#/components/schemas/AccountAbstractionPaymaster'
           description: Paymaster
         '400':
           content:
@@ -16002,7 +17438,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Counter'
+                $ref: '#/components/schemas/BeaconWithdrawalCounter'
           description: Withdrawals counters.
         '422':
           content:
@@ -16274,7 +17710,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Account'
+                $ref: '#/components/schemas/AccountAbstractionAccount'
           description: Account
         '400':
           content:
@@ -16388,11 +17824,11 @@ paths:
                   type:
                     enum:
                       - address
+                      - ens_domain
                       - block
                       - transaction
                       - user_operation
                       - blob
-                      - ens_domain
                     nullable: true
                     type: string
                     x-struct:
@@ -16528,7 +17964,7 @@ paths:
                 properties:
                   items:
                     items:
-                      $ref: '#/components/schemas/Deposit'
+                      $ref: '#/components/schemas/OptimismDeposit'
                     nullable: false
                     type: array
                     x-struct:
@@ -16777,12 +18213,14 @@ paths:
                     x-validate:
                   chart_data:
                     items:
-                      type: object
-                      x-struct:
-                      x-validate:
+                      $ref: '#/components/schemas/StatsMarketChartDataPoint'
+                    nullable: false
                     type: array
                     x-struct:
                     x-validate:
+                required:
+                  - chart_data
+                  - available_supply
                 type: object
                 x-struct:
                 x-validate:
@@ -17215,7 +18653,7 @@ paths:
             application/json:
               schema:
                 items:
-                  $ref: '#/components/schemas/TransactionResponse'
+                  $ref: '#/components/schemas/Transaction'
                 nullable: false
                 type: array
                 x-struct:
@@ -17399,7 +18837,7 @@ paths:
                 properties:
                   items:
                     items:
-                      $ref: '#/components/schemas/TransactionResponse'
+                      $ref: '#/components/schemas/Transaction'
                     nullable: false
                     type: array
                     x-struct:
@@ -17796,7 +19234,7 @@ paths:
                 properties:
                   items:
                     items:
-                      $ref: '#/components/schemas/Optimism.Batch'
+                      $ref: '#/components/schemas/OptimismBatch'
                     nullable: false
                     type: array
                     x-struct:
@@ -18288,7 +19726,7 @@ paths:
     get:
       callbacks: {}
       description: Performs a unified search across multiple blockchain entity types including tokens, addresses, contracts, blocks, transactions and other resources.
-      operationId: BlockScoutWeb.API.V2.SearchController.search (2)
+      operationId: BlockScoutWeb.API.V2.SearchController.search
       parameters:
         - description: Search query filter
           in: query
@@ -18454,7 +19892,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Bundler'
+                $ref: '#/components/schemas/AccountAbstractionBundler'
           description: Bundler
         '400':
           content:
