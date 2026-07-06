@@ -3726,9 +3726,6 @@ definitions:
       l2_fault_proof_enabled:
         type: boolean
         title: NEXT_PUBLIC_FAULT_PROOF_ENABLED
-      has_mud_framework:
-        type: boolean
-        title: NEXT_PUBLIC_HAS_MUD_FRAMEWORK
       flashblocks_socket_url:
         type: string
         title: NEXT_PUBLIC_FLASHBLOCKS_SOCKET_URL
