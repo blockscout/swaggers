@@ -1959,6 +1959,9 @@ definitions:
         format: uint64
       price_per_token_usd:
         type: string
+      rank:
+        type: integer
+        format: int32
   AutoscoutCreateTeamInviteBody:
     type: object
     properties:
@@ -2266,6 +2269,14 @@ definitions:
         $ref: '#/definitions/v1ApaySubscriptionPlanMode'
       billing_interval:
         $ref: '#/definitions/v1ApayBillingInterval'
+      rank:
+        type: integer
+        format: int32
+        description: |-
+          Tier ordering for upgrade/downgrade classification. Higher rank = higher
+          tier: moving to a higher rank is an upgrade (applied immediately, prorated),
+          a lower rank is a downgrade (applied at the flat-fee period end).
+          Defaults to 0 when deserializing payloads written before the field existed.
     required:
       - id
       - name
@@ -2274,6 +2285,7 @@ definitions:
       - price_per_token_usd
       - mode
       - billing_interval
+      - rank
   v1ApaySubscriptionPlanMode:
     type: string
     enum:
@@ -2628,10 +2640,15 @@ definitions:
         description: |-
           Defaults to BILLING_INTERVAL_MONTH (= 0) when omitted, matching existing plans.
           Must be MONTH for PAY_AS_YOU_GO plans.
+      rank:
+        type: integer
+        format: int32
+        description: Tier ordering used for upgrade/downgrade classification.
     required:
       - name
       - price_per_token_usd
       - mode
+      - rank
   v1CreateApaySubscriptionPlanResponse:
     type: object
     properties:
