@@ -5192,7 +5192,7 @@ info:
   contact:
     email: info@blockscout.com
   title: Blockscout
-  version: 11.2.2
+  version: 11.2.3
 openapi: 3.0.0
 paths:
   /v2/scroll/batches:
