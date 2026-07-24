@@ -3696,36 +3696,35 @@ components:
       x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.AdvancedFilter.SearchParams
       x-validate:
     BlockCountdown:
+      additionalProperties: false
       description: Block countdown information showing estimated time until a target block is reached
       example:
-        countdown_block: 22600000
-        current_block: 22566361
-        estimated_time_in_sec: 404868.0
-        remaining_blocks: 33639
+        countdown_block_number: 22600000
+        current_block_number: 22566361
+        estimated_time_in_seconds: '404868.0'
+        remaining_blocks_count: 33639
       properties:
-        countdown_block:
+        countdown_block_number:
           description: The target block number for the countdown
           example: 22600000
           minimum: 0
           type: integer
           x-struct:
           x-validate:
-        current_block:
+        current_block_number:
           description: The current highest block number in the blockchain
           example: 22566361
           minimum: 0
           type: integer
           x-struct:
           x-validate:
-        estimated_time_in_sec:
+        estimated_time_in_seconds:
           description: Estimated time in seconds until the target block is reached
-          example: 404868.0
-          format: float
-          minimum: 0
-          type: number
+          example: '404868.0'
+          type: string
           x-struct:
           x-validate:
-        remaining_blocks:
+        remaining_blocks_count:
           description: Number of blocks remaining until the target block is reached
           example: 33639
           minimum: 0
@@ -3733,10 +3732,10 @@ components:
           x-struct:
           x-validate:
       required:
-        - current_block
-        - countdown_block
-        - remaining_blocks
-        - estimated_time_in_sec
+        - current_block_number
+        - countdown_block_number
+        - remaining_blocks_count
+        - estimated_time_in_seconds
       title: BlockCountdown
       type: object
       x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.Block.Countdown
@@ -4039,6 +4038,9 @@ components:
           items:
             items:
               anyOf:
+                - type: array
+                  x-struct:
+                  x-validate:
                 - type: object
                   x-struct:
                   x-validate:
