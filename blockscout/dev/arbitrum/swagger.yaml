@@ -17985,6 +17985,67 @@ paths:
       summary: Get cross-chain messages count.
       tags:
         - arbitrum
+  /api/v2/tokens/batch:
+    post:
+      callbacks: {}
+      description: Retrieves token information for a list of token contract addresses.
+      operationId: BlockScoutWeb.API.V2.TokenController.tokens_batch
+      parameters:
+        - description: API key for rate limiting or for sensitive endpoints
+          in: query
+          name: apikey
+          required: false
+          schema:
+            type: string
+            x-struct:
+            x-validate:
+        - description: Secret key for getting access to restricted resources
+          in: query
+          name: key
+          required: false
+          schema:
+            type: string
+            x-struct:
+            x-validate:
+      requestBody:
+        content:
+          application/json:
+            schema:
+              properties:
+                address_hashes:
+                  items:
+                    $ref: '#/components/schemas/AddressHash'
+                  maxItems: 50
+                  type: array
+                  x-struct:
+                  x-validate:
+              required:
+                - address_hashes
+              type: object
+              x-struct:
+              x-validate:
+        description: List of token contract address hashes
+        required: false
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/TokenResponse'
+                type: array
+                x-struct:
+                x-validate:
+          description: List of tokens for given addresses.
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JsonErrorResponse'
+          description: Unprocessable Entity
+      summary: Get token info for a batch of token addresses
+      tags:
+        - tokens
   /api/v2/advanced-filters/methods:
     get:
       callbacks: {}
