@@ -4346,6 +4346,28 @@ components:
           type: integer
           x-struct:
           x-validate:
+        calls:
+          items:
+            additionalProperties: false
+            nullable: false
+            properties:
+              input:
+                $ref: '#/components/schemas/HexString'
+              to:
+                $ref: '#/components/schemas/AddressHashNullable'
+              value:
+                $ref: '#/components/schemas/IntegerString'
+            required:
+              - to
+              - value
+              - input
+            type: object
+            x-struct:
+            x-validate:
+          nullable: true
+          type: array
+          x-struct:
+          x-validate:
         exchange_rate:
           $ref: '#/components/schemas/FloatStringNullable'
         transaction_types:
@@ -4392,35 +4414,15 @@ components:
           type: integer
           x-struct:
           x-validate:
-        stability_fee:
-          additionalProperties: false
-          nullable: false
-          properties:
-            dapp_address:
-              $ref: '#/components/schemas/Address'
-            dapp_fee:
-              $ref: '#/components/schemas/IntegerString'
-            token:
-              $ref: '#/components/schemas/Token'
-            total_fee:
-              $ref: '#/components/schemas/IntegerString'
-            validator_address:
-              $ref: '#/components/schemas/Address'
-            validator_fee:
-              $ref: '#/components/schemas/IntegerString'
-          required:
-            - token
-            - validator_address
-            - dapp_address
-            - total_fee
-            - dapp_fee
-            - validator_fee
-          type: object
-          x-struct:
-          x-validate:
         decoded_input:
           allOf:
             - $ref: '#/components/schemas/DecodedInput'
+          nullable: true
+          x-struct:
+          x-validate:
+        fee_payer:
+          allOf:
+            - $ref: '#/components/schemas/Address'
           nullable: true
           x-struct:
           x-validate:
@@ -4600,6 +4602,8 @@ components:
         - authorization_list
         - is_pending_update
         - fhe_operations_count
+        - fee_payer
+        - calls
       title: Transaction
       type: object
       x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.Transaction
@@ -4690,6 +4694,28 @@ components:
           type: integer
           x-struct:
           x-validate:
+        calls:
+          items:
+            additionalProperties: false
+            nullable: false
+            properties:
+              input:
+                $ref: '#/components/schemas/HexString'
+              to:
+                $ref: '#/components/schemas/AddressHashNullable'
+              value:
+                $ref: '#/components/schemas/IntegerString'
+            required:
+              - to
+              - value
+              - input
+            type: object
+            x-struct:
+            x-validate:
+          nullable: true
+          type: array
+          x-struct:
+          x-validate:
         exchange_rate:
           $ref: '#/components/schemas/FloatStringNullable'
         transaction_types:
@@ -4736,35 +4762,15 @@ components:
           type: integer
           x-struct:
           x-validate:
-        stability_fee:
-          additionalProperties: false
-          nullable: false
-          properties:
-            dapp_address:
-              $ref: '#/components/schemas/Address'
-            dapp_fee:
-              $ref: '#/components/schemas/IntegerString'
-            token:
-              $ref: '#/components/schemas/Token'
-            total_fee:
-              $ref: '#/components/schemas/IntegerString'
-            validator_address:
-              $ref: '#/components/schemas/Address'
-            validator_fee:
-              $ref: '#/components/schemas/IntegerString'
-          required:
-            - token
-            - validator_address
-            - dapp_address
-            - total_fee
-            - dapp_fee
-            - validator_fee
-          type: object
-          x-struct:
-          x-validate:
         decoded_input:
           allOf:
             - $ref: '#/components/schemas/DecodedInput'
+          nullable: true
+          x-struct:
+          x-validate:
+        fee_payer:
+          allOf:
+            - $ref: '#/components/schemas/Address'
           nullable: true
           x-struct:
           x-validate:
@@ -4944,6 +4950,8 @@ components:
         - authorization_list
         - is_pending_update
         - fhe_operations_count
+        - fee_payer
+        - calls
       title: TransactionResponse
       type: object
       x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.Transaction

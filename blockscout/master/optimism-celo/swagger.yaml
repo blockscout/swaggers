@@ -5141,6 +5141,7 @@ components:
               - token_transfer
               - blob_transaction
               - set_code_transaction
+              - sponsored_transaction
             type: string
             x-struct:
             x-validate:
@@ -5641,6 +5642,7 @@ components:
               - token_transfer
               - blob_transaction
               - set_code_transaction
+              - sponsored_transaction
             type: string
             x-struct:
             x-validate:
