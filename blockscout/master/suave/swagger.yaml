@@ -3578,23 +3578,21 @@ components:
       additionalProperties: false
       description: Block countdown information showing estimated time until a target block is reached
       example:
-        countdown_block_number: 22600000
-        current_block_number: 22566361
+        countdown_block_number: '22600000'
+        current_block_number: '22566361'
         estimated_time_in_seconds: '404868.0'
-        remaining_blocks_count: 33639
+        remaining_blocks_count: '33639'
       properties:
         countdown_block_number:
           description: The target block number for the countdown
-          example: 22600000
-          minimum: 0
-          type: integer
+          example: '22600000'
+          type: string
           x-struct:
           x-validate:
         current_block_number:
           description: The current highest block number in the blockchain
-          example: 22566361
-          minimum: 0
-          type: integer
+          example: '22566361'
+          type: string
           x-struct:
           x-validate:
         estimated_time_in_seconds:
@@ -3605,9 +3603,8 @@ components:
           x-validate:
         remaining_blocks_count:
           description: Number of blocks remaining until the target block is reached
-          example: 33639
-          minimum: 0
-          type: integer
+          example: '33639'
+          type: string
           x-struct:
           x-validate:
       required:
@@ -10298,6 +10295,12 @@ paths:
               schema:
                 $ref: '#/components/schemas/JsonErrorResponse'
           description: Unprocessable Entity
+        '501':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotImplementedResponse'
+          description: Not Implemented
       summary: Get countdown information for a target block number
       tags:
         - blocks
