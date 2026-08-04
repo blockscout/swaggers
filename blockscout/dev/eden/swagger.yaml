@@ -5563,10 +5563,25 @@ components:
           type: integer
           x-struct:
           x-validate:
-        allowed_peekers:
+        calls:
           items:
-            $ref: '#/components/schemas/AddressHash'
-          nullable: false
+            additionalProperties: false
+            nullable: false
+            properties:
+              input:
+                $ref: '#/components/schemas/HexData'
+              to:
+                $ref: '#/components/schemas/AddressHashNullable'
+              value:
+                $ref: '#/components/schemas/IntegerString'
+            required:
+              - to
+              - value
+              - input
+            type: object
+            x-struct:
+            x-validate:
+          nullable: true
           type: array
           x-struct:
           x-validate:
@@ -5589,50 +5604,6 @@ components:
             x-struct:
             x-validate:
           type: array
-          x-struct:
-          x-validate:
-        execution_node:
-          $ref: '#/components/schemas/Address'
-        wrapped:
-          additionalProperties: false
-          nullable: false
-          properties:
-            decoded_input:
-              allOf:
-                - $ref: '#/components/schemas/DecodedInput'
-              nullable: true
-              x-struct:
-              x-validate:
-            fee:
-              $ref: '#/components/schemas/Fee'
-            gas_limit:
-              $ref: '#/components/schemas/IntegerStringNullable'
-            gas_price:
-              $ref: '#/components/schemas/IntegerStringNullable'
-            hash:
-              $ref: '#/components/schemas/FullHash'
-            max_fee_per_gas:
-              $ref: '#/components/schemas/IntegerStringNullable'
-            max_priority_fee_per_gas:
-              $ref: '#/components/schemas/IntegerStringNullable'
-            method:
-              $ref: '#/components/schemas/MethodNameNullable'
-            nonce:
-              nullable: true
-              type: integer
-              x-struct:
-              x-validate:
-            raw_input:
-              $ref: '#/components/schemas/HexData'
-            to:
-              $ref: '#/components/schemas/Address'
-            type:
-              type: integer
-              x-struct:
-              x-validate:
-            value:
-              $ref: '#/components/schemas/IntegerStringNullable'
-          type: object
           x-struct:
           x-validate:
         historic_exchange_rate:
@@ -5663,6 +5634,12 @@ components:
         decoded_input:
           allOf:
             - $ref: '#/components/schemas/DecodedInput'
+          nullable: true
+          x-struct:
+          x-validate:
+        fee_payer:
+          allOf:
+            - $ref: '#/components/schemas/Address'
           nullable: true
           x-struct:
           x-validate:
@@ -5846,6 +5823,8 @@ components:
         - authorization_list
         - is_pending_update
         - fhe_operations_count
+        - fee_payer
+        - calls
       title: Transaction
       type: object
       x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.Transaction
@@ -5956,10 +5935,25 @@ components:
           type: integer
           x-struct:
           x-validate:
-        allowed_peekers:
+        calls:
           items:
-            $ref: '#/components/schemas/AddressHash'
-          nullable: false
+            additionalProperties: false
+            nullable: false
+            properties:
+              input:
+                $ref: '#/components/schemas/HexData'
+              to:
+                $ref: '#/components/schemas/AddressHashNullable'
+              value:
+                $ref: '#/components/schemas/IntegerString'
+            required:
+              - to
+              - value
+              - input
+            type: object
+            x-struct:
+            x-validate:
+          nullable: true
           type: array
           x-struct:
           x-validate:
@@ -5982,50 +5976,6 @@ components:
             x-struct:
             x-validate:
           type: array
-          x-struct:
-          x-validate:
-        execution_node:
-          $ref: '#/components/schemas/Address'
-        wrapped:
-          additionalProperties: false
-          nullable: false
-          properties:
-            decoded_input:
-              allOf:
-                - $ref: '#/components/schemas/DecodedInput'
-              nullable: true
-              x-struct:
-              x-validate:
-            fee:
-              $ref: '#/components/schemas/Fee'
-            gas_limit:
-              $ref: '#/components/schemas/IntegerStringNullable'
-            gas_price:
-              $ref: '#/components/schemas/IntegerStringNullable'
-            hash:
-              $ref: '#/components/schemas/FullHash'
-            max_fee_per_gas:
-              $ref: '#/components/schemas/IntegerStringNullable'
-            max_priority_fee_per_gas:
-              $ref: '#/components/schemas/IntegerStringNullable'
-            method:
-              $ref: '#/components/schemas/MethodNameNullable'
-            nonce:
-              nullable: true
-              type: integer
-              x-struct:
-              x-validate:
-            raw_input:
-              $ref: '#/components/schemas/HexData'
-            to:
-              $ref: '#/components/schemas/Address'
-            type:
-              type: integer
-              x-struct:
-              x-validate:
-            value:
-              $ref: '#/components/schemas/IntegerStringNullable'
-          type: object
           x-struct:
           x-validate:
         historic_exchange_rate:
@@ -6056,6 +6006,12 @@ components:
         decoded_input:
           allOf:
             - $ref: '#/components/schemas/DecodedInput'
+          nullable: true
+          x-struct:
+          x-validate:
+        fee_payer:
+          allOf:
+            - $ref: '#/components/schemas/Address'
           nullable: true
           x-struct:
           x-validate:
@@ -6239,6 +6195,8 @@ components:
         - authorization_list
         - is_pending_update
         - fhe_operations_count
+        - fee_payer
+        - calls
       title: TransactionResponse
       type: object
       x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.Transaction
@@ -15568,100 +15526,6 @@ paths:
                 $ref: '#/components/schemas/JsonErrorResponse'
           description: Unprocessable Entity
       summary: List internal transactions triggered during a specific transaction
-      tags:
-        - transactions
-  /api/v2/transactions/execution-node/{execution_node_hash_param}:
-    get:
-      callbacks: {}
-      description: Retrieves transactions that were executed on the specified execution node.
-      operationId: BlockScoutWeb.API.V2.TransactionController.execution_node
-      parameters:
-        - description: Execution node hash in the path
-          in: path
-          name: execution_node_hash_param
-          required: true
-          schema:
-            $ref: '#/components/schemas/AddressHash'
-        - description: API key for rate limiting or for sensitive endpoints
-          in: query
-          name: apikey
-          required: false
-          schema:
-            type: string
-            x-struct:
-            x-validate:
-        - description: Secret key for getting access to restricted resources
-          in: query
-          name: key
-          required: false
-          schema:
-            type: string
-            x-struct:
-            x-validate:
-        - description: Number of items per page
-          in: query
-          name: items_count
-          required: false
-          schema:
-            minimum: 1
-            type: integer
-            x-struct:
-            x-validate:
-        - description: Block number for paging
-          in: query
-          name: block_number
-          required: false
-          schema:
-            minimum: 0
-            type: integer
-            x-struct:
-            x-validate:
-        - description: Item index for paging
-          in: query
-          name: index
-          required: false
-          schema:
-            type: integer
-            x-struct:
-            x-validate:
-      responses:
-        '200':
-          content:
-            application/json:
-              schema:
-                additionalProperties: false
-                nullable: false
-                properties:
-                  items:
-                    items:
-                      $ref: '#/components/schemas/Transaction'
-                    nullable: false
-                    type: array
-                    x-struct:
-                    x-validate:
-                  next_page_params:
-                    additionalProperties: true
-                    example:
-                      block_number: 14127868
-                      index: 0
-                    nullable: true
-                    type: object
-                    x-struct:
-                    x-validate:
-                required:
-                  - items
-                  - next_page_params
-                type: object
-                x-struct:
-                x-validate:
-          description: List of transactions.
-        '422':
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/JsonErrorResponse'
-          description: Unprocessable Entity
-      summary: List transactions executed on a specific execution node
       tags:
         - transactions
   /api/v2/transactions/{transaction_hash_param}/logs:
