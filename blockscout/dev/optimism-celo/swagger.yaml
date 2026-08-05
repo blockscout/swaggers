@@ -292,9 +292,9 @@ components:
         msg_nonce_raw:
           $ref: '#/components/schemas/IntegerString'
         msg_sender_address_hash:
-          $ref: '#/components/schemas/FullHashNullable'
+          $ref: '#/components/schemas/AddressHashNullable'
         msg_target_address_hash:
-          $ref: '#/components/schemas/FullHashNullable'
+          $ref: '#/components/schemas/AddressHashNullable'
         msg_value:
           $ref: '#/components/schemas/IntegerStringNullable'
         nonce:
@@ -1973,7 +1973,7 @@ components:
               from:
                 $ref: '#/components/schemas/AddressHash'
               gas:
-                $ref: '#/components/schemas/HexData'
+                $ref: '#/components/schemas/HexQuantity'
               init:
                 $ref: '#/components/schemas/HexData'
               input:
@@ -1981,7 +1981,7 @@ components:
               to:
                 $ref: '#/components/schemas/AddressHash'
               value:
-                $ref: '#/components/schemas/HexData'
+                $ref: '#/components/schemas/HexQuantity'
             required:
               - from
               - gas
@@ -1994,7 +1994,7 @@ components:
             additionalProperties: false
             properties:
               gasUsed:
-                $ref: '#/components/schemas/HexData'
+                $ref: '#/components/schemas/HexQuantity'
               output:
                 $ref: '#/components/schemas/HexData'
             required:
@@ -4876,9 +4876,9 @@ components:
           x-struct:
           x-validate:
         msg_sender_address_hash:
-          $ref: '#/components/schemas/FullHashNullable'
+          $ref: '#/components/schemas/AddressHashNullable'
         msg_target_address_hash:
-          $ref: '#/components/schemas/FullHashNullable'
+          $ref: '#/components/schemas/AddressHashNullable'
         msg_value:
           $ref: '#/components/schemas/IntegerStringNullable'
         portal_contract_address_hash:
@@ -19135,15 +19135,6 @@ paths:
           required: false
           schema:
             $ref: '#/components/schemas/FullHash'
-        - description: Limit result items in the response
-          in: query
-          name: limit
-          required: false
-          schema:
-            nullable: true
-            type: integer
-            x-struct:
-            x-validate:
         - description: If `false`, zero-value call-type internal transactions are excluded from results.
           in: query
           name: include_zero_value
