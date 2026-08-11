@@ -7892,7 +7892,7 @@ paths:
   /api/v2/tokens/{address_hash_param}/instances/{token_id_param}/refetch-metadata:
     patch:
       callbacks: {}
-      description: Triggers a refresh of metadata for a specific NFT instance. Useful when the NFT's metadata has been updated but is not yet reflected in the BlockScout database.
+      description: Triggers a refresh of metadata for a specific NFT instance. Useful when the NFT's metadata has been updated but is not yet reflected in the BlockScout database. The endpoint is rate limited per IP; once the limit is reached, a valid reCAPTCHA header is required to proceed.
       operationId: BlockScoutWeb.API.V2.TokenController.refetch_metadata
       parameters:
         - description: API key for rate limiting or for sensitive endpoints
@@ -7923,17 +7923,41 @@ paths:
           required: true
           schema:
             $ref: '#/components/schemas/IntegerStringNullable'
-        - description: reCAPTCHA response token
+        - description: Scoped reCAPTCHA bypass token for trusted clients
           in: query
-          name: recaptcha_response
+          name: scoped_recaptcha_bypass_token
           required: false
           schema:
             type: string
             x-struct:
             x-validate:
-        - description: Scoped reCAPTCHA bypass token for trusted clients
-          in: query
-          name: scoped_recaptcha_bypass_token
+        - description: reCAPTCHA v2 response token
+          in: header
+          name: recaptcha-v2-response
+          required: false
+          schema:
+            type: string
+            x-struct:
+            x-validate:
+        - description: reCAPTCHA v3 response token
+          in: header
+          name: recaptcha-v3-response
+          required: false
+          schema:
+            type: string
+            x-struct:
+            x-validate:
+        - description: Bypass token issued to trusted clients for this specific endpoint. May also be passed as the `scoped_recaptcha_bypass_token` query parameter; the header takes precedence
+          in: header
+          name: scoped-recaptcha-bypass-token
+          required: false
+          schema:
+            type: string
+            x-struct:
+            x-validate:
+        - description: Bypass token issued to trusted clients for all reCAPTCHA-protected endpoints
+          in: header
+          name: recaptcha-bypass-token
           required: false
           schema:
             type: string
