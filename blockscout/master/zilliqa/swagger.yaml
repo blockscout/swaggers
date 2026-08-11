@@ -13932,6 +13932,82 @@ paths:
       summary: List transactions involving a specific address with to-from filtering
       tags:
         - addresses
+  /v2/transactions/{transaction_hash_param}/preview:
+    get:
+      callbacks: {}
+      description: Returns minimal transaction data (status, timestamp, method, from/to) for rendering OG previews.
+      operationId: BlockScoutWeb.API.V2.TransactionController.preview
+      parameters:
+        - description: Transaction hash in the path
+          in: path
+          name: transaction_hash_param
+          required: true
+          schema:
+            $ref: '#/components/schemas/FullHash'
+        - description: API key for rate limiting or for sensitive endpoints
+          in: query
+          name: apikey
+          required: false
+          schema:
+            type: string
+            x-struct:
+            x-validate:
+        - description: Secret key for getting access to restricted resources
+          in: query
+          name: key
+          required: false
+          schema:
+            type: string
+            x-struct:
+            x-validate:
+        - description: 'Preload ENS domain names for addresses (default: false)'
+          in: query
+          name: preload_ens
+          required: false
+          schema:
+            type: boolean
+            x-struct:
+            x-validate:
+        - description: 'Preload address metadata/name tags (default: false)'
+          in: query
+          name: preload_metadata
+          required: false
+          schema:
+            type: boolean
+            x-struct:
+            x-validate:
+        - description: 'Decode transaction input to resolve method name (default: false)'
+          in: query
+          name: decode_input
+          required: false
+          schema:
+            type: boolean
+            x-struct:
+            x-validate:
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: object
+                x-struct:
+                x-validate:
+          description: Lightweight transaction preview.
+        '404':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFoundResponse'
+          description: Not Found
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JsonErrorResponse'
+          description: Unprocessable Entity
+      summary: Get lightweight transaction preview for social media embeds
+      tags:
+        - transactions
   /v2/transactions/{transaction_hash_param}/raw-trace:
     get:
       callbacks: {}
