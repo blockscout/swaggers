@@ -1663,6 +1663,45 @@ components:
       type: string
       x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.General.URLNullable
       x-validate:
+    Preview:
+      additionalProperties: false
+      description: Lightweight transaction preview for social media embeds
+      properties:
+        from:
+          allOf:
+            - $ref: '#/components/schemas/PreviewAddress'
+          nullable: true
+          x-struct:
+          x-validate:
+        method:
+          $ref: '#/components/schemas/MethodNameNullable'
+        status:
+          description: Transaction execution status
+          enum:
+            - ok
+            - error
+          nullable: true
+          type: string
+          x-struct:
+          x-validate:
+        timestamp:
+          $ref: '#/components/schemas/TimestampNullable'
+        to:
+          allOf:
+            - $ref: '#/components/schemas/PreviewAddress'
+          nullable: true
+          x-struct:
+          x-validate:
+      required:
+        - status
+        - timestamp
+        - method
+        - from
+        - to
+      title: Preview
+      type: object
+      x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.Transaction.Preview
+      x-validate:
     FloatString:
       pattern: ^([1-9][0-9]*|0)(\.[0-9]+)?$
       title: FloatString
@@ -2032,6 +2071,41 @@ components:
       title: Implementation
       type: object
       x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.General.Implementation
+      x-validate:
+    PreviewAddress:
+      additionalProperties: false
+      description: Lightweight address in transaction preview
+      nullable: true
+      properties:
+        ens_domain_name:
+          description: ENS domain name associated with the address. Populated only when preload_ens=true is passed.
+          nullable: true
+          type: string
+          x-struct:
+          x-validate:
+        hash:
+          $ref: '#/components/schemas/AddressHash'
+        metadata:
+          allOf:
+            - $ref: '#/components/schemas/Metadata'
+          description: Address metadata tags from the Metadata microservice. Populated only when preload_metadata=true is passed.
+          nullable: true
+          x-struct:
+          x-validate:
+        name:
+          description: Display name of the address (contract name or address name)
+          nullable: true
+          type: string
+          x-struct:
+          x-validate:
+      required:
+        - hash
+        - name
+        - ens_domain_name
+        - metadata
+      title: PreviewAddress
+      type: object
+      x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.Transaction.PreviewAddress
       x-validate:
     AddressHash:
       nullable: false
@@ -13989,9 +14063,7 @@ paths:
           content:
             application/json:
               schema:
-                type: object
-                x-struct:
-                x-validate:
+                $ref: '#/components/schemas/Preview'
           description: Lightweight transaction preview.
         '404':
           content:
