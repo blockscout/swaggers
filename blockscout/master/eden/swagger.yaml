@@ -530,9 +530,22 @@ components:
         data:
           additionalProperties: false
           properties:
+            calls:
+              items:
+                $ref: '#/components/schemas/Call'
+              nullable: true
+              type: array
+              x-struct:
+              x-validate:
             decoded_input:
               nullable: true
               type: object
+              x-struct:
+              x-validate:
+            fee_payer:
+              allOf:
+                - $ref: '#/components/schemas/Address'
+              nullable: true
               x-struct:
               x-validate:
             from:
@@ -1929,6 +1942,24 @@ components:
       title: Block
       type: object
       x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.Block
+      x-validate:
+    Call:
+      additionalProperties: false
+      nullable: false
+      properties:
+        input:
+          $ref: '#/components/schemas/HexString'
+        to:
+          $ref: '#/components/schemas/AddressHashNullable'
+        value:
+          $ref: '#/components/schemas/IntegerString'
+      required:
+        - to
+        - value
+        - input
+      title: Call
+      type: object
+      x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.Eden.Call
       x-validate:
     Implementation:
       additionalProperties: false
@@ -4419,22 +4450,7 @@ components:
           x-validate:
         calls:
           items:
-            additionalProperties: false
-            nullable: false
-            properties:
-              input:
-                $ref: '#/components/schemas/HexString'
-              to:
-                $ref: '#/components/schemas/AddressHashNullable'
-              value:
-                $ref: '#/components/schemas/IntegerString'
-            required:
-              - to
-              - value
-              - input
-            type: object
-            x-struct:
-            x-validate:
+            $ref: '#/components/schemas/Call'
           nullable: true
           type: array
           x-struct:
@@ -4767,22 +4783,7 @@ components:
           x-validate:
         calls:
           items:
-            additionalProperties: false
-            nullable: false
-            properties:
-              input:
-                $ref: '#/components/schemas/HexString'
-              to:
-                $ref: '#/components/schemas/AddressHashNullable'
-              value:
-                $ref: '#/components/schemas/IntegerString'
-            required:
-              - to
-              - value
-              - input
-            type: object
-            x-struct:
-            x-validate:
+            $ref: '#/components/schemas/Call'
           nullable: true
           type: array
           x-struct:

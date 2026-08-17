@@ -6166,6 +6166,24 @@ components:
       type: string
       x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.General.Timestamp
       x-validate: null
+    Call:
+      additionalProperties: false
+      nullable: false
+      properties:
+        input:
+          $ref: '#/components/schemas/HexString'
+        to:
+          $ref: '#/components/schemas/AddressHashNullable'
+        value:
+          $ref: '#/components/schemas/IntegerString'
+      required:
+        - to
+        - value
+        - input
+      title: Call
+      type: object
+      x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.Eden.Call
+      x-validate: null
     BeaconDepositResponse:
       additionalProperties: false
       description: BeaconDeposit response
