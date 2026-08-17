@@ -2530,45 +2530,6 @@ components:
       type: string
       x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.General.URLNullable
       x-validate: null
-    Preview:
-      additionalProperties: false
-      description: Lightweight transaction preview for social media embeds
-      properties:
-        from:
-          allOf:
-            - $ref: '#/components/schemas/PreviewAddress'
-          nullable: true
-          x-struct: null
-          x-validate: null
-        method:
-          $ref: '#/components/schemas/MethodNameNullable'
-        status:
-          description: Transaction execution status
-          enum:
-            - ok
-            - error
-          nullable: true
-          type: string
-          x-struct: null
-          x-validate: null
-        timestamp:
-          $ref: '#/components/schemas/TimestampNullable'
-        to:
-          allOf:
-            - $ref: '#/components/schemas/PreviewAddress'
-          nullable: true
-          x-struct: null
-          x-validate: null
-      required:
-        - status
-        - timestamp
-        - method
-        - from
-        - to
-      title: Preview
-      type: object
-      x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.Transaction.Preview
-      x-validate: null
     FloatString:
       pattern: ^([1-9][0-9]*|0)(\.[0-9]+)?$
       title: FloatString
@@ -2931,24 +2892,7 @@ components:
       type: object
       x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.Block
       x-validate: null
-    Implementation:
-      additionalProperties: false
-      description: Proxy smart contract implementation
-      properties:
-        address_hash:
-          $ref: '#/components/schemas/AddressHash'
-        name:
-          nullable: true
-          type: string
-          x-struct: null
-          x-validate: null
-      required:
-        - address_hash
-      title: Implementation
-      type: object
-      x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.General.Implementation
-      x-validate: null
-    PreviewAddress:
+    TransactionPreviewAddress:
       additionalProperties: false
       description: Lightweight address in transaction preview
       nullable: true
@@ -2979,9 +2923,26 @@ components:
         - name
         - ens_domain_name
         - metadata
-      title: PreviewAddress
+      title: TransactionPreviewAddress
       type: object
       x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.Transaction.PreviewAddress
+      x-validate: null
+    Implementation:
+      additionalProperties: false
+      description: Proxy smart contract implementation
+      properties:
+        address_hash:
+          $ref: '#/components/schemas/AddressHash'
+        name:
+          nullable: true
+          type: string
+          x-struct: null
+          x-validate: null
+      required:
+        - address_hash
+      title: Implementation
+      type: object
+      x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.General.Implementation
       x-validate: null
     AddressHash:
       nullable: false
@@ -7451,6 +7412,45 @@ components:
       title: TokenTransferTotalFungible
       type: object
       x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.TokenTransfer.Total
+      x-validate: null
+    TransactionPreview:
+      additionalProperties: false
+      description: Lightweight transaction preview for social media embeds
+      properties:
+        from:
+          allOf:
+            - $ref: '#/components/schemas/TransactionPreviewAddress'
+          nullable: true
+          x-struct: null
+          x-validate: null
+        method:
+          $ref: '#/components/schemas/MethodNameNullable'
+        status:
+          description: Transaction execution status
+          enum:
+            - ok
+            - error
+          nullable: true
+          type: string
+          x-struct: null
+          x-validate: null
+        timestamp:
+          $ref: '#/components/schemas/TimestampNullable'
+        to:
+          allOf:
+            - $ref: '#/components/schemas/TransactionPreviewAddress'
+          nullable: true
+          x-struct: null
+          x-validate: null
+      required:
+        - status
+        - timestamp
+        - method
+        - from
+        - to
+      title: TransactionPreview
+      type: object
+      x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.Transaction.Preview
       x-validate: null
     Timestamp:
       format: date-time
@@ -13431,7 +13431,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Preview'
+                $ref: '#/components/schemas/TransactionPreview'
           description: Lightweight transaction preview.
         '404':
           content:
