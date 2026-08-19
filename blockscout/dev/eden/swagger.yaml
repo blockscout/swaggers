@@ -856,9 +856,22 @@ components:
         data:
           additionalProperties: false
           properties:
+            calls:
+              items:
+                $ref: '#/components/schemas/Call'
+              nullable: true
+              type: array
+              x-struct:
+              x-validate:
             decoded_input:
               nullable: true
               type: object
+              x-struct:
+              x-validate:
+            fee_payer:
+              allOf:
+                - $ref: '#/components/schemas/Address'
+              nullable: true
               x-struct:
               x-validate:
             from:
@@ -2526,6 +2539,24 @@ components:
       type: object
       x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.Transaction.PreviewAddress
       x-validate:
+    Call:
+      additionalProperties: false
+      nullable: false
+      properties:
+        input:
+          $ref: '#/components/schemas/HexData'
+        to:
+          $ref: '#/components/schemas/AddressHashNullable'
+        value:
+          $ref: '#/components/schemas/IntegerString'
+      required:
+        - to
+        - value
+        - input
+      title: Call
+      type: object
+      x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.Eden.Call
+      x-validate:
     Implementation:
       additionalProperties: false
       description: Proxy smart contract implementation
@@ -2552,29 +2583,86 @@ components:
       x-validate:
     SearchResultTacOperation:
       additionalProperties: false
+      description: TAC operation as returned by the tac-operation-lifecycle service Read API v2.
       properties:
-        priority:
-          nullable: false
-          type: integer
+        error_reason:
+          description: Short failure label. It is published only when the stored reason is short enough to be a label, so it is legitimately `null` on a failed operation — its absence does not imply success.
+          example: Insufficient Fee
+          nullable: true
+          type: string
           x-struct:
           x-validate:
-        tac_operation:
-          additionalProperties: true
+        operation_id:
+          example: '0xf01646ac36cbbcebd8a5ff09c300d5f3bebdd2fbe0135a377eaa485d9edcc670'
+          nullable: false
+          type: string
+          x-struct:
+          x-validate:
+        rollback:
+          description: Whether a rollback occurred.
+          example: false
+          nullable: false
+          type: boolean
+          x-struct:
+          x-validate:
+        sender:
+          additionalProperties: false
           nullable: true
+          properties:
+            address:
+              description: TAC (EVM) or TON address, depending on `blockchain`
+              example: EQDoF2OkxsI3gc5jAuxlqozN9H/SgEOUCopMa1yU4djLaXuL
+              nullable: false
+              type: string
+              x-struct:
+              x-validate:
+            blockchain:
+              enum:
+                - TAC
+                - TON
+                - UNKNOWN_BLOCKCHAIN
+              example: TON
+              nullable: false
+              type: string
+              x-struct:
+              x-validate:
+          required:
+            - address
+            - blockchain
           type: object
           x-struct:
           x-validate:
-        type:
+        status:
+          description: Business outcome of the operation.
           enum:
-            - tac_operation
+            - pending
+            - success
+            - failed
+          example: success
+          nullable: false
+          type: string
+          x-struct:
+          x-validate:
+        timestamp:
+          $ref: '#/components/schemas/Timestamp'
+        type:
+          description: Transfer route. Never carries a lifecycle outcome — see `status` and `rollback`.
+          enum:
+            - UNKNOWN
+            - TON_TAC_TON
+            - TAC_TON
+            - TON_TAC
+          example: TAC_TON
           nullable: false
           type: string
           x-struct:
           x-validate:
       required:
+        - operation_id
         - type
-        - tac_operation
-        - priority
+        - status
+        - rollback
+        - timestamp
       title: SearchResultTacOperation
       type: object
       x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.Search.Result.TacOperation
@@ -3185,7 +3273,6 @@ components:
         items:
           items:
             $ref: '#/components/schemas/SearchResultItem'
-          nullable: false
           type: array
           x-struct:
           x-validate:
@@ -5600,22 +5687,7 @@ components:
           x-validate:
         calls:
           items:
-            additionalProperties: false
-            nullable: false
-            properties:
-              input:
-                $ref: '#/components/schemas/HexData'
-              to:
-                $ref: '#/components/schemas/AddressHashNullable'
-              value:
-                $ref: '#/components/schemas/IntegerString'
-            required:
-              - to
-              - value
-              - input
-            type: object
-            x-struct:
-            x-validate:
+            $ref: '#/components/schemas/Call'
           nullable: true
           type: array
           x-struct:
@@ -5972,22 +6044,7 @@ components:
           x-validate:
         calls:
           items:
-            additionalProperties: false
-            nullable: false
-            properties:
-              input:
-                $ref: '#/components/schemas/HexData'
-              to:
-                $ref: '#/components/schemas/AddressHashNullable'
-              value:
-                $ref: '#/components/schemas/IntegerString'
-            required:
-              - to
-              - value
-              - input
-            type: object
-            x-struct:
-            x-validate:
+            $ref: '#/components/schemas/Call'
           nullable: true
           type: array
           x-struct:
