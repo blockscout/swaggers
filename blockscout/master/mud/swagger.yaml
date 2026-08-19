@@ -1078,6 +1078,15 @@ components:
       type: object
       x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.Token.Holder
       x-validate:
+    SearchResultItem:
+      description: Single search result. The shape depends on `type`; only `tac_operation` results are fully described.
+      properties:
+        tac_operation:
+          $ref: '#/components/schemas/TacOperationSearchResult'
+      title: SearchResultItem
+      type: object
+      x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.Search.ResultItem
+      x-validate:
     AddressResponse:
       additionalProperties: false
       description: Address response
@@ -1461,6 +1470,92 @@ components:
       title: Language
       type: string
       x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.SmartContract.Language
+      x-validate:
+    TacOperationSearchResult:
+      additionalProperties: false
+      description: TAC operation as returned by the tac-operation-lifecycle service Read API v2.
+      properties:
+        error_reason:
+          description: Short failure label. It is published only when the stored reason is short enough to be a label, so it is legitimately `null` on a failed operation — its absence does not imply success.
+          example: Insufficient Fee
+          nullable: true
+          type: string
+          x-struct:
+          x-validate:
+        operation_id:
+          example: '0xf01646ac36cbbcebd8a5ff09c300d5f3bebdd2fbe0135a377eaa485d9edcc670'
+          nullable: false
+          type: string
+          x-struct:
+          x-validate:
+        rollback:
+          description: Whether a rollback occurred.
+          example: false
+          nullable: false
+          type: boolean
+          x-struct:
+          x-validate:
+        sender:
+          additionalProperties: false
+          nullable: true
+          properties:
+            address:
+              description: TAC (EVM) or TON address, depending on `blockchain`
+              example: EQDoF2OkxsI3gc5jAuxlqozN9H/SgEOUCopMa1yU4djLaXuL
+              nullable: false
+              type: string
+              x-struct:
+              x-validate:
+            blockchain:
+              enum:
+                - TAC
+                - TON
+                - UNKNOWN_BLOCKCHAIN
+              example: TON
+              nullable: false
+              type: string
+              x-struct:
+              x-validate:
+          required:
+            - address
+            - blockchain
+          type: object
+          x-struct:
+          x-validate:
+        status:
+          description: Business outcome of the operation.
+          enum:
+            - pending
+            - success
+            - failed
+          example: success
+          nullable: false
+          type: string
+          x-struct:
+          x-validate:
+        timestamp:
+          $ref: '#/components/schemas/Timestamp'
+        type:
+          description: Transfer route. Never carries a lifecycle outcome — see `status` and `rollback`.
+          enum:
+            - UNKNOWN
+            - TON_TAC_TON
+            - TAC_TON
+            - TON_TAC
+          example: TAC_TON
+          nullable: false
+          type: string
+          x-struct:
+          x-validate:
+      required:
+        - operation_id
+        - type
+        - status
+        - rollback
+        - timestamp
+      title: TacOperationSearchResult
+      type: object
+      x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.Search.TacOperation
       x-validate:
     FheOperationsResponse:
       additionalProperties: false
@@ -2843,9 +2938,7 @@ components:
       properties:
         items:
           items:
-            type: object
-            x-struct:
-            x-validate:
+            $ref: '#/components/schemas/SearchResultItem'
           type: array
           x-struct:
           x-validate:
@@ -10039,9 +10132,7 @@ paths:
             application/json:
               schema:
                 items:
-                  type: object
-                  x-struct:
-                  x-validate:
+                  $ref: '#/components/schemas/SearchResultItem'
                 nullable: false
                 type: array
                 x-struct:
