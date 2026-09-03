@@ -5098,8 +5098,6 @@ components:
           $ref: '#/components/schemas/IntegerString'
         total_blocks:
           $ref: '#/components/schemas/IntegerString'
-        total_gas_used:
-          $ref: '#/components/schemas/IntegerString'
         total_transactions:
           $ref: '#/components/schemas/IntegerString'
         transactions_today:
