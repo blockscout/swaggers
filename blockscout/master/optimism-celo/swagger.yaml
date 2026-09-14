@@ -6190,9 +6190,13 @@ components:
           x-struct:
           x-validate:
         l2_block_number:
+          description: L2 block number the game is bound to. `null` for the games with Super Root claim.
+          nullable: true
           type: integer
           x-struct:
           x-validate:
+        l2_timestamp:
+          $ref: '#/components/schemas/TimestampNullable'
         resolved_at:
           $ref: '#/components/schemas/TimestampNullable'
         status:
@@ -6210,6 +6214,7 @@ components:
         - game_type
         - index
         - l2_block_number
+        - l2_timestamp
         - resolved_at
         - status
       title: Game
