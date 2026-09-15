@@ -2088,9 +2088,9 @@ definitions:
       the null value for the `Value` type union.
 
       A field of type `NullValue` with any value other than `0` is considered
-      invalid. Most ProtoJSON serializers will emit a Value with a `null_value` set
-      as a JSON `null` regardless of the integer value, and so will round trip to
-      a `0` value.
+      invalid. Most ProtoJSON serializers will emit a `Value` with a `null_value`
+      set as a JSON `null` regardless of the integer value, and so will round trip
+      to a `0` value.
 
        - NULL_VALUE: Null value.
   rpcStatus:
@@ -3177,6 +3177,13 @@ definitions:
         type: string
       value:
         type: string
+  v1FlashblocksName:
+    type: string
+    enum:
+      - UNSPECIFIED_FLASHBLOCKS_NAME
+      - FLASHBLOCK
+      - SUBBLOCK
+    default: UNSPECIFIED_FLASHBLOCKS_NAME
   v1Footer:
     type: object
     properties:
@@ -3759,6 +3766,9 @@ definitions:
       l1_batch_alt_da_server_url:
         type: string
         title: INDEXER_OPTIMISM_L1_BATCH_ALT_DA_SERVER_URL
+      flashblocks_name:
+        $ref: '#/definitions/v1FlashblocksName'
+        title: NEXT_PUBLIC_FLASHBLOCKS_NAME, requires flashblocks_socket_url
       beacon_rpc_url:
         type: string
       beacon_blob_fetcher_reference_slot:
