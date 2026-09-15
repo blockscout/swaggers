@@ -5304,6 +5304,8 @@ components:
               - blob_transaction
               - set_code_transaction
               - sponsored_transaction
+              - op_stack_l1_attributes_transaction
+              - op_stack_post_exec_transaction
             type: string
             x-struct:
             x-validate:
@@ -5805,6 +5807,8 @@ components:
               - blob_transaction
               - set_code_transaction
               - sponsored_transaction
+              - op_stack_l1_attributes_transaction
+              - op_stack_post_exec_transaction
             type: string
             x-struct:
             x-validate:
