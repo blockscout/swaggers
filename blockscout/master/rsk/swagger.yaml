@@ -39,8 +39,9 @@ components:
           description: Moment `new_multiplier` replaces `old_multiplier`. A moment still in the future means the change is announced but pending.
           format: date-time
           nullable: false
+          title: Timestamp
           type: string
-          x-struct:
+          x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.General.Timestamp
           x-validate:
         log_index:
           nullable: false
@@ -48,29 +49,36 @@ components:
           x-struct:
           x-validate:
         new_multiplier:
-          allOf:
-            - $ref: '#/components/schemas/IntegerString'
           description: Multiplier in force from `effective_at` on, with 18 decimals of precision.
-          x-struct:
+          nullable: false
+          pattern: ^-?([1-9][0-9]*|0)$
+          title: IntegerString
+          type: string
+          x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.General.IntegerString
           x-validate:
         old_multiplier:
-          allOf:
-            - $ref: '#/components/schemas/IntegerString'
           description: Multiplier in force until `effective_at`, with 18 decimals of precision.
-          x-struct:
+          nullable: false
+          pattern: ^-?([1-9][0-9]*|0)$
+          title: IntegerString
+          type: string
+          x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.General.IntegerString
           x-validate:
         timestamp:
           description: Moment the change was announced, i.e. the timestamp of the block holding the event.
           format: date-time
           nullable: false
+          title: Timestamp
           type: string
-          x-struct:
+          x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.General.Timestamp
           x-validate:
         transaction_hash:
-          allOf:
-            - $ref: '#/components/schemas/FullHashNullable'
           description: Transaction the event was emitted from. `null` for changes recorded before this field existed and for chains that emit logs outside of a transaction.
-          x-struct:
+          nullable: true
+          pattern: ^0x([A-Fa-f0-9]{64})$
+          title: FullHashNullable
+          type: string
+          x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.General.FullHashNullable
           x-validate:
       required:
         - block_number
@@ -1859,6 +1867,7 @@ components:
       x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.General.FloatString
       x-validate:
     FullHashNullable:
+      description: Transaction the event was emitted from. `null` for changes recorded before this field existed and for chains that emit logs outside of a transaction.
       nullable: true
       pattern: ^0x([A-Fa-f0-9]{64})$
       title: FullHashNullable
@@ -2166,6 +2175,7 @@ components:
       x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.General.AddressHash
       x-validate:
     IntegerString:
+      description: Number of ERC-8056 multiplier changes listed by `/api/v2/tokens/{address_hash}/ui-multiplier-changes`. Always `"0"` for a token that does not implement ERC-8056.
       nullable: false
       pattern: ^-?([1-9][0-9]*|0)$
       title: IntegerString
@@ -2824,10 +2834,12 @@ components:
         transfers_count:
           $ref: '#/components/schemas/IntegerString'
         ui_multiplier_changes_count:
-          allOf:
-            - $ref: '#/components/schemas/IntegerString'
           description: Number of ERC-8056 multiplier changes listed by `/api/v2/tokens/{address_hash}/ui-multiplier-changes`. Always `"0"` for a token that does not implement ERC-8056.
-          x-struct:
+          nullable: false
+          pattern: ^-?([1-9][0-9]*|0)$
+          title: IntegerString
+          type: string
+          x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.General.IntegerString
           x-validate:
       required:
         - token_holders_count
