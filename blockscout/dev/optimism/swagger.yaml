@@ -3410,9 +3410,13 @@ components:
           x-struct:
           x-validate:
         l2_block_number:
+          description: L2 block number the game is bound to. `null` for the games with Super Root claim.
+          nullable: true
           type: integer
           x-struct:
           x-validate:
+        l2_timestamp:
+          $ref: '#/components/schemas/TimestampNullable'
         resolved_at:
           $ref: '#/components/schemas/TimestampNullable'
         status:
@@ -3430,6 +3434,7 @@ components:
         - game_type
         - index
         - l2_block_number
+        - l2_timestamp
         - resolved_at
         - status
       title: OptimismGame
@@ -6527,6 +6532,8 @@ components:
               - blob_transaction
               - set_code_transaction
               - sponsored_transaction
+              - op_stack_l1_attributes_transaction
+              - op_stack_post_exec_transaction
             type: string
             x-struct:
             x-validate:
@@ -7027,6 +7034,8 @@ components:
               - blob_transaction
               - set_code_transaction
               - sponsored_transaction
+              - op_stack_l1_attributes_transaction
+              - op_stack_post_exec_transaction
             type: string
             x-struct:
             x-validate:
