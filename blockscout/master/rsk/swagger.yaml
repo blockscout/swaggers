@@ -15,84 +15,6 @@ components:
       type: object
       x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.ErrorResponses.NotImplementedResponse
       x-validate:
-    TokenUIMultiplierChange:
-      additionalProperties: false
-      description: 'A single `UIMultiplierUpdated` event of an ERC-8056 token: the multiplier it replaces, the one it schedules, and the moment that one takes effect.'
-      example:
-        block_hash: '0x3a2b4c07b7e4ec0a2e67d8e6e2f5c8f6a1f1f0c1c2f7d1d8e5b0a9c3d4e5f607'
-        block_number: 12345
-        effective_at: 2026-09-05T00:00:00.000000Z
-        log_index: 3
-        new_multiplier: '2000000000000000000'
-        old_multiplier: '1000000000000000000'
-        timestamp: 2026-09-01T00:00:00.000000Z
-        transaction_hash: '0x9f8e7d6c5b4a39281706f5e4d3c2b1a09f8e7d6c5b4a39281706f5e4d3c2b1a0'
-      properties:
-        block_hash:
-          $ref: '#/components/schemas/FullHash'
-        block_number:
-          nullable: false
-          type: integer
-          x-struct:
-          x-validate:
-        effective_at:
-          description: Moment `new_multiplier` replaces `old_multiplier`. A moment still in the future means the change is announced but pending.
-          format: date-time
-          nullable: false
-          title: Timestamp
-          type: string
-          x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.General.Timestamp
-          x-validate:
-        log_index:
-          nullable: false
-          type: integer
-          x-struct:
-          x-validate:
-        new_multiplier:
-          description: Multiplier in force from `effective_at` on, with 18 decimals of precision.
-          nullable: false
-          pattern: ^-?([1-9][0-9]*|0)$
-          title: IntegerString
-          type: string
-          x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.General.IntegerString
-          x-validate:
-        old_multiplier:
-          description: Multiplier in force until `effective_at`, with 18 decimals of precision.
-          nullable: false
-          pattern: ^-?([1-9][0-9]*|0)$
-          title: IntegerString
-          type: string
-          x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.General.IntegerString
-          x-validate:
-        timestamp:
-          description: Moment the change was announced, i.e. the timestamp of the block holding the event.
-          format: date-time
-          nullable: false
-          title: Timestamp
-          type: string
-          x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.General.Timestamp
-          x-validate:
-        transaction_hash:
-          description: Transaction the event was emitted from. `null` for changes recorded before this field existed and for chains that emit logs outside of a transaction.
-          nullable: true
-          pattern: ^0x([A-Fa-f0-9]{64})$
-          title: FullHashNullable
-          type: string
-          x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.General.FullHashNullable
-          x-validate:
-      required:
-        - block_number
-        - block_hash
-        - timestamp
-        - transaction_hash
-        - log_index
-        - old_multiplier
-        - new_multiplier
-        - effective_at
-      title: TokenUIMultiplierChange
-      type: object
-      x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.Token.UIMultiplierChange
-      x-validate:
     Address:
       additionalProperties: false
       description: Address
@@ -1867,7 +1789,6 @@ components:
       x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.General.FloatString
       x-validate:
     FullHashNullable:
-      description: Transaction the event was emitted from. `null` for changes recorded before this field existed and for chains that emit logs outside of a transaction.
       nullable: true
       pattern: ^0x([A-Fa-f0-9]{64})$
       title: FullHashNullable
@@ -2175,7 +2096,6 @@ components:
       x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.General.AddressHash
       x-validate:
     IntegerString:
-      description: Number of ERC-8056 multiplier changes listed by `/api/v2/tokens/{address_hash}/ui-multiplier-changes`. Always `"0"` for a token that does not implement ERC-8056.
       nullable: false
       pattern: ^-?([1-9][0-9]*|0)$
       title: IntegerString
@@ -2494,12 +2414,6 @@ components:
       properties:
         decimals:
           $ref: '#/components/schemas/IntegerStringNullable'
-        ui_multiplier:
-          allOf:
-            - $ref: '#/components/schemas/IntegerStringNullable'
-          description: ERC-8056 multiplier that was in force when this transfer happened, with 18 decimals of precision.
-          x-struct:
-          x-validate:
         value:
           $ref: '#/components/schemas/IntegerStringNullable'
       required:
@@ -2827,24 +2741,14 @@ components:
       example:
         token_holders_count: '0'
         transfers_count: '0'
-        ui_multiplier_changes_count: '0'
       properties:
         token_holders_count:
           $ref: '#/components/schemas/IntegerString'
         transfers_count:
           $ref: '#/components/schemas/IntegerString'
-        ui_multiplier_changes_count:
-          description: Number of ERC-8056 multiplier changes listed by `/api/v2/tokens/{address_hash}/ui-multiplier-changes`. Always `"0"` for a token that does not implement ERC-8056.
-          nullable: false
-          pattern: ^-?([1-9][0-9]*|0)$
-          title: IntegerString
-          type: string
-          x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.General.IntegerString
-          x-validate:
       required:
         - token_holders_count
         - transfers_count
-        - ui_multiplier_changes_count
       title: TokenCountersResponse
       type: object
       x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.Token.Counters
@@ -3393,7 +3297,6 @@ components:
         - ERC-1155
         - ERC-404
         - ERC-7984
-        - ERC-8056
       title: TokenType
       type: string
       x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.Token.Type
@@ -3561,27 +3464,13 @@ components:
           x-struct:
           x-validate:
         circulating_market_cap:
-          allOf:
-            - $ref: '#/components/schemas/FloatStringNullable'
-          description: 'Market capitalisation as reported by the price source. A fiat figure: never scaled.'
-          nullable: true
-          x-struct:
-          x-validate:
+          $ref: '#/components/schemas/FloatStringNullable'
         circulating_supply:
-          allOf:
-            - $ref: '#/components/schemas/FloatStringNullable'
-          description: Circulating supply as reported by the price source, in whichever unit that source uses. Not scaled, since the base cannot be told.
-          nullable: true
-          x-struct:
-          x-validate:
+          $ref: '#/components/schemas/FloatStringNullable'
         decimals:
           $ref: '#/components/schemas/IntegerStringNullable'
         exchange_rate:
-          allOf:
-            - $ref: '#/components/schemas/FloatStringNullable'
-          description: Price of one displayed unit of the token. For an ERC-8056 token that is the UI amount, the one that trades, so a fiat value is `raw_amount * ui_multiplier / 1e18 / 10 ^ decimals * exchange_rate`.
-          x-struct:
-          x-validate:
+          $ref: '#/components/schemas/FloatStringNullable'
         foreign_address:
           nullable: true
           pattern: ^0x([A-Fa-f0-9]{40})$
@@ -3595,12 +3484,6 @@ components:
         name:
           nullable: true
           type: string
-          x-struct:
-          x-validate:
-        new_ui_multiplier:
-          allOf:
-            - $ref: '#/components/schemas/IntegerStringNullable'
-          description: ERC-8056 multiplier scheduled to replace `ui_multiplier` at `ui_multiplier_effective_at`.
           x-struct:
           x-validate:
         origin_chain_id:
@@ -3620,28 +3503,11 @@ components:
           x-struct:
           x-validate:
         total_supply:
-          allOf:
-            - $ref: '#/components/schemas/IntegerStringNullable'
-          description: Raw `totalSupply()` of the contract. ERC-8056 leaves it unscaled, so displaying it takes the same `ui_multiplier` as any other raw amount.
-          x-struct:
-          x-validate:
+          $ref: '#/components/schemas/IntegerStringNullable'
         type:
           allOf:
             - $ref: '#/components/schemas/TokenType'
           nullable: true
-          x-struct:
-          x-validate:
-        ui_multiplier:
-          allOf:
-            - $ref: '#/components/schemas/IntegerStringNullable'
-          description: ERC-8056 multiplier in effect at the time of the request, with 18 decimals of precision.
-          x-struct:
-          x-validate:
-        ui_multiplier_effective_at:
-          description: Moment `new_ui_multiplier` takes effect.
-          format: date-time
-          nullable: true
-          type: string
           x-struct:
           x-validate:
         volume_24h:
@@ -3660,9 +3526,6 @@ components:
         - circulating_market_cap
         - circulating_supply
         - reputation
-        - ui_multiplier
-        - new_ui_multiplier
-        - ui_multiplier_effective_at
       title: TokenResponse
       type: object
       x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.Token
@@ -3796,7 +3659,6 @@ components:
             - ERC-1155
             - ERC-404
             - ERC-7984
-            - ERC-8056
           nullable: false
           type: string
           x-struct:
@@ -3860,12 +3722,6 @@ components:
           type: string
           x-struct:
           x-validate:
-        ui_multiplier:
-          allOf:
-            - $ref: '#/components/schemas/IntegerStringNullable'
-          description: ERC-8056 multiplier `balance_before`, `balance_after` and `change` are to be displayed with, as of this transaction, with 18 decimals of precision. The nested `token.ui_multiplier` is the one in force now, not then.
-          x-struct:
-          x-validate:
       required:
         - address
         - balance_after
@@ -3874,7 +3730,6 @@ components:
         - is_miner
         - token
         - type
-        - ui_multiplier
       title: StateChange
       type: object
       x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.Transaction.StateChange
@@ -4464,27 +4319,13 @@ components:
           x-struct:
           x-validate:
         circulating_market_cap:
-          allOf:
-            - $ref: '#/components/schemas/FloatStringNullable'
-          description: 'Market capitalisation as reported by the price source. A fiat figure: never scaled.'
-          nullable: true
-          x-struct:
-          x-validate:
+          $ref: '#/components/schemas/FloatStringNullable'
         circulating_supply:
-          allOf:
-            - $ref: '#/components/schemas/FloatStringNullable'
-          description: Circulating supply as reported by the price source, in whichever unit that source uses. Not scaled, since the base cannot be told.
-          nullable: true
-          x-struct:
-          x-validate:
+          $ref: '#/components/schemas/FloatStringNullable'
         decimals:
           $ref: '#/components/schemas/IntegerStringNullable'
         exchange_rate:
-          allOf:
-            - $ref: '#/components/schemas/FloatStringNullable'
-          description: Price of one displayed unit of the token. For an ERC-8056 token that is the UI amount, the one that trades, so a fiat value is `raw_amount * ui_multiplier / 1e18 / 10 ^ decimals * exchange_rate`.
-          x-struct:
-          x-validate:
+          $ref: '#/components/schemas/FloatStringNullable'
         foreign_address:
           nullable: true
           pattern: ^0x([A-Fa-f0-9]{40})$
@@ -4498,12 +4339,6 @@ components:
         name:
           nullable: true
           type: string
-          x-struct:
-          x-validate:
-        new_ui_multiplier:
-          allOf:
-            - $ref: '#/components/schemas/IntegerStringNullable'
-          description: ERC-8056 multiplier scheduled to replace `ui_multiplier` at `ui_multiplier_effective_at`.
           x-struct:
           x-validate:
         origin_chain_id:
@@ -4523,28 +4358,11 @@ components:
           x-struct:
           x-validate:
         total_supply:
-          allOf:
-            - $ref: '#/components/schemas/IntegerStringNullable'
-          description: Raw `totalSupply()` of the contract. ERC-8056 leaves it unscaled, so displaying it takes the same `ui_multiplier` as any other raw amount.
-          x-struct:
-          x-validate:
+          $ref: '#/components/schemas/IntegerStringNullable'
         type:
           allOf:
             - $ref: '#/components/schemas/TokenType'
           nullable: true
-          x-struct:
-          x-validate:
-        ui_multiplier:
-          allOf:
-            - $ref: '#/components/schemas/IntegerStringNullable'
-          description: ERC-8056 multiplier in effect at the time of the request, with 18 decimals of precision.
-          x-struct:
-          x-validate:
-        ui_multiplier_effective_at:
-          description: Moment `new_ui_multiplier` takes effect.
-          format: date-time
-          nullable: true
-          type: string
           x-struct:
           x-validate:
         volume_24h:
@@ -4563,9 +4381,6 @@ components:
         - circulating_market_cap
         - circulating_supply
         - reputation
-        - ui_multiplier
-        - new_ui_multiplier
-        - ui_multiplier_effective_at
       title: Token
       type: object
       x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.Token
@@ -5308,7 +5123,7 @@ info:
   contact:
     email: info@blockscout.com
   title: Blockscout
-  version: 11.3.0
+  version: 11.3.1
 openapi: 3.0.0
 paths:
   /v2/blocks/{block_hash_or_number_param}/internal-transactions:
@@ -5463,109 +5278,6 @@ paths:
       summary: List internal transactions in a specific block
       tags:
         - blocks
-  /v2/tokens/{address_hash_param}/ui-multiplier-changes:
-    get:
-      callbacks: {}
-      description: 'Retrieves the history of `UIMultiplierUpdated` events of an ERC-8056 token, newest first. Every entry carries the multiplier it replaces, the one it schedules and the moment that one takes effect, so an entry whose `effective_at` is still in the future is an announced but pending change. Entries from blocks that lost consensus are left out. Empty for a token that does not implement ERC-8056. Note that a token which announces more than 1000 changes stops being resolved altogether: its history stays listed here, but the `ui_multiplier` of its token transfers becomes `null`.'
-      operationId: BlockScoutWeb.API.V2.TokenController.ui_multiplier_changes
-      parameters:
-        - description: API key for rate limiting or for sensitive endpoints
-          in: query
-          name: apikey
-          required: false
-          schema:
-            type: string
-            x-struct:
-            x-validate:
-        - description: Secret key for getting access to restricted resources
-          in: query
-          name: key
-          required: false
-          schema:
-            type: string
-            x-struct:
-            x-validate:
-        - description: Address hash in the path
-          in: path
-          name: address_hash_param
-          required: true
-          schema:
-            $ref: '#/components/schemas/AddressHash'
-        - description: Block number for paging
-          in: query
-          name: block_number
-          required: false
-          schema:
-            minimum: 0
-            type: integer
-            x-struct:
-            x-validate:
-        - description: Log index for paging
-          in: query
-          name: log_index
-          required: false
-          schema:
-            minimum: 0
-            type: integer
-            x-struct:
-            x-validate:
-        - description: Number of items returned per page
-          in: query
-          name: items_count
-          required: false
-          schema:
-            maximum: 50
-            minimum: 1
-            type: integer
-            x-struct:
-            x-validate:
-      responses:
-        '200':
-          content:
-            application/json:
-              schema:
-                additionalProperties: false
-                nullable: false
-                properties:
-                  items:
-                    items:
-                      $ref: '#/components/schemas/TokenUIMultiplierChange'
-                    nullable: false
-                    type: array
-                    x-struct:
-                    x-validate:
-                  next_page_params:
-                    additionalProperties: true
-                    example:
-                      block_number: 12345
-                      items_count: 50
-                      log_index: 3
-                    nullable: true
-                    type: object
-                    x-struct:
-                    x-validate:
-                required:
-                  - items
-                  - next_page_params
-                type: object
-                x-struct:
-                x-validate:
-          description: ERC-8056 multiplier history of the specified token, with pagination.
-        '404':
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/NotFoundResponse'
-          description: Not Found
-        '422':
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/JsonErrorResponse'
-          description: Unprocessable Entity
-      summary: List the ERC-8056 multiplier changes of a specific token
-      tags:
-        - tokens
   /v2/tokens/{address_hash_param}:
     get:
       callbacks: {}
@@ -5889,11 +5601,10 @@ paths:
             x-validate:
         - description: |
             Filter by token type. Comma-separated list of:
-            * ERC-20 - Fungible tokens. Does not include ERC-8056, which is a type of its own
+            * ERC-20 - Fungible tokens
             * ERC-721 - Non-fungible tokens
             * ERC-1155 - Multi-token standard
             * ERC-404 - Hybrid fungible/non-fungible tokens
-            * ERC-8056 - Fungible tokens with a scaled UI amount. Such a token is labelled ERC-8056 instead of ERC-20, so list both to get every fungible token
 
 
             Example: `ERC-20,ERC-721` to show both fungible and NFT transfers
@@ -5903,7 +5614,7 @@ paths:
           schema:
             anyOf:
               - $ref: '#/components/schemas/EmptyString'
-              - pattern: ^\[?(ERC-20|ERC-721|ERC-1155|ERC-404|ERC-7984|ERC-8056)(,(ERC-20|ERC-721|ERC-1155|ERC-404|ERC-7984|ERC-8056))*\]?$
+              - pattern: ^\[?(ERC-20|ERC-721|ERC-1155|ERC-404|ERC-7984)(,(ERC-20|ERC-721|ERC-1155|ERC-404|ERC-7984))*\]?$
                 type: string
                 x-struct:
                 x-validate:
@@ -6229,7 +5940,7 @@ paths:
   /v2/addresses/{address_hash_param}/token-balances:
     get:
       callbacks: {}
-      description: Retrieves all token balances held by a specific address, including ERC-20, ERC-721, ERC-1155, ERC-404, and ERC-8056 tokens.
+      description: Retrieves all token balances held by a specific address, including ERC-20, ERC-721, ERC-1155, and ERC-404 tokens.
       operationId: BlockScoutWeb.API.V2.AddressController.token_balances
       parameters:
         - description: Address hash in the path
@@ -6568,11 +6279,10 @@ paths:
             $ref: '#/components/schemas/AddressHash'
         - description: |
             Filter by token type. Comma-separated list of:
-            * ERC-20 - Fungible tokens. Does not include ERC-8056, which is a type of its own
+            * ERC-20 - Fungible tokens
             * ERC-721 - Non-fungible tokens
             * ERC-1155 - Multi-token standard
             * ERC-404 - Hybrid fungible/non-fungible tokens
-            * ERC-8056 - Fungible tokens with a scaled UI amount. Such a token is labelled ERC-8056 instead of ERC-20, so list both to get every fungible token
 
 
             Example: `ERC-20,ERC-721` to show both fungible and NFT transfers
@@ -6582,7 +6292,7 @@ paths:
           schema:
             anyOf:
               - $ref: '#/components/schemas/EmptyString'
-              - pattern: ^\[?(ERC-20|ERC-721|ERC-1155|ERC-404|ERC-7984|ERC-8056)(,(ERC-20|ERC-721|ERC-1155|ERC-404|ERC-7984|ERC-8056))*\]?$
+              - pattern: ^\[?(ERC-20|ERC-721|ERC-1155|ERC-404|ERC-7984)(,(ERC-20|ERC-721|ERC-1155|ERC-404|ERC-7984))*\]?$
                 type: string
                 x-struct:
                 x-validate:
@@ -6892,11 +6602,10 @@ paths:
             x-validate:
         - description: |
             Filter by token type. Comma-separated list of:
-            * ERC-20 - Fungible tokens. Does not include ERC-8056, which is a type of its own
+            * ERC-20 - Fungible tokens
             * ERC-721 - Non-fungible tokens
             * ERC-1155 - Multi-token standard
             * ERC-404 - Hybrid fungible/non-fungible tokens
-            * ERC-8056 - Fungible tokens with a scaled UI amount. Such a token is labelled ERC-8056 instead of ERC-20, so list both to get every fungible token
 
 
             Example: `ERC-20,ERC-721` to show both fungible and NFT transfers
@@ -6906,7 +6615,7 @@ paths:
           schema:
             anyOf:
               - $ref: '#/components/schemas/EmptyString'
-              - pattern: ^\[?(ERC-20|ERC-721|ERC-1155|ERC-404|ERC-7984|ERC-8056)(,(ERC-20|ERC-721|ERC-1155|ERC-404|ERC-7984|ERC-8056))*\]?$
+              - pattern: ^\[?(ERC-20|ERC-721|ERC-1155|ERC-404|ERC-7984)(,(ERC-20|ERC-721|ERC-1155|ERC-404|ERC-7984))*\]?$
                 type: string
                 x-struct:
                 x-validate:
@@ -7061,7 +6770,7 @@ paths:
           schema:
             anyOf:
               - $ref: '#/components/schemas/EmptyString'
-              - pattern: ^\[?(ERC-721|ERC-1155|ERC-404)(,(ERC-721|ERC-1155|ERC-404))*\]?$
+              - pattern: ^\[?(ERC-20|ERC-721|ERC-1155|ERC-404|ERC-7984)(,(ERC-20|ERC-721|ERC-1155|ERC-404|ERC-7984))*\]?$
                 type: string
                 x-struct:
                 x-validate:
@@ -8238,7 +7947,7 @@ paths:
             type: string
             x-struct:
             x-validate:
-        - description: 'Comma-separated list of transaction types to include. Allowed values: `COIN_TRANSFER`, `CONTRACT_INTERACTION`, `CONTRACT_CREATION`, `ERC-20`, `ERC-404`, `ERC-721`, `ERC-1155`, `ERC-7984`, `ERC-8056` (plus `ZRC-2` on Zilliqa). Values are matched case-insensitively; unknown entries are silently dropped.'
+        - description: 'Comma-separated list of transaction types to include. Allowed values: `COIN_TRANSFER`, `CONTRACT_INTERACTION`, `CONTRACT_CREATION`, `ERC-20`, `ERC-404`, `ERC-721`, `ERC-1155`, `ERC-7984` (plus `ZRC-2` on Zilliqa). Values are matched case-insensitively; unknown entries are silently dropped.'
           example: COIN_TRANSFER,ERC-20
           in: query
           name: transaction_types
@@ -8903,11 +8612,10 @@ paths:
             x-validate:
         - description: |
             Filter by token type. Comma-separated list of:
-            * ERC-20 - Fungible tokens. Does not include ERC-8056, which is a type of its own
+            * ERC-20 - Fungible tokens
             * ERC-721 - Non-fungible tokens
             * ERC-1155 - Multi-token standard
             * ERC-404 - Hybrid fungible/non-fungible tokens
-            * ERC-8056 - Fungible tokens with a scaled UI amount. Such a token is labelled ERC-8056 instead of ERC-20, so list both to get every fungible token
 
 
             Example: `ERC-20,ERC-721` to show both fungible and NFT transfers
@@ -8917,7 +8625,7 @@ paths:
           schema:
             anyOf:
               - $ref: '#/components/schemas/EmptyString'
-              - pattern: ^\[?(ERC-20|ERC-721|ERC-1155|ERC-404|ERC-7984|ERC-8056)(,(ERC-20|ERC-721|ERC-1155|ERC-404|ERC-7984|ERC-8056))*\]?$
+              - pattern: ^\[?(ERC-20|ERC-721|ERC-1155|ERC-404|ERC-7984)(,(ERC-20|ERC-721|ERC-1155|ERC-404|ERC-7984))*\]?$
                 type: string
                 x-struct:
                 x-validate:
@@ -9047,11 +8755,10 @@ paths:
             $ref: '#/components/schemas/FullHash'
         - description: |
             Filter by token type. Comma-separated list of:
-            * ERC-20 - Fungible tokens. Does not include ERC-8056, which is a type of its own
+            * ERC-20 - Fungible tokens
             * ERC-721 - Non-fungible tokens
             * ERC-1155 - Multi-token standard
             * ERC-404 - Hybrid fungible/non-fungible tokens
-            * ERC-8056 - Fungible tokens with a scaled UI amount. Such a token is labelled ERC-8056 instead of ERC-20, so list both to get every fungible token
 
 
             Example: `ERC-20,ERC-721` to show both fungible and NFT transfers
@@ -9061,7 +8768,7 @@ paths:
           schema:
             anyOf:
               - $ref: '#/components/schemas/EmptyString'
-              - pattern: ^\[?(ERC-20|ERC-721|ERC-1155|ERC-404|ERC-7984|ERC-8056)(,(ERC-20|ERC-721|ERC-1155|ERC-404|ERC-7984|ERC-8056))*\]?$
+              - pattern: ^\[?(ERC-20|ERC-721|ERC-1155|ERC-404|ERC-7984)(,(ERC-20|ERC-721|ERC-1155|ERC-404|ERC-7984))*\]?$
                 type: string
                 x-struct:
                 x-validate:
@@ -9419,7 +9126,7 @@ paths:
   /v2/tokens/{address_hash_param}/counters:
     get:
       callbacks: {}
-      description: Retrieves count statistics for a specific token, including holders count, transfers count and, for an ERC-8056 token, the number of multiplier changes listed by `/api/v2/tokens/{address_hash}/ui-multiplier-changes`.
+      description: Retrieves count statistics for a specific token, including holders count and transfers count.
       operationId: BlockScoutWeb.API.V2.TokenController.counters
       parameters:
         - description: Address hash in the path
@@ -9600,7 +9307,7 @@ paths:
             type: string
             x-struct:
             x-validate:
-        - description: 'Comma-separated list of transaction types to include. Allowed values: `COIN_TRANSFER`, `CONTRACT_INTERACTION`, `CONTRACT_CREATION`, `ERC-20`, `ERC-404`, `ERC-721`, `ERC-1155`, `ERC-7984`, `ERC-8056` (plus `ZRC-2` on Zilliqa). Values are matched case-insensitively; unknown entries are silently dropped.'
+        - description: 'Comma-separated list of transaction types to include. Allowed values: `COIN_TRANSFER`, `CONTRACT_INTERACTION`, `CONTRACT_CREATION`, `ERC-20`, `ERC-404`, `ERC-721`, `ERC-1155`, `ERC-7984` (plus `ZRC-2` on Zilliqa). Values are matched case-insensitively; unknown entries are silently dropped.'
           example: COIN_TRANSFER,ERC-20
           in: query
           name: transaction_types
@@ -14276,7 +13983,7 @@ paths:
           schema:
             anyOf:
               - $ref: '#/components/schemas/EmptyString'
-              - pattern: ^\[?(ERC-721|ERC-1155|ERC-404)(,(ERC-721|ERC-1155|ERC-404))*\]?$
+              - pattern: ^\[?(ERC-20|ERC-721|ERC-1155|ERC-404|ERC-7984)(,(ERC-20|ERC-721|ERC-1155|ERC-404|ERC-7984))*\]?$
                 type: string
                 x-struct:
                 x-validate:
