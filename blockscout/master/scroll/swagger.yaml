@@ -5358,7 +5358,7 @@ info:
   contact:
     email: info@blockscout.com
   title: Blockscout
-  version: 11.3.1
+  version: 11.3.2
 openapi: 3.0.0
 paths:
   /v2/scroll/batches:
