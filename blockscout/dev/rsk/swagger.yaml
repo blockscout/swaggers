@@ -8568,7 +8568,7 @@ paths:
         - description: Start of the time period (ISO 8601 format) in CSV export
           in: query
           name: from_period
-          required: false
+          required: true
           schema:
             anyOf:
               - nullable: false
@@ -8582,7 +8582,7 @@ paths:
         - description: End of the time period (ISO 8601 format) In CSV export
           in: query
           name: to_period
-          required: false
+          required: true
           schema:
             anyOf:
               - nullable: false
@@ -9113,7 +9113,7 @@ paths:
         - description: Start of the time period (ISO 8601 format) in CSV export
           in: query
           name: from_period
-          required: false
+          required: true
           schema:
             anyOf:
               - nullable: false
@@ -9127,7 +9127,7 @@ paths:
         - description: End of the time period (ISO 8601 format) In CSV export
           in: query
           name: to_period
-          required: false
+          required: true
           schema:
             anyOf:
               - nullable: false
@@ -10532,7 +10532,7 @@ paths:
         - description: Start of the time period (ISO 8601 format) in CSV export
           in: query
           name: from_period
-          required: false
+          required: true
           schema:
             anyOf:
               - nullable: false
@@ -10546,7 +10546,7 @@ paths:
         - description: End of the time period (ISO 8601 format) In CSV export
           in: query
           name: to_period
-          required: false
+          required: true
           schema:
             anyOf:
               - nullable: false
@@ -12741,7 +12741,7 @@ paths:
         - description: Start of the time period (ISO 8601 format) in CSV export
           in: query
           name: from_period
-          required: false
+          required: true
           schema:
             anyOf:
               - nullable: false
@@ -12755,7 +12755,7 @@ paths:
         - description: End of the time period (ISO 8601 format) In CSV export
           in: query
           name: to_period
-          required: false
+          required: true
           schema:
             anyOf:
               - nullable: false
