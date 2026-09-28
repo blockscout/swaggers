@@ -17802,6 +17802,15 @@ paths:
           required: false
           schema:
             $ref: '#/components/schemas/IntegerStringOrEmptyOrNullLiteral'
+        - description: Number of items per page
+          in: query
+          name: items_count
+          required: false
+          schema:
+            minimum: 1
+            type: integer
+            x-struct: null
+            x-validate: null
       responses:
         '200':
           content:
