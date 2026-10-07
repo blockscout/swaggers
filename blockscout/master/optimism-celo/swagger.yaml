@@ -11040,6 +11040,16 @@ paths:
             type: string
             x-struct:
             x-validate:
+        - description: 'Relative time-window preset selected in the UI (e.g. `1h`, `24h`, `7d`). Accepted for compatibility and ignored by the backend: the actual window is taken from `age_from` and `age_to`.'
+          example: 1h
+          in: query
+          name: age
+          required: false
+          schema:
+            nullable: true
+            type: string
+            x-struct:
+            x-validate:
         - description: Comma-separated list of sender address hashes to include.
           example: '0x5a52e96bacdabb82fd05763e25335261b270efcb,0x00000000219ab540356cbb839cbe05303d7705fa'
           in: query
@@ -16955,6 +16965,16 @@ paths:
           example: 2024-12-31T23:59:59Z
           in: query
           name: age_to
+          required: false
+          schema:
+            nullable: true
+            type: string
+            x-struct:
+            x-validate:
+        - description: 'Relative time-window preset selected in the UI (e.g. `1h`, `24h`, `7d`). Accepted for compatibility and ignored by the backend: the actual window is taken from `age_from` and `age_to`.'
+          example: 1h
+          in: query
+          name: age
           required: false
           schema:
             nullable: true
