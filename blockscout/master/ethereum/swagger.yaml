@@ -2548,7 +2548,7 @@ components:
         kzg_commitment:
           $ref: '#/components/schemas/HexData'
         kzg_proof:
-          $ref: '#/components/schemas/HexData'
+          $ref: '#/components/schemas/HexDataNullable'
       required:
         - blob_data
         - hash
