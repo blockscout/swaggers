@@ -2369,6 +2369,7 @@ definitions:
         type: string
       token_value:
         type: string
+        description: Returned only once, by CreateAuthToken and RegisterProfile. The value is not stored.
       created_at:
         type: string
       id:
@@ -2377,7 +2378,6 @@ definitions:
         type: string
     required:
       - name
-      - token_value
       - created_at
       - id
       - expires_at
