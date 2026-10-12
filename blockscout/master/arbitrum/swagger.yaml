@@ -11306,7 +11306,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/BadRequestResponse'
-          description: Withdrawal cannot be claimed. Returned when the withdrawal is unconfirmed, just initiated, or already executed.
+          description: Withdrawal cannot be claimed. Returned when the withdrawal is unconfirmed or already executed.
         '404':
           content:
             application/json:
