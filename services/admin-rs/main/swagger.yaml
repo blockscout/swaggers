@@ -100,10 +100,10 @@ paths:
             $ref: '#/definitions/rpcStatus'
       parameters:
         - name: chainId
+          description: Either just `chain_id` or `chain_id:instance_id`
           in: path
           required: true
           type: string
-          format: uint64
         - name: body
           in: body
           required: true
@@ -125,10 +125,10 @@ paths:
             $ref: '#/definitions/rpcStatus'
       parameters:
         - name: chainId
+          description: Either just `chain_id` or `chain_id:instance_id`
           in: path
           required: true
           type: string
-          format: uint64
         - name: id
           in: path
           required: true
@@ -153,10 +153,10 @@ paths:
             $ref: '#/definitions/rpcStatus'
       parameters:
         - name: chainId
+          description: Either just `chain_id` or `chain_id:instance_id`
           in: path
           required: true
           type: string
-          format: uint64
         - name: status
           description: Filter by submission status.
           in: query
@@ -188,10 +188,10 @@ paths:
             $ref: '#/definitions/rpcStatus'
       parameters:
         - name: chainId
+          description: Either just `chain_id` or `chain_id:instance_id`
           in: path
           required: true
           type: string
-          format: uint64
         - name: submission
           description: The token info submission resource to create.
           in: body
@@ -215,10 +215,10 @@ paths:
             $ref: '#/definitions/rpcStatus'
       parameters:
         - name: chainId
+          description: Either just `chain_id` or `chain_id:instance_id`
           in: path
           required: true
           type: string
-          format: uint64
       tags:
         - Admin
   /api/v1/chains/{chainId}/token-info-submissions/{id}:
@@ -236,10 +236,10 @@ paths:
             $ref: '#/definitions/rpcStatus'
       parameters:
         - name: chainId
+          description: Either just `chain_id` or `chain_id:instance_id`
           in: path
           required: true
           type: string
-          format: uint64
         - name: id
           description: The ID of the token info submission resource to retrieve.
           in: path
@@ -262,10 +262,10 @@ paths:
             $ref: '#/definitions/rpcStatus'
       parameters:
         - name: chainId
+          description: Either just `chain_id` or `chain_id:instance_id`
           in: path
           required: true
           type: string
-          format: uint64
         - name: id
           description: |-
             The ID of the token info submission resource to update.
@@ -285,7 +285,53 @@ paths:
             $ref: '#/definitions/v1TokenInfoSubmission'
       tags:
         - Admin
+  /api/v1/explorer-instances/{chainSpecifier}:
+    get:
+      operationId: AdminManagement_GetExplorerInstance
+      responses:
+        "200":
+          description: A successful response.
+          schema:
+            $ref: '#/definitions/v1Instance'
+        default:
+          description: An unexpected error response.
+          schema:
+            $ref: '#/definitions/rpcStatus'
+      parameters:
+        - name: chainSpecifier
+          in: path
+          required: true
+          type: string
+      tags:
+        - AdminManagement
   /api/v1/instances:
+    get:
+      summary: 'Instance directory (service-to-service: contracts-info, metadata, autoscout)'
+      operationId: AdminManagement_ListExplorerInstances
+      responses:
+        "200":
+          description: ""
+          schema:
+            type: array
+            items:
+              type: object
+              $ref: '#/definitions/v1Instance'
+        default:
+          description: An unexpected error response.
+          schema:
+            $ref: '#/definitions/rpcStatus'
+      parameters:
+        - name: userId
+          in: query
+          required: false
+          type: string
+          format: int64
+        - name: userEmail
+          in: query
+          required: false
+          type: string
+      tags:
+        - AdminManagement
     post:
       summary: Instance Management
       operationId: AdminManagement_RegisterInstance
@@ -306,7 +352,7 @@ paths:
             $ref: '#/definitions/v1RegisterInstanceRequest'
       tags:
         - AdminManagement
-  /api/v1/instances/{instancePublicId}:
+  /api/v1/instances/{chainSpecifier}:
     get:
       operationId: AdminManagement_GetInstance
       responses:
@@ -319,7 +365,7 @@ paths:
           schema:
             $ref: '#/definitions/rpcStatus'
       parameters:
-        - name: instancePublicId
+        - name: chainSpecifier
           in: path
           required: true
           type: string
@@ -337,7 +383,7 @@ paths:
           schema:
             $ref: '#/definitions/rpcStatus'
       parameters:
-        - name: instancePublicId
+        - name: chainSpecifier
           in: path
           required: true
           type: string
@@ -355,7 +401,7 @@ paths:
           schema:
             $ref: '#/definitions/rpcStatus'
       parameters:
-        - name: instancePublicId
+        - name: chainSpecifier
           in: path
           required: true
           type: string
@@ -366,7 +412,7 @@ paths:
             $ref: '#/definitions/AdminManagementUpdateInstanceBody'
       tags:
         - AdminManagement
-  /api/v1/instances/{instancePublicId}/api-key:
+  /api/v1/instances/{chainSpecifier}/api-key:
     get:
       operationId: AdminManagement_GetInstanceWithApiKey
       responses:
@@ -379,7 +425,45 @@ paths:
           schema:
             $ref: '#/definitions/rpcStatus'
       parameters:
-        - name: instancePublicId
+        - name: chainSpecifier
+          in: path
+          required: true
+          type: string
+      tags:
+        - AdminManagement
+  /api/v1/instances/{chainSpecifier}/disable:
+    post:
+      operationId: AdminManagement_DisableInstance
+      responses:
+        "200":
+          description: A successful response.
+          schema:
+            $ref: '#/definitions/v1DisableInstanceResponse'
+        default:
+          description: An unexpected error response.
+          schema:
+            $ref: '#/definitions/rpcStatus'
+      parameters:
+        - name: chainSpecifier
+          in: path
+          required: true
+          type: string
+      tags:
+        - AdminManagement
+  /api/v1/instances/{chainSpecifier}/enable:
+    post:
+      operationId: AdminManagement_EnableInstance
+      responses:
+        "200":
+          description: A successful response.
+          schema:
+            $ref: '#/definitions/v1EnableInstanceResponse'
+        default:
+          description: An unexpected error response.
+          schema:
+            $ref: '#/definitions/rpcStatus'
+      parameters:
+        - name: chainSpecifier
           in: path
           required: true
           type: string
@@ -505,6 +589,118 @@ paths:
           type: string
       tags:
         - AdminManagement
+  /api/v1/roles/{rolePublicId}/permissions:
+    post:
+      operationId: AdminManagement_UpdateRolePermissions
+      responses:
+        "200":
+          description: A successful response.
+          schema:
+            $ref: '#/definitions/v1UpdateRolePermissionsResponse'
+        default:
+          description: An unexpected error response.
+          schema:
+            $ref: '#/definitions/rpcStatus'
+      parameters:
+        - name: rolePublicId
+          in: path
+          required: true
+          type: string
+        - name: body
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/AdminManagementUpdateRolePermissionsBody'
+      tags:
+        - AdminManagement
+  /api/v1/users:
+    post:
+      summary: User Management
+      operationId: AdminManagement_RegisterUser
+      responses:
+        "200":
+          description: A successful response.
+          schema:
+            $ref: '#/definitions/v1RegisterUserResponse'
+        default:
+          description: An unexpected error response.
+          schema:
+            $ref: '#/definitions/rpcStatus'
+      parameters:
+        - name: body
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/v1RegisterUserRequest'
+      tags:
+        - AdminManagement
+  /api/v1/users/{userEmailOrId}:
+    get:
+      operationId: AdminManagement_GetUser
+      responses:
+        "200":
+          description: A successful response.
+          schema:
+            $ref: '#/definitions/v1GetUserResponse'
+        default:
+          description: An unexpected error response.
+          schema:
+            $ref: '#/definitions/rpcStatus'
+      parameters:
+        - name: userEmailOrId
+          in: path
+          required: true
+          type: string
+      tags:
+        - AdminManagement
+  /api/v1/users/{userEmailOrId}/password:
+    post:
+      operationId: AdminManagement_UpdateUserPassword
+      responses:
+        "200":
+          description: A successful response.
+          schema:
+            $ref: '#/definitions/v1UpdateUserPasswordResponse'
+        default:
+          description: An unexpected error response.
+          schema:
+            $ref: '#/definitions/rpcStatus'
+      parameters:
+        - name: userEmailOrId
+          in: path
+          required: true
+          type: string
+        - name: body
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/AdminManagementUpdateUserPasswordBody'
+      tags:
+        - AdminManagement
+  /api/v1/users/{userEmailOrId}/roles:
+    post:
+      operationId: AdminManagement_AddUserToRole
+      responses:
+        "200":
+          description: A successful response.
+          schema:
+            $ref: '#/definitions/v1AddUserToRoleResponse'
+        default:
+          description: An unexpected error response.
+          schema:
+            $ref: '#/definitions/rpcStatus'
+      parameters:
+        - name: userEmailOrId
+          in: path
+          required: true
+          type: string
+        - name: body
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/AdminManagementAddUserToRoleBody'
+      tags:
+        - AdminManagement
   /health:
     get:
       summary: |-
@@ -533,12 +729,35 @@ definitions:
     properties:
       submission:
         $ref: '#/definitions/v1MetadataTagSubmission'
+  AdminManagementAddUserToRoleBody:
+    type: object
+    properties:
+      rolePublicId:
+        type: string
   AdminManagementUpdateInstanceBody:
     type: object
     properties:
       url:
         type: string
       apiKey:
+        type: string
+  AdminManagementUpdateRolePermissionsBody:
+    type: object
+    properties:
+      updates:
+        type: array
+        items:
+          type: object
+          $ref: '#/definitions/v1PermissionUpdate'
+      addDefaultInstanceOwnerPermissions:
+        type: boolean
+        description: |-
+          If `true`, on top of `updates` it will add default permissions suitable for instance owner role.
+          This can be useful for initial regular role setup for a new instance.
+  AdminManagementUpdateUserPasswordBody:
+    type: object
+    properties:
+      newPassword:
         type: string
   HealthCheckResponseServingStatus:
     type: string
@@ -574,10 +793,15 @@ definitions:
       - NULL_VALUE
     default: NULL_VALUE
     description: |-
-      `NullValue` is a singleton enumeration to represent the null value for the
-      `Value` type union.
+      Represents a JSON `null`.
 
-      The JSON representation for `NullValue` is JSON `null`.
+      `NullValue` is a sentinel, using an enum with only one value to represent
+      the null value for the `Value` type union.
+
+      A field of type `NullValue` with any value other than `0` is considered
+      invalid. Most ProtoJSON serializers will emit a Value with a `null_value` set
+      as a JSON `null` regardless of the integer value, and so will round trip to
+      a `0` value.
 
        - NULL_VALUE: Null value.
   rpcStatus:
@@ -593,6 +817,8 @@ definitions:
         items:
           type: object
           $ref: '#/definitions/protobufAny'
+  v1AddUserToRoleResponse:
+    type: object
   v1CreateDappRatingResponse:
     type: object
     properties:
@@ -614,6 +840,10 @@ definitions:
         type: string
   v1DeleteRoleResponse:
     type: object
+  v1DisableInstanceResponse:
+    type: object
+  v1EnableInstanceResponse:
+    type: object
   v1GetRoleResponse:
     type: object
     properties:
@@ -626,6 +856,14 @@ definitions:
           $ref: '#/definitions/v1Instance'
     required:
       - role
+  v1GetUserResponse:
+    type: object
+    properties:
+      id:
+        type: string
+        format: int64
+      email:
+        type: string
   v1HealthCheckResponse:
     type: object
     properties:
@@ -634,20 +872,21 @@ definitions:
   v1Instance:
     type: object
     properties:
-      instancePublicId:
+      chainSpecifier:
         type: string
-        title: Public identifier provided by autoscout
+        title: Explorer instance key (opaque string; often decimal chain id or `chain_id:autoscout_segment`)
       slug:
         type: string
         title: Human-readable identifier
-      chainId:
-        type: string
-        format: uint64
       url:
         type: string
       ownerRolePublicId:
         type: string
         title: Owner role (org/team) public ID
+      disabledAt:
+        type: string
+        description: API key is sometimes omitted on purpose as a sensitive data
+        title: ISO 8601 format
   v1InstanceWithApiKey:
     type: object
     properties:
@@ -657,6 +896,14 @@ definitions:
         type: string
     required:
       - inner
+  v1ListExplorerInstancesResponse:
+    type: object
+    properties:
+      instances:
+        type: array
+        items:
+          type: object
+          $ref: '#/definitions/v1Instance'
   v1ListMarketplaceCategoriesResponse:
     type: object
     properties:
@@ -788,6 +1035,100 @@ definitions:
         type: string
       companyWebsite:
         type: string
+  v1Permission:
+    type: string
+    enum:
+      - PERMISSION_UNSPECIFIED
+      - PERMISSION_TOKEN_INFO_SUBMISSIONS_READ_ALL
+      - PERMISSION_TOKEN_INFO_SUBMISSIONS_READ_OWN
+      - PERMISSION_TOKEN_INFO_SUBMISSIONS_EDIT_ALL
+      - PERMISSION_TOKEN_INFO_SUBMISSIONS_EDIT_OWN
+      - PERMISSION_TOKEN_INFO_SUBMISSIONS_DELETE_ALL
+      - PERMISSION_TOKEN_INFO_SUBMISSIONS_DELETE_OWN
+      - PERMISSION_TOKEN_INFO_SUBMISSIONS_APPROVE_ALL
+      - PERMISSION_TOKEN_INFO_SUBMISSIONS_APPROVE_OWN
+      - PERMISSION_TOKEN_INFO_SUBMISSIONS_REJECT_ALL
+      - PERMISSION_TOKEN_INFO_SUBMISSIONS_REJECT_OWN
+      - PERMISSION_TOKEN_INFO_SUBMISSIONS_REQUIRE_UPDATES_ALL
+      - PERMISSION_TOKEN_INFO_SUBMISSIONS_REQUIRE_UPDATES_OWN
+      - PERMISSION_VERIFIED_ADDRESSES_READ_ALL
+      - PERMISSION_VERIFIED_ADDRESSES_READ_OWN
+      - PERMISSION_VERIFIED_ADDRESSES_EDIT_ALL
+      - PERMISSION_VERIFIED_ADDRESSES_EDIT_OWN
+      - PERMISSION_VERIFIED_ADDRESSES_DELETE_ALL
+      - PERMISSION_VERIFIED_ADDRESSES_DELETE_OWN
+      - PERMISSION_TOKEN_INFOS_READ_ALL
+      - PERMISSION_TOKEN_INFOS_READ_OWN
+      - PERMISSION_TOKEN_INFOS_EDIT_ALL
+      - PERMISSION_TOKEN_INFOS_EDIT_OWN
+      - PERMISSION_TOKEN_INFOS_DELETE_ALL
+      - PERMISSION_TOKEN_INFOS_DELETE_OWN
+      - PERMISSION_METADATA_TAGS_READ_ALL
+      - PERMISSION_METADATA_TAGS_READ_OWN
+      - PERMISSION_METADATA_TAGS_EDIT_ALL
+      - PERMISSION_METADATA_TAGS_EDIT_OWN
+      - PERMISSION_METADATA_TAGS_DELETE_ALL
+      - PERMISSION_METADATA_TAGS_DELETE_OWN
+      - PERMISSION_NFT_REFETCH_READ_ALL
+      - PERMISSION_NFT_REFETCH_READ_OWN
+      - PERMISSION_NFT_REFETCH_REFETCH_ALL
+      - PERMISSION_NFT_REFETCH_REFETCH_OWN
+      - PERMISSION_USERS_ROLES_READ_ALL
+      - PERMISSION_USERS_ROLES_READ_OWN
+      - PERMISSION_USERS_ROLES_EDIT_ALL
+      - PERMISSION_USERS_ROLES_EDIT_OWN
+      - PERMISSION_USERS_ROLES_DELETE_ALL
+      - PERMISSION_USERS_ROLES_DELETE_OWN
+      - PERMISSION_USERS_CREATE_ALL
+      - PERMISSION_USERS_READ_ALL
+      - PERMISSION_USERS_EDIT_ALL
+      - PERMISSION_USERS_DELETE_ALL
+      - PERMISSION_INSTANCES_READ_ALL
+      - PERMISSION_INSTANCES_READ_OWN
+      - PERMISSION_INSTANCES_EDIT_ALL
+      - PERMISSION_INSTANCES_EDIT_OWN
+      - PERMISSION_INSTANCES_DELETE_ALL
+      - PERMISSION_INSTANCES_DELETE_OWN
+      - PERMISSION_AUTOSCOUT_READ_ALL
+      - PERMISSION_AUTOSCOUT_EDIT_ALL
+      - PERMISSION_AUTOSCOUT_DELETE_ALL
+      - PERMISSION_MARKETPLACE_DAPPS_READ_ALL
+      - PERMISSION_MARKETPLACE_DAPPS_EDIT_ALL
+      - PERMISSION_MARKETPLACE_DAPPS_DELETE_ALL
+      - PERMISSION_MARKETPLACE_RATINGS_READ_ALL
+      - PERMISSION_MARKETPLACE_RATINGS_EDIT_ALL
+      - PERMISSION_MARKETPLACE_RATINGS_DELETE_ALL
+      - PERMISSION_MARKETPLACE_OVERRIDES_READ_ALL
+      - PERMISSION_MARKETPLACE_OVERRIDES_EDIT_ALL
+      - PERMISSION_MARKETPLACE_OVERRIDES_DELETE_ALL
+      - PERMISSION_MARKETPLACE_USER_VOTES_READ_ALL
+      - PERMISSION_MARKETPLACE_USER_VOTES_EDIT_ALL
+      - PERMISSION_MARKETPLACE_USER_VOTES_DELETE_ALL
+      - PERMISSION_ROLES_READ_ALL
+      - PERMISSION_ROLES_EDIT_ALL
+      - PERMISSION_ROLES_DELETE_ALL
+      - PERMISSION_METADATA_TAG_SUBMISSIONS_READ_ALL
+      - PERMISSION_METADATA_TAG_SUBMISSIONS_READ_OWN
+      - PERMISSION_METADATA_TAG_SUBMISSIONS_EDIT_ALL
+      - PERMISSION_METADATA_TAG_SUBMISSIONS_EDIT_OWN
+      - PERMISSION_METADATA_TAG_SUBMISSIONS_DELETE_ALL
+      - PERMISSION_METADATA_TAG_SUBMISSIONS_DELETE_OWN
+    default: PERMISSION_UNSPECIFIED
+  v1PermissionAction:
+    type: string
+    enum:
+      - PERMISSION_ACTION_UNSPECIFIED
+      - PERMISSION_ACTION_ALLOW
+      - PERMISSION_ACTION_DENY
+    default: PERMISSION_ACTION_UNSPECIFIED
+    description: Unspecified is a no-op (permission unchanged). Only Allow and Deny change state.
+  v1PermissionUpdate:
+    type: object
+    properties:
+      permission:
+        $ref: '#/definitions/v1Permission'
+      action:
+        $ref: '#/definitions/v1PermissionAction'
   v1RegisterInstanceRequest:
     type: object
     properties:
@@ -798,7 +1139,7 @@ definitions:
   v1RegisterInstanceResponse:
     type: object
     properties:
-      instancePublicId:
+      chainSpecifier:
         type: string
       ownerRolePublicId:
         type: string
@@ -813,6 +1154,21 @@ definitions:
     type: object
     properties:
       rolePublicId:
+        type: string
+  v1RegisterUserRequest:
+    type: object
+    properties:
+      email:
+        type: string
+      password:
+        type: string
+  v1RegisterUserResponse:
+    type: object
+    properties:
+      id:
+        type: string
+        format: int64
+      email:
         type: string
   v1RemoveInstanceResponse:
     type: object
@@ -829,6 +1185,10 @@ definitions:
       maxUsers:
         type: integer
         format: int32
+      ownerUserId:
+        type: string
+        format: int64
+        description: 'Admin `users.id` of the user who may delegate `users_roles::edit::own` for this role (Autoscout: instance owner).'
   v1SearchMarketplaceDappsResponse:
     type: object
     properties:
@@ -914,5 +1274,9 @@ definitions:
   v1UpdateInstanceResponse:
     type: object
     properties:
-      instancePublicId:
+      chainSpecifier:
         type: string
+  v1UpdateRolePermissionsResponse:
+    type: object
+  v1UpdateUserPasswordResponse:
+    type: object

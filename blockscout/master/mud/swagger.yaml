@@ -111,6 +111,14 @@ components:
       type: object
       x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.Address
       x-validate:
+    EthBlockNumberResult:
+      description: Hex-encoded latest block number on the chain. Nullable in the schema for defensive reasons; always present in practice.
+      nullable: true
+      pattern: ^0x[0-9a-fA-F]+$
+      title: EthBlockNumberResult
+      type: string
+      x-struct: Elixir.BlockScoutWeb.Schemas.API.Legacy.EthBlockNumberResult
+      x-validate:
     NFTCollection:
       additionalProperties: false
       properties:
@@ -231,17 +239,6 @@ components:
       type: string
       x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.General.EmptyString
       x-validate:
-    Type:
-      enum:
-        - ERC-20
-        - ERC-721
-        - ERC-1155
-        - ERC-404
-        - ERC-7984
-      title: Type
-      type: string
-      x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.Token.Type
-      x-validate:
     AddressNullable:
       additionalProperties: false
       description: AddressNullable
@@ -361,6 +358,124 @@ components:
       title: Metadata
       type: object
       x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.Proxy.Metadata
+      x-validate:
+    AccountAbstractionStatus:
+      additionalProperties:
+        additionalProperties: false
+        properties:
+          enabled:
+            nullable: false
+            type: boolean
+            x-struct:
+            x-validate:
+          live:
+            nullable: false
+            type: boolean
+            x-struct:
+            x-validate:
+          past_db_logs_indexing_finished:
+            nullable: false
+            type: boolean
+            x-struct:
+            x-validate:
+          past_rpc_logs_indexing_finished:
+            nullable: false
+            type: boolean
+            x-struct:
+            x-validate:
+        type: object
+        x-struct:
+        x-validate:
+      description: Status struct.
+      nullable: false
+      properties:
+        finished_past_indexing:
+          nullable: false
+          type: boolean
+          x-struct:
+          x-validate:
+      required:
+        - finished_past_indexing
+      title: AccountAbstractionStatus
+      type: object
+      x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.Proxy.AccountAbstraction.Status
+      x-validate:
+    LogItem:
+      additionalProperties: false
+      properties:
+        address:
+          $ref: '#/components/schemas/AddressHash'
+        blockNumber:
+          description: Hex-encoded block number.
+          pattern: ^0x[0-9a-fA-F]+$
+          type: string
+          x-struct:
+          x-validate:
+        data:
+          description: Hex-encoded event data payload (`0x`-prefixed, arbitrary length).
+          pattern: ^0x[0-9a-fA-F]*$
+          type: string
+          x-struct:
+          x-validate:
+        gasPrice:
+          description: Hex-encoded gas price in wei.
+          pattern: ^0x[0-9a-fA-F]+$
+          type: string
+          x-struct:
+          x-validate:
+        gasUsed:
+          description: Hex-encoded gas used by the transaction.
+          pattern: ^0x[0-9a-fA-F]+$
+          type: string
+          x-struct:
+          x-validate:
+        logIndex:
+          description: Hex-encoded position of the log within the block.
+          pattern: ^0x[0-9a-fA-F]+$
+          type: string
+          x-struct:
+          x-validate:
+        timeStamp:
+          description: Hex-encoded Unix timestamp in seconds of the block.
+          pattern: ^0x[0-9a-fA-F]+$
+          type: string
+          x-struct:
+          x-validate:
+        topics:
+          description: 32-byte indexed event topics. Always a 4-element array; unfilled slots are `null`.
+          items:
+            nullable: true
+            pattern: ^0x[0-9a-fA-F]{64}$
+            type: string
+            x-struct:
+            x-validate:
+          maxItems: 4
+          minItems: 4
+          type: array
+          x-struct:
+          x-validate:
+        transactionHash:
+          $ref: '#/components/schemas/FullHash'
+        transactionIndex:
+          description: Hex-encoded position of the transaction within the block.
+          pattern: ^0x[0-9a-fA-F]+$
+          type: string
+          x-struct:
+          x-validate:
+      required:
+        - address
+        - topics
+        - data
+        - blockNumber
+        - timeStamp
+        - gasPrice
+        - gasUsed
+        - logIndex
+        - transactionHash
+        - transactionIndex
+      title: LogItem
+      type: object
+      x-struct: Elixir.BlockScoutWeb.Schemas.API.Legacy.LogItem
       x-validate:
     TotalERC721:
       additionalProperties: false
@@ -526,6 +641,39 @@ components:
       type: object
       x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.Transaction.SummaryJustRequestBody
       x-validate:
+    AdvancedFilterResponse:
+      additionalProperties: false
+      properties:
+        items:
+          items:
+            $ref: '#/components/schemas/AdvancedFilterItem'
+          nullable: false
+          type: array
+          x-struct:
+          x-validate:
+        next_page_params:
+          additionalProperties: true
+          example:
+            block_number: 23532302
+            internal_transaction_index:
+            items_count: 50
+            token_transfer_batch_index:
+            token_transfer_index: 0
+            transaction_index: 1
+          nullable: true
+          type: object
+          x-struct:
+          x-validate:
+        search_params:
+          $ref: '#/components/schemas/AdvancedFilterSearchParams'
+      required:
+        - items
+        - search_params
+        - next_page_params
+      title: AdvancedFilterResponse
+      type: object
+      x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.AdvancedFilter.Response
+      x-validate:
     HotContract:
       additionalProperties: false
       properties:
@@ -551,6 +699,21 @@ components:
       title: HotContract
       type: object
       x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.Stats.HotContract
+      x-validate:
+    IntegerStringOrEmptyOrNullLiteral:
+      oneOf:
+        - pattern: ^([1-9][0-9]*|0)$
+          type: string
+          x-struct:
+          x-validate:
+        - enum:
+            - ""
+            - 'null'
+          type: string
+          x-struct:
+          x-validate:
+      title: IntegerStringOrEmptyOrNullLiteral
+      x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.General.IntegerStringOrEmptyOrNullLiteral
       x-validate:
     BadRequestResponse:
       description: Response returned when the request is invalid
@@ -596,6 +759,113 @@ components:
       title: Withdrawal
       type: object
       x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.Withdrawal
+      x-validate:
+    TopAddress:
+      additionalProperties: false
+      description: Address holding native coin, with its balance and transactions count
+      properties:
+        coin_balance:
+          $ref: '#/components/schemas/IntegerStringNullable'
+        ens_domain_name:
+          description: ENS domain name associated with the address
+          nullable: true
+          type: string
+          x-struct:
+          x-validate:
+        hash:
+          $ref: '#/components/schemas/AddressHash'
+        implementations:
+          description: Implementations linked with the contract
+          items:
+            $ref: '#/components/schemas/Implementation'
+          type: array
+          x-struct:
+          x-validate:
+        is_contract:
+          description: Has address contract code?
+          nullable: true
+          type: boolean
+          x-struct:
+          x-validate:
+        is_scam:
+          description: Has address scam badge?
+          nullable: false
+          type: boolean
+          x-struct:
+          x-validate:
+        is_verified:
+          description: Has address associated source code?
+          nullable: true
+          type: boolean
+          x-struct:
+          x-validate:
+        metadata:
+          allOf:
+            - $ref: '#/components/schemas/Metadata'
+          nullable: true
+          x-struct:
+          x-validate:
+        name:
+          description: Name associated with the address
+          nullable: true
+          type: string
+          x-struct:
+          x-validate:
+        private_tags:
+          description: Private tags associated with the address
+          items:
+            $ref: '#/components/schemas/Tag'
+          type: array
+          x-struct:
+          x-validate:
+        proxy_type:
+          $ref: '#/components/schemas/ProxyType'
+        public_tags:
+          description: Public tags associated with the address
+          items:
+            $ref: '#/components/schemas/Tag'
+          type: array
+          x-struct:
+          x-validate:
+        reputation:
+          description: Reputation of the address
+          enum:
+            - ok
+            - scam
+          nullable: false
+          type: string
+          x-struct:
+          x-validate:
+        transactions_count:
+          anyOf:
+            - $ref: '#/components/schemas/IntegerString'
+            - $ref: '#/components/schemas/EmptyString'
+          nullable: true
+          x-struct:
+          x-validate:
+        watchlist_names:
+          description: Watchlist name associated with the address
+          items:
+            $ref: '#/components/schemas/WatchlistName'
+          type: array
+          x-struct:
+          x-validate:
+      required:
+        - hash
+        - is_contract
+        - name
+        - is_scam
+        - reputation
+        - proxy_type
+        - implementations
+        - is_verified
+        - ens_domain_name
+        - metadata
+        - coin_balance
+        - transactions_count
+      title: TopAddress
+      type: object
+      x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.Address
       x-validate:
     AddressTabsCounters:
       additionalProperties: false
@@ -808,6 +1078,15 @@ components:
       type: object
       x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.Token.Holder
       x-validate:
+    SearchResultItem:
+      description: Single search result. The shape depends on `type`; only `tac_operation` results are fully described.
+      properties:
+        tac_operation:
+          $ref: '#/components/schemas/TacOperationSearchResult'
+      title: SearchResultItem
+      type: object
+      x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.Search.ResultItem
+      x-validate:
     AddressResponse:
       additionalProperties: false
       description: Address response
@@ -976,47 +1255,6 @@ components:
       title: AddressResponse
       type: object
       x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.Address
-      x-validate:
-    Status:
-      additionalProperties:
-        additionalProperties: false
-        properties:
-          enabled:
-            nullable: false
-            type: boolean
-            x-struct:
-            x-validate:
-          live:
-            nullable: false
-            type: boolean
-            x-struct:
-            x-validate:
-          past_db_logs_indexing_finished:
-            nullable: false
-            type: boolean
-            x-struct:
-            x-validate:
-          past_rpc_logs_indexing_finished:
-            nullable: false
-            type: boolean
-            x-struct:
-            x-validate:
-        type: object
-        x-struct:
-        x-validate:
-      description: Status struct.
-      nullable: false
-      properties:
-        finished_past_indexing:
-          nullable: false
-          type: boolean
-          x-struct:
-          x-validate:
-      required:
-        - finished_past_indexing
-      title: Status
-      type: object
-      x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.Proxy.AccountAbstraction.Status
       x-validate:
     RawTrace:
       items:
@@ -1233,6 +1471,92 @@ components:
       type: string
       x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.SmartContract.Language
       x-validate:
+    TacOperationSearchResult:
+      additionalProperties: false
+      description: TAC operation as returned by the tac-operation-lifecycle service Read API v2.
+      properties:
+        error_reason:
+          description: Short failure label. It is published only when the stored reason is short enough to be a label, so it is legitimately `null` on a failed operation — its absence does not imply success.
+          example: Insufficient Fee
+          nullable: true
+          type: string
+          x-struct:
+          x-validate:
+        operation_id:
+          example: '0xf01646ac36cbbcebd8a5ff09c300d5f3bebdd2fbe0135a377eaa485d9edcc670'
+          nullable: false
+          type: string
+          x-struct:
+          x-validate:
+        rollback:
+          description: Whether a rollback occurred.
+          example: false
+          nullable: false
+          type: boolean
+          x-struct:
+          x-validate:
+        sender:
+          additionalProperties: false
+          nullable: true
+          properties:
+            address:
+              description: TAC (EVM) or TON address, depending on `blockchain`
+              example: EQDoF2OkxsI3gc5jAuxlqozN9H/SgEOUCopMa1yU4djLaXuL
+              nullable: false
+              type: string
+              x-struct:
+              x-validate:
+            blockchain:
+              enum:
+                - TAC
+                - TON
+                - UNKNOWN_BLOCKCHAIN
+              example: TON
+              nullable: false
+              type: string
+              x-struct:
+              x-validate:
+          required:
+            - address
+            - blockchain
+          type: object
+          x-struct:
+          x-validate:
+        status:
+          description: Business outcome of the operation.
+          enum:
+            - pending
+            - success
+            - failed
+          example: success
+          nullable: false
+          type: string
+          x-struct:
+          x-validate:
+        timestamp:
+          $ref: '#/components/schemas/Timestamp'
+        type:
+          description: Transfer route. Never carries a lifecycle outcome — see `status` and `rollback`.
+          enum:
+            - UNKNOWN
+            - TON_TAC_TON
+            - TAC_TON
+            - TON_TAC
+          example: TAC_TON
+          nullable: false
+          type: string
+          x-struct:
+          x-validate:
+      required:
+        - operation_id
+        - type
+        - status
+        - rollback
+        - timestamp
+      title: TacOperationSearchResult
+      type: object
+      x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.Search.TacOperation
+      x-validate:
     FheOperationsResponse:
       additionalProperties: false
       properties:
@@ -1438,6 +1762,45 @@ components:
       type: object
       x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.MUD.TableWithSchema
       x-validate:
+    Preview:
+      additionalProperties: false
+      description: Lightweight transaction preview for social media embeds
+      properties:
+        from:
+          allOf:
+            - $ref: '#/components/schemas/PreviewAddress'
+          nullable: true
+          x-struct:
+          x-validate:
+        method:
+          $ref: '#/components/schemas/MethodNameNullable'
+        status:
+          description: Transaction execution status
+          enum:
+            - ok
+            - error
+          nullable: true
+          type: string
+          x-struct:
+          x-validate:
+        timestamp:
+          $ref: '#/components/schemas/TimestampNullable'
+        to:
+          allOf:
+            - $ref: '#/components/schemas/PreviewAddress'
+          nullable: true
+          x-struct:
+          x-validate:
+      required:
+        - status
+        - timestamp
+        - method
+        - from
+        - to
+      title: Preview
+      type: object
+      x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.Transaction.Preview
+      x-validate:
     Table:
       additionalProperties: false
       description: MUD Table struct.
@@ -1515,24 +1878,62 @@ components:
       type: object
       x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.Optimism.Deposit.MainPage
       x-validate:
+    AdvancedFilterMethod:
+      additionalProperties: false
+      description: Contract method identified by its 4-byte selector and human-readable name.
+      properties:
+        method_id:
+          description: 4-byte method selector prefixed with 0x (lowercase hex).
+          example: '0xa9059cbb'
+          pattern: ^0x[0-9a-f]{8}$
+          type: string
+          x-struct:
+          x-validate:
+        name:
+          description: Human-readable method name. Empty string if the name could not be resolved.
+          example: transfer
+          type: string
+          x-struct:
+          x-validate:
+      required:
+        - method_id
+        - name
+      title: AdvancedFilterMethod
+      type: object
+      x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.AdvancedFilter.Method
+      x-validate:
     Block:
       additionalProperties: false
       properties:
         base_fee_per_gas:
-          $ref: '#/components/schemas/IntegerStringNullable'
+          allOf:
+            - $ref: '#/components/schemas/IntegerStringNullable'
+          description: EIP-1559 base fee per gas, in wei. Null on blocks produced before EIP-1559 activation or on chains that do not implement EIP-1559.
+          x-struct:
+          x-validate:
         burnt_fees:
-          $ref: '#/components/schemas/IntegerStringNullable'
+          allOf:
+            - $ref: '#/components/schemas/IntegerStringNullable'
+          description: Sum of EIP-1559 base fees burned by transactions in this block, in wei.
+          x-struct:
+          x-validate:
         burnt_fees_percentage:
+          description: Burned base fees as a percentage of total transaction fees in this block.
           format: float
           nullable: true
           type: number
           x-struct:
           x-validate:
         difficulty:
-          $ref: '#/components/schemas/IntegerStringNullable'
+          allOf:
+            - $ref: '#/components/schemas/IntegerStringNullable'
+          description: Proof-of-work difficulty of this block. Zero on proof-of-stake chains.
+          x-struct:
+          x-validate:
         gas_limit:
           $ref: '#/components/schemas/IntegerString'
         gas_target_percentage:
+          description: Percent above the EIP-1559 elasticity target (gas_used vs. gas_limit / elasticity_multiplier).
           format: float
           nullable: false
           type: number
@@ -1541,6 +1942,7 @@ components:
         gas_used:
           $ref: '#/components/schemas/IntegerString'
         gas_used_percentage:
+          description: Gas used in this block as a percentage of `gas_limit`.
           format: float
           nullable: false
           type: number
@@ -1549,25 +1951,37 @@ components:
         hash:
           $ref: '#/components/schemas/FullHash'
         height:
+          description: Block number (zero-based index from genesis).
           minimum: 0
           nullable: false
           type: integer
           x-struct:
           x-validate:
         internal_transactions_count:
+          description: Number of internal transactions in this block; null when the count is unavailable.
+          minimum: 0
           nullable: true
           type: integer
           x-struct:
           x-validate:
         is_pending_update:
-          nullable: false
+          description: True when the block is scheduled for re-fetch; its fields may change once re-fetching completes.
+          nullable: true
           type: boolean
           x-struct:
           x-validate:
         miner:
-          $ref: '#/components/schemas/Address'
+          allOf:
+            - $ref: '#/components/schemas/Address'
+          description: Address credited with the block — the miner on PoW chains, the fee recipient / proposer on PoS chains, and the sequencer on rollups.
+          x-struct:
+          x-validate:
         nonce:
-          $ref: '#/components/schemas/HexStringNullable'
+          allOf:
+            - $ref: '#/components/schemas/HexString'
+          description: Proof-of-work nonce used to satisfy the difficulty target. Zero on proof-of-stake chains.
+          x-struct:
+          x-validate:
         optimism:
           additionalProperties: false
           nullable: false
@@ -1576,6 +1990,7 @@ components:
               enum:
                 - in_blob4844
                 - in_celestia
+                - in_eigenda
                 - in_alt_da
                 - in_calldata
               nullable: false
@@ -1681,16 +2096,24 @@ components:
         parent_hash:
           $ref: '#/components/schemas/FullHash'
         priority_fee:
-          $ref: '#/components/schemas/IntegerStringNullable'
+          allOf:
+            - $ref: '#/components/schemas/IntegerStringNullable'
+          description: Sum of validator tips (EIP-1559 priority fees) paid by transactions in this block, in wei.
+          x-struct:
+          x-validate:
         rewards:
+          description: Block rewards grouped by recipient category. Each entry describes a reward paid for this block; the set of categories depends on the chain and block type.
           items:
             additionalProperties: false
             properties:
-              address_hash:
-                $ref: '#/components/schemas/AddressHash'
               reward:
                 $ref: '#/components/schemas/IntegerString'
               type:
+                description: Reward category (machine-readable identifier).
+                enum:
+                  - emission_funds
+                  - uncle
+                  - validator
                 nullable: false
                 type: string
                 x-struct:
@@ -1706,22 +2129,34 @@ components:
           x-struct:
           x-validate:
         size:
-          nullable: false
+          description: Block size in bytes (length of the RLP-encoded block).
+          minimum: 0
+          nullable: true
           type: integer
           x-struct:
           x-validate:
         timestamp:
           $ref: '#/components/schemas/Timestamp'
         total_difficulty:
-          $ref: '#/components/schemas/IntegerStringNullable'
+          allOf:
+            - $ref: '#/components/schemas/IntegerStringNullable'
+          description: Cumulative chain difficulty through this block (sum of `difficulty` of this block and all ancestors).
+          x-struct:
+          x-validate:
         transaction_fees:
-          $ref: '#/components/schemas/IntegerString'
+          allOf:
+            - $ref: '#/components/schemas/IntegerString'
+          description: Sum of transaction fees (gas price × gas used) paid by transactions in this block, in wei.
+          x-struct:
+          x-validate:
         transactions_count:
+          minimum: 0
           nullable: false
           type: integer
           x-struct:
           x-validate:
         type:
+          description: 'Block classification: `block` = main-chain consensus block; `uncle` = ommer (valid but not in main chain); `reorg` = former main-chain block lost to reorganization.'
           enum:
             - block
             - uncle
@@ -1731,6 +2166,7 @@ components:
           x-struct:
           x-validate:
         uncles_hashes:
+          description: Hashes of ommer (uncle) blocks referenced by this block.
           items:
             additionalProperties: false
             nullable: false
@@ -1747,6 +2183,7 @@ components:
           x-struct:
           x-validate:
         withdrawals_count:
+          description: Number of withdrawals included in this block; null when the count is unavailable.
           minimum: 0
           nullable: true
           type: integer
@@ -1799,6 +2236,41 @@ components:
       title: Implementation
       type: object
       x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.General.Implementation
+      x-validate:
+    PreviewAddress:
+      additionalProperties: false
+      description: Lightweight address in transaction preview
+      nullable: true
+      properties:
+        ens_domain_name:
+          description: ENS domain name associated with the address. Populated only when preload_ens=true is passed.
+          nullable: true
+          type: string
+          x-struct:
+          x-validate:
+        hash:
+          $ref: '#/components/schemas/AddressHash'
+        metadata:
+          allOf:
+            - $ref: '#/components/schemas/Metadata'
+          description: Address metadata tags from the Metadata microservice. Populated only when preload_metadata=true is passed.
+          nullable: true
+          x-struct:
+          x-validate:
+        name:
+          description: Display name of the address (contract name or address name)
+          nullable: true
+          type: string
+          x-struct:
+          x-validate:
+      required:
+        - hash
+        - name
+        - ens_domain_name
+        - metadata
+      title: PreviewAddress
+      type: object
+      x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.Transaction.PreviewAddress
       x-validate:
     AddressHash:
       nullable: false
@@ -1904,6 +2376,7 @@ components:
         media_url:
           $ref: '#/components/schemas/URLNullable'
         metadata:
+          additionalProperties: true
           example:
             description: Test
             image: https://example.com/image.png
@@ -1954,7 +2427,7 @@ components:
           x-validate:
         token_type:
           allOf:
-            - $ref: '#/components/schemas/Type'
+            - $ref: '#/components/schemas/TokenType'
           nullable: true
           x-struct:
           x-validate:
@@ -1975,6 +2448,81 @@ components:
       title: TokenInstance
       type: object
       x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.TokenInstance
+      x-validate:
+    SmartContractListItem:
+      additionalProperties: false
+      description: Smart contract list item
+      properties:
+        address:
+          $ref: '#/components/schemas/Address'
+        certified:
+          type: boolean
+          x-struct:
+          x-validate:
+        coin_balance:
+          nullable: true
+          type: string
+          x-struct:
+          x-validate:
+        compiler_version:
+          nullable: true
+          type: string
+          x-struct:
+          x-validate:
+        has_constructor_args:
+          nullable: true
+          type: boolean
+          x-struct:
+          x-validate:
+        language:
+          nullable: true
+          type: string
+          x-struct:
+          x-validate:
+        license_type:
+          nullable: true
+          type: string
+          x-struct:
+          x-validate:
+        market_cap:
+          nullable: true
+          type: string
+          x-struct:
+          x-validate:
+        optimization_enabled:
+          nullable: true
+          type: boolean
+          x-struct:
+          x-validate:
+        reputation:
+          nullable: true
+          type: string
+          x-struct:
+          x-validate:
+        transactions_count:
+          nullable: true
+          type: integer
+          x-struct:
+          x-validate:
+        verified_at:
+          format: date-time
+          nullable: true
+          type: string
+          x-struct:
+          x-validate:
+      required:
+        - address
+        - compiler_version
+        - optimization_enabled
+        - language
+        - verified_at
+        - has_constructor_args
+        - license_type
+        - certified
+        - reputation
+      title: SmartContractListItem
+      type: object
+      x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.SmartContract.ListItem
       x-validate:
     CoinBalanceByDay:
       additionalProperties: false
@@ -2064,6 +2612,7 @@ components:
         - eip7702
         - resolved_delegate_proxy
         - erc7760
+        - minimal_proxy
       nullable: true
       title: ProxyType
       type: string
@@ -2389,13 +2938,12 @@ components:
       properties:
         items:
           items:
-            type: object
-            x-struct:
-            x-validate:
+            $ref: '#/components/schemas/SearchResultItem'
           type: array
           x-struct:
           x-validate:
         next_page_params:
+          additionalProperties: true
           nullable: true
           type: object
           x-struct:
@@ -2446,20 +2994,34 @@ components:
       description: Block response
       properties:
         base_fee_per_gas:
-          $ref: '#/components/schemas/IntegerStringNullable'
+          allOf:
+            - $ref: '#/components/schemas/IntegerStringNullable'
+          description: EIP-1559 base fee per gas, in wei. Null on blocks produced before EIP-1559 activation or on chains that do not implement EIP-1559.
+          x-struct:
+          x-validate:
         burnt_fees:
-          $ref: '#/components/schemas/IntegerStringNullable'
+          allOf:
+            - $ref: '#/components/schemas/IntegerStringNullable'
+          description: Sum of EIP-1559 base fees burned by transactions in this block, in wei.
+          x-struct:
+          x-validate:
         burnt_fees_percentage:
+          description: Burned base fees as a percentage of total transaction fees in this block.
           format: float
           nullable: true
           type: number
           x-struct:
           x-validate:
         difficulty:
-          $ref: '#/components/schemas/IntegerStringNullable'
+          allOf:
+            - $ref: '#/components/schemas/IntegerStringNullable'
+          description: Proof-of-work difficulty of this block. Zero on proof-of-stake chains.
+          x-struct:
+          x-validate:
         gas_limit:
           $ref: '#/components/schemas/IntegerString'
         gas_target_percentage:
+          description: Percent above the EIP-1559 elasticity target (gas_used vs. gas_limit / elasticity_multiplier).
           format: float
           nullable: false
           type: number
@@ -2468,6 +3030,7 @@ components:
         gas_used:
           $ref: '#/components/schemas/IntegerString'
         gas_used_percentage:
+          description: Gas used in this block as a percentage of `gas_limit`.
           format: float
           nullable: false
           type: number
@@ -2476,25 +3039,37 @@ components:
         hash:
           $ref: '#/components/schemas/FullHash'
         height:
+          description: Block number (zero-based index from genesis).
           minimum: 0
           nullable: false
           type: integer
           x-struct:
           x-validate:
         internal_transactions_count:
+          description: Number of internal transactions in this block; null when the count is unavailable.
+          minimum: 0
           nullable: true
           type: integer
           x-struct:
           x-validate:
         is_pending_update:
-          nullable: false
+          description: True when the block is scheduled for re-fetch; its fields may change once re-fetching completes.
+          nullable: true
           type: boolean
           x-struct:
           x-validate:
         miner:
-          $ref: '#/components/schemas/Address'
+          allOf:
+            - $ref: '#/components/schemas/Address'
+          description: Address credited with the block — the miner on PoW chains, the fee recipient / proposer on PoS chains, and the sequencer on rollups.
+          x-struct:
+          x-validate:
         nonce:
-          $ref: '#/components/schemas/HexStringNullable'
+          allOf:
+            - $ref: '#/components/schemas/HexString'
+          description: Proof-of-work nonce used to satisfy the difficulty target. Zero on proof-of-stake chains.
+          x-struct:
+          x-validate:
         optimism:
           additionalProperties: false
           nullable: false
@@ -2503,6 +3078,7 @@ components:
               enum:
                 - in_blob4844
                 - in_celestia
+                - in_eigenda
                 - in_alt_da
                 - in_calldata
               nullable: false
@@ -2608,16 +3184,20 @@ components:
         parent_hash:
           $ref: '#/components/schemas/FullHash'
         priority_fee:
-          $ref: '#/components/schemas/IntegerStringNullable'
+          allOf:
+            - $ref: '#/components/schemas/IntegerStringNullable'
+          description: Sum of validator tips (EIP-1559 priority fees) paid by transactions in this block, in wei.
+          x-struct:
+          x-validate:
         rewards:
+          description: 'Block rewards grouped by recipient category. Single-block variant: `type` is a human-readable label rather than a machine identifier.'
           items:
             additionalProperties: false
             properties:
-              address_hash:
-                $ref: '#/components/schemas/AddressHash'
               reward:
                 $ref: '#/components/schemas/IntegerString'
               type:
+                description: Human-readable reward category label (e.g. "Miner Reward", "Uncle Reward").
                 nullable: false
                 type: string
                 x-struct:
@@ -2633,22 +3213,34 @@ components:
           x-struct:
           x-validate:
         size:
-          nullable: false
+          description: Block size in bytes (length of the RLP-encoded block).
+          minimum: 0
+          nullable: true
           type: integer
           x-struct:
           x-validate:
         timestamp:
           $ref: '#/components/schemas/Timestamp'
         total_difficulty:
-          $ref: '#/components/schemas/IntegerStringNullable'
+          allOf:
+            - $ref: '#/components/schemas/IntegerStringNullable'
+          description: Cumulative chain difficulty through this block (sum of `difficulty` of this block and all ancestors).
+          x-struct:
+          x-validate:
         transaction_fees:
-          $ref: '#/components/schemas/IntegerString'
+          allOf:
+            - $ref: '#/components/schemas/IntegerString'
+          description: Sum of transaction fees (gas price × gas used) paid by transactions in this block, in wei.
+          x-struct:
+          x-validate:
         transactions_count:
+          minimum: 0
           nullable: false
           type: integer
           x-struct:
           x-validate:
         type:
+          description: 'Block classification: `block` = main-chain consensus block; `uncle` = ommer (valid but not in main chain); `reorg` = former main-chain block lost to reorganization.'
           enum:
             - block
             - uncle
@@ -2658,6 +3250,7 @@ components:
           x-struct:
           x-validate:
         uncles_hashes:
+          description: Hashes of ommer (uncle) blocks referenced by this block.
           items:
             additionalProperties: false
             nullable: false
@@ -2674,6 +3267,7 @@ components:
           x-struct:
           x-validate:
         withdrawals_count:
+          description: Number of withdrawals included in this block; null when the count is unavailable.
           minimum: 0
           nullable: true
           type: integer
@@ -2709,25 +3303,42 @@ components:
       type: object
       x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.Block
       x-validate:
+    GetBlockNumberByTimeResult:
+      additionalProperties: false
+      nullable: true
+      properties:
+        blockNumber:
+          allOf:
+            - $ref: '#/components/schemas/IntegerString'
+          description: Decimal-string block number.
+          x-struct:
+          x-validate:
+      required:
+        - blockNumber
+      title: GetBlockNumberByTimeResult
+      type: object
+      x-struct: Elixir.BlockScoutWeb.Schemas.API.Legacy.GetBlockNumberByTimeResult
+      x-validate:
     AuditReport:
       description: Smart contract audit report item
       properties:
         audit_company_name:
-          nullable: true
           type: string
           x-struct:
           x-validate:
         audit_publish_date:
           format: date
-          nullable: true
           type: string
           x-struct:
           x-validate:
         audit_report_url:
-          nullable: true
           type: string
           x-struct:
           x-validate:
+      required:
+        - audit_company_name
+        - audit_publish_date
+        - audit_report_url
       title: AuditReport
       type: object
       x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.SmartContract.AuditReport
@@ -2782,12 +3393,28 @@ components:
       type: object
       x-struct: Elixir.OpenApiSpex.JsonErrorResponse
       x-validate:
+    AdvancedFilterCsvExportError:
+      additionalProperties: false
+      properties:
+        error:
+          description: Human-readable error description.
+          nullable: false
+          type: string
+          x-struct:
+          x-validate:
+      required:
+        - error
+      title: AdvancedFilterCsvExportError
+      type: object
+      x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.AdvancedFilter.CsvExportError
+      x-validate:
     MetadataTag:
       additionalProperties: false
       description: Metadata tag struct
       properties:
         meta:
-          nullable: false
+          additionalProperties: true
+          nullable: true
           type: object
           x-struct:
           x-validate:
@@ -2807,6 +3434,13 @@ components:
           x-struct:
           x-validate:
         tagType:
+          enum:
+            - name
+            - generic
+            - classifier
+            - information
+            - note
+            - protocol
           nullable: false
           type: string
           x-struct:
@@ -2848,6 +3482,7 @@ components:
         media_url:
           $ref: '#/components/schemas/URLNullable'
         metadata:
+          additionalProperties: true
           example:
             description: Test
             image: https://example.com/image.png
@@ -2897,7 +3532,7 @@ components:
           x-struct:
           x-validate:
         token_type:
-          $ref: '#/components/schemas/Type'
+          $ref: '#/components/schemas/TokenType'
         value:
           $ref: '#/components/schemas/IntegerStringNullable'
       required:
@@ -3108,6 +3743,17 @@ components:
       type: object
       x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.MUD.World
       x-validate:
+    TokenType:
+      enum:
+        - ERC-20
+        - ERC-721
+        - ERC-1155
+        - ERC-404
+        - ERC-7984
+      title: TokenType
+      type: string
+      x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.Token.Type
+      x-validate:
     AddressHashNullable:
       nullable: true
       pattern: ^0x([A-Fa-f0-9]{40})$
@@ -3254,12 +3900,6 @@ components:
     InternalTransaction:
       additionalProperties: false
       properties:
-        block_index:
-          description: The index of this internal transaction inside the block.
-          nullable: true
-          type: integer
-          x-struct:
-          x-validate:
         block_number:
           nullable: false
           type: integer
@@ -3294,7 +3934,11 @@ components:
         timestamp:
           $ref: '#/components/schemas/Timestamp'
         to:
-          $ref: '#/components/schemas/Address'
+          allOf:
+            - $ref: '#/components/schemas/Address'
+          nullable: true
+          x-struct:
+          x-validate:
         transaction_hash:
           $ref: '#/components/schemas/FullHash'
         transaction_index:
@@ -3325,7 +3969,6 @@ components:
         - timestamp
         - index
         - gas_limit
-        - block_index
       title: InternalTransaction
       type: object
       x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.InternalTransaction
@@ -3391,6 +4034,8 @@ components:
           x-validate:
         circulating_market_cap:
           $ref: '#/components/schemas/FloatStringNullable'
+        circulating_supply:
+          $ref: '#/components/schemas/FloatStringNullable'
         decimals:
           $ref: '#/components/schemas/IntegerStringNullable'
         exchange_rate:
@@ -3430,7 +4075,7 @@ components:
           $ref: '#/components/schemas/IntegerStringNullable'
         type:
           allOf:
-            - $ref: '#/components/schemas/Type'
+            - $ref: '#/components/schemas/TokenType'
           nullable: true
           x-struct:
           x-validate:
@@ -3448,6 +4093,7 @@ components:
         - total_supply
         - icon_url
         - circulating_market_cap
+        - circulating_supply
         - reputation
       title: TokenResponse
       type: object
@@ -3558,6 +4204,168 @@ components:
       type: object
       x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.MUD.Record
       x-validate:
+    AdvancedFilterCsvExportAccepted:
+      additionalProperties: false
+      description: Body returned when an asynchronous CSV export job has been queued. Poll `/api/v2/csv-exports/{request_id}` with the returned `request_id` to check status.
+      properties:
+        request_id:
+          description: UUID of the queued export request.
+          format: uuid
+          nullable: false
+          type: string
+          x-struct:
+          x-validate:
+      required:
+        - request_id
+      title: AdvancedFilterCsvExportAccepted
+      type: object
+      x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.AdvancedFilter.CsvExportAccepted
+      x-validate:
+    AdvancedFilterItem:
+      additionalProperties: false
+      properties:
+        block_number:
+          description: Number of the block that contains the parent transaction.
+          minimum: 0
+          nullable: false
+          type: integer
+          x-struct:
+          x-validate:
+        created_contract:
+          allOf:
+            - $ref: '#/components/schemas/Address'
+          description: Address of the contract deployed by this item. `null` unless the item is a contract creation.
+          nullable: true
+          x-struct:
+          x-validate:
+        fee:
+          description: Transaction fee paid by the sender, in the chain's base unit (e.g. wei).
+          nullable: false
+          pattern: ^([1-9][0-9]*|0)$
+          type: string
+          x-struct:
+          x-validate:
+        from:
+          allOf:
+            - $ref: '#/components/schemas/Address'
+          description: Sender address. `null` for contract-creation items.
+          nullable: true
+          x-struct:
+          x-validate:
+        hash:
+          $ref: '#/components/schemas/FullHash'
+        internal_transaction_index:
+          description: Zero-based position of the internal transaction within its parent transaction. Populated only for internal-transaction items; `null` otherwise.
+          minimum: 0
+          nullable: true
+          type: integer
+          x-struct:
+          x-validate:
+        method:
+          $ref: '#/components/schemas/MethodNameNullable'
+        status:
+          description: Execution status of the parent transaction. One of `pending`, `awaiting_internal_transactions`, `success`, or a free-form error reason string when the transaction reverted (e.g. `Reverted`).
+          nullable: false
+          type: string
+          x-struct:
+          x-validate:
+        timestamp:
+          description: Block timestamp of the parent transaction.
+          format: date-time
+          nullable: false
+          title: Timestamp
+          type: string
+          x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.General.Timestamp
+          x-validate:
+        to:
+          allOf:
+            - $ref: '#/components/schemas/Address'
+          description: Recipient address. `null` for contract-creation items and some internal transactions.
+          nullable: true
+          x-struct:
+          x-validate:
+        token:
+          allOf:
+            - $ref: '#/components/schemas/Token'
+          description: Token contract metadata. Populated only for token-transfer items; `null` otherwise.
+          nullable: true
+          x-struct:
+          x-validate:
+        token_transfer_batch_index:
+          description: Zero-based position within an ERC-1155 batch token transfer. Populated only for items that belong to a batch; `null` otherwise.
+          minimum: 0
+          nullable: true
+          type: integer
+          x-struct:
+          x-validate:
+        token_transfer_index:
+          description: Zero-based position of the token transfer, unique per parent transaction. Populated only for token-transfer items; `null` otherwise.
+          minimum: 0
+          nullable: true
+          type: integer
+          x-struct:
+          x-validate:
+        total:
+          anyOf:
+            - $ref: '#/components/schemas/TotalERC721'
+            - $ref: '#/components/schemas/TotalERC1155'
+            - $ref: '#/components/schemas/TotalERC7984'
+            - $ref: '#/components/schemas/Total'
+          description: Token transfer amount (or token id for NFTs). Populated only for token-transfer items; `null` otherwise.
+          nullable: true
+          x-struct:
+          x-validate:
+        transaction_index:
+          description: Zero-based position of the parent transaction within its block.
+          minimum: 0
+          nullable: false
+          type: integer
+          x-struct:
+          x-validate:
+        type:
+          description: Kind of activity represented by the item. Values `coin_transfer`, `contract_interaction`, and `contract_creation` apply to top-level transactions and internal transactions; the `ERC-*` values apply to token transfers.
+          enum:
+            - coin_transfer
+            - contract_interaction
+            - contract_creation
+            - ERC-20
+            - ERC-721
+            - ERC-1155
+            - ERC-404
+            - ERC-7984
+          nullable: false
+          type: string
+          x-struct:
+          x-validate:
+        value:
+          description: Native coin amount transferred, in the chain's base unit (e.g. wei). `null` for token-transfer items.
+          nullable: true
+          pattern: ^([1-9][0-9]*|0)$
+          type: string
+          x-struct:
+          x-validate:
+      required:
+        - hash
+        - type
+        - status
+        - method
+        - from
+        - to
+        - created_contract
+        - value
+        - total
+        - token
+        - timestamp
+        - block_number
+        - transaction_index
+        - internal_transaction_index
+        - token_transfer_index
+        - token_transfer_batch_index
+        - fee
+      title: AdvancedFilterItem
+      type: object
+      x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.AdvancedFilter
+      x-validate:
     StateChange:
       additionalProperties: false
       properties:
@@ -3626,48 +4434,71 @@ components:
       type: object
       x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.MUD.SystemDetails
       x-validate:
-    BlockCountdown:
-      description: Block countdown information showing estimated time until a target block is reached
-      example:
-        countdown_block: 22600000
-        current_block: 22566361
-        estimated_time_in_sec: 404868.0
-        remaining_blocks: 33639
+    AdvancedFilterSearchParams:
+      additionalProperties: false
       properties:
-        countdown_block:
-          description: The target block number for the countdown
-          example: 22600000
-          minimum: 0
-          type: integer
+        methods:
+          additionalProperties:
+            nullable: false
+            type: string
+            x-struct:
+            x-validate:
+          description: Map of 4-byte method selectors (keys) to resolved method names (values) for the `methods` filter.
+          type: object
           x-struct:
           x-validate:
-        current_block:
-          description: The current highest block number in the blockchain
-          example: 22566361
-          minimum: 0
-          type: integer
-          x-struct:
-          x-validate:
-        estimated_time_in_sec:
-          description: Estimated time in seconds until the target block is reached
-          example: 404868.0
-          format: float
-          minimum: 0
-          type: number
-          x-struct:
-          x-validate:
-        remaining_blocks:
-          description: Number of blocks remaining until the target block is reached
-          example: 33639
-          minimum: 0
-          type: integer
+        tokens:
+          additionalProperties:
+            $ref: '#/components/schemas/Token'
+          description: Map of token contract address hashes (keys) to `Token` objects for tokens referenced in the `token_contract_address_hashes_to_include`/`_exclude` filters. At most 20 entries are returned (combined across both lists).
+          type: object
           x-struct:
           x-validate:
       required:
-        - current_block
-        - countdown_block
-        - remaining_blocks
-        - estimated_time_in_sec
+        - methods
+        - tokens
+      title: AdvancedFilterSearchParams
+      type: object
+      x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.AdvancedFilter.SearchParams
+      x-validate:
+    BlockCountdown:
+      additionalProperties: false
+      description: Block countdown information showing estimated time until a target block is reached
+      example:
+        countdown_block_number: '22600000'
+        current_block_number: '22566361'
+        estimated_time_in_seconds: '404868.0'
+        remaining_blocks_count: '33639'
+      properties:
+        countdown_block_number:
+          description: The target block number for the countdown
+          example: '22600000'
+          type: string
+          x-struct:
+          x-validate:
+        current_block_number:
+          description: The current highest block number in the blockchain
+          example: '22566361'
+          type: string
+          x-struct:
+          x-validate:
+        estimated_time_in_seconds:
+          description: Estimated time in seconds until the target block is reached
+          example: '404868.0'
+          type: string
+          x-struct:
+          x-validate:
+        remaining_blocks_count:
+          description: Number of blocks remaining until the target block is reached
+          example: '33639'
+          type: string
+          x-struct:
+          x-validate:
+      required:
+        - current_block_number
+        - countdown_block_number
+        - remaining_blocks_count
+        - estimated_time_in_seconds
       title: BlockCountdown
       type: object
       x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.Block.Countdown
@@ -3719,7 +4550,7 @@ components:
         token:
           $ref: '#/components/schemas/Token'
         token_type:
-          $ref: '#/components/schemas/Type'
+          $ref: '#/components/schemas/TokenType'
         total:
           anyOf:
             - $ref: '#/components/schemas/TotalERC721'
@@ -3860,12 +4691,17 @@ components:
           x-struct:
           x-validate:
         language:
+          enum:
+            - solidity
+            - vyper
+            - yul
+            - scilla
+            - stylus_rust
+            - geas
           nullable: true
           type: string
           x-struct:
           x-validate:
-        address:
-          $ref: '#/components/schemas/Address'
         is_verified_via_eth_bytecode_db:
           nullable: true
           type: boolean
@@ -3965,6 +4801,9 @@ components:
           items:
             items:
               anyOf:
+                - type: array
+                  x-struct:
+                  x-validate:
                 - type: object
                   x-struct:
                   x-validate:
@@ -4050,6 +4889,13 @@ components:
           type: boolean
           x-struct:
           x-validate:
+      required:
+        - proxy_type
+        - implementations
+        - conflicting_implementations
+        - deployed_bytecode
+        - creation_bytecode
+        - creation_status
       title: SmartContract
       type: object
       x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.SmartContract
@@ -4147,8 +4993,6 @@ components:
           $ref: '#/components/schemas/IntegerString'
         total_blocks:
           $ref: '#/components/schemas/IntegerString'
-        total_gas_used:
-          $ref: '#/components/schemas/IntegerString'
         total_transactions:
           $ref: '#/components/schemas/IntegerString'
         transactions_today:
@@ -4175,6 +5019,8 @@ components:
           x-struct:
           x-validate:
         circulating_market_cap:
+          $ref: '#/components/schemas/FloatStringNullable'
+        circulating_supply:
           $ref: '#/components/schemas/FloatStringNullable'
         decimals:
           $ref: '#/components/schemas/IntegerStringNullable'
@@ -4215,7 +5061,7 @@ components:
           $ref: '#/components/schemas/IntegerStringNullable'
         type:
           allOf:
-            - $ref: '#/components/schemas/Type'
+            - $ref: '#/components/schemas/TokenType'
           nullable: true
           x-struct:
           x-validate:
@@ -4233,6 +5079,7 @@ components:
         - total_supply
         - icon_url
         - circulating_market_cap
+        - circulating_supply
         - reputation
       title: Token
       type: object
@@ -4401,6 +5248,9 @@ components:
               - token_transfer
               - blob_transaction
               - set_code_transaction
+              - sponsored_transaction
+              - op_stack_l1_attributes_transaction
+              - op_stack_post_exec_transaction
             type: string
             x-struct:
             x-validate:
@@ -4444,66 +5294,6 @@ components:
           $ref: '#/components/schemas/IntegerStringNullable'
         gas_limit:
           $ref: '#/components/schemas/IntegerString'
-        actions:
-          items:
-            additionalProperties: false
-            properties:
-              data:
-                description: Transaction action details (json formatted)
-                nullable: false
-                type: object
-                x-struct:
-                x-validate:
-              protocol:
-                enum:
-                  - uniswap_v3
-                  - opensea_v1_1
-                  - wrapping
-                  - approval
-                  - zkbob
-                  - aave_v3
-                nullable: false
-                type: string
-                x-struct:
-                x-validate:
-              type:
-                enum:
-                  - mint_nft
-                  - mint
-                  - burn
-                  - collect
-                  - swap
-                  - sale
-                  - cancel
-                  - transfer
-                  - wrap
-                  - unwrap
-                  - approve
-                  - revoke
-                  - withdraw
-                  - deposit
-                  - borrow
-                  - supply
-                  - repay
-                  - flash_loan
-                  - enable_collateral
-                  - disable_collateral
-                  - liquidation_call
-                nullable: false
-                type: string
-                x-struct:
-                x-validate:
-            required:
-              - protocol
-              - type
-              - data
-            type: object
-            x-struct:
-            x-validate:
-          nullable: true
-          type: array
-          x-struct:
-          x-validate:
         fee:
           $ref: '#/components/schemas/Fee'
         method:
@@ -4748,7 +5538,6 @@ components:
         - decoded_input
         - token_transfers
         - token_transfers_overflow
-        - actions
         - exchange_rate
         - historic_exchange_rate
         - method
@@ -4837,6 +5626,32 @@ components:
       type: object
       x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.Optimism.Deposit
       x-validate:
+    Response:
+      properties:
+        expires_at:
+          format: date-time
+          nullable: true
+          type: string
+          x-struct:
+          x-validate:
+        file_id:
+          nullable: true
+          type: string
+          x-struct:
+          x-validate:
+        status:
+          enum:
+            - pending
+            - completed
+            - failed
+          nullable: false
+          type: string
+          x-struct:
+          x-validate:
+      title: Response
+      type: object
+      x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.CSVExport.Response
+      x-validate:
     TransactionResponse:
       additionalProperties: false
       description: Transaction response
@@ -4865,6 +5680,9 @@ components:
               - token_transfer
               - blob_transaction
               - set_code_transaction
+              - sponsored_transaction
+              - op_stack_l1_attributes_transaction
+              - op_stack_post_exec_transaction
             type: string
             x-struct:
             x-validate:
@@ -4908,66 +5726,6 @@ components:
           $ref: '#/components/schemas/IntegerStringNullable'
         gas_limit:
           $ref: '#/components/schemas/IntegerString'
-        actions:
-          items:
-            additionalProperties: false
-            properties:
-              data:
-                description: Transaction action details (json formatted)
-                nullable: false
-                type: object
-                x-struct:
-                x-validate:
-              protocol:
-                enum:
-                  - uniswap_v3
-                  - opensea_v1_1
-                  - wrapping
-                  - approval
-                  - zkbob
-                  - aave_v3
-                nullable: false
-                type: string
-                x-struct:
-                x-validate:
-              type:
-                enum:
-                  - mint_nft
-                  - mint
-                  - burn
-                  - collect
-                  - swap
-                  - sale
-                  - cancel
-                  - transfer
-                  - wrap
-                  - unwrap
-                  - approve
-                  - revoke
-                  - withdraw
-                  - deposit
-                  - borrow
-                  - supply
-                  - repay
-                  - flash_loan
-                  - enable_collateral
-                  - disable_collateral
-                  - liquidation_call
-                nullable: false
-                type: string
-                x-struct:
-                x-validate:
-            required:
-              - protocol
-              - type
-              - data
-            type: object
-            x-struct:
-            x-validate:
-          nullable: true
-          type: array
-          x-struct:
-          x-validate:
         fee:
           $ref: '#/components/schemas/Fee'
         method:
@@ -5237,7 +5995,6 @@ components:
         - decoded_input
         - token_transfers
         - token_transfers_overflow
-        - actions
         - exchange_rate
         - historic_exchange_rate
         - method
@@ -5295,9 +6052,13 @@ components:
           x-struct:
           x-validate:
         l2_block_number:
+          description: L2 block number the game is bound to. `null` for the games with Super Root claim.
+          nullable: true
           type: integer
           x-struct:
           x-validate:
+        l2_timestamp:
+          $ref: '#/components/schemas/TimestampNullable'
         resolved_at:
           $ref: '#/components/schemas/TimestampNullable'
         status:
@@ -5315,6 +6076,7 @@ components:
         - game_type
         - index
         - l2_block_number
+        - l2_timestamp
         - resolved_at
         - status
       title: Game
@@ -5322,6 +6084,7 @@ components:
       x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.Optimism.Game
       x-validate:
     Timestamp:
+      description: Block timestamp of the parent transaction.
       format: date-time
       nullable: false
       title: Timestamp
@@ -5332,7 +6095,7 @@ info:
   contact:
     email: info@blockscout.com
   title: Blockscout
-  version: 10.0.6
+  version: 11.3.3
 openapi: 3.0.0
 paths:
   /v2/blocks/{block_hash_or_number_param}/internal-transactions:
@@ -5456,6 +6219,7 @@ paths:
                     x-struct:
                     x-validate:
                   next_page_params:
+                    additionalProperties: true
                     example:
                       index: 8
                       items_count: 50
@@ -5564,6 +6328,10 @@ paths:
             application/json:
               schema:
                 properties:
+                  async_enabled:
+                    type: boolean
+                    x-struct:
+                    x-validate:
                   limit:
                     type: integer
                     x-struct:
@@ -5721,7 +6489,7 @@ paths:
           description: Unprocessable Entity
       summary: Last 6 transactions from the current user's watchlist
       tags:
-        - main_page
+        - main-page
   /v2/tokens/{address_hash_param}/holders/csv:
     get:
       callbacks: {}
@@ -5753,7 +6521,7 @@ paths:
         - description: Start of the time period (ISO 8601 format) in CSV export
           in: query
           name: from_period
-          required: true
+          required: false
           schema:
             anyOf:
               - nullable: false
@@ -5767,7 +6535,7 @@ paths:
         - description: End of the time period (ISO 8601 format) In CSV export
           in: query
           name: to_period
-          required: true
+          required: false
           schema:
             anyOf:
               - nullable: false
@@ -5891,13 +6659,8 @@ paths:
             x-struct:
             x-validate:
         - description: |
-            Sort transactions by:
-            * block_number - Sort by block number
-            * value - Sort by transaction value
-            * fee - Sort by transaction fee
-            * balance - Sort by account balance
-            * transactions_count - Sort by number of transactions on address
-            * fiat_value - Sort by fiat value of the token transfer
+            Sort results by:
+            * fiat_value - Sort by fiat value
             * holders_count - Sort by number of token holders
             * circulating_market_cap - Sort by circulating market cap of the token
             Should be used together with `order` parameter.
@@ -6008,6 +6771,7 @@ paths:
                     x-struct:
                     x-validate:
                   next_page_params:
+                    additionalProperties: true
                     example:
                       contract_address_hash: '0xbe9895146f7af43049ca1c1ae358b0541ea49704'
                       fiat_value: '4724.32'
@@ -6316,6 +7080,7 @@ paths:
                     x-struct:
                     x-validate:
                   next_page_params:
+                    additionalProperties: true
                     example:
                       index: 88192653
                       items_count: 50
@@ -6416,6 +7181,7 @@ paths:
                     x-struct:
                     x-validate:
                   next_page_params:
+                    additionalProperties: true
                     example:
                       address_hash: '0x48bb9b14483e43c7726df702b271d410e7460656'
                       items_count: 50
@@ -6608,6 +7374,7 @@ paths:
                     x-struct:
                     x-validate:
                   next_page_params:
+                    additionalProperties: true
                     example:
                       fiat_value:
                       id: 12519063346
@@ -6683,6 +7450,7 @@ paths:
                     x-struct:
                     x-validate:
                   next_page_params:
+                    additionalProperties: true
                     nullable: true
                     type: object
                     x-struct:
@@ -6702,7 +7470,7 @@ paths:
           description: Unprocessable Entity
       summary: Audit reports list
       tags:
-        - smart_contracts
+        - smart-contracts
     post:
       callbacks: {}
       description: Submits an audit report for a given smart contract address.
@@ -6808,7 +7576,7 @@ paths:
           description: Unprocessable Entity
       summary: Submit audit report
       tags:
-        - smart_contracts
+        - smart-contracts
   /v2/addresses/{address_hash_param}/token-transfers:
     get:
       callbacks: {}
@@ -6950,6 +7718,7 @@ paths:
                     x-struct:
                     x-validate:
                   next_page_params:
+                    additionalProperties: true
                     example:
                       block_number: 12345678
                       index: 0
@@ -7054,7 +7823,7 @@ paths:
           name: token_type
           required: false
           schema:
-            $ref: '#/components/schemas/Type'
+            $ref: '#/components/schemas/TokenType'
       responses:
         '200':
           content:
@@ -7071,6 +7840,7 @@ paths:
                     x-struct:
                     x-validate:
                   next_page_params:
+                    additionalProperties: true
                     example:
                       items_count: 50
                       token_contract_address_hash: '0x1ffe11b9fb7f6ff1b153ab8608cf403ecaf9d44a'
@@ -7196,6 +7966,7 @@ paths:
                     x-struct:
                     x-validate:
                   next_page_params:
+                    additionalProperties: true
                     example:
                       unique_token: 782098
                     nullable: true
@@ -7332,7 +8103,7 @@ paths:
           description: Not Implemented
       summary: Get a human-readable, LLM-based user operation summary
       tags:
-        - account_abstraction
+        - account-abstraction
   /v2/main-page/blocks:
     get:
       callbacks: {}
@@ -7361,7 +8132,7 @@ paths:
             application/json:
               schema:
                 items:
-                  $ref: '#/components/schemas/BlockResponse'
+                  $ref: '#/components/schemas/Block'
                 nullable: false
                 type: array
                 x-struct:
@@ -7369,7 +8140,7 @@ paths:
           description: List of recent blocks on the home page.
       summary: Retrieve recent blocks as displayed on Blockscout homepage
       tags:
-        - main_page
+        - main-page
   /v2/stats/charts/secondary-coin-market:
     get:
       callbacks: {}
@@ -7482,6 +8253,7 @@ paths:
                     x-struct:
                     x-validate:
                   next_page_params:
+                    additionalProperties: true
                     example:
                       block_number: 22546398
                       items_count: 50
@@ -7605,6 +8377,7 @@ paths:
                     x-struct:
                     x-validate:
                   next_page_params:
+                    additionalProperties: true
                     example:
                       block_number: 22530770
                       index: 8
@@ -7845,6 +8618,7 @@ paths:
                     x-struct:
                     x-validate:
                   next_page_params:
+                    additionalProperties: true
                     example:
                       batch_block_hash: '0x789'
                       batch_log_index: 3
@@ -7985,6 +8759,7 @@ paths:
                     x-struct:
                     x-validate:
                   next_page_params:
+                    additionalProperties: true
                     example:
                       block_number: 23532302
                       index: 375
@@ -8092,6 +8867,7 @@ paths:
                     x-struct:
                     x-validate:
                   next_page_params:
+                    additionalProperties: true
                     example:
                       address_hash: '0x1d2c163fbda9486c3a384b6fa5e34c96fe948e9a'
                       items_count: 50
@@ -8146,15 +8922,9 @@ paths:
             x-struct:
             x-validate:
         - description: |
-            Sort transactions by:
-            * block_number - Sort by block number
-            * value - Sort by transaction value
-            * fee - Sort by transaction fee
-            * balance - Sort by account balance
-            * transactions_count - Sort by number of transactions on address
-            * fiat_value - Sort by fiat value of the token transfer
-            * holders_count - Sort by number of token holders
-            * circulating_market_cap - Sort by circulating market cap of the token
+            Sort results by:
+            * transactions_count - Sort by number of transactions
+            * total_gas_used - Sort by total gas used
             Should be used together with `order` parameter.
           in: query
           name: sort
@@ -8247,6 +9017,7 @@ paths:
                     x-struct:
                     x-validate:
                   next_page_params:
+                    additionalProperties: true
                     example:
                       contract_address_hash: '0x01a2A10583675E0e5dF52DE1b62734109201477a'
                       items_count: 50
@@ -8278,6 +9049,258 @@ paths:
       summary: Retrieve hot smart-contracts
       tags:
         - stats
+  /v2/advanced-filters/csv:
+    get:
+      callbacks: {}
+      description: Streams the items matching the advanced filter criteria as a CSV file. When asynchronous CSV export is enabled on the deployment, returns `202 Accepted` with a `request_id` that can be polled via `/api/v2/csv-exports/{request_id}`; otherwise the CSV body is streamed inline.
+      operationId: BlockScoutWeb.API.V2.AdvancedFilterController.list_csv
+      parameters:
+        - description: API key for rate limiting or for sensitive endpoints
+          in: query
+          name: apikey
+          required: false
+          schema:
+            type: string
+            x-struct:
+            x-validate:
+        - description: Secret key for getting access to restricted resources
+          in: query
+          name: key
+          required: false
+          schema:
+            type: string
+            x-struct:
+            x-validate:
+        - description: 'Comma-separated list of transaction types to include. Allowed values: `COIN_TRANSFER`, `CONTRACT_INTERACTION`, `CONTRACT_CREATION`, `ERC-20`, `ERC-404`, `ERC-721`, `ERC-1155`, `ERC-7984` (plus `ZRC-2` on Zilliqa). Values are matched case-insensitively; unknown entries are silently dropped.'
+          example: COIN_TRANSFER,ERC-20
+          in: query
+          name: transaction_types
+          required: false
+          schema:
+            nullable: true
+            type: string
+            x-struct:
+            x-validate:
+        - description: Comma-separated list of 4-byte contract method selectors (lowercase, `0x`-prefixed). At most 20 unique entries are honored; invalid entries are dropped.
+          example: '0xa9059cbb,0x095ea7b3'
+          in: query
+          name: methods
+          required: false
+          schema:
+            nullable: true
+            type: string
+            x-struct:
+            x-validate:
+        - description: Inclusive lower bound on `timestamp` (ISO 8601).
+          example: 2024-01-01T00:00:00Z
+          in: query
+          name: age_from
+          required: false
+          schema:
+            nullable: true
+            type: string
+            x-struct:
+            x-validate:
+        - description: Inclusive upper bound on `timestamp` (ISO 8601).
+          example: 2024-12-31T23:59:59Z
+          in: query
+          name: age_to
+          required: false
+          schema:
+            nullable: true
+            type: string
+            x-struct:
+            x-validate:
+        - description: Comma-separated list of sender address hashes to include.
+          example: '0x5a52e96bacdabb82fd05763e25335261b270efcb,0x00000000219ab540356cbb839cbe05303d7705fa'
+          in: query
+          name: from_address_hashes_to_include
+          required: false
+          schema:
+            nullable: true
+            type: string
+            x-struct:
+            x-validate:
+        - description: Comma-separated list of sender address hashes to exclude.
+          example: '0x5a52e96bacdabb82fd05763e25335261b270efcb,0x00000000219ab540356cbb839cbe05303d7705fa'
+          in: query
+          name: from_address_hashes_to_exclude
+          required: false
+          schema:
+            nullable: true
+            type: string
+            x-struct:
+            x-validate:
+        - description: Comma-separated list of recipient address hashes to include.
+          example: '0x5a52e96bacdabb82fd05763e25335261b270efcb,0x00000000219ab540356cbb839cbe05303d7705fa'
+          in: query
+          name: to_address_hashes_to_include
+          required: false
+          schema:
+            nullable: true
+            type: string
+            x-struct:
+            x-validate:
+        - description: Comma-separated list of recipient address hashes to exclude.
+          example: '0x5a52e96bacdabb82fd05763e25335261b270efcb,0x00000000219ab540356cbb839cbe05303d7705fa'
+          in: query
+          name: to_address_hashes_to_exclude
+          required: false
+          schema:
+            nullable: true
+            type: string
+            x-struct:
+            x-validate:
+        - description: How to combine the `from_address_hashes_*` and `to_address_hashes_*` filters. Accepts `or` or `and` (case-insensitive). `or` (default) matches an item if either side matches; `and` requires both sides to match. Any other value is silently coerced to `nil` (no relation constraint).
+          example: and
+          in: query
+          name: address_relation
+          required: false
+          schema:
+            nullable: true
+            type: string
+            x-struct:
+            x-validate:
+        - description: "Inclusive lower bound on the item's transferred amount (decimal string in the token's base units)."
+          example: '0'
+          in: query
+          name: amount_from
+          required: false
+          schema:
+            nullable: true
+            type: string
+            x-struct:
+            x-validate:
+        - description: "Inclusive upper bound on the item's transferred amount (decimal string in the token's base units)."
+          example: '1000000'
+          in: query
+          name: amount_to
+          required: false
+          schema:
+            nullable: true
+            type: string
+            x-struct:
+            x-validate:
+        - description: Comma-separated list of token contract address hashes to include. Use the literal `native` to also include native coin transfers. Each list (include and exclude) is capped to 20 entries separately.
+          example: native,0xdac17f958d2ee523a2206206994597c13d831ec7
+          in: query
+          name: token_contract_address_hashes_to_include
+          required: false
+          schema:
+            nullable: true
+            type: string
+            x-struct:
+            x-validate:
+        - description: Comma-separated list of token contract address hashes to exclude. Use the literal `native` to also exclude native coin transfers. Each list (include and exclude) is capped to 20 entries separately.
+          example: '0x0000000000000000000000000000000000000000'
+          in: query
+          name: token_contract_address_hashes_to_exclude
+          required: false
+          schema:
+            nullable: true
+            type: string
+            x-struct:
+            x-validate:
+        - description: Comma-separated list of human-readable method names corresponding to the `methods` selectors.
+          example: transfer,approve
+          in: query
+          name: methods_names
+          required: false
+          schema:
+            nullable: true
+            type: string
+            x-struct:
+            x-validate:
+        - description: Comma-separated list of token symbols to include.
+          example: USDT,USDC
+          in: query
+          name: token_contract_symbols_to_include
+          required: false
+          schema:
+            nullable: true
+            type: string
+            x-struct:
+            x-validate:
+        - description: Comma-separated list of token symbols to exclude.
+          example: USDT,USDC
+          in: query
+          name: token_contract_symbols_to_exclude
+          required: false
+          schema:
+            nullable: true
+            type: string
+            x-struct:
+            x-validate:
+        - description: 'Keyset cursor: block number of the last item from the previous page.'
+          example: '23532302'
+          in: query
+          name: block_number
+          required: false
+          schema:
+            pattern: ^([1-9][0-9]*|0)$
+            type: string
+            x-struct:
+            x-validate:
+        - description: 'Keyset cursor: transaction index within the block of the last item from the previous page.'
+          example: '1'
+          in: query
+          name: transaction_index
+          required: false
+          schema:
+            pattern: ^([1-9][0-9]*|0)$
+            type: string
+            x-struct:
+            x-validate:
+        - description: 'Keyset cursor: internal-transaction index of the last item from the previous page. Use an empty string or the literal `null` when the previous item was not an internal transaction.'
+          in: query
+          name: internal_transaction_index
+          required: false
+          schema:
+            $ref: '#/components/schemas/IntegerStringOrEmptyOrNullLiteral'
+        - description: 'Keyset cursor: token-transfer index of the last item from the previous page. Use an empty string or the literal `null` when the previous item was not a token transfer.'
+          in: query
+          name: token_transfer_index
+          required: false
+          schema:
+            $ref: '#/components/schemas/IntegerStringOrEmptyOrNullLiteral'
+        - description: 'Keyset cursor: index within an ERC-1155 batch token transfer. Use an empty string or the literal `null` when the previous item was not part of a batch.'
+          in: query
+          name: token_transfer_batch_index
+          required: false
+          schema:
+            $ref: '#/components/schemas/IntegerStringOrEmptyOrNullLiteral'
+      responses:
+        '200':
+          content:
+            application/csv: {}
+          description: CSV file (sync export).
+        '202':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AdvancedFilterCsvExportAccepted'
+          description: Async export queued; poll `/api/v2/csv-exports/{request_id}` with the returned `request_id`.
+        '409':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AdvancedFilterCsvExportError'
+          description: Too many pending export requests for this client.
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JsonErrorResponse'
+          description: Unprocessable Entity
+        '500':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AdvancedFilterCsvExportError'
+          description: Failed to create CSV export request.
+      summary: Export advanced-filter results as CSV
+      tags:
+        - advanced-filters
   /v2/proxy/account-abstraction/status:
     get:
       callbacks: {}
@@ -8305,7 +9328,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Status'
+                $ref: '#/components/schemas/AccountAbstractionStatus'
           description: Status
         '501':
           content:
@@ -8315,7 +9338,7 @@ paths:
           description: Not Implemented
       summary: Get the status of the account abstraction microservice
       tags:
-        - account_abstraction
+        - account-abstraction
   /v2/smart-contracts/{address_hash_param}:
     get:
       callbacks: {}
@@ -8353,7 +9376,7 @@ paths:
           description: Detailed information about the specified verified smart contract.
       summary: Retrieve detailed information about a verified smart contract
       tags:
-        - smart_contracts
+        - smart-contracts
   /v2/tokens/{address_hash_param}/instances/{token_id_param}/transfers:
     get:
       callbacks: {}
@@ -8427,6 +9450,7 @@ paths:
                     x-struct:
                     x-validate:
                   next_page_params:
+                    additionalProperties: true
                     example:
                       block_number: 23489243
                       index: 920
@@ -8503,6 +9527,191 @@ paths:
       summary: Get backend version
       tags:
         - config
+  /legacy/logs/get-logs:
+    get:
+      callbacks: {}
+      description: |
+        Event logs for an address and topic. Use and/or with the topic operator to specify
+        topic retrieval options when adding multiple topics. Up to a maximum of 1,000 event logs.
+
+        Required:
+        - `fromBlock` and `toBlock`
+        - At least one of `address`, `topic0`, `topic1`, `topic2`, `topic3`
+        - If any pair of topic parameters is set, the corresponding `topicA_B_opr` is required.
+      operationId: BlockScoutWeb.API.Legacy.LogsController.get_logs
+      parameters:
+        - description: 'Start block: integer or the sentinel "latest"'
+          in: query
+          name: fromBlock
+          schema:
+            anyOf:
+              - $ref: '#/components/schemas/IntegerString'
+              - enum:
+                  - latest
+                type: string
+                x-struct:
+                x-validate:
+            x-struct:
+            x-validate:
+        - description: 'End block: integer or the sentinel "latest"'
+          in: query
+          name: toBlock
+          schema:
+            anyOf:
+              - $ref: '#/components/schemas/IntegerString'
+              - enum:
+                  - latest
+                type: string
+                x-struct:
+                x-validate:
+            x-struct:
+            x-validate:
+        - in: query
+          name: address
+          schema:
+            $ref: '#/components/schemas/AddressHash'
+        - in: query
+          name: topic0
+          schema:
+            pattern: ^0x[0-9a-fA-F]{64}$
+            type: string
+            x-struct:
+            x-validate:
+        - in: query
+          name: topic1
+          schema:
+            pattern: ^0x[0-9a-fA-F]{64}$
+            type: string
+            x-struct:
+            x-validate:
+        - in: query
+          name: topic2
+          schema:
+            pattern: ^0x[0-9a-fA-F]{64}$
+            type: string
+            x-struct:
+            x-validate:
+        - in: query
+          name: topic3
+          schema:
+            pattern: ^0x[0-9a-fA-F]{64}$
+            type: string
+            x-struct:
+            x-validate:
+        - in: query
+          name: topic0_1_opr
+          schema:
+            enum:
+              - and
+              - or
+            type: string
+            x-struct:
+            x-validate:
+        - in: query
+          name: topic0_2_opr
+          schema:
+            enum:
+              - and
+              - or
+            type: string
+            x-struct:
+            x-validate:
+        - in: query
+          name: topic0_3_opr
+          schema:
+            enum:
+              - and
+              - or
+            type: string
+            x-struct:
+            x-validate:
+        - in: query
+          name: topic1_2_opr
+          schema:
+            enum:
+              - and
+              - or
+            type: string
+            x-struct:
+            x-validate:
+        - in: query
+          name: topic1_3_opr
+          schema:
+            enum:
+              - and
+              - or
+            type: string
+            x-struct:
+            x-validate:
+        - in: query
+          name: topic2_3_opr
+          schema:
+            enum:
+              - and
+              - or
+            type: string
+            x-struct:
+            x-validate:
+        - description: API key for rate limiting or for sensitive endpoints
+          in: query
+          name: apikey
+          required: false
+          schema:
+            type: string
+            x-struct:
+            x-validate:
+        - description: Secret key for getting access to restricted resources
+          in: query
+          name: key
+          required: false
+          schema:
+            type: string
+            x-struct:
+            x-validate:
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                additionalProperties: false
+                properties:
+                  message:
+                    description: Human-readable status string — `OK` on success, a descriptive error message otherwise.
+                    type: string
+                    x-struct:
+                    x-validate:
+                  result:
+                    allOf:
+                      - items:
+                          $ref: '#/components/schemas/LogItem'
+                        nullable: true
+                        type: array
+                        x-struct:
+                        x-validate:
+                    description: Endpoint-specific payload on success; `null` on error.
+                    nullable: true
+                    x-struct:
+                    x-validate:
+                  status:
+                    description: '`1` = OK, `0` = error, `2` = pending.'
+                    enum:
+                      - '0'
+                      - '1'
+                      - '2'
+                    type: string
+                    x-struct:
+                    x-validate:
+                required:
+                  - status
+                  - message
+                  - result
+                type: object
+                x-struct:
+                x-validate:
+          description: Event logs
+      summary: Get Event Logs by Address and/or Topic(s)
+      tags:
+        - legacy
   /v2/token-transfers:
     get:
       callbacks: {}
@@ -8616,6 +9825,7 @@ paths:
                     x-struct:
                     x-validate:
                   next_page_params:
+                    additionalProperties: true
                     example:
                       block_number: 22133247
                       index: 50
@@ -8638,7 +9848,7 @@ paths:
           description: Unprocessable Entity
       summary: List token transfers across all token types (ERC-20, ERC-721, ERC-1155)
       tags:
-        - token_transfers
+        - token-transfers
   /v2/transactions/{transaction_hash_param}/token-transfers:
     get:
       callbacks: {}
@@ -8749,6 +9959,7 @@ paths:
                     x-struct:
                     x-validate:
                   next_page_params:
+                    additionalProperties: true
                     example:
                       block_number: 21307214
                       index: 442
@@ -8928,9 +10139,7 @@ paths:
             application/json:
               schema:
                 items:
-                  type: object
-                  x-struct:
-                  x-validate:
+                  $ref: '#/components/schemas/SearchResultItem'
                 nullable: false
                 type: array
                 x-struct:
@@ -9123,7 +10332,7 @@ paths:
           description: Not Implemented
       summary: Get a bundler by address hash
       tags:
-        - account_abstraction
+        - account-abstraction
   /v2/mud/worlds/{world}/systems/{system}:
     get:
       callbacks: {}
@@ -9216,7 +10425,7 @@ paths:
           description: Unprocessable Entity
       summary: Retrieve recent transactions as displayed on Blockscout homepage
       tags:
-        - main_page
+        - main-page
   /v2/transactions/optimism-batch/{batch_number_param}:
     get:
       callbacks: {}
@@ -9291,6 +10500,7 @@ paths:
                     x-struct:
                     x-validate:
                   next_page_params:
+                    additionalProperties: true
                     example:
                       block_number: 142678440
                       index: 5
@@ -9442,6 +10652,7 @@ paths:
                     x-struct:
                     x-validate:
                   next_page_params:
+                    additionalProperties: true
                     example:
                       items_count: 50
                       table_id: '0x746243484553545f5641554c5400000043686573744163636573730000000000'
@@ -9627,6 +10838,251 @@ paths:
       summary: Smart contract languages list
       tags:
         - config
+  /v2/advanced-filters:
+    get:
+      callbacks: {}
+      description: Returns a paginated, mixed list of activity — native value transfers, internal transactions and token transfers — filtered by transaction type, contract method, time window, address relations, value range and/or token contract. The response also echoes the resolved human-readable names of the methods and tokens referenced in the request filters.
+      operationId: BlockScoutWeb.API.V2.AdvancedFilterController.list
+      parameters:
+        - description: API key for rate limiting or for sensitive endpoints
+          in: query
+          name: apikey
+          required: false
+          schema:
+            type: string
+            x-struct:
+            x-validate:
+        - description: Secret key for getting access to restricted resources
+          in: query
+          name: key
+          required: false
+          schema:
+            type: string
+            x-struct:
+            x-validate:
+        - description: 'Comma-separated list of transaction types to include. Allowed values: `COIN_TRANSFER`, `CONTRACT_INTERACTION`, `CONTRACT_CREATION`, `ERC-20`, `ERC-404`, `ERC-721`, `ERC-1155`, `ERC-7984` (plus `ZRC-2` on Zilliqa). Values are matched case-insensitively; unknown entries are silently dropped.'
+          example: COIN_TRANSFER,ERC-20
+          in: query
+          name: transaction_types
+          required: false
+          schema:
+            nullable: true
+            type: string
+            x-struct:
+            x-validate:
+        - description: Comma-separated list of 4-byte contract method selectors (lowercase, `0x`-prefixed). At most 20 unique entries are honored; invalid entries are dropped.
+          example: '0xa9059cbb,0x095ea7b3'
+          in: query
+          name: methods
+          required: false
+          schema:
+            nullable: true
+            type: string
+            x-struct:
+            x-validate:
+        - description: Inclusive lower bound on `timestamp` (ISO 8601).
+          example: 2024-01-01T00:00:00Z
+          in: query
+          name: age_from
+          required: false
+          schema:
+            nullable: true
+            type: string
+            x-struct:
+            x-validate:
+        - description: Inclusive upper bound on `timestamp` (ISO 8601).
+          example: 2024-12-31T23:59:59Z
+          in: query
+          name: age_to
+          required: false
+          schema:
+            nullable: true
+            type: string
+            x-struct:
+            x-validate:
+        - description: Comma-separated list of sender address hashes to include.
+          example: '0x5a52e96bacdabb82fd05763e25335261b270efcb,0x00000000219ab540356cbb839cbe05303d7705fa'
+          in: query
+          name: from_address_hashes_to_include
+          required: false
+          schema:
+            nullable: true
+            type: string
+            x-struct:
+            x-validate:
+        - description: Comma-separated list of sender address hashes to exclude.
+          example: '0x5a52e96bacdabb82fd05763e25335261b270efcb,0x00000000219ab540356cbb839cbe05303d7705fa'
+          in: query
+          name: from_address_hashes_to_exclude
+          required: false
+          schema:
+            nullable: true
+            type: string
+            x-struct:
+            x-validate:
+        - description: Comma-separated list of recipient address hashes to include.
+          example: '0x5a52e96bacdabb82fd05763e25335261b270efcb,0x00000000219ab540356cbb839cbe05303d7705fa'
+          in: query
+          name: to_address_hashes_to_include
+          required: false
+          schema:
+            nullable: true
+            type: string
+            x-struct:
+            x-validate:
+        - description: Comma-separated list of recipient address hashes to exclude.
+          example: '0x5a52e96bacdabb82fd05763e25335261b270efcb,0x00000000219ab540356cbb839cbe05303d7705fa'
+          in: query
+          name: to_address_hashes_to_exclude
+          required: false
+          schema:
+            nullable: true
+            type: string
+            x-struct:
+            x-validate:
+        - description: How to combine the `from_address_hashes_*` and `to_address_hashes_*` filters. Accepts `or` or `and` (case-insensitive). `or` (default) matches an item if either side matches; `and` requires both sides to match. Any other value is silently coerced to `nil` (no relation constraint).
+          example: and
+          in: query
+          name: address_relation
+          required: false
+          schema:
+            nullable: true
+            type: string
+            x-struct:
+            x-validate:
+        - description: "Inclusive lower bound on the item's transferred amount (decimal string in the token's base units)."
+          example: '0'
+          in: query
+          name: amount_from
+          required: false
+          schema:
+            nullable: true
+            type: string
+            x-struct:
+            x-validate:
+        - description: "Inclusive upper bound on the item's transferred amount (decimal string in the token's base units)."
+          example: '1000000'
+          in: query
+          name: amount_to
+          required: false
+          schema:
+            nullable: true
+            type: string
+            x-struct:
+            x-validate:
+        - description: Comma-separated list of token contract address hashes to include. Use the literal `native` to also include native coin transfers. Each list (include and exclude) is capped to 20 entries separately.
+          example: native,0xdac17f958d2ee523a2206206994597c13d831ec7
+          in: query
+          name: token_contract_address_hashes_to_include
+          required: false
+          schema:
+            nullable: true
+            type: string
+            x-struct:
+            x-validate:
+        - description: Comma-separated list of token contract address hashes to exclude. Use the literal `native` to also exclude native coin transfers. Each list (include and exclude) is capped to 20 entries separately.
+          example: '0x0000000000000000000000000000000000000000'
+          in: query
+          name: token_contract_address_hashes_to_exclude
+          required: false
+          schema:
+            nullable: true
+            type: string
+            x-struct:
+            x-validate:
+        - description: Comma-separated list of human-readable method names corresponding to the `methods` selectors.
+          example: transfer,approve
+          in: query
+          name: methods_names
+          required: false
+          schema:
+            nullable: true
+            type: string
+            x-struct:
+            x-validate:
+        - description: Comma-separated list of token symbols to include.
+          example: USDT,USDC
+          in: query
+          name: token_contract_symbols_to_include
+          required: false
+          schema:
+            nullable: true
+            type: string
+            x-struct:
+            x-validate:
+        - description: Comma-separated list of token symbols to exclude.
+          example: USDT,USDC
+          in: query
+          name: token_contract_symbols_to_exclude
+          required: false
+          schema:
+            nullable: true
+            type: string
+            x-struct:
+            x-validate:
+        - description: 'Keyset cursor: block number of the last item from the previous page.'
+          example: '23532302'
+          in: query
+          name: block_number
+          required: false
+          schema:
+            pattern: ^([1-9][0-9]*|0)$
+            type: string
+            x-struct:
+            x-validate:
+        - description: 'Keyset cursor: transaction index within the block of the last item from the previous page.'
+          example: '1'
+          in: query
+          name: transaction_index
+          required: false
+          schema:
+            pattern: ^([1-9][0-9]*|0)$
+            type: string
+            x-struct:
+            x-validate:
+        - description: 'Keyset cursor: internal-transaction index of the last item from the previous page. Use an empty string or the literal `null` when the previous item was not an internal transaction.'
+          in: query
+          name: internal_transaction_index
+          required: false
+          schema:
+            $ref: '#/components/schemas/IntegerStringOrEmptyOrNullLiteral'
+        - description: 'Keyset cursor: token-transfer index of the last item from the previous page. Use an empty string or the literal `null` when the previous item was not a token transfer.'
+          in: query
+          name: token_transfer_index
+          required: false
+          schema:
+            $ref: '#/components/schemas/IntegerStringOrEmptyOrNullLiteral'
+        - description: 'Keyset cursor: index within an ERC-1155 batch token transfer. Use an empty string or the literal `null` when the previous item was not part of a batch.'
+          in: query
+          name: token_transfer_batch_index
+          required: false
+          schema:
+            $ref: '#/components/schemas/IntegerStringOrEmptyOrNullLiteral'
+        - description: Cumulative number of items already returned across previous pages.
+          in: query
+          name: items_count
+          required: false
+          schema:
+            minimum: 1
+            type: integer
+            x-struct:
+            x-validate:
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AdvancedFilterResponse'
+          description: List of matching items with pagination information and resolved search params.
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JsonErrorResponse'
+          description: Unprocessable Entity
+      summary: List transactions, internal transactions and token transfers matching the advanced filter criteria
+      tags:
+        - advanced-filters
   /v2/tokens/{address_hash_param}/instances/{token_id_param}:
     get:
       callbacks: {}
@@ -9773,6 +11229,7 @@ paths:
                     x-struct:
                     x-validate:
                   next_page_params:
+                    additionalProperties: true
                     example:
                       index: 8829
                       items_count: 50
@@ -9987,15 +11444,10 @@ paths:
             x-struct:
             x-validate:
         - description: |
-            Sort transactions by:
-            * block_number - Sort by block number
-            * value - Sort by transaction value
-            * fee - Sort by transaction fee
-            * balance - Sort by account balance
-            * transactions_count - Sort by number of transactions on address
-            * fiat_value - Sort by fiat value of the token transfer
-            * holders_count - Sort by number of token holders
-            * circulating_market_cap - Sort by circulating market cap of the token
+            Sort results by:
+            * key_bytes - Sort by MUD record key_bytes
+            * key0 - Sort by MUD record key0
+            * key1 - Sort by MUD record key1
             Should be used together with `order` parameter.
           in: query
           name: sort
@@ -10067,6 +11519,7 @@ paths:
                     x-struct:
                     x-validate:
                   next_page_params:
+                    additionalProperties: true
                     example:
                       items_count: 50
                       key0: '0x73796269746c7900000000000000000043686573743332000000000000000000'
@@ -10120,15 +11573,9 @@ paths:
             x-struct:
             x-validate:
         - description: |
-            Sort transactions by:
-            * block_number - Sort by block number
-            * value - Sort by transaction value
-            * fee - Sort by transaction fee
+            Sort results by:
             * balance - Sort by account balance
-            * transactions_count - Sort by number of transactions on address
-            * fiat_value - Sort by fiat value of the token transfer
-            * holders_count - Sort by number of token holders
-            * circulating_market_cap - Sort by circulating market cap of the token
+            * transactions_count - Sort by number of transactions
             Should be used together with `order` parameter.
           in: query
           name: sort
@@ -10230,12 +11677,13 @@ paths:
                 properties:
                   items:
                     items:
-                      $ref: '#/components/schemas/SmartContract'
+                      $ref: '#/components/schemas/SmartContractListItem'
                     nullable: false
                     type: array
                     x-struct:
                     x-validate:
                   next_page_params:
+                    additionalProperties: true
                     example:
                       items_count: 50
                       smart_contract_id: 1947801
@@ -10258,7 +11706,7 @@ paths:
           description: Unprocessable Entity
       summary: List verified smart contracts with optional filtering options
       tags:
-        - smart_contracts
+        - smart-contracts
   /v2/addresses/{address_hash_param}/coin-balance-history:
     get:
       callbacks: {}
@@ -10322,6 +11770,7 @@ paths:
                     x-struct:
                     x-validate:
                   next_page_params:
+                    additionalProperties: true
                     example:
                       block_number: 22546398
                       items_count: 50
@@ -10480,6 +11929,7 @@ paths:
                     x-struct:
                     x-validate:
                   next_page_params:
+                    additionalProperties: true
                     example:
                       page_size: 50
                       page_token: 5,0x9B67A24A474e9EC7372c23B023f36ab28831e4C4
@@ -10508,7 +11958,7 @@ paths:
           description: Not Implemented
       summary: List of top bundlers
       tags:
-        - account_abstraction
+        - account-abstraction
   /v2/transactions/{transaction_hash_param}/state-changes:
     get:
       callbacks: {}
@@ -10571,6 +12021,7 @@ paths:
                     x-struct:
                     x-validate:
                   next_page_params:
+                    additionalProperties: true
                     example:
                       items_count: 50
                       state_changes:
@@ -10656,6 +12107,7 @@ paths:
                     x-struct:
                     x-validate:
                   next_page_params:
+                    additionalProperties: true
                     example:
                       index: 12967
                       items_count: 50
@@ -10779,6 +12231,12 @@ paths:
               schema:
                 $ref: '#/components/schemas/JsonErrorResponse'
           description: Unprocessable Entity
+        '501':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotImplementedResponse'
+          description: Not Implemented
       summary: Get countdown information for a target block number
       tags:
         - blocks
@@ -10805,15 +12263,9 @@ paths:
             x-struct:
             x-validate:
         - description: |
-            Sort transactions by:
-            * block_number - Sort by block number
-            * value - Sort by transaction value
-            * fee - Sort by transaction fee
+            Sort results by:
             * balance - Sort by account balance
-            * transactions_count - Sort by number of transactions on address
-            * fiat_value - Sort by fiat value of the token transfer
-            * holders_count - Sort by number of token holders
-            * circulating_market_cap - Sort by circulating market cap of the token
+            * transactions_count - Sort by number of transactions
             Should be used together with `order` parameter.
           in: query
           name: sort
@@ -10887,117 +12339,13 @@ paths:
                     $ref: '#/components/schemas/FloatStringNullable'
                   items:
                     items:
-                      additionalProperties: false
-                      description: Address
-                      properties:
-                        coin_balance:
-                          $ref: '#/components/schemas/IntegerStringNullable'
-                        ens_domain_name:
-                          description: ENS domain name associated with the address
-                          nullable: true
-                          type: string
-                          x-struct:
-                          x-validate:
-                        hash:
-                          $ref: '#/components/schemas/AddressHash'
-                        implementations:
-                          description: Implementations linked with the contract
-                          items:
-                            $ref: '#/components/schemas/Implementation'
-                          type: array
-                          x-struct:
-                          x-validate:
-                        is_contract:
-                          description: Has address contract code?
-                          nullable: true
-                          type: boolean
-                          x-struct:
-                          x-validate:
-                        is_scam:
-                          description: Has address scam badge?
-                          nullable: false
-                          type: boolean
-                          x-struct:
-                          x-validate:
-                        is_verified:
-                          description: Has address associated source code?
-                          nullable: true
-                          type: boolean
-                          x-struct:
-                          x-validate:
-                        metadata:
-                          allOf:
-                            - $ref: '#/components/schemas/Metadata'
-                          nullable: true
-                          x-struct:
-                          x-validate:
-                        name:
-                          description: Name associated with the address
-                          nullable: true
-                          type: string
-                          x-struct:
-                          x-validate:
-                        private_tags:
-                          description: Private tags associated with the address
-                          items:
-                            $ref: '#/components/schemas/Tag'
-                          type: array
-                          x-struct:
-                          x-validate:
-                        proxy_type:
-                          $ref: '#/components/schemas/ProxyType'
-                        public_tags:
-                          description: Public tags associated with the address
-                          items:
-                            $ref: '#/components/schemas/Tag'
-                          type: array
-                          x-struct:
-                          x-validate:
-                        reputation:
-                          description: Reputation of the address
-                          enum:
-                            - ok
-                            - scam
-                          nullable: false
-                          type: string
-                          x-struct:
-                          x-validate:
-                        transactions_count:
-                          anyOf:
-                            - $ref: '#/components/schemas/IntegerString'
-                            - $ref: '#/components/schemas/EmptyString'
-                          nullable: true
-                          x-struct:
-                          x-validate:
-                        watchlist_names:
-                          description: Watchlist name associated with the address
-                          items:
-                            $ref: '#/components/schemas/WatchlistName'
-                          type: array
-                          x-struct:
-                          x-validate:
-                      required:
-                        - hash
-                        - is_contract
-                        - name
-                        - is_scam
-                        - reputation
-                        - proxy_type
-                        - implementations
-                        - is_verified
-                        - ens_domain_name
-                        - metadata
-                        - coin_balance
-                        - transactions_count
-                      title: Address
-                      type: object
-                      x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.Address
-                      x-validate:
+                      $ref: '#/components/schemas/TopAddress'
                     nullable: false
                     type: array
                     x-struct:
                     x-validate:
                   next_page_params:
+                    additionalProperties: true
                     example:
                       fetched_coin_balance: '124355417998347240251800'
                       hash: '0x59708733fbbf64378d9293ec56b977c011a08fd2'
@@ -11130,6 +12478,7 @@ paths:
                     x-struct:
                     x-validate:
                   next_page_params:
+                    additionalProperties: true
                     example:
                       index: 88192653
                       items_count: 50
@@ -11214,7 +12563,7 @@ paths:
           description: Not Implemented
       summary: Get a user operation by hash
       tags:
-        - account_abstraction
+        - account-abstraction
   /v2/proxy/account-abstraction/paymasters/{address_hash_param}:
     get:
       callbacks: {}
@@ -11270,7 +12619,7 @@ paths:
           description: Not Implemented
       summary: Get a paymaster by address hash
       tags:
-        - account_abstraction
+        - account-abstraction
   /v2/internal-transactions:
     get:
       callbacks: {}
@@ -11359,6 +12708,7 @@ paths:
                     x-struct:
                     x-validate:
                   next_page_params:
+                    additionalProperties: true
                     example:
                       block_number: 22133247
                       index: 50
@@ -11383,7 +12733,7 @@ paths:
           description: Unprocessable Entity
       summary: List internal transactions generated during smart contract execution
       tags:
-        - internal_transactions
+        - internal-transactions
   /v2/proxy/account-abstraction/operations:
     get:
       callbacks: {}
@@ -11494,6 +12844,7 @@ paths:
                     x-struct:
                     x-validate:
                   next_page_params:
+                    additionalProperties: true
                     example:
                       page_size: 50
                       page_token: 3937439,0xbb680271614883525ac8056c388489e80b3518ec12ec46e1b910c7238c46b565
@@ -11522,7 +12873,7 @@ paths:
           description: Not Implemented
       summary: List of recent user operations
       tags:
-        - account_abstraction
+        - account-abstraction
   /v2/addresses/{address_hash_param}/coin-balance-history-by-day:
     get:
       callbacks: {}
@@ -11645,6 +12996,7 @@ paths:
                     x-struct:
                     x-validate:
                   next_page_params:
+                    additionalProperties: true
                     example:
                       id: 394591
                       items_count: 50
@@ -11705,7 +13057,7 @@ paths:
           description: Unprocessable Entity
       summary: Get count statistics (new & newly verified) for deployed smart contracts
       tags:
-        - smart_contracts
+        - smart-contracts
   /v2/tokens/{address_hash_param}/instances/{token_id_param}/transfers-count:
     get:
       callbacks: {}
@@ -11822,7 +13174,7 @@ paths:
           description: Current blockchain indexing status.
       summary: Check if indexing is finished with indexing ratio
       tags:
-        - main_page
+        - main-page
   /v2/blocks/{block_hash_or_number_param}/transactions:
     get:
       callbacks: {}
@@ -11922,6 +13274,7 @@ paths:
                     x-struct:
                     x-validate:
                   next_page_params:
+                    additionalProperties: true
                     example:
                       block_number: 12345678
                       index: 103
@@ -12007,7 +13360,7 @@ paths:
           description: Not Implemented
       summary: Get an account abstraction wallet by address hash
       tags:
-        - account_abstraction
+        - account-abstraction
   /v2/transactions/{transaction_hash_param}/summary:
     get:
       callbacks: {}
@@ -12126,6 +13479,7 @@ paths:
                     x-struct:
                     x-validate:
                   next_page_params:
+                    additionalProperties: true
                     example:
                       page_size: 50
                       page_token: 3,0xC23957e7Fea98eBD017abe15a4e7770797ff6D8d
@@ -12154,7 +13508,7 @@ paths:
           description: Not Implemented
       summary: List of top wallet factories
       tags:
-        - account_abstraction
+        - account-abstraction
   /v2/withdrawals/counters:
     get:
       callbacks: {}
@@ -12196,7 +13550,17 @@ paths:
   /v2/blocks:
     get:
       callbacks: {}
-      description: Retrieves a paginated list of blocks with optional filtering by block type.
+      description: |
+        Retrieves a paginated list of blocks ordered by descending block number.
+
+        When the `type` query parameter is omitted, only main-chain consensus blocks
+        (equivalent to `type=block`) are returned. Use `type=uncle` to list ommer
+        blocks (valid but not in the main chain) and `type=reorg` to list blocks
+        that lost consensus during a chain reorganization.
+
+        Pagination is cursor-based: the response contains `next_page_params` with
+        `block_number` and `items_count` — pass these back as query parameters on
+        the next request to fetch the following page.
       operationId: BlockScoutWeb.API.V2.BlockController.blocks
       parameters:
         - description: API key for rate limiting or for sensitive endpoints
@@ -12225,6 +13589,7 @@ paths:
           name: type
           required: false
           schema:
+            default: block
             enum:
               - uncle
               - reorg
@@ -12267,6 +13632,7 @@ paths:
                     x-struct:
                     x-validate:
                   next_page_params:
+                    additionalProperties: true
                     example:
                       block_number: 22566361
                       items_count: 50
@@ -12281,6 +13647,12 @@ paths:
                 x-struct:
                 x-validate:
           description: List of blocks with pagination information.
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JsonErrorResponse'
+          description: Unprocessable Entity
       summary: List blocks with optional filtering by block type
       tags:
         - blocks
@@ -12432,6 +13804,7 @@ paths:
                     x-struct:
                     x-validate:
                   next_page_params:
+                    additionalProperties: true
                     example:
                       block_number: 22546398
                       index: 268
@@ -12462,6 +13835,87 @@ paths:
       summary: List event logs emitted by or involving a specific address
       tags:
         - addresses
+  /legacy/block/get-block-number-by-time:
+    get:
+      callbacks: {}
+      description: |
+        Returns the block number created closest to a provided timestamp.
+
+        Required:
+        - `timestamp`
+        - `closest`
+      operationId: BlockScoutWeb.API.Legacy.BlockController.get_block_number_by_time
+      parameters:
+        - description: Unix timestamp in seconds.
+          in: query
+          name: timestamp
+          schema:
+            $ref: '#/components/schemas/IntegerString'
+        - description: Whether to return the block before or after the timestamp.
+          in: query
+          name: closest
+          schema:
+            enum:
+              - before
+              - after
+            type: string
+            x-struct:
+            x-validate:
+        - description: API key for rate limiting or for sensitive endpoints
+          in: query
+          name: apikey
+          required: false
+          schema:
+            type: string
+            x-struct:
+            x-validate:
+        - description: Secret key for getting access to restricted resources
+          in: query
+          name: key
+          required: false
+          schema:
+            type: string
+            x-struct:
+            x-validate:
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                additionalProperties: false
+                properties:
+                  message:
+                    description: Human-readable status string — `OK` on success, a descriptive error message otherwise.
+                    type: string
+                    x-struct:
+                    x-validate:
+                  result:
+                    allOf:
+                      - $ref: '#/components/schemas/GetBlockNumberByTimeResult'
+                    description: Endpoint-specific payload on success; `null` on error.
+                    nullable: true
+                    x-struct:
+                    x-validate:
+                  status:
+                    description: '`1` = OK, `0` = error, `2` = pending.'
+                    enum:
+                      - '0'
+                      - '1'
+                      - '2'
+                    type: string
+                    x-struct:
+                    x-validate:
+                required:
+                  - status
+                  - message
+                  - result
+                type: object
+                x-struct:
+                x-validate:
+          description: Block number
+      summary: Get block number by time stamp
+      tags:
+        - legacy
   /v2/optimism/withdrawals:
     get:
       callbacks: {}
@@ -12516,6 +13970,7 @@ paths:
                     x-struct:
                     x-validate:
                   next_page_params:
+                    additionalProperties: true
                     example:
                       items_count: 50
                       nonce: '1766847064778384329583297500742918515827483896875618958121606201292650102'
@@ -12601,6 +14056,7 @@ paths:
                     x-struct:
                     x-validate:
                   next_page_params:
+                    additionalProperties: true
                     example:
                       page_size: 50
                       page_token: '0x29cB129476609bBa26372b23427Af3b87cB23aF6'
@@ -12629,7 +14085,7 @@ paths:
           description: Not Implemented
       summary: List of account abstraction wallets
       tags:
-        - account_abstraction
+        - account-abstraction
   /v2/addresses/{address_hash_param}/internal-transactions/csv:
     get:
       callbacks: {}
@@ -13125,7 +14581,7 @@ paths:
           description: Not Implemented
       summary: Get a factory by address hash
       tags:
-        - account_abstraction
+        - account-abstraction
   /v2/transactions/{transaction_hash_param}/logs:
     get:
       callbacks: {}
@@ -13197,6 +14653,7 @@ paths:
                     x-struct:
                     x-validate:
                   next_page_params:
+                    additionalProperties: true
                     example:
                       block_number: 21925703
                       index: 124
@@ -13300,6 +14757,59 @@ paths:
       summary: Uncompleted background migrations
       tags:
         - config
+  /v2/advanced-filters/methods:
+    get:
+      callbacks: {}
+      description: Returns a list of known contract methods. When the `q` parameter is provided, searches for a single method by its 4-byte selector or name. Without `q`, returns the default list of popular methods.
+      operationId: BlockScoutWeb.API.V2.AdvancedFilterController.list_methods
+      parameters:
+        - description: 'Search string: either a 4-byte method selector (e.g. `0xa9059cbb`) or a method name (e.g. `transfer`).'
+          example: transfer
+          in: query
+          name: q
+          required: false
+          schema:
+            nullable: true
+            type: string
+            x-struct:
+            x-validate:
+        - description: API key for rate limiting or for sensitive endpoints
+          in: query
+          name: apikey
+          required: false
+          schema:
+            type: string
+            x-struct:
+            x-validate:
+        - description: Secret key for getting access to restricted resources
+          in: query
+          name: key
+          required: false
+          schema:
+            type: string
+            x-struct:
+            x-validate:
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/AdvancedFilterMethod'
+                nullable: false
+                type: array
+                x-struct:
+                x-validate:
+          description: List of contract methods.
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JsonErrorResponse'
+          description: Unprocessable Entity
+      summary: List known contract methods
+      tags:
+        - advanced-filters
   /v2/blocks/optimism-batch/{batch_number_param}:
     get:
       callbacks: {}
@@ -13366,6 +14876,7 @@ paths:
                     x-struct:
                     x-validate:
                   next_page_params:
+                    additionalProperties: true
                     example:
                       block_number: 22566361
                       items_count: 50
@@ -13445,6 +14956,7 @@ paths:
                     x-struct:
                     x-validate:
                   next_page_params:
+                    additionalProperties: true
                     example:
                       page_size: 50
                       page_token: 19,0xB98Cb1dA4F9BD640879F0bBCb30A541c84163406
@@ -13473,7 +14985,7 @@ paths:
           description: Not Implemented
       summary: List of top paymasters
       tags:
-        - account_abstraction
+        - account-abstraction
   /v2/transactions/watchlist:
     get:
       callbacks: {}
@@ -13539,6 +15051,7 @@ paths:
                     x-struct:
                     x-validate:
                   next_page_params:
+                    additionalProperties: true
                     example:
                       block_number: 23617990
                       index: 128
@@ -13648,6 +15161,7 @@ paths:
                     x-struct:
                     x-validate:
                   next_page_params:
+                    additionalProperties: true
                     example:
                       block_number: 22133247
                       index: 50
@@ -13747,6 +15261,7 @@ paths:
                     x-struct:
                     x-validate:
                   next_page_params:
+                    additionalProperties: true
                     example:
                       page_size: 50
                       page_token: 3949699,0x275f7110df7d73e530f3381daa9d422dea80f036b514e56427d2d7e492c8a81f,0
@@ -13775,7 +15290,7 @@ paths:
           description: Not Implemented
       summary: List of recent bundles
       tags:
-        - account_abstraction
+        - account-abstraction
   /v2/config/backend:
     get:
       callbacks: {}
@@ -13934,6 +15449,84 @@ paths:
       summary: Export logs as CSV
       tags:
         - addresses
+  /legacy/block/eth-block-number:
+    get:
+      callbacks: {}
+      description: |
+        Returns the latest block number as a hex-encoded string in a JSON-RPC 2.0 response.
+      operationId: BlockScoutWeb.API.Legacy.BlockController.eth_block_number
+      parameters:
+        - description: JSON-RPC request id echoed back in the response. Defaults to 1 when omitted.
+          in: query
+          name: id
+          schema:
+            anyOf:
+              - type: integer
+                x-struct:
+                x-validate:
+              - type: string
+                x-struct:
+                x-validate:
+            x-struct:
+            x-validate:
+        - description: API key for rate limiting or for sensitive endpoints
+          in: query
+          name: apikey
+          required: false
+          schema:
+            type: string
+            x-struct:
+            x-validate:
+        - description: Secret key for getting access to restricted resources
+          in: query
+          name: key
+          required: false
+          schema:
+            type: string
+            x-struct:
+            x-validate:
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                additionalProperties: false
+                properties:
+                  id:
+                    anyOf:
+                      - type: integer
+                        x-struct:
+                        x-validate:
+                      - type: string
+                        x-struct:
+                        x-validate:
+                    description: Echoes the request id. When the client omits it, the server echoes integer `1`.
+                    x-struct:
+                    x-validate:
+                  jsonrpc:
+                    description: JSON-RPC protocol version, always `2.0`.
+                    enum:
+                      - '2.0'
+                    type: string
+                    x-struct:
+                    x-validate:
+                  result:
+                    allOf:
+                      - $ref: '#/components/schemas/EthBlockNumberResult'
+                    description: Endpoint-specific payload.
+                    x-struct:
+                    x-validate:
+                required:
+                  - jsonrpc
+                  - result
+                  - id
+                type: object
+                x-struct:
+                x-validate:
+          description: Latest block number
+      summary: Get the latest block number
+      tags:
+        - legacy
   /v2/withdrawals:
     get:
       callbacks: {}
@@ -13990,6 +15583,7 @@ paths:
                     x-struct:
                     x-validate:
                   next_page_params:
+                    additionalProperties: true
                     example:
                       index: 50
                       items_count: 50
@@ -14262,15 +15856,10 @@ paths:
             x-struct:
             x-validate:
         - description: |
-            Sort transactions by:
+            Sort results by:
             * block_number - Sort by block number
             * value - Sort by transaction value
             * fee - Sort by transaction fee
-            * balance - Sort by account balance
-            * transactions_count - Sort by number of transactions on address
-            * fiat_value - Sort by fiat value of the token transfer
-            * holders_count - Sort by number of token holders
-            * circulating_market_cap - Sort by circulating market cap of the token
             Should be used together with `order` parameter.
           in: query
           name: sort
@@ -14382,6 +15971,7 @@ paths:
                     x-struct:
                     x-validate:
                   next_page_params:
+                    additionalProperties: true
                     example:
                       block_number: 22566361
                       fee: '19206937428000'
@@ -14513,6 +16103,7 @@ paths:
                     x-struct:
                     x-validate:
                   next_page_params:
+                    additionalProperties: true
                     example:
                       items_count: 50
                       world: '0x82cb040ff4463bff3395d52b558fd77c61583b27'
@@ -14530,6 +16121,80 @@ paths:
       summary: List of MUD worlds.
       tags:
         - mud
+  /v2/transactions/{transaction_hash_param}/preview:
+    get:
+      callbacks: {}
+      description: Returns minimal transaction data (status, timestamp, method, from/to) for rendering OG previews.
+      operationId: BlockScoutWeb.API.V2.TransactionController.preview
+      parameters:
+        - description: Transaction hash in the path
+          in: path
+          name: transaction_hash_param
+          required: true
+          schema:
+            $ref: '#/components/schemas/FullHash'
+        - description: API key for rate limiting or for sensitive endpoints
+          in: query
+          name: apikey
+          required: false
+          schema:
+            type: string
+            x-struct:
+            x-validate:
+        - description: Secret key for getting access to restricted resources
+          in: query
+          name: key
+          required: false
+          schema:
+            type: string
+            x-struct:
+            x-validate:
+        - description: 'Preload ENS domain names for addresses (default: false)'
+          in: query
+          name: preload_ens
+          required: false
+          schema:
+            type: boolean
+            x-struct:
+            x-validate:
+        - description: 'Preload address metadata/name tags (default: false)'
+          in: query
+          name: preload_metadata
+          required: false
+          schema:
+            type: boolean
+            x-struct:
+            x-validate:
+        - description: 'Decode transaction input to resolve method name (default: false)'
+          in: query
+          name: decode_input
+          required: false
+          schema:
+            type: boolean
+            x-struct:
+            x-validate:
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Preview'
+          description: Lightweight transaction preview.
+        '404':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFoundResponse'
+          description: Not Found
+        '422':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JsonErrorResponse'
+          description: Unprocessable Entity
+      summary: Get lightweight transaction preview for social media embeds
+      tags:
+        - transactions
   /v2/transactions/{transaction_hash_param}/raw-trace:
     get:
       callbacks: {}
@@ -14750,6 +16415,7 @@ paths:
                     x-struct:
                     x-validate:
                   next_page_params:
+                    additionalProperties: true
                     example:
                       items_count: 50
                       l1_block_number: 23937283
@@ -14815,6 +16481,54 @@ paths:
       summary: Number of output roots in the list.
       tags:
         - optimism
+  /v2/csv-exports/{uuid_param}:
+    get:
+      callbacks: {}
+      description: Gets a CSV export by UUID
+      operationId: BlockScoutWeb.API.V2.CsvExportController.get_csv_export
+      parameters:
+        - description: UUID for CSV export
+          in: path
+          name: uuid_param
+          required: true
+          schema:
+            format: uuid
+            pattern: ^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$
+            type: string
+            x-struct:
+            x-validate:
+        - description: API key for rate limiting or for sensitive endpoints
+          in: query
+          name: apikey
+          required: false
+          schema:
+            type: string
+            x-struct:
+            x-validate:
+        - description: Secret key for getting access to restricted resources
+          in: query
+          name: key
+          required: false
+          schema:
+            type: string
+            x-struct:
+            x-validate:
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Response'
+          description: Status of CSV export.
+        '404':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFoundResponse'
+          description: Not Found
+      summary: Get CSV export
+      tags:
+        - csv-export
   /v2/addresses/{address_hash_param}/nft/collections:
     get:
       callbacks: {}
@@ -14883,7 +16597,7 @@ paths:
           name: token_type
           required: false
           schema:
-            $ref: '#/components/schemas/Type'
+            $ref: '#/components/schemas/TokenType'
       responses:
         '200':
           content:
@@ -14900,6 +16614,7 @@ paths:
                     x-struct:
                     x-validate:
                   next_page_params:
+                    additionalProperties: true
                     example:
                       items_count: 50
                       token_contract_address_hash: '0x1ffe11b9fb7f6ff1b153ab8608cf403ecaf9d44a'
@@ -14934,4 +16649,22 @@ security: []
 servers:
   - url: http://localhost/api
     variables: {}
-tags: []
+tags:
+  - name: blocks
+  - name: transactions
+  - name: addresses
+  - name: internal-transactions
+  - name: tokens
+  - name: token-transfers
+  - name: smart-contracts
+  - name: config
+  - name: main-page
+  - name: search
+  - name: stats
+  - name: csv-export
+  - name: account-abstraction
+  - name: withdrawals
+  - name: advanced-filters
+  - name: optimism
+  - name: mud
+  - name: legacy
