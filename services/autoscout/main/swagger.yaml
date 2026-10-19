@@ -2120,6 +2120,11 @@ definitions:
         type: string
     required:
       - version
+  v1AccountPluginConfig:
+    type: object
+    properties:
+      enabled:
+        type: boolean
   v1AdBannerProvider:
     type: string
     enum:
@@ -2954,6 +2959,8 @@ definitions:
         $ref: '#/definitions/v1AdminServicePluginConfig'
       name_service_plugin_config:
         $ref: '#/definitions/v1NameServicePluginConfig'
+      account_plugin_config:
+        $ref: '#/definitions/v1AccountPluginConfig'
       monitoring:
         $ref: '#/definitions/v1MonitoringConfig'
       versions_stack:
@@ -3072,11 +3079,14 @@ definitions:
         $ref: '#/definitions/v1PluginStatuses'
       name_service_status:
         $ref: '#/definitions/v1PluginStatuses'
+      account_status:
+        $ref: '#/definitions/v1PluginStatuses'
     required:
       - stats_status
       - user_ops_status
       - admin_service_status
       - name_service_status
+      - account_status
   v1DeploymentStatus:
     type: string
     enum:
@@ -3923,6 +3933,7 @@ definitions:
       - PLUGIN_VARIANT_USER_OPS
       - PLUGIN_VARIANT_ADMIN_SERVICE
       - PLUGIN_VARIANT_NAME_SERVICE
+      - PLUGIN_VARIANT_ACCOUNT
     default: UNSPECIFIED_PLUGIN_VARIANT
   v1PreviewDepositRequest:
     type: object
@@ -4125,6 +4136,8 @@ definitions:
       admin_service_cost_per_hour:
         type: string
       name_service_cost_per_hour:
+        type: string
+      account_cost_per_hour:
         type: string
   v1StatsPluginConfig:
     type: object
