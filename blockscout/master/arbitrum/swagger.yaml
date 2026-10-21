@@ -7727,7 +7727,7 @@ info:
   contact:
     email: info@blockscout.com
   title: Blockscout
-  version: 12.0.2
+  version: 12.0.3
 openapi: 3.0.0
 paths:
   /api/v2/addresses/{address_hash_param}/coin-balance-history-by-day:
