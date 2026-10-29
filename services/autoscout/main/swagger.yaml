@@ -1812,27 +1812,6 @@ paths:
         - Users
       security:
         - ApiKeyAuth: []
-  /api/v1/users/profile:register:
-    post:
-      summary: Register new profile
-      operationId: Autoscout_RegisterProfile
-      responses:
-        "200":
-          description: A successful response.
-          schema:
-            $ref: '#/definitions/v1RegisterProfileResponse'
-        default:
-          description: An unexpected error response.
-          schema:
-            $ref: '#/definitions/rpcStatus'
-      parameters:
-        - name: body
-          in: body
-          required: true
-          schema:
-            $ref: '#/definitions/v1RegisterProfileRequest'
-      tags:
-        - Users
   /api/v1/users/promocodes:activate:
     post:
       operationId: Autoscout_ActivateRegularPromocode
@@ -2374,7 +2353,7 @@ definitions:
         type: string
       token_value:
         type: string
-        description: Returned only once, by CreateAuthToken and RegisterProfile. The value is not stored.
+        description: Returned only once, by CreateAuthToken. The value is not stored.
       created_at:
         type: string
       id:
@@ -4017,25 +3996,6 @@ definitions:
       - total
       - total_errors
       - items
-  v1RegisterProfileRequest:
-    type: object
-    properties:
-      email:
-        type: string
-      project_title:
-        type: string
-      promo:
-        type: string
-    required:
-      - email
-      - project_title
-  v1RegisterProfileResponse:
-    type: object
-    properties:
-      profile:
-        $ref: '#/definitions/v1UserProfile'
-      initial_token:
-        $ref: '#/definitions/v1AuthToken'
   v1RegularPromocodeRequest:
     type: object
     properties:
