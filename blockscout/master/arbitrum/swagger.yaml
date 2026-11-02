@@ -4428,6 +4428,7 @@ components:
             - information
             - note
             - protocol
+            - service
           nullable: false
           type: string
           x-struct:
