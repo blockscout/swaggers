@@ -14069,7 +14069,7 @@ paths:
   /api/v2/addresses/{address_hash_param}/internal-transactions/csv:
     get:
       callbacks: {}
-      description: Exports internal transactions for a specific address as a CSV file.
+      description: Exports internal transactions for a specific address as a CSV file. Pass `include_zero_value=false` to omit zero-value call-type internal transactions, matching the list endpoint.
       operationId: BlockScoutWeb.API.V2.CsvExportController.internal_transactions_csv
       parameters:
         - description: API key for rate limiting or for sensitive endpoints
@@ -14151,6 +14151,15 @@ paths:
                 x-struct: null
                 x-validate: null
               - $ref: '#/components/schemas/NullString'
+            x-struct: null
+            x-validate: null
+        - description: If `false`, zero-value call-type internal transactions are excluded from results.
+          in: query
+          name: include_zero_value
+          required: false
+          schema:
+            default: true
+            type: boolean
             x-struct: null
             x-validate: null
       responses:
