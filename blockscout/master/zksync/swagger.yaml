@@ -1072,6 +1072,123 @@ components:
       type: object
       x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.Log
       x-validate:
+    Pool:
+      additionalProperties: false
+      description: DEX pool as returned by the contracts-info service.
+      properties:
+        base_token_address:
+          $ref: '#/components/schemas/AddressHash'
+        base_token_fully_diluted_valuation_usd:
+          $ref: '#/components/schemas/FloatStringNullable'
+        base_token_icon_url:
+          nullable: true
+          type: string
+          x-struct:
+          x-validate:
+        base_token_market_cap_usd:
+          $ref: '#/components/schemas/FloatStringNullable'
+        base_token_symbol:
+          nullable: false
+          type: string
+          x-struct:
+          x-validate:
+        chain_id:
+          description: Either just `chain_id` or `chain_id:instance_id`
+          example: '1'
+          nullable: false
+          type: string
+          x-struct:
+          x-validate:
+        coin_gecko_terminal_url:
+          nullable: false
+          type: string
+          x-struct:
+          x-validate:
+        contract_address:
+          nullable: false
+          type: string
+          x-struct:
+          x-validate:
+        dex:
+          additionalProperties: false
+          nullable: false
+          properties:
+            id:
+              example: uniswap-v4-ethereum
+              nullable: false
+              type: string
+              x-struct:
+              x-validate:
+            name:
+              example: Uniswap V4 (Ethereum)
+              nullable: false
+              type: string
+              x-struct:
+              x-validate:
+          required:
+            - id
+            - name
+          type: object
+          x-struct:
+          x-validate:
+        fee:
+          $ref: '#/components/schemas/FloatStringNullable'
+        is_contract:
+          nullable: false
+          type: boolean
+          x-struct:
+          x-validate:
+        liquidity:
+          $ref: '#/components/schemas/FloatStringNullable'
+        pool_id:
+          description: 'Pool identifier: the pool ID for Uniswap v4 pools, the pool contract address otherwise.'
+          example: '0xe63e32b2ae40601662f760d6bf5d771057324fbd97784fe1d3717069f7b75d45'
+          nullable: false
+          type: string
+          x-struct:
+          x-validate:
+        quote_token_address:
+          $ref: '#/components/schemas/AddressHash'
+        quote_token_fully_diluted_valuation_usd:
+          $ref: '#/components/schemas/FloatStringNullable'
+        quote_token_icon_url:
+          nullable: true
+          type: string
+          x-struct:
+          x-validate:
+        quote_token_market_cap_usd:
+          $ref: '#/components/schemas/FloatStringNullable'
+        quote_token_symbol:
+          nullable: false
+          type: string
+          x-struct:
+          x-validate:
+        volume_usd_24h:
+          $ref: '#/components/schemas/FloatStringNullable'
+      required:
+        - pool_id
+        - contract_address
+        - chain_id
+        - is_contract
+        - base_token_address
+        - base_token_symbol
+        - base_token_icon_url
+        - quote_token_address
+        - quote_token_symbol
+        - quote_token_icon_url
+        - base_token_fully_diluted_valuation_usd
+        - base_token_market_cap_usd
+        - quote_token_fully_diluted_valuation_usd
+        - quote_token_market_cap_usd
+        - fee
+        - liquidity
+        - volume_usd_24h
+        - dex
+        - coin_gecko_terminal_url
+      title: Pool
+      type: object
+      x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.Search.Result.Pool.Pool
+      x-validate:
     Fee:
       additionalProperties: false
       properties:
@@ -2220,6 +2337,31 @@ components:
       title: UserOperationRawV06
       type: object
       x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.Proxy.AccountAbstraction.UserOperation.RawV06
+      x-validate:
+    SearchResultPool:
+      additionalProperties: false
+      properties:
+        pool:
+          $ref: '#/components/schemas/Pool'
+        priority:
+          nullable: false
+          type: integer
+          x-struct:
+          x-validate:
+        type:
+          enum:
+            - pool
+          nullable: false
+          type: string
+          x-struct:
+          x-validate:
+      required:
+        - type
+        - pool
+        - priority
+      title: SearchResultPool
+      type: object
+      x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.Search.Result.Pool
       x-validate:
     HotContract:
       additionalProperties: false
@@ -6131,6 +6273,7 @@ components:
           ens_domain: '#/components/schemas/SearchResultEnsDomain'
           label: '#/components/schemas/SearchResultLabel'
           metadata_tag: '#/components/schemas/SearchResultMetadataTag'
+          pool: '#/components/schemas/SearchResultPool'
           tac_operation: '#/components/schemas/SearchResultTacOperation'
           token: '#/components/schemas/SearchResultToken'
           transaction: '#/components/schemas/SearchResultTransaction'
@@ -6147,6 +6290,7 @@ components:
         - $ref: '#/components/schemas/SearchResultUserOperation'
         - $ref: '#/components/schemas/SearchResultBlob'
         - $ref: '#/components/schemas/SearchResultTacOperation'
+        - $ref: '#/components/schemas/SearchResultPool'
       title: SearchResultItem
       type: object
       x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.Search.Result.Item
