@@ -6923,7 +6923,7 @@ info:
   contact:
     email: info@blockscout.com
   title: Blockscout
-  version: 12.0.4
+  version: 12.1.0
 openapi: 3.0.0
 paths:
   /api/v2/beacon/deposits/count:
