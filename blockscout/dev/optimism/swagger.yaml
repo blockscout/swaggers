@@ -3021,52 +3021,6 @@ components:
           $ref: '#/components/schemas/IntegerString'
         from:
           $ref: '#/components/schemas/Address'
-        op_interop_messages:
-          additionalProperties: false
-          nullable: false
-          properties:
-            init_chain:
-              nullable: true
-              type: object
-              x-struct:
-              x-validate:
-            init_transaction_hash:
-              $ref: '#/components/schemas/FullHashNullable'
-            nonce:
-              type: integer
-              x-struct:
-              x-validate:
-            payload:
-              $ref: '#/components/schemas/HexData'
-            relay_chain:
-              nullable: true
-              type: object
-              x-struct:
-              x-validate:
-            relay_transaction_hash:
-              $ref: '#/components/schemas/FullHashNullable'
-            sender_address_hash:
-              $ref: '#/components/schemas/AddressHashNullable'
-            status:
-              enum:
-                - Sent
-                - Relayed
-                - Failed
-              nullable: false
-              type: string
-              x-struct:
-              x-validate:
-            target_address_hash:
-              $ref: '#/components/schemas/AddressHashNullable'
-          required:
-            - nonce
-            - status
-            - sender_address_hash
-            - target_address_hash
-            - payload
-          type: object
-          x-struct:
-          x-validate:
         max_priority_fee_per_gas:
           $ref: '#/components/schemas/IntegerStringNullable'
         transaction_burnt_fee:
@@ -3994,13 +3948,6 @@ components:
           $ref: '#/components/schemas/IntegerString'
         from:
           $ref: '#/components/schemas/Address'
-        op_interop_messages:
-          items:
-            $ref: '#/components/schemas/OptimismInteropMessage'
-          nullable: false
-          type: array
-          x-struct:
-          x-validate:
         max_priority_fee_per_gas:
           $ref: '#/components/schemas/IntegerStringNullable'
         transaction_burnt_fee:
@@ -4177,101 +4124,6 @@ components:
       title: WatchlistName
       type: object
       x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.General.WatchlistName
-      x-validate:
-    OptimismInteropMessage:
-      additionalProperties: false
-      description: Interop message included in an Optimism transaction
-      example:
-        nonce: 0
-        payload: '0x30787849009c24f10a91a327a9f2ed94ebc49ee9'
-        relay_chain:
-        relay_transaction_hash: '0x0000000000000000000000000000000000000000000000000000000000000002'
-        sender_address_hash: '0x0000000000000000000000000000000000000003'
-        status: Relayed
-        target_address_hash: '0x0000000000000000000000000000000000000004'
-        unique_id: '0000000100000000'
-      nullable: false
-      properties:
-        init_chain:
-          additionalProperties: false
-          nullable: true
-          properties:
-            chain_id:
-              $ref: '#/components/schemas/IntegerString'
-            chain_logo:
-              nullable: true
-              type: string
-              x-struct:
-              x-validate:
-            chain_name:
-              nullable: true
-              type: string
-              x-struct:
-              x-validate:
-            instance_url:
-              nullable: true
-              type: string
-              x-struct:
-              x-validate:
-          type: object
-          x-struct:
-          x-validate:
-        init_transaction_hash:
-          $ref: '#/components/schemas/FullHash'
-        nonce:
-          minimum: 0
-          type: integer
-          x-struct:
-          x-validate:
-        payload:
-          $ref: '#/components/schemas/HexData'
-        relay_chain:
-          additionalProperties: false
-          nullable: true
-          properties:
-            chain_id:
-              $ref: '#/components/schemas/IntegerString'
-            chain_logo:
-              nullable: true
-              type: string
-              x-struct:
-              x-validate:
-            chain_name:
-              nullable: true
-              type: string
-              x-struct:
-              x-validate:
-            instance_url:
-              nullable: true
-              type: string
-              x-struct:
-              x-validate:
-          type: object
-          x-struct:
-          x-validate:
-        relay_transaction_hash:
-          $ref: '#/components/schemas/FullHash'
-        sender_address_hash:
-          $ref: '#/components/schemas/AddressHash'
-        status:
-          enum:
-            - Sent
-            - Relayed
-            - Failed
-          type: string
-          x-struct:
-          x-validate:
-        target_address_hash:
-          $ref: '#/components/schemas/AddressHash'
-        unique_id:
-          type: string
-          x-struct:
-          x-validate:
-      required:
-        - payload
-      title: OptimismInteropMessage
-      type: object
-      x-struct: Elixir.BlockScoutWeb.Schemas.API.V2.Optimism.InteropMessage
       x-validate:
     BlockCountdown:
       additionalProperties: false
