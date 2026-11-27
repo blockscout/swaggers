@@ -285,6 +285,42 @@ paths:
             $ref: '#/definitions/v1TokenInfoSubmission'
       tags:
         - Admin
+  /api/v1/chains/{chainId}/token-info-submissions/{id}/payment-tx:
+    patch:
+      summary: |-
+        Sets the payment transaction hash of a token info submission.
+        Allowed for submissions that are in process or require an update.
+        Does not change the submission status, so the review is not reset.
+        Fails if a different payment transaction hash is already set.
+      operationId: Admin_UpdateTokenInfoSubmissionPaymentTx
+      responses:
+        "200":
+          description: A successful response.
+          schema:
+            $ref: '#/definitions/v1TokenInfoSubmission'
+        default:
+          description: An unexpected error response.
+          schema:
+            $ref: '#/definitions/rpcStatus'
+      parameters:
+        - name: chainId
+          description: Either just `chain_id` or `chain_id:instance_id`
+          in: path
+          required: true
+          type: string
+        - name: id
+          description: The ID of the token info submission resource to update.
+          in: path
+          required: true
+          type: string
+          format: int64
+        - name: body
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/AdminUpdateTokenInfoSubmissionPaymentTxBody'
+      tags:
+        - Admin
   /api/v1/explorer-instances/{chainSpecifier}:
     get:
       operationId: AdminManagement_GetExplorerInstance
@@ -759,6 +795,14 @@ definitions:
     properties:
       newPassword:
         type: string
+  AdminUpdateTokenInfoSubmissionPaymentTxBody:
+    type: object
+    properties:
+      paymentTx:
+        type: string
+        description: |-
+          Hash of the transaction the user paid the submission with.
+          Must be a 0x-prefixed 32 byte hash.
   HealthCheckResponseServingStatus:
     type: string
     enum:
@@ -799,9 +843,9 @@ definitions:
       the null value for the `Value` type union.
 
       A field of type `NullValue` with any value other than `0` is considered
-      invalid. Most ProtoJSON serializers will emit a Value with a `null_value` set
-      as a JSON `null` regardless of the integer value, and so will round trip to
-      a `0` value.
+      invalid. Most ProtoJSON serializers will emit a `Value` with a `null_value`
+      set as a JSON `null` regardless of the integer value, and so will round trip
+      to a `0` value.
 
        - NULL_VALUE: Null value.
   rpcStatus:
@@ -1262,6 +1306,11 @@ definitions:
         type: string
       defiLlamaTicker:
         type: string
+      paymentTx:
+        type: string
+        description: |-
+          Hash of the transaction the user paid the submission with.
+          Must be a 0x-prefixed 32 byte hash if set.
   v1TokenInfoSubmissionStatus:
     type: string
     enum:
